@@ -13,9 +13,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 整库迁移任务列表/详情 VO。
- * <p>接口出入参中的 {@code databaseMappings} 为 {@link DatabaseMappingVO}（含表）；
- * 任务持久化库映射仍写在父类字段（仅库维）。</p>
+ * Library Migration TaskList/Details VO。
+ * <p>InterfaceAccess.{@code databaseMappings} Yes{@link DatabaseMappingVO}（Includes tables;
+ * TasksEnduringLibraryMap still written in parentField（OnlyLibraryV.</p>
  *
  * @author wuji
  * @version 1.0.0
@@ -27,28 +27,28 @@ public final class DatabaseSyncTaskVO extends DatabaseSyncTask {
     private final Connector targetConnector;
 
     /**
-     * 编辑/展示用库映射（含表）
+     * Edit/PresentationLibraryMaps (including tables)
      */
     private List<DatabaseMappingVO> mappingViews;
 
     private int mappingCount;
-    /** 任务进度 0~100，由任务/明细 Meta 计算 */
+    /** TasksProgress0~100，ByTasks/DetailsMeta Calculate*/
     private BigDecimal progress;
-    /** 失败数（任务级 Meta 累计 FAIL） */
+    /** Failures（TasksAdministrationMeta CumulativeFAIL） */
     private long errorCount;
-    /** 任务总表数（TableGroup 数量） */
+    /** TasksNumber of summary tablesTableGroup Number)*/
     private int totalTableCount;
-    /** 已完成表数（整表终态；仅结构模式列表展示用） */
+    /** CompletedNumber of tables (total Mobilization; structure mode only)ListPresentation)*/
     private int completedTableCount;
-    /** 结构阶段已完成表数（列表阶段文案用） */
+    /** Structure phaseCompletedTableListPhase text)*/
     private int schemaCompletedCount;
-    /** 已同步行合计（success+fail；有数据阶段时列表展示用） */
+    /** Total on foot (%)success+fail；When data are availableListPresentation)*/
     private long syncedRows;
-    /** 源端总行合计（各表 sourceTotal 缓存之和；有数据阶段时列表展示用） */
+    /** SourceTotal total (tables)sourceTotal Cache sum; when data phases are availableListPresentation)*/
     private long sourceTotal;
-    /** 任务级 Meta.state（本轮业务态，含 DONE=3） */
+    /** TasksAdministrationMeta.state（(4) Current round of businessDONE=3） */
     private Integer metaState;
-    /** 本轮执行开始时间（任务级 Meta.startTime） */
+    /** Current roundStart time（TasksAdministrationMeta.startTime） */
     private Long startTime;
 
     public DatabaseSyncTaskVO(Connector sourceConnector, Connector targetConnector) {
@@ -73,7 +73,7 @@ public final class DatabaseSyncTaskVO extends DatabaseSyncTask {
     }
 
     /**
-     * 序列化为前端字段 {@code databaseMappings}（元素运行时为 {@link DatabaseMappingVO}）。
+     * Sequence to FrontendField {@code databaseMappings}（Element running as{@link DatabaseMappingVO}）。
      */
     @Override
     public List<DatabaseMapping> getDatabaseMappings() {
@@ -84,7 +84,7 @@ public final class DatabaseSyncTaskVO extends DatabaseSyncTask {
     }
 
     /**
-     * BeanUtils / 接口反序列化入口；若元素已是 VO 则保留表映射。
+     * BeanUtils / Interfaceinverse sequenced entry; if the element hasYes VO .
      */
     @Override
     public void setDatabaseMappings(List<DatabaseMapping> databaseMappings) {

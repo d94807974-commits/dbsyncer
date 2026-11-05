@@ -6,8 +6,8 @@ package org.dbsyncer.sdk.spi;
 import org.dbsyncer.sdk.plugin.PluginContext;
 
 /**
- * 插件扩展服务接口
- * <p>全量同步/增量同步,扩展转换</p>
+ * PluginExtension of AIInterface
+ * <p>Full sync/Incremental sync,ExtensionConvert</p>
  *
  * @author AE86
  * @version 1.0.0
@@ -16,36 +16,36 @@ import org.dbsyncer.sdk.plugin.PluginContext;
 public interface PluginService {
 
     /**
-     * 初始化加载
+     * Initialise Loading
      */
     default void init() {
     }
 
     /**
-     * 全量同步/定时增量同步前置处理
+     * Full sync/ScheduledIncremental syncPreprocess
      *
-     * @param pluginContext 上下文
+     * @param pluginContext Context
      */
     default void postProcessBefore(PluginContext pluginContext) {
     }
 
     /**
-     * 全量同步/增量同步
+     * Full sync/Incremental sync
      *
-     * @param pluginContext 上下文
+     * @param pluginContext Context
      */
     void convert(PluginContext pluginContext);
 
     /**
-     * 全量同步/增量同步后置处理
+     * Full sync/Incremental syncPost-processing
      *
-     * @param pluginContext 上下文
+     * @param pluginContext Context
      */
     default void postProcessAfter(PluginContext pluginContext) {
     }
 
     /**
-     * 版本号
+     * VersionNo. No.
      *
      * @return
      */
@@ -54,7 +54,7 @@ public interface PluginService {
     }
 
     /**
-     * 插件名称
+     * PluginName
      *
      * @return
      */
@@ -63,7 +63,7 @@ public interface PluginService {
     }
 
     /**
-     * 关闭服务(上传相同插件或服务关闭时触发)
+     * CloseServices(UploadSamePluginor servicesCloseTime Trigger)
      */
     default void close() {
     }

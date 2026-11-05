@@ -4,7 +4,7 @@ import org.dbsyncer.common.util.StringUtil;
 import org.dbsyncer.parser.convert.Handler;
 
 /**
- * 默认值
+ * Default value
  *
  * @author AE86
  * @version 1.0.0

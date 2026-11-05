@@ -101,7 +101,7 @@ public class ParserComponentImpl implements ParserComponent {
     }
 
     /**
-     * 根据驱动/任务 id 与表组构建连接器命令
+     * Based onDriver/Tasks id andTable Group BuildConnectorYou can't.
      */
     private Map<String, String> buildConnectorCommand(String mappingId, String sourceConnectorId, String targetConnectorId,
                                                       String sourceDatabase, String sourceSchema, String targetDatabase,
@@ -143,19 +143,19 @@ public class ParserComponentImpl implements ParserComponent {
         final String targetConnectorId = mapping.getTargetConnectorId();
 
         ConnectorConfig sConfig = getConnectorConfig(sourceConnectorId);
-        Assert.notNull(sConfig, "数据源配置不能为空.");
+        Assert.notNull(sConfig, "Data source configuration cannot be empty Regulatory");
         ConnectorConfig tConfig = getConnectorConfig(targetConnectorId);
-        Assert.notNull(tConfig, "目标源配置不能为空.");
+        Assert.notNull(tConfig, "Target source configuration cannot be empty.");
         TableGroup group = PickerUtil.mergeTableGroupConfig(mapping, tableGroup);
         Map<String, String> command = group.getCommand();
-        Assert.notEmpty(command, "执行命令不能为空.");
+        Assert.notEmpty(command, "Executing orders cannot be empty.");
         List<FieldMapping> fieldMapping = group.getFieldMapping();
         String sTableName = group.getSourceTable().getName();
         String tTableName = group.getTargetTable().getName();
-        Assert.notEmpty(fieldMapping, String.format("数据源表[%s]同步到目标源表[%s], 映射关系不能为空.", sTableName, tTableName));
-        // 获取同步字段
+        Assert.notEmpty(fieldMapping, String.format("Data source table [%s] synchronized to target source table [%s], map relationship not empty.", sTableName, tTableName));
+        // Get SyncField
         Picker picker = new Picker(group);
-        // 游标分页时使用与构建 QUERY_CURSOR 一致的主键列表，避免 findTablePrimaryKeys 返回表上未参与游标的主键（如 id）导致 getLastCursors 多取游标值、参数个数与 SQL 占位符不一致
+        // CursorminPageuseandBuildQUERY_CURSOR The same.Primary keyList，AvoidfindTablePrimaryKeys BackNot included in tableandThe cursor.Primary key（Likeid）ResultgetLastCursors More CursorValue、ParameterNumberand SQL Placeholders are inconsistent
         boolean enableCursor = StringUtil.isNotBlank(command.get(ConnectorConstant.OPERTION_QUERY_CURSOR));
         List<String> primaryKeys = getPrimaryKeysForCursor(command, group.getSourceTable(), enableCursor);
         final FullPluginContext context = new FullPluginContext();
@@ -180,56 +180,56 @@ public class ParserComponentImpl implements ParserComponent {
         ConnectorService targetConnector = connectorFactory.getConnectorService(context.getTargetConnectorInstance().getConfig());
         picker.setSourceResolver(sourceConnector.getSchemaResolver());
         Map<String, Field> targetFieldMap = picker.getTargetFieldMap();
-        // 0、插件前置处理
+        // 0、PluginPreprocess
         pluginFactory.process(context, ProcessEnum.BEFORE);
 
         for (; ; ) {
             if (!task.isRunning()) {
-                logger.warn("任务被中止:{}", taskId);
+                logger.warn("Other Organiser", taskId);
                 break;
             }
 
-            // 1、获取数据源数据
+            // 1、Getting dataSourceData Fact
             context.setArgs(new ArrayList<>());
             context.setCursors(task.getCursors());
             context.setPageIndex(task.getPageIndex());
             Result reader = connectorFactory.reader(context);
             List<Map> source = reader.getSuccessData();
             if (CollectionUtils.isEmpty(source)) {
-                logger.info("完成全量同步任务:{}, [{}] >> [{}]", taskId, sTableName, tTableName);
+                logger.info("Completion of full sync task: {}, [} > [}]", taskId, sTableName, tTableName);
                 break;
             }
-            // 分页 SQL 无结束上界，本页可能越过 endCursors；必须先截断再写，否则 success 会超过片预算
+            // minPage SQL NoneOver, Ben.PageCould cross.endCursors；We have to cut and write first.Nothensuccess It'll exceed the budget.
             source = PrimaryKeyUtil.trimToEndInclusive(source, primaryKeys, task.getEndCursors());
             if (CollectionUtils.isEmpty(source)) {
                 break;
             }
             boolean hitEnd = PrimaryKeyUtil.reachedEnd(PrimaryKeyUtil.getLastCursors(source, primaryKeys), task.getEndCursors());
 
-            // 2、映射字段
+            // 2、MapField
             List<Map> target = picker.pickTargetData(source);
 
-            // 3、参数转换
+            // 3、ParameterConvert
             ConvertUtil.convert(group.getConvert(), target);
 
-            // 4、插件转换
+            // 4、PluginConvert
             context.setSourceList(source);
             context.setTargetList(target);
             pluginFactory.process(context, ProcessEnum.CONVERT);
 
-            // 5、写入目标源
+            // 5、WritingTarget
             Result result = writeBatch(context, executor);
 
-            // 6、更新结果
+            // 6、UpdateResult
             task.setPageIndex(task.getPageIndex() + 1);
             task.setCursors(PrimaryKeyUtil.getLastCursors(source, primaryKeys));
             result.setTableGroupId(tableGroup.getId());
             result.setTargetTableGroupName(tTableName);
             fullFlushService.flush(task, result, targetConnector.getSchemaResolver(), targetFieldMap);
-            // 7、同步完成后通知插件做后置处理
+            // 7、SyncFinishAnnouncementsPluginReprocessing
             pluginFactory.process(context, ProcessEnum.AFTER);
 
-            // 8、释放本批数据引用，避免 context 长期持有大 List（如 10000 条），减轻 LinkedList 保留内存
+            // 8、Release the data references in this instalment, avoidcontext Long-term holdingList（Like10000 (Article ), mitigationLinkedList ReservationsMemory
             if (context.getSourceList() != null) {
                 context.getSourceList().clear();
             }
@@ -245,7 +245,7 @@ public class ParserComponentImpl implements ParserComponent {
     @Override
     public Result writeBatch(PluginContext context, Executor executor) {
         Result result = new Result();
-        // 终止同步数据到目标源库
+        // TerminationSync dataPresent.TargetLibrary
         if (context.isTerminated()) {
             result.getSuccessData().addAll(context.getTargetList());
             return result;
@@ -254,12 +254,12 @@ public class ParserComponentImpl implements ParserComponent {
         int batchSize = context.getBatchSize();
         List<Map> targetList = context.getTargetList();
         int total = targetList.size();
-        // 单次任务
+        // SingleTasks
         if (total <= batchSize) {
             return connectorFactory.writer(context);
         }
 
-        // 批量任务, 拆分
+        // BatchTasks, Openmin
         int taskSize = (total + batchSize - 1) / batchSize;
         CountDownLatch latch = new CountDownLatch(taskSize);
         TaskSplitUtil.split(targetList, batchSize, batch -> {
@@ -299,13 +299,13 @@ public class ParserComponentImpl implements ParserComponent {
     }
 
     /**
-     * 游标分页时使用与构建 QUERY_CURSOR 一致的主键列表；非游标或未配置时使用表主键。
-     * 避免 findTablePrimaryKeys(sourceTable) 返回表上全部主键（含未参与游标的 id）导致 getLastCursors 多取游标值、参数与 SQL 占位符不一致。
+     * CursorminPageuseandBuildQUERY_CURSOR The same.Primary keyList；Not a cursor or notConfigureTimetablePrimary key。
+     * AvoidfindTablePrimaryKeys(sourceTable) BackTechnicalAllPrimary key（UnspecifiedandThe cursor.id）ResultgetLastCursors More CursorValue、Parameterand SQL Placeholders are inconsistent.
      *
-     * @param command      执行命令（含 CURSOR_PK_NAMES 时表示游标实际使用的主键）
-     * @param sourceTable  源表
-     * @param enableCursor 是否支持游标
-     * @return 用于 getLastCursors 的主键名列表
+     * @param command      Enforcement orders (inclusive)CURSOR_PK_NAMES It means the cursor is actually used.Primary key）
+     * @param sourceTable  Source table
+     * @param enableCursor YesNoSupport cursor
+     * @return ForgetLastCursors Yes.Primary keyFirst NameList
      */
     private List<String> getPrimaryKeysForCursor(Map<String, String> command, Table sourceTable, boolean enableCursor) {
         if (enableCursor) {
@@ -314,26 +314,26 @@ public class ParserComponentImpl implements ParserComponent {
                 return Arrays.stream(cursorPkNames.split(StringUtil.COMMA)).map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.toList());
             }
         }
-        // 不支持游标查询，或非结构化连接器场景
+        // No cursor queries supported, or unstructuredConnectorscene
         return PrimaryKeyUtil.findTablePrimaryKeys(sourceTable);
     }
 
     /**
-     * 获取连接配置
+     * AccessConnectConfigure
      */
     private ConnectorConfig getConnectorConfig(String connectorId) {
         return connectorProfile.getConnector(connectorId).getConfig();
     }
 
     /**
-     * 获取任务级连接，池中没有时按配置建连。
+     * AccessTasksLevelConnect，When the pool is not pressedConfigureConstruction.
      *
-     * @param uniqueId    任务 ID
-     * @param connectorId 连接器 ID
-     * @param catalog     目录
-     * @param schema      模式
-     * @param suffix      源/目标后缀
-     * @return 连接实例
+     * @param uniqueId    Tasks ID
+     * @param connectorId Connector ID
+     * @param catalog     Contents
+     * @param schema      Mode
+     * @param suffix      Source/Objective CombinedPostfix
+     * @return ConnectExamples
      */
     private ConnectorInstance requireInstance(String uniqueId, String connectorId, String catalog, String schema, String suffix) {
         String instanceId = ConnectorInstanceUtil.buildConnectorInstanceId(uniqueId, connectorId, suffix);
@@ -341,12 +341,12 @@ public class ParserComponentImpl implements ParserComponent {
             return connectorFactory.connect(instanceId);
         }
         Connector connector = connectorProfile.getConnector(connectorId);
-        Assert.notNull(connector, "连接器不存在");
+        Assert.notNull(connector, "Connector does not exist");
         return connectorFactory.connect(instanceId, connector.getConfig(), catalog, schema);
     }
 
     /**
-     * 根据源条件 组装目标表条件
+     * Based on SourceCondition assemblyTarget tableCondition
      */
     private static List<Filter> getTargetFilter(TableGroup tableGroup, List<FieldMapping> fieldMapping) {
         List<Filter> filter = tableGroup.getFilter();
@@ -355,7 +355,7 @@ public class ParserComponentImpl implements ParserComponent {
             filter.forEach(f -> {
                 Field matchedField = fieldMapping.stream()
                         .filter(m -> m.getSource().getName().equals(f.getName()))
-                        .map(FieldMapping::getTarget)                 // 获取目标字段
+                        .map(FieldMapping::getTarget)                 // AccessTarget fields
                         .findFirst()
                         .orElse(null);
                 if (matchedField != null) {

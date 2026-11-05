@@ -22,21 +22,21 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2024-11-26 22:24
  */
 public final class MySQLStringType extends StringType {
 
     private enum TypeEnum {
-        CHAR, // 固定长度，最多255个字符
-        VARCHAR, // 固定长度，最多65535个字符，64K
-        TINYTEXT, // 可变长度，最多255字符
-        TEXT, // 可变长度，最多65535个字符，64K
-        MEDIUMTEXT, // 可变长度，最多2的24次方-1个字符，16M
-        LONGTEXT, // 可变长度，最多2的32次方-1个字符，4GB
-        ENUM, // 2字节，最大可达65535个不同的枚举值
-        SET,//枚举型
+        CHAR, // FixedLength，Most255Character
+        VARCHAR, // FixedLength，Most65535Character，64K
+        TINYTEXT, // VariableLength，Most255Character
+        TEXT, // VariableLength，Most65535Character，64K
+        MEDIUMTEXT, // VariableLength，Most2Yes.24Sub--1Character，16M
+        LONGTEXT, // VariableLength，Most2Yes.32Sub--1Character，4GB
+        ENUM, // 2bytes, maximum accessible65535A different list.Value
+        SET,//Element type
         JSON, GEOMETRY; // POINT, LINESTRING, POLYGON, MULTIPOINT, MULTILINESTRING, MULTIPOLYGON,
         // GEOMETRYCOLLECTION
     }

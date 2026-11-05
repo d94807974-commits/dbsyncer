@@ -11,7 +11,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 /**
- * Redis连接器实例
+ * RedisConnectorExamples
  */
 public final class RedisConnectorInstance implements ConnectorInstance<RedisConfig, JedisPool> {
 

@@ -6,7 +6,7 @@ package org.dbsyncer.connector.h2;
 import org.dbsyncer.sdk.SdkException;
 
 /**
- * H2连接器异常
+ * H2ConnectorError
  */
 public final class H2Exception extends SdkException {
 

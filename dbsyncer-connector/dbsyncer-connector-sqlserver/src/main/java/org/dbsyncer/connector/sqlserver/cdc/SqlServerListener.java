@@ -57,7 +57,7 @@ public class SqlServerListener extends AbstractDatabaseListener {
     private static final String ENABLE_DB_CDC = "IF EXISTS(select 1 from sys.databases where name = '#' and is_cdc_enabled=0) EXEC sys.sp_cdc_enable_db";
     private static final String ENABLE_TABLE_CDC = "IF EXISTS(select 1 from sys.tables where name = '#' and is_tracked_by_cdc=0) EXEC sys.sp_cdc_enable_table @source_schema = N'%s', @source_name = N'#', @role_name = NULL, @supports_net_changes = 0";
     private static final String GET_TABLES_CDC_ENABLED = "EXEC sys.sp_cdc_help_change_data_capture";
-    //二进制转换出来 SELECT CONVERT(varchar(50), sys.fn_cdc_get_max_lsn(), 1) AS max_lsn;
+    //BinaryConvertCome out.SELECT CONVERT(varchar(50), sys.fn_cdc_get_max_lsn(), 1) AS max_lsn;
     private static final String GET_MAX_LSN = "select sys.fn_cdc_get_max_lsn()";
     private static final String GET_MIN_LSN = "select sys.fn_cdc_get_min_lsn('#')";
     private static final String GET_INCREMENT_LSN = "select sys.fn_cdc_increment_lsn(?)";
@@ -66,39 +66,39 @@ public class SqlServerListener extends AbstractDatabaseListener {
      */
     private static final String GET_ALL_CHANGES_FOR_TABLE = "select * from cdc.[fn_cdc_get_all_changes_#](?, ?, N'all update old') order by [__$start_lsn] ASC, [__$seqval] ASC";
     /**
-     * 从LSN时间映射表中取出最多N个事务的提交位点，作为单批拉取的结束位点。
-     * <p>提交位点是事务边界，按此切批不会拆散同一事务的变更。
-     * <p>binary类型不支持max聚合，因此用嵌套TOP取最大值。
+     * FromLSNTimeMost taken from mapNServiceSubmitbit, as the end point of a single-drawn batch.
+     * <p>SubmitBitsYesThe boundary of the service, at which point the same transaction will not be broken up.
+     * <p>binaryTypeNot supportedmaxAggregation, so use the nest.TOPMaximumValue。
      */
     private static final String GET_BATCH_STOP_LSN = "select top (1) start_lsn from (select top (?) start_lsn from cdc.lsn_time_mapping where start_lsn > ? and start_lsn <= ? order by start_lsn asc) t order by start_lsn desc";
 
     private static final String LSN_POSITION = "position";
     private static final int OFFSET_COLUMNS = 4;
     /**
-     * SQL Server CDC TVF在LSN为空/越界时会抛出Msg 313（文案具有误导性，实际表示区间无效）。
+     * SQL Server CDC TVFYes.LSNIt'll be thrown when it's empty/cross.Msg 313（It's misleading. It's actually an inter-territory.NoneExact.
      * @see <a href="https://learn.microsoft.com/en-us/sql/relational-databases/system-functions/cdc-fn-cdc-get-all-changes-capture-instance-transact-sql">fn_cdc_get_all_changes</a>
      */
     private static final int CDC_INVALID_LSN_ERROR = 313;
     /**
-     * 拉取变更数据时的游标大小，避免驱动一次性缓存全部结果集
+     * Draw cursor size when changing data, avoidDriverOne-time CacheAllResultSet
      */
     private static final int FETCH_SIZE = 1000;
     /**
-     * 单批拉取的事务数范围，用于把积压变更拆分成小批次
+     * The range of services to be drawn from individual batches to remove backlog changesminIn small batches
      */
     private static final int MIN_LSN_RANGE = 500;
     private static final int MAX_LSN_RANGE = 20000;
     private static final int DEFAULT_LSN_RANGE = 5000;
     /**
-     * 单批拉取耗时超过该值判定为过重，需要缩小批次范围
+     * One batch takes more time than that.ValueConsider it too heavy to narrow the batch.
      */
     private static final long SLOW_PULL_MILLIS = 30000;
     /**
-     * 单批拉取耗时低于该值且行数不多，判定为过轻，可以扩大批次范围
+     * Single batch is less time-consuming than thatValueIt's resubmitable. It's too light.
      */
     private static final long FAST_PULL_MILLIS = 3000;
     /**
-     * 单批拉取行数超过该值判定为过重，需要缩小批次范围
+     * The number of single-draw lines exceeds thatValueConsider it too heavy to narrow the batch.
      */
     private static final long HIGH_PULL_ROWS = 100000;
     private final Lock connectLock = new ReentrantLock();
@@ -141,7 +141,7 @@ public class SqlServerListener extends AbstractDatabaseListener {
             LsnPuller.addExtractor(taskId, this);
         } catch (Exception e) {
             close();
-            logger.error("启动失败:{}", e.getMessage());
+            logger.error("Start failed: {}", e.getMessage());
             throw new SqlServerException(e);
         } finally {
             connectLock.unlock();
@@ -173,7 +173,7 @@ public class SqlServerListener extends AbstractDatabaseListener {
             captured.put(LSN_POSITION, lsn.toString());
             return captured;
         } catch (Exception e) {
-            logger.error("捕获SqlServer LSN位点失败:{}", e.getMessage(), e);
+            logger.error("Could not close temporary folder: %s", e.getMessage(), e);
             return Collections.emptyMap();
         }
     }
@@ -234,7 +234,7 @@ public class SqlServerListener extends AbstractDatabaseListener {
         changeTables = queryAndMapList(GET_TABLES_CDC_ENABLED, rs-> {
             final Set<SqlServerChangeTable> changed = new HashSet<>();
             while (rs.next()) {
-                // 只关注当前任务监听的表，避免拉取无关表的变更数据
+                // Focus only on CurrentTasksListening watch. Avoid pulling.NoneChange data for closed tables
                 if (!this.tables.contains(rs.getString(2))) {
                     continue;
                 }
@@ -266,7 +266,7 @@ public class SqlServerListener extends AbstractDatabaseListener {
                 if (!enabledTableCDC) {
                     execute(String.format(ENABLE_TABLE_CDC.replace(STATEMENTS_PLACEHOLDER, table), schema));
                     Lsn minLsn = queryAndMap(GET_MIN_LSN.replace(STATEMENTS_PLACEHOLDER, table), rs->new Lsn(rs.getBytes(1)));
-                    logger.info("启用CDC表[{}]:{}", table, minLsn.isAvailable());
+                    logger.info("Enable CDC table [{}]: {", table, minLsn.isAvailable());
                 }
             });
         }
@@ -300,7 +300,7 @@ public class SqlServerListener extends AbstractDatabaseListener {
     private long pull(Lsn stopLsn) {
         final Lsn startLsn = queryAndMap(GET_INCREMENT_LSN, statement->statement.setBytes(1, lastLsn.getBinary()), rs->Lsn.valueOf(rs.getBytes(1)));
         if (null == startLsn || !startLsn.isAvailable()) {
-            throw new SqlServerException("获取起始LSN失败, lastLsn=" + lastLsn);
+            throw new SqlServerException("Could not close temporary folder: %s" + lastLsn);
         }
         long rows = 0;
         for (SqlServerChangeTable changeTable : changeTables) {
@@ -314,7 +314,7 @@ public class SqlServerListener extends AbstractDatabaseListener {
                 statement.setBytes(1, fromLsn.getBinary());
                 statement.setBytes(2, stopLsn.getBinary());
             }, rs->parseEvent(changeTable.getTableName(), rs, stopLsn));
-            // Msg 313按空结果处理；其它异常会向上抛出，阻止位点推进
+            // Msg 313Press EmptyResultprocessing;otherErrorIt'll throw it up and stop the bits.
             if (null != count) {
                 rows += count;
             }
@@ -323,17 +323,17 @@ public class SqlServerListener extends AbstractDatabaseListener {
     }
 
     /**
-     * 将拉取起点钳制到捕获实例的最小可用LSN，避免因CDC清理导致起点越界触发Msg 313。
-     * <p>若起点已越过本批结束位点，则本表本批无需拉取。
+     * Minimal use of pulling starting clamp to capture instanceLSN，AvoidanceCDCClean-up triggers crossing the thresholdMsg 313。
+     * <p>If the starting point has passed the end of this instalment, this form is enteredNoneNeed to pull.
      *
-     * @return 有效起点；无需拉取时返回null
+     * @return Effectivedoubt;NoneOther OrganiserBacknull
      */
     private Lsn resolveFromLsn(SqlServerChangeTable changeTable, Lsn startLsn, Lsn stopLsn) {
         Lsn fromLsn = startLsn;
         Lsn minLsn = queryAndMap(GET_MIN_LSN.replace(STATEMENTS_PLACEHOLDER, changeTable.getCaptureInstance()),
                 rs->Lsn.valueOf(rs.getBytes(1)));
         if (null != minLsn && minLsn.isAvailable() && fromLsn.compareTo(minLsn) < 0) {
-            logger.warn("CDC位点[{}]早于表[{}]最小可用LSN[{}]，可能因清理产生数据空洞，跳到最小LSN继续",
+            logger.warn("CTC bit [{}] pre-table [{}] minimum available LSN [{}], may continue to the smallest LSN due to data gaps created by clean-up",
                     fromLsn, changeTable.getTableName(), minLsn);
             fromLsn = minLsn;
         }
@@ -344,8 +344,8 @@ public class SqlServerListener extends AbstractDatabaseListener {
     }
 
     /**
-     * 取出本批的结束位点，把大段积压拆成最多{@link #currentLsnRange}个事务的小批次。
-     * <p>映射表查不到边界（如刚启用CDC、或积压已在目标位点内）时，直接推进到目标位点。
+     * Take out the end point of the instalment and break the backlog to the highest level{@link #currentLsnRange}A small batch of services.
+     * <p>The Extensive Map does not identify the boundary (e.g., just as in the past)EnableCDC、Or backlog alreadyObjective CombinedDemanding directly toObjective Combinedbits.
      */
     private Lsn nextBatchStopLsn(Lsn stopLsn) {
         Lsn batchStopLsn = queryAndMapList(GET_BATCH_STOP_LSN, statement-> {
@@ -356,13 +356,13 @@ public class SqlServerListener extends AbstractDatabaseListener {
         if (null == batchStopLsn || !batchStopLsn.isAvailable()) {
             return stopLsn;
         }
-        // 必须严格前进，否则回退到目标位点，避免批次不推进
+        // eleventh year of the year.NoBack ScheduleObjective CombinedBits, avoid batches without advance
         boolean valid = batchStopLsn.compareTo(lastLsn) > 0 && batchStopLsn.compareTo(stopLsn) < 0;
         return valid ? batchStopLsn : stopLsn;
     }
 
     /**
-     * 根据上一批的行数和耗时动态调整批次范围：过重则缩小以加快位点刷新，过轻则放大以加快追平积压。
+     * Adjusting batch ranges to the number of lines and time-consuming dynamics of the previous batch: too heavy to accelerate position PointsRefresh，It's too light to zoom in to speed up the backlog.
      */
     private void adjustLsnRange(long rows, long duration) {
         int newRange = currentLsnRange;
@@ -372,7 +372,7 @@ public class SqlServerListener extends AbstractDatabaseListener {
             newRange = Math.min(MAX_LSN_RANGE, currentLsnRange * 2);
         }
         if (newRange != currentLsnRange) {
-            logger.info("调整CDC批次范围[{} -> {}], 本批行数:{}, 耗时:{}ms", currentLsnRange, newRange, rows, duration);
+            logger.info("Adjusting the range of the CDC batch [{} ->}, number of rows Territorial: {, time-consuming: {}ms", currentLsnRange, newRange, rows, duration);
             currentLsnRange = newRange;
         }
     }
@@ -393,8 +393,8 @@ public class SqlServerListener extends AbstractDatabaseListener {
     }
 
     /**
-     * 边读边发，避免变更量过大时一次性堆积到内存导致OOM。
-     * 仅缓存一行做前瞻，用于给最后一行附加stopLsn位点。
+     * Read it and do it one-time when it's too big.BacklogPresent.MemoryRecommendations maintainOOM。
+     * Cache oneIntensifying efforts line to see for the last linestopLsnbits.
      */
     private int parseEvent(String tableName, ResultSet rs, Lsn stopLsn) throws SQLException {
         final int columnCount = rs.getMetaData().getColumnCount();
@@ -479,9 +479,9 @@ public class SqlServerListener extends AbstractDatabaseListener {
                 rs = ps.executeQuery();
                 return mapper.apply(rs);
             } catch (SQLException e) {
-                // Msg 313: CDC TVF在LSN为空/越界时的误导性报错，按空结果处理；其它异常必须抛出，避免位点误推进丢数
+                // Msg 313: CDC TVFYes.LSNUnsettled errors for air/crossing, press emptyResultprocessing;otherErrorIt has to be thrown, so we don't lose points.
                 if (isCdcInvalidLsnError(e)) {
-                    logger.warn("CDC查询LSN区间无效，按空结果处理. sql={}, error={}", preparedQuerySql, e.getMessage());
+                    logger.warn("The CCDC query LSN is invalid, treated as empty result. sql=}, error={", preparedQuerySql, e.getMessage());
                     return null;
                 }
                 throw new SqlServerException(e);
@@ -493,17 +493,17 @@ public class SqlServerListener extends AbstractDatabaseListener {
     }
 
     /**
-     * 判定是否为CDC变更函数因LSN区间无效抛出的Msg 313。
-     * <p>不能仅按消息包含函数名判断，否则会把权限拒绝(Msg 229)等真实错误误当成空结果。
+     * DecisionYesNoYesCDCChangeFunctionsBecauseLSNAreaNoneEmpirically castMsg 313。
+     * <p>West information onlyFunctionsI'm not sure.No♪ And I'll put ♪PermissionsReject(Msg 229)PersonnelErrorIt's empty.Result。
      */
     private boolean isCdcInvalidLsnError(SQLException e) {
         if (e.getErrorCode() == CDC_INVALID_LSN_ERROR) {
             return true;
         }
-        // 部分驱动/本地化场景下errorCode可能为0，再用文案兜底
+        // DepartmentminDriver/LocalizederrorCodeMaybe.0，We'll use the paperwork again.
         String message = e.getMessage();
         return null != message
-                && (message.contains("参数数目不足") || message.contains("insufficient number of arguments"))
+                && (message.contains("Insufficient number of parameters") || message.contains("insufficient number of arguments"))
                 && (message.contains("fn_cdc_get_all_changes") || message.contains("fn_cdc_get_net_changes"));
     }
 
@@ -526,7 +526,7 @@ public class SqlServerListener extends AbstractDatabaseListener {
                         continue;
                     }
 
-                    // 分批推进到目标位点，避免单批变更过大，同时更频繁地刷新位点
+                    // minBatch boost toObjective CombinedBits, avoid excessive single batch changes and more frequentRefreshBits
                     while (connected && !isInterrupted() && lastLsn.compareTo(stopLsn) < 0) {
                         Lsn batchStopLsn = nextBatchStopLsn(stopLsn);
                         long begin = System.currentTimeMillis();
@@ -539,7 +539,7 @@ public class SqlServerListener extends AbstractDatabaseListener {
                 } catch (InterruptedException e) {
                     break;
                 } catch (Throwable e) {
-                    // 捕获Error(如OOM)，避免解析线程静默退出后任务假死
+                    // CaptureError(LikeOOM)，Beyond parsingThreadsAfter the silent exitTasksFake death.
                     if (connected) {
                         logger.error(e.getMessage(), e);
                         sleepInMills(1000L);
@@ -561,7 +561,7 @@ public class SqlServerListener extends AbstractDatabaseListener {
             try {
                 lock.lock();
                 while (!buffer.offer(stopLsn) && connected) {
-                    logger.warn("[{}]缓存队列容量已达上限[{}], 正在阻塞重试.", this.getClass().getSimpleName(), BUFFER_CAPACITY);
+                    logger.warn("[{} Cache Queue has reached maximum [{}] and is blocking a retest.", this.getClass().getSimpleName(), BUFFER_CAPACITY);
                     try {
                         this.isFull.await(pollInterval.toMillis(), TimeUnit.MILLISECONDS);
                     } catch (InterruptedException e) {

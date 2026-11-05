@@ -30,9 +30,9 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Doris Stream Load 写入实现
+ * Doris Stream Load Writing discontinue
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-06 23:50
  */
@@ -75,7 +75,7 @@ public final class DorisStreamLoadWriter {
             database = config.getDatabase();
         }
         if (StringUtil.isBlank(database)) {
-            throw new DorisException("Stream Load 需要指定数据库名");
+            throw new DorisException("Stream Load needs to specify a database First Name");
         }
         return database;
     }
@@ -109,7 +109,7 @@ public final class DorisStreamLoadWriter {
                         || statusCode == 307 || statusCode == 308) {
                     String location = connection.getHeaderField("Location");
                     if (StringUtil.isBlank(location)) {
-                        throw new DorisException("Stream Load 重定向缺少 Location 头");
+                        throw new DorisException("Stream Load Redirect missing Location Header");
                     }
                     currentUrl = location;
                     continue;
@@ -119,7 +119,7 @@ public final class DorisStreamLoadWriter {
                 connection.disconnect();
             }
         }
-        throw new DorisException("Stream Load 重定向次数过多");
+        throw new DorisException("Stream Load reoriented too many times");
     }
 
     private HttpURLConnection openConnection(DatabaseConfig config, String loadUrl, String label) throws IOException {
@@ -133,7 +133,7 @@ public final class DorisStreamLoadWriter {
         connection.setRequestProperty("label", label);
         connection.setRequestProperty("format", "json");
         connection.setRequestProperty("read_json_by_line", "true");
-        // 与 JDBC serverTimezone 对齐；带时区的时间串按此时区解释，无时区串保持墙钟不变
+        // and JDBC serverTimezone alignment;time zoneTimeThis post is part of our special coverage Syria Protests 2011.NoneTime zone stays the same.
         connection.setRequestProperty("timezone", "Asia/Shanghai");
         connection.setRequestProperty("Expect", "100-continue");
         connection.setRequestProperty("Content-Type", "text/plain; charset=UTF-8");
@@ -153,7 +153,7 @@ public final class DorisStreamLoadWriter {
         InputStream stream = statusCode >= HttpURLConnection.HTTP_BAD_REQUEST
                 ? connection.getErrorStream() : connection.getInputStream();
         if (stream == null) {
-            throw new DorisException("Stream Load 响应为空, status=" + statusCode);
+            throw new DorisException("Strread Load response empty, status=" + statusCode);
         }
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
             StringBuilder response = new StringBuilder();
@@ -162,7 +162,7 @@ public final class DorisStreamLoadWriter {
                 response.append(line);
             }
             if (statusCode >= HttpURLConnection.HTTP_BAD_REQUEST) {
-                throw new DorisException("Stream Load HTTP 失败, status=" + statusCode + ", body=" + response);
+                throw new DorisException("Stream HTTP failed, status=" + statusCode + ", body=" + response);
             }
             return response.toString();
         }
@@ -172,7 +172,7 @@ public final class DorisStreamLoadWriter {
         Map responseMap = JsonUtil.jsonToObj(response, Map.class);
         if (responseMap == null) {
             result.addFailData(data);
-            result.getError().append("Stream Load 响应解析失败: ").append(response).append(System.lineSeparator());
+            result.getError().append("Stream Load responded to parsing failure: ").append(response).append(System.lineSeparator());
             return;
         }
         Object status = responseMap.get("Status");

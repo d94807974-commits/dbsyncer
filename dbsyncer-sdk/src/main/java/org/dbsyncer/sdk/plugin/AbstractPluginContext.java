@@ -19,75 +19,75 @@ import java.util.Map;
 public abstract class AbstractPluginContext extends AbstractBaseContext implements PluginContext, Cloneable {
 
     /**
-     * 是否终止任务
-     * <p>true：目标源不再接收同步数据，默认值false
+     * YesNoTerminationTasks
+     * <p>true：TargetCan not open messageSync data，Default valuefalse
      */
     private boolean terminated;
 
     /**
-     * 目标源连接实例
+     * TargetConnectExamples
      */
     private ConnectorInstance targetConnectorInstance;
 
     /**
-     * 获取目标表信息
+     * AccessTarget tableInfo
      */
     private Table targetTable;
 
     /**
-     * 同步事件（INSERT/UPDATE/DELETE）
+     * SyncEvent（INSERT/UPDATE/DELETE）
      */
     private String event;
 
     /**
-     * 目标字段
+     * Target fields
      */
     private List<Field> targetFields;
 
     /**
-     * 批量处理任务数
+     * Batch processingTasksNumber
      */
     private int batchSize;
 
     /**
-     * 是否覆盖更新
+     * Overwrite?Update
      */
     private boolean forceUpdate;
 
     /**
-     * 是否打印trace信息
+     * YesNoCan not open message
      */
     private boolean enablePrintTraceInfo;
 
     /**
-     * 数据源数据集合
+     * Data FactSource data set
      */
     private List<Map> sourceList;
 
     /**
-     * 目标源源数据集合
+     * TargetSource data set
      */
     private List<Map> targetList;
 
     /**
-     * 插件
+     * Plugin
      */
     private Plugin plugin;
 
     /**
-     * 插件参数
+     * PluginParameter
      */
     private String pluginExtInfo;
 
     private String traceId;
 
     /**
-     * 获取RSA加密类
+     * AccessRSAIllicit Classes
      */
     private RsaManager rsaManager;
 
     /**
-     * 获取RSA配置
+     * AccessRSAConfigure
      */
     private RsaConfig rsaConfig;
 

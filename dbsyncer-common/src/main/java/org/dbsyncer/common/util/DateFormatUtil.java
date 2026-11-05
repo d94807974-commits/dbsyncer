@@ -29,7 +29,7 @@ import java.time.temporal.TemporalAccessor;
 
 public abstract class DateFormatUtil {
 
-    // 常见日期时间格式模式
+    // Common datesTimeFormat Mode
     public static final String PATTERN_YYYY_MM_DD = "yyyy-MM-dd";
     public static final String PATTERN_YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
     public static final String PATTERN_YYYY_MM_DD_HH_MM_SS_SSS = "yyyy-MM-dd HH:mm:ss.SSS";
@@ -48,28 +48,28 @@ public abstract class DateFormatUtil {
     public static final DateTimeFormatter YYYY_MM_DD_HH_MM_SS_SSSSSS = DateTimeFormatter.ofPattern(PATTERN_YYYY_MM_DD_HH_MM_SS_SSSSSS);
 
     /**
-     * 时间带精度格式
+     * TimeAnd...Outlook saluteFormat
      */
     private static final DateTimeFormatter[] DATETIME_FSP_FORMATTERS = buildDatetimeFspFormatters();
-    /* 带时区格式 */
+    /* Timezone Format*/
     public static final DateTimeFormatter YYYY_MM_DD_T_HH_MM_SS_XXX = DateTimeFormatter.ofPattern(PATTERN_YYYY_MM_DD_T_HH_MM_SS_XXX);
     public static final DateTimeFormatter YYYY_MM_DD_T_HH_MM_SS_SSS_XXX = DateTimeFormatter.ofPattern(PATTERN_YYYY_MM_DD_T_HH_MM_SS_SSS_XXX);
     public static final DateTimeFormatter YYYY_MM_DD_T_HH_MM_SS_Z = DateTimeFormatter.ofPattern(PATTERN_YYYY_MM_DD_T_HH_MM_SS_Z);
     public static final DateTimeFormatter YYYY_MM_DD_T_HH_MM_SS_SSS_Z = DateTimeFormatter.ofPattern(PATTERN_YYYY_MM_DD_T_HH_MM_SS_SSS_Z);
 
-    // 兼容格式
+    // Compatible Format
     private static final DateTimeFormatter[] FORMATTERS = {YYYY_MM_DD, YYYY_MM_DD_HH_MM_SS, YYYY_MM_DD_HH_MM_SS_SSS, YYYY_MM_DD_HH_MM_SS_SSSSSS, YYYY_MM_DD_T_HH_MM_SS_XXX,
             YYYY_MM_DD_T_HH_MM_SS_SSS_XXX, YYYY_MM_DD_T_HH_MM_SS_Z, YYYY_MM_DD_T_HH_MM_SS_SSS_Z, DateTimeFormatter.ISO_OFFSET_DATE_TIME, DateTimeFormatter.ISO_LOCAL_DATE_TIME,
             DateTimeFormatter.ISO_DATE_TIME, DateTimeFormatter.ISO_INSTANT};
 
-    // 定义常见的日期时间格式模式
+    // Define common datesTimeFormat Mode
     private static final String[] SIMPLE_PATTERNS = {PATTERN_YYYY_MM_DD, PATTERN_YYYY_MM_DD_HH_MM_SS, PATTERN_YYYY_MM_DD_HH_MM_SS_SSS, PATTERN_YYYY_MM_DD_HH_MM_SS_SSSSSS, PATTERN_YYYYMMDD,
             PATTERN_YYYYMMDDHHMMSS, PATTERN_YYYYMMDDHHMMSSSSS};
 
     public static final DateTimeFormatter MM_DD = DateTimeFormatter.ofPattern("MM-dd");
     public static final DateTimeFormatter HH_MM_SS = DateTimeFormatter.ofPattern("HH:mm:ss");
     /**
-     * 默认时区
+     * Default Timezone
      */
     private static final ZoneId zoneId = ZoneId.systemDefault();
 
@@ -125,9 +125,9 @@ public abstract class DateFormatUtil {
     }
 
     /**
-     * 获取带小数秒精度的日期时间格式化器。
+     * Get with decimalssecondsOutlook saluteDateTimeformatter.
      *
-     * @param fsp 小数秒位数，取值 0~6
+     * @param fsp DecimalsecondsDigits, takeValue 0~6
      */
     public static DateTimeFormatter getDatetimeFormatter(int fsp) {
         if (fsp <= 0) {
@@ -170,8 +170,8 @@ public abstract class DateFormatUtil {
             return Timestamp.valueOf(LocalDateTime.from(YYYY_MM_DD_HH_MM_SS.parse(format(s))));
         }
 
-        // 带时区的 ISO 字符串（如 2024-01-10T01:15:00.000Z、2024-01-10T09:15:00+08:00、2024-01-10T01:15:00.000-08:00）
-        // 按 UTC 解析为 Instant，避免被 LocalDateTime.parse 当成本地时间再 Timestamp.valueOf 产生时区偏差
+        // Time zoneISO String (e. g.2024-01-10T01:15:00.000Z、2024-01-10T09:15:00+08:00、2024-01-10T01:15:00.000-08:00）
+        // PressUTC Resolve asInstant，Avoid byLocalDateTime.parse Consider it local.TimeAgain.Timestamp.valueOf Generate time zone deviations
         if (s.contains("T") && (s.endsWith("Z") || s.contains("+") || s.matches(".*-\\d{2}:\\d{2}$"))) {
             try {
                 return Timestamp.from(OffsetDateTime.parse(s, DateTimeFormatter.ISO_OFFSET_DATE_TIME).toInstant());
@@ -187,18 +187,18 @@ public abstract class DateFormatUtil {
         for (DateTimeFormatter formatter : FORMATTERS) {
             try {
                 if (s.contains("T") && s.contains("+")) {
-                    // 处理带时区的ISO格式
+                    // Process TimezonesISOFormat
                     Instant instant = Instant.from(formatter.parse(s));
                     return Timestamp.from(instant);
                 }
-                // 处理本地时间格式
+                // Process LocalTimeFormat
                 return Timestamp.valueOf(LocalDateTime.parse(s, formatter));
             } catch (DateTimeParseException e) {
-                // 继续尝试下一个格式
+                // Continue to try the next format
                 continue;
             }
         }
-        // 尝试SimpleDateFormat
+        // TrySimpleDateFormat
         return parseWithSimpleDateFormat(s);
     }
 
@@ -206,10 +206,10 @@ public abstract class DateFormatUtil {
         for (String pattern : SIMPLE_PATTERNS) {
             try {
                 SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-                sdf.setLenient(false); // 严格模式
+                sdf.setLenient(false); // Strict Mode
                 return new Timestamp(sdf.parse(s).getTime());
             } catch (ParseException e) {
-                // 继续尝试下一个格式
+                // Continue to try the next format
                 continue;
             }
         }
@@ -247,19 +247,19 @@ public abstract class DateFormatUtil {
         StringBuilder buf = new StringBuilder();
         Lexer lexer = new Lexer(s);
         char comma = '-';
-        // 年
+        // Year
         nextToken(lexer, buf, comma);
-        // 月
+        // Intern
         nextToken(lexer, buf, comma);
-        // 日
+        // Day
         comma = ' ';
         nextToken(lexer, buf, comma);
-        // 时
+        // Time
         comma = ':';
         nextToken(lexer, buf, comma);
-        // 分
+        // min
         nextToken(lexer, buf, comma);
-        // 秒
+        // seconds
         nextToken(lexer, buf, comma, false);
         return buf.toString();
     }
@@ -297,9 +297,9 @@ public abstract class DateFormatUtil {
     // for (String example : dateTimeExamples) {
     // Timestamp timestamp = DateFormatUtil.stringToTimestamp(example);
     // if (timestamp != null) {
-    // System.out.println(String.format("解析 '%s' -> %s", example, timestamp));
+    // System.out.println(String.format("Can not open message", example, timestamp));
     // } else {
-    // System.out.println("无法解析: " + example);
+    // System.out.println("Could not close temporary folder: %s " + example);
     // }
     // }
     // }

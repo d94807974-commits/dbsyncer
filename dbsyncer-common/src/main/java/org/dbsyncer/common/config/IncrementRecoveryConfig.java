@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * 增量同步（含全量+增量）自动恢复重试配置。
+ * Incremental sync（HamFull + incremental）AutorecoverTry againConfigure。
  *
  * @author wuji
  * @version 1.0.0
@@ -18,12 +18,12 @@ import org.springframework.context.annotation.Configuration;
 public class IncrementRecoveryConfig {
 
     /**
-     * 自动恢复启动 CDC 监听失败时的最大重试次数
+     * AutorecoverStart CDC ListenFailedMaximumTry againNumber
      */
     private int retryTimes = 10;
 
     /**
-     * 每次重试间隔（毫秒）
+     * Every timeTry againIntervalms）
      */
     private long retryInterval = 5000L;
 

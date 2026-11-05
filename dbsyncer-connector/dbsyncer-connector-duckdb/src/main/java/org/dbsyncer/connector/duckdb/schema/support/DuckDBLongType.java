@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * DuckDB 长整型
+ * DuckDB Long
  *
  * @author wuji
  * @version 1.0.0

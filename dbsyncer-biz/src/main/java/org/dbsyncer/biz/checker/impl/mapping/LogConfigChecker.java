@@ -11,7 +11,7 @@ import org.springframework.util.Assert;
 import java.util.Map;
 
 /**
- * 日志配置
+ * LogConfigure
  *
  * @author AE86
  * @version 1.0.0

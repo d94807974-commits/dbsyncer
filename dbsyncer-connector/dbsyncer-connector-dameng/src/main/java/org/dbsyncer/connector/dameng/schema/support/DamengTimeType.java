@@ -14,9 +14,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 达梦时间类型
+ * Tamang!TimeType
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-07-18
  */
@@ -77,7 +77,7 @@ public final class DamengTimeType extends TimeType {
         String text = value.trim();
         int space = text.indexOf(' ');
         if (space > 0) {
-            // 兼容带时区后缀：12:00:00 +08:00
+            // Compatible Time Zone Corrections12:00:00 +08:00
             text = text.substring(0, space);
         }
         int dot = text.indexOf('.');

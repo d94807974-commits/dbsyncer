@@ -12,62 +12,62 @@ import java.time.Instant;
 public class SnowflakeIdWorker {
 
     /**
-     * 工作机器ID(0~31)
+     * Work MachineID(0~31)
      */
     private long id = 1L;
 
     /**
-     * 数据中心ID(0~31)
+     * Data centreID(0~31)
      */
     private long dataCenterId = 1L;
 
     /**
-     * 毫秒内序列(0~4095)
+     * msProcurate(0~4095)
      */
     private long sequence = 0L;
 
     /**
-     * 上次生成ID的时间截
+     * Last time.GenerateIDYes.TimeCut.
      */
     private long lastTimestamp = -1L;
 
     /**
-     * 开始时间截 (2015-01-01)
+     * Start timeCut!(2015-01-01)
      */
     private final long twepoch = 1420041600000L;
 
     /**
-     * 机器id所占的位数
+     * MachineidNumber of places
      */
     private final long workerIdBits = 5L;
 
     /**
-     * 数据标识id所占的位数
+     * Data identifieridNumber of places
      */
     private final long dataCenterIdBits = 5L;
 
     /**
-     * 序列在id中占的位数
+     * Sequence inidNumber of places
      */
     private final long sequenceBits = 12L;
 
     /**
-     * 机器ID向左移12位
+     * MachineIDMove Left12bit
      */
     private final long workerIdShift = sequenceBits;
 
     /**
-     * 数据标识id向左移17位(12+5)
+     * Data identifieridMove Left17bit(12+5)
      */
     private final long dataCenterIdShift = sequenceBits + workerIdBits;
 
     /**
-     * 时间截向左移22位(5+5+12)
+     * TimeMove left22bit(5+5+12)
      */
     private final long timestampLeftShift = sequenceBits + workerIdBits + dataCenterIdBits;
 
     /**
-     * 生成序列的掩码，这里为4095 (0b111111111111=0xfff=4095)
+     * GenerateSequence mask.4095 (0b111111111111=0xfff=4095)
      */
     private final long sequenceMask = -1L ^ (-1L << sequenceBits);
 
@@ -79,36 +79,36 @@ public class SnowflakeIdWorker {
     }
 
     /**
-     * 获得下一个ID (该方法是线程安全的)
+     * Get nextID (The methodYesThreadsClear.)
      *
      * @return SnowflakeId
      */
     public synchronized long nextId() {
         long timestamp = timeGen();
 
-        // 如果当前时间小于上一次ID生成的时间戳，说明系统时钟回退过这个时候应当抛出异常
+        // If CurrentTimeLess than previousIDGenerateYes.TimePoke.DescriptionThe system clock should be thrown back at this time.Error
         if (timestamp < lastTimestamp) {
             throw new CommonException(String.format("Clock moved backwards.  Refusing to generate id for %d milliseconds", lastTimestamp - timestamp));
         }
 
-        // 如果是同一时间生成的，则进行毫秒内序列
+        // IfYesThe same.TimeGenerateOther OrganisermsProcurate
         if (lastTimestamp == timestamp) {
             sequence = (sequence + 1) & sequenceMask;
-            // 毫秒内序列溢出
+            // msInner series spill
             if (sequence == 0) {
-                // 阻塞到下一个毫秒,获得新的时间戳
+                // Block the next one.ms,Get NewTimePoke
                 timestamp = tilNextMillis(lastTimestamp);
             }
         }
-        // 时间戳改变，毫秒内序列重置
+        // TimeIt's a change.msProcurateReset
         else {
             sequence = 0L;
         }
 
-        // 上次生成ID的时间截
+        // Last time.GenerateIDYes.TimeCut.
         lastTimestamp = timestamp;
 
-        // 移位并通过或运算拼到一起组成64位的ID
+        // Organisation64BitID
         return ((timestamp - twepoch) << timestampLeftShift) //
                 | (dataCenterId << dataCenterIdShift) //
                 | (id << workerIdShift) //
@@ -116,10 +116,10 @@ public class SnowflakeIdWorker {
     }
 
     /**
-     * 阻塞到下一个毫秒，直到获得新的时间戳
+     * Block the next one.ms，Until I get a new one.TimePoke
      *
-     * @param lastTimestamp 上次生成ID的时间截
-     * @return 当前时间戳
+     * @param lastTimestamp Last time.GenerateIDYes.TimeCut.
+     * @return CurrentTimePoke
      */
     private long tilNextMillis(long lastTimestamp) {
         long timestamp = timeGen();
@@ -130,9 +130,9 @@ public class SnowflakeIdWorker {
     }
 
     /**
-     * 返回以毫秒为单位的当前时间
+     * BackHere 2008-2012.msCurrent in UnitTime
      *
-     * @return 当前时间(毫秒)
+     * @return CurrentTime(ms)
      */
     private long timeGen() {
         return Instant.now().toEpochMilli();

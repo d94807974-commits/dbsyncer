@@ -7,7 +7,7 @@ import org.dbsyncer.common.message.impl.RemoveCacheMessage;
 import org.springframework.context.ApplicationContext;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-09-23 01:14
  */

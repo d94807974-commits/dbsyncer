@@ -7,7 +7,7 @@ import org.dbsyncer.sdk.enums.StorageEnum;
 import org.dbsyncer.sdk.storage.Strategy;
 
 /**
- * 资源 ACL：单表存储。
+ * Resource ACL：Form storage.
  *
  * @author wuji
  * @version 1.0.0

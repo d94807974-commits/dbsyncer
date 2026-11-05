@@ -80,21 +80,21 @@ public class OracleListener extends AbstractDatabaseListener {
                 try {
                     parseEvent(event);
                 } catch (JSQLParserException e) {
-                    logger.warn("不支持sql:{}", event.getRedoSql(), e);
+                    logger.warn("Other Organiser", event.getRedoSql(), e);
                 } catch (Exception e) {
-                    logger.error("解析sql异常:{}", event.getRedoSql(), e);
+                    logger.error("Parsing sql anomaly: }", event.getRedoSql(), e);
                 }
             });
             logMiner.start();
         } catch (Exception e) {
-            logger.error("启动失败:{}", e.getMessage(), e);
+            logger.error("Start failed: {}", e.getMessage(), e);
             throw new OracleException(e);
         }
     }
 
     private void trySendEvent(ChangedEvent event) {
         try {
-            // 如果消费事件失败，重试
+            // If you consumeEventFailed，Try again
             while (logMiner.isConnected()) {
                 try {
                     sendChangedEvent(event);
@@ -113,7 +113,7 @@ public class OracleListener extends AbstractDatabaseListener {
     }
 
     /**
-     * 解析事件
+     * ParsingEvent
      *
      * @param event
      * @throws Exception
@@ -127,10 +127,10 @@ public class OracleListener extends AbstractDatabaseListener {
                 List<Field> fields = tableFiledMap.get(tableName);
                 UpdateSql parser = new UpdateSql(update, fields);
                 List<Object> data = parser.parseColumns();
-                // 缺列哨兵 + 大 LOB 的 EMPTY_BLOB/EMPTY_CLOB 占位，均需按主键回查实值
+                // We're short of guards.+ LargeLOB Yes.EMPTY_BLOB/EMPTY_CLOB Placed, all required ApproachPrimary keyCheck back.Value
                 List<Integer> indexes = findUpdateColumnsNeedFill(fields, data);
                 if (!fillColumnsByPrimaryKey(tableName, fields, data, indexes)) {
-                    logger.error("UPDATE 回查源表失败，丢弃事件以免写入空 LOB. table={}, scn={}, sql={}",
+                    logger.error("UPDATE has failed to recheck the source list, discarding events to avoid writing empty LOB. table=}, scn={}, sql=}",
                             tableName, event.getScn(), event.getRedoSql());
                     return;
                 }
@@ -148,7 +148,7 @@ public class OracleListener extends AbstractDatabaseListener {
                 List<Object> data = parser.parseColumns();
                 List<Integer> lobIndexes = OracleLobRedoHelper.findEmptyLobPlaceholderIndexes(fields, data);
                 if (!fillColumnsByPrimaryKey(tableName, fields, data, lobIndexes)) {
-                    logger.error("INSERT 回查源表 LOB 失败，丢弃事件以免写入空 LOB. table={}, scn={}, sql={}",
+                    logger.error("INSERT failed to recheck source list LOB, discarding events to avoid writing empty LOB. table=}, scn=}, sql=}",
                             tableName, event.getScn(), event.getRedoSql());
                     return;
                 }
@@ -177,8 +177,8 @@ public class OracleListener extends AbstractDatabaseListener {
     }
 
     /**
-     * 找出 UPDATE redo 中未出现的列下标（{@link OracleUnchangedValue} 哨兵）。
-     * <p>缺列若当 null 写入，全字段 MERGE 会把目标侧未变更的 LOB 清空。
+     * Find out.UPDATE redo Column subscripts that do not appear in{@link OracleUnchangedValue} Sentry.
+     * <p>Missingnull Writing, AllField MERGE Yes.Objective CombinedSide unchangedLOB Clear。
      */
     private List<Integer> findUnchangedIndexes(List<Object> data) {
         List<Integer> indexes = new ArrayList<>();
@@ -194,8 +194,8 @@ public class OracleListener extends AbstractDatabaseListener {
     }
 
     /**
-     * UPDATE 需回查的列：缺列哨兵 + LogMiner 对大 LOB 常用的 EMPTY_BLOB()/EMPTY_CLOB() 占位。
-     * <p>仅改 其他类型是 时 LOB 为哨兵；直接改大 LOB 时 SET 侧多为 EMPTY_*()，二者都要回表取实值。
+     * UPDATE Reconnaissance: missing sentry+ LogMiner Yeah.LOB CommonEMPTY_BLOB()/EMPTY_CLOB() Place.
+     * <p>Change onlyOtherTypeYes TimeLOB For the sentry; to grow up directlyLOB TimeSET Most sidesEMPTY_*()，I want both to be heard.Value。
      */
     private List<Integer> findUpdateColumnsNeedFill(List<Field> fields, List<Object> data) {
         List<Integer> indexes = findUnchangedIndexes(data);
@@ -208,13 +208,13 @@ public class OracleListener extends AbstractDatabaseListener {
     }
 
     /**
-     * 按主键回查源表，用实值覆盖指定列下标（UPDATE 缺列哨兵 / INSERT LOB 占位）。
+     * PressPrimary keyCheck back.Source table，Use it.ValueOverwriteSpecifies the column subscript (UPDATE No sentry posts /INSERT LOB I'm not Achievements.
      *
-     * @param indexes 需要回填的列下标；为空则直接成功
-     * @return false 表示需要回查但失败，调用方应丢弃事件
+     * @param indexes Column subscripts to fill back; empty directSuccess
+     * @return false It means we need to look back.Failed，Caller should be discardedEvent
      */
     private boolean fillColumnsByPrimaryKey(String tableName, List<Field> fields, List<Object> data, List<Integer> indexes) {
-        // 无需回查（普通小 UPDATE / 无 LOB 占位的 INSERT）
+        // NoneRecoverable (normal small)UPDATE / None LOB I'm in position.INSERT）
         if (CollectionUtils.isEmpty(indexes)) {
             return true;
         }
@@ -224,18 +224,18 @@ public class OracleListener extends AbstractDatabaseListener {
 
         List<Field> pkFields = PrimaryKeyUtil.findPrimaryKeyFields(fields);
         if (CollectionUtils.isEmpty(pkFields)) {
-            logger.error("表 {} 无主键，无法回查列", tableName);
+            logger.error("Table {} No master key, cannot check back", tableName);
             return false;
         }
 
-        // 主键必须出现在 redo 中，否则无法定位源行
+        // Primary keyMust be there.redo Itчs a lot.NothenNoneLegal source line
         Object[] pkArgs = buildPrimaryKeyArgs(tableName, fields, data, pkFields);
         if (pkArgs == null) {
             return false;
         }
 
         Database database = (Database) connectorService;
-        // 只 SELECT 待回填列，避免宽表/多 LOB 时整行拉取
+        // Only IncludesSELECT To be filled back to avoid width/overLOB Line Rip
         String sql = buildSelectSqlByPrimaryKey(database, tableName, fields, indexes, pkFields);
         if (sql == null) {
             return false;
@@ -246,28 +246,28 @@ public class OracleListener extends AbstractDatabaseListener {
                 try {
                     return databaseTemplate.queryForMap(sql, pkArgs);
                 } catch (org.springframework.dao.EmptyResultDataAccessException e) {
-                    // 行已删或不存在：与查询异常区分，上层统一判空后丢弃事件
+                    // Line deleted or non-existent: supplementsandQuestionErrorSector Entitiesmin，Upstream uniform emptied and discardedEvent
                     return null;
                 }
             });
             if (CollectionUtils.isEmpty(row)) {
-                logger.error("表 {} 按主键回查无数据, args={}", tableName, pkArgs);
+                logger.error("Table {} Turn back no data by primary key, args=}", tableName, pkArgs);
                 return false;
             }
-            // 定点覆盖：保留 redo 已解析出的真实值（含显式 NULL），只补哨兵/占位列
+            // PointOverwrite：Reservationsredo Reassembly.Value（VisibleNULL），Sentry only/ranking
             for (Integer idx : indexes) {
                 Field field = fields.get(idx);
                 data.set(idx, row.get(field.getName()));
             }
             return true;
         } catch (Exception e) {
-            logger.error("表 {} 回查列失败: {}", tableName, e.getMessage(), e);
+            logger.error("Table {} Failed to check back: }", tableName, e.getMessage(), e);
             return false;
         }
     }
 
     /**
-     * 从 redo 行数据组装主键绑定参数；主键缺失或仍为哨兵时返回 null。
+     * Fromredo Row dataassemblyPrimary keyTieParameter；Primary keyWhile missing or still a sentryBack null。
      */
     private Object[] buildPrimaryKeyArgs(String tableName, List<Field> fields, List<Object> data, List<Field> pkFields) {
         Object[] args = new Object[pkFields.size()];
@@ -275,7 +275,7 @@ public class OracleListener extends AbstractDatabaseListener {
             Field pk = pkFields.get(i);
             int idx = indexOfField(fields, pk.getName());
             if (idx < 0 || OracleUnchangedValue.isUnchanged(data.get(idx))) {
-                logger.error("表 {} 主键 {} 在 redo 中缺失，无法回查", tableName, pk.getName());
+                logger.error("Table/2001/8", tableName, pk.getName());
                 return null;
             }
             args[i] = data.get(idx);
@@ -284,16 +284,16 @@ public class OracleListener extends AbstractDatabaseListener {
     }
 
     /**
-     * 拼装按主键回查 SQL：仅包含 indexes 对应列。
+     * Collapse PressPrimary keyCheck back.SQL：Include onlyindexes Corresponding column.
      *
-     * @return 非法下标时返回 null
+     * @return Other OrganiserBack null
      */
     private String buildSelectSqlByPrimaryKey(Database database, String tableName, List<Field> fields,
                                               List<Integer> indexes, List<Field> pkFields) {
         List<String> selectCols = new ArrayList<>(indexes.size());
         for (Integer idx : indexes) {
             if (idx == null || idx < 0 || idx >= fields.size()) {
-                logger.error("表 {} 回填列下标非法: {}", tableName, idx);
+                logger.error("Table {} Filling back the subscript illegal: }", tableName, idx);
                 return null;
             }
             selectCols.add(database.buildWithQuotation(fields.get(idx).getName()));
@@ -332,7 +332,7 @@ public class OracleListener extends AbstractDatabaseListener {
                 return captured;
             }
         } catch (Exception e) {
-            logger.error("捕获Oracle SCN位点失败:{}", e.getMessage(), e);
+            logger.error("Failed to capture Oracle SCN location: }", e.getMessage(), e);
             return Collections.emptyMap();
         }
     }

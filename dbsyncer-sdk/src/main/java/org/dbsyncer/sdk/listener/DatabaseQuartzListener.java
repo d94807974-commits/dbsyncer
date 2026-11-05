@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 关系型数据库定时抽取
+ * Relationship DataLibraryScheduledExtract
  *
  * @version 1.0.0
  * @author AE86
@@ -31,7 +31,7 @@ public final class DatabaseQuartzListener extends AbstractQuartzListener {
 
     @Override
     protected Point checkLastPoint(TableGroupQuartzCommand cmd, int index) {
-        // 检查是否存在系统参数
+        // InspectionYesNoExistenceSystem Parameters
         Map<String, String> command = cmd.getCommand();
         final String query = command.get(ConnectorConstant.OPERTION_QUERY);
 
@@ -39,7 +39,7 @@ public final class DatabaseQuartzListener extends AbstractQuartzListener {
         AtomicLong lastIndex = new AtomicLong();
         List<QuartzFilterEnum> filterEnums = Stream.of(QuartzFilterEnum.values()).sorted(Comparator.comparing(QuartzFilterEnum::getIndex)).filter(f-> {
             int currentIndex = StringUtil.indexOf(query, f.getType());
-            Assert.isTrue((currentIndex == StringUtil.lastIndexOf(query, f.getType())), String.format("系统参数%s存在多个.", f.getType()));
+            Assert.isTrue((currentIndex == StringUtil.lastIndexOf(query, f.getType())), String.format("Multiple system parameters found for %s.", f.getType()));
             boolean exist = StringUtil.contains(query, f.getType());
             if (exist && !reversed.get()) {
                 reversed.set(lastIndex.get() > currentIndex);
@@ -53,21 +53,21 @@ public final class DatabaseQuartzListener extends AbstractQuartzListener {
         }
 
         Point point = new Point();
-        // 存在系统参数，替换
+        // ExistenceSystem Parameters，Replace
         String replaceQuery = query;
         String replaceQueryCursor = command.get(ConnectorConstant.OPERTION_QUERY_CURSOR);
         for (QuartzFilterEnum quartzFilter : filterEnums) {
             final String type = quartzFilter.getType();
             final QuartzFilter f = quartzFilter.getQuartzFilter();
 
-            // 替换字符
+            // ReplaceCharacter
             replaceQuery = replaceType(replaceQuery, type);
             replaceQueryCursor = replaceType(replaceQueryCursor, type);
 
-            // 创建参数索引key
+            // CreateParameterIndexkey
             final String key = index + type;
 
-            // 开始位置
+            // Organisation Authorities
             if (f.begin()) {
                 if (!snapshot.containsKey(key)) {
                     final Object val = f.getObject();
@@ -76,14 +76,14 @@ public final class DatabaseQuartzListener extends AbstractQuartzListener {
                     continue;
                 }
 
-                // 读取历史增量点
+                // Read HistoryIncrementalPoints 71
                 Object val = f.getObject((String) snapshot.get(key));
                 point.addArg(val);
                 point.setBeginKey(key);
                 point.setBeginValue(f.toString(f.getObject()));
                 continue;
             }
-            // 结束位置(刷新)
+            // End Location(Refresh)
             Object val = f.getObject();
             point.addArg(val);
             point.setBeginValue(f.toString(val));

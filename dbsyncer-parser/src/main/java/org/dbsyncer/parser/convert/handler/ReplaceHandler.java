@@ -6,7 +6,7 @@ import org.dbsyncer.parser.convert.AbstractHandler;
 import org.springframework.util.Assert;
 
 /**
- * 替换
+ * Replace
  *
  * @author AE86
  * @version 1.0.0
@@ -16,7 +16,7 @@ public class ReplaceHandler extends AbstractHandler {
 
     @Override
     protected Object convert(String args, Object value) {
-        Assert.hasText(args, "缺少替换参数.");
+        Assert.hasText(args, "No 55/2.");
         String[] split = StringUtil.split(args, StringUtil.COMMA);
         String a = split[0];
         String b = split.length == 2 ? split[1] : "";

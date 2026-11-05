@@ -18,37 +18,37 @@ import org.dbsyncer.sdk.listener.filter.YesTimestampFilter;
 public enum QuartzFilterEnum {
 
     /**
-     * 时间戳(开始)
+     * TimePoke(Start)
      */
-    TIME_STAMP_BEGIN(1, "$timestamp_begin$", "系统时间戳(开始)", new TimestampFilter(true)),
+    TIME_STAMP_BEGIN(1, "$timestamp_begin$", "System timestamp (start)", new TimestampFilter(true)),
     /**
-     * 时间戳(结束)
+     * TimePoke(End)
      */
-    TIME_STAMP_END(2, "$timestamp_end$", "系统时间戳(结束)", new TimestampFilter(false)),
+    TIME_STAMP_END(2, "$timestamp_end$", "System timestamp (end)", new TimestampFilter(false)),
     /**
-     * 日期(开始)
+     * Date(Start)
      */
-    DATE_BEGIN(3, "$date_begin$", "系统日期(开始)", new DateFilter(true)),
+    DATE_BEGIN(3, "$date_begin$", "System date (start)", new DateFilter(true)),
     /**
-     * 日期(结束)
+     * Date(End)
      */
-    DATE_END(4, "$date_end$", "系统日期(结束)", new DateFilter(false)),
+    DATE_END(4, "$date_end$", "System date (end)", new DateFilter(false)),
     /**
-     * 昨天日期(开始)
+     * Yesterday.Date(Start)
      */
-    DATE_YES_BEGIN(5, "$date_yes_begin$", "系统昨天日期(开始00:00:00)", new YesDateFilter(true)),
+    DATE_YES_BEGIN(5, "$date_yes_begin$", "Yesterday date (start 00:00:00)", new YesDateFilter(true)),
     /**
-     * 昨天日期(结束)
+     * Yesterday.Date(End)
      */
-    DATE_YES_END(6, "$date_yes_end$", "系统昨天日期(结束23:59:59)", new YesDateFilter(false)),
+    DATE_YES_END(6, "$date_yes_end$", "Yesterday date (end 23:59:59)", new YesDateFilter(false)),
     /**
-     * 昨天时间戳(开始)
+     * Yesterday.TimePoke(Start)
      */
-    TIME_STAMP_YES_BEGIN(7, "$timestamp_yes_begin$", "系统昨天时间戳(开始00:00:00)", new YesTimestampFilter(true)),
+    TIME_STAMP_YES_BEGIN(7, "$timestamp_yes_begin$", "Yesterday timestamp (start 00:00:00)", new YesTimestampFilter(true)),
     /**
-     * 昨天时间戳(结束)
+     * Yesterday.TimePoke(End)
      */
-    TIME_STAMP_YES_END(8, "$timestamp_yes_end$", "系统昨天时间戳(结束23:59:59)", new YesTimestampFilter(false));
+    TIME_STAMP_YES_END(8, "$timestamp_yes_end$", "Yesterday timestamp (end 23:59:59)", new YesTimestampFilter(false));
 
     private final int index;
     private final String type;
@@ -72,7 +72,7 @@ public enum QuartzFilterEnum {
     }
 
     /**
-     * 是否为定时增量系统占位符（全量/count 等未经监听器替换时须排除）
+     * YesNoYesScheduledIncrementalSystem placeholderFull/count Waiting for unheard.Replacefrom time to time)
      */
     public static boolean isSystemPlaceholder(String value) {
         return StringUtil.isNotBlank(value) && getQuartzFilterEnum(value.trim()) != null;

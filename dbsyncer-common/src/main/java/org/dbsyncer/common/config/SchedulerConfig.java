@@ -18,7 +18,7 @@ import java.util.concurrent.RejectedExecutionHandler;
 public class SchedulerConfig implements SchedulingConfigurer {
 
     /**
-     * 工作线程数
+     * WorkThreads
      */
     private int poolSize = Runtime.getRuntime().availableProcessors();
 
@@ -30,15 +30,15 @@ public class SchedulerConfig implements SchedulingConfigurer {
     @Bean(name = "taskScheduler", destroyMethod = "shutdown")
     public ThreadPoolTaskScheduler taskScheduler() {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
-        // 核心线程池大小
+        // CoreThreadsPool Size
         scheduler.setPoolSize(poolSize);
-        // 线程名字前缀
+        // ThreadsName65 prefix
         scheduler.setThreadNamePrefix("taskScheduler-");
-        // 设置线程池关闭的时候等待所有任务都完成再继续销毁其他的Bean
+        // SettingsThreadsJi.Close♪ Wait Executive time for allTasksBothFinishKeep destroying it.OtherYes.Bean
         scheduler.setWaitForTasksToCompleteOnShutdown(true);
-        // 设置线程池中任务的等待时间，如果超过这个时候还没有销毁就强制销毁，以确保应用最后能够被关闭，而不是阻塞住
+        // SettingsThreadsIke.TasksWaitingTime，If it's not destroyed by this time, then it's mandatory to destroy it to ensure that the application is finally capable of being destroyed.Close，NotYesBlock it.
         scheduler.setAwaitTerminationSeconds(30);
-        // 线程池满，拒绝策略
+        // ThreadsJiman, no strategy.
         scheduler.setRejectedExecutionHandler(rejectedExecutionHandler());
         return scheduler;
     }

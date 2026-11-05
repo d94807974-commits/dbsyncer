@@ -14,27 +14,27 @@ import org.dbsyncer.sdk.model.ProductInfo;
 public interface LicenseService {
 
     /**
-     * 获取版本号
+     * AccessVersionNo. No.
      */
     EditionEnum getEditionEnum();
 
     /**
-     * 获取License上传路径 dbsyncer/conf/
+     * AccessLicenseUploadPathdbsyncer/conf/
      */
     String getLicensePath();
 
     /**
-     * 获取授权KEY
+     * AccessAuthorizationKEY
      */
     String getKey();
 
     /**
-     * 获取授权信息
+     * AccessAuthorizationInfo
      */
     ProductInfo getProductInfo();
 
     /**
-     * 更新授权
+     * UpdateAuthorization
      */
     void updateLicense();
 }

@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 周期策略待发送队列：同策略桶内按消息键去重，flush 时逐条投递。
+ * Periodical policy to be sent in queue: weight with the message in the policy barrel.flush .
  *
  * @author wuji
  * @version 1.0.0
@@ -41,7 +41,7 @@ public class StrategyBucketManager {
     }
 
     /**
-     * 清空全部策略桶（配置 reload 时调用）。
+     * ClearAllPolicy barrel(s)Configure reload .
      */
     public void clear() {
         buckets.clear();

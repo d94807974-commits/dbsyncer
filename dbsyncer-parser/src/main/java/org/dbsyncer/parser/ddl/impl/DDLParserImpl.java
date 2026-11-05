@@ -39,7 +39,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
- * ddl解析器, 支持类型参考：{@link DDLOperationEnum}
+ * ddlParser, SupportTypeReferences:{@link DDLOperationEnum}
  *
  * @author life
  * @version 1.0.0
@@ -67,10 +67,10 @@ public class DDLParserImpl implements DDLParser {
         if (statement instanceof Alter && connectorService instanceof Database) {
             Alter alter = (Alter) statement;
             Database database = (Database) connectorService;
-            // 替换成目标表名
+            // ReplaceDone.Target Table Name
             String newTableName = database.buildWithQuotation(tableGroup.getTargetTable().getName());
             alter.getTable().setName(newTableName);
-            // 替换目标数据库名
+            // ReplaceTarget databaseFirst Name
             sql = database.buildAlterCatalog((DatabaseConnectorInstance) connectorInstance, alter);
             ddlConfig.setSql(sql);
             for (AlterExpression expression : alter.getAlterExpressions()) {
@@ -109,7 +109,7 @@ public class DDLParserImpl implements DDLParser {
         for (FieldMapping fieldMapping : tableGroup.getFieldMapping()) {
             Field source = fieldMapping.getSource();
             Field target = fieldMapping.getTarget();
-            // 支持1对多场景
+            // Support1To multiple scenes.
             if (source != null) {
                 String modifiedName = source.getName();
                 if (!modifiedFieldNames.contains(modifiedName)) {
@@ -134,7 +134,7 @@ public class DDLParserImpl implements DDLParser {
         for (FieldMapping fieldMapping : tableGroup.getFieldMapping()) {
             Field source = fieldMapping.getSource();
             Field target = fieldMapping.getTarget();
-            // 支持1对多场景
+            // Support1To multiple scenes.
             if (source != null) {
                 String oldFieldName = source.getName();
                 if (!oldNames.contains(oldFieldName)) {
@@ -170,7 +170,7 @@ public class DDLParserImpl implements DDLParser {
             for (FieldMapping fieldMapping : fieldMappings) {
                 Field source = fieldMapping.getSource();
                 Field target = fieldMapping.getTarget();
-                // 检查重复字段
+                // Check RepeatField
                 if (source != null && target != null && StringUtil.equals(source.getName(), name) && StringUtil.equals(target.getName(), name)) {
                     iterator.remove();
                 }

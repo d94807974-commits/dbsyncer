@@ -11,9 +11,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 达梦布尔类型
+ * Darmbull.Type
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-07-18
  */

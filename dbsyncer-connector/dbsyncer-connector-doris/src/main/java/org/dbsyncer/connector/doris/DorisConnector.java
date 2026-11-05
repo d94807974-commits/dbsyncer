@@ -45,9 +45,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Apache Doris 连接器（兼容 MySQL 协议）
+ * Apache Doris Connector（CompatibilityMySQL )
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-06 21:00
  */
@@ -60,7 +60,7 @@ public final class DorisConnector extends MySQLConnector {
             .collect(Collectors.toSet());
 
     /**
-     * 匹配列定义末尾的 MySQL 风格 PRIMARY KEY 子句，Doris 建表前需剥离。
+     * Match the end of the column definitionMySQL StylePRIMARY KEY The sentence,Doris The table needs to be stripped before construction.
      */
     private static final Pattern PRIMARY_KEY_CLAUSE = Pattern.compile(
             ",?\\s*PRIMARY\\s+KEY\\s*\\(([^)]+)\\)\\s*$", Pattern.CASE_INSENSITIVE);
@@ -100,7 +100,7 @@ public final class DorisConnector extends MySQLConnector {
     }
 
     /**
-     * Doris 不支持 MySQL 的 ON DUPLICATE KEY UPDATE；Unique/Primary Key 模型下普通 INSERT 即按键覆盖。
+     * Doris Not supportedMySQL Yes.ON DUPLICATE KEY UPDATE；Unique/Primary Key Peoples under ModelINSERT Press keyOverwrite。
      */
     @Override
     public String buildUpsertSql(DatabaseConnectorInstance connectorInstance, SqlBuilderConfig config) {
@@ -108,7 +108,7 @@ public final class DorisConnector extends MySQLConnector {
     }
 
     /**
-     * Doris 不支持 INSERT IGNORE，使用普通 INSERT。
+     * Doris Not supportedINSERT IGNORE，Use undertakes normalINSERT。
      */
     @Override
     public String buildInsertSql(SqlBuilderConfig config) {
@@ -142,8 +142,8 @@ public final class DorisConnector extends MySQLConnector {
     }
 
     /**
-     * 列类型仍走 JDBC {@code getColumns}；键信息用 {@code SHOW FULL COLUMNS}
-     *（避免 information_schema 预编译参数在 Doris 上触发 MEM_ALLOC_FAILED）。
+     * ColumnsTypeKeep going.JDBC {@code getColumns}；KeysInfoUse{@code SHOW FULL COLUMNS}
+     *（Avoidinformation_schema OriginalParameterYes.Doris Trigger UpMEM_ALLOC_FAILED）。
      */
     @Override
     public List<MetaInfo> getMetaInfo(DatabaseConnectorInstance connectorInstance, ConnectorServiceContext context) {
@@ -174,8 +174,8 @@ public final class DorisConnector extends MySQLConnector {
                             + buildWithQuotation(metaInfo.getTable());
                     applyDorisKeyFlags(databaseTemplate.queryForList(sql), metaInfo);
                 } catch (Exception e) {
-                    // 键标记失败不阻断元数据加载，下游无主键时再由业务报错
-                    logger.warn("获取 Doris 键列失败, database={}, table={}, err={}",
+                    // Key TagsFailedDo not block metadata loading, downstreamNonePrimary keyIt Thirties.
+                    logger.warn("Failed to get the Doris Keybar, database={, table=}, err={",
                             database, metaInfo.getTable(), e.getMessage());
                 }
             }
@@ -201,8 +201,8 @@ public final class DorisConnector extends MySQLConnector {
     }
 
     /**
-     * Doris 建表必须指定 KEY 模型与分桶。跨库迁移默认使用明细模型（DUPLICATE KEY）：
-     * 优先取源 PRIMARY KEY 列（并重排为 schema 有序前缀），否则回退首列。
+     * Doris Table must be specifiedKEY ModelandminA barrel. CrossLibraryMove Default Use Detailed ModelDUPLICATE KEY）：
+     * Priority SourcePRIMARY KEY Columnsschema This post is part of our special coverage Global Voices 2011.No.
      */
     @Override
     public String getTargetTableDDL(DatabaseConnectorInstance targetInstance, String tableName, String sourceDDL) {
@@ -236,7 +236,7 @@ public final class DorisConnector extends MySQLConnector {
         }
         List<String> keyColumns = new ArrayList<>();
         for (Map<String, Object> row : keyRows) {
-            // SHOW FULL COLUMNS: Field / Key；兼容 information_schema 列名
+            // SHOW FULL COLUMNS: Field / Key；Compatibilityinformation_schema Listing
             String columnName = getMapString(row, "Field", "FIELD", "field", "COLUMN_NAME", "column_name");
             if (StringUtil.isBlank(columnName)) {
                 continue;
@@ -261,7 +261,7 @@ public final class DorisConnector extends MySQLConnector {
     }
 
     /**
-     * Doris {@code SHOW FULL COLUMNS} 的 Key 常为 YES/NO；部分版本/information_schema 为 PRI/UNI/AGG/DUP。
+     * Doris {@code SHOW FULL COLUMNS} Yes.Key Always.YES/NO；DepartmentminVersion/information_schema YesPRI/UNI/AGG/DUP。
      */
     private static boolean isDorisKeyColumn(String columnKey) {
         if (StringUtil.isBlank(columnKey)) {
@@ -317,7 +317,7 @@ public final class DorisConnector extends MySQLConnector {
     }
 
     /**
-     * Doris 要求 KEY 列为 schema 有序前缀；将主键列定义移到列清单最前。
+     * Doris RequestKEY Listedschema Orderd prefixes; CATPrimary keyColumn definition moved to the top of the column list.
      */
     private static String reorderColumnsForKeyPrefix(String columns, List<String> keyColumns) {
         List<String> defs = splitColumnDefinitions(columns);
@@ -343,7 +343,7 @@ public final class DorisConnector extends MySQLConnector {
             return columns;
         }
         List<String> ordered = new ArrayList<>(keyDefs.size() + otherDefs.size());
-        // 按 PRIMARY KEY 声明顺序排放键列
+        // PressPRIMARY KEY Declares the sequence discharge column
         for (String key : keyColumns) {
             String upper = key.toUpperCase(Locale.ROOT);
             for (String def : keyDefs) {
@@ -398,7 +398,7 @@ public final class DorisConnector extends MySQLConnector {
 
     @Override
     public String getSourceTableDDL(DatabaseConnectorInstance sourceInstance, String sourceTableName) {
-        // Doris 兼容 MySQL 协议，SHOW CREATE TABLE 返回格式与 MySQL 一致
+        // Doris CompatibilityMySQL An agreement.SHOW CREATE TABLE BackFormatand MySQL Consistent
         return super.getSourceTableDDL(sourceInstance, sourceTableName);
     }
 

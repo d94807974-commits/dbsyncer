@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-07 02:00
  */
@@ -31,7 +31,7 @@ public final class DamengConfigValidator extends OracleConfigValidator {
     }
 
     /**
-     * 达梦通过连接属性 {@code schema} 指定当前模式；未填写时驱动默认使用与用户名同名的模式。
+     * Dream through.ConnectProperties{@code schema} specifying current mode;when not completedMappingDefault UseandUsernameThe same name model.
      */
     private void applySchemaProperty(DatabaseConfig connectorConfig, String schema) {
         if (StringUtil.isBlank(schema)) {

@@ -37,7 +37,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 连接器工厂
+ * ConnectorPlant
  *
  * @author AE86
  * @version 1.0.0
@@ -70,27 +70,27 @@ public class ConnectorFactory implements DisposableBean {
     }
 
     /**
-     * 建立连接，返回缓存连接对象。同一 {@code instanceId} 已存在则复用，不新建、不拆除旧实例。
+     * Create Connection，BackCacheConnectobject. The same.{@code instanceId} Existing or reused, no new and no old examples removed.
      *
-     * @param instanceId 实例ID
-     * @param config     连接配置
-     * @param catalog    目录
-     * @param schema     模式
-     * @return 连接实例（克隆）
+     * @param instanceId ExamplesID
+     * @param config     ConnectConfigure
+     * @param catalog    Contents
+     * @param schema     Mode
+     * @return ConnectExample (cloning)
      */
     public ConnectorInstance connect(String instanceId, ConnectorConfig config, String catalog, String schema) {
         Assert.notNull(config, "ConnectorConfig can not be null.");
         Assert.hasText(instanceId, "instanceId can not be blank.");
         ConnectorService connectorService = getConnectorService(config);
 
-        // 仅首次创建；并发下由 computeIfAbsent 保证同一 instanceId 只建一套池
+        // only first created Procedures; and by AllowingcomputeIfAbsent Promise the same.instanceId Only one pool.
         ConnectorInstance pooledInstance = pool.computeIfAbsent(instanceId, id -> {
             DefaultConnectorServiceContext context = new DefaultConnectorServiceContext();
             context.setCatalog(catalog);
             context.setSchema(schema);
             ConnectorInstance created = connectorService.connect(config, context);
             if (created == null) {
-                throw new ConnectorException("连接配置异常：无法创建连接实例");
+                throw new ConnectorException("Connection configuration anomaly: Could not create connection instance");
             }
             return created;
         });
@@ -115,14 +115,14 @@ public class ConnectorFactory implements DisposableBean {
     }
 
     /**
-     * 获取监听器
+     * Get a listener.
      */
     public Listener getListener(String connectorType, String listenerType) {
         return getConnectorService(connectorType).getListener(listenerType);
     }
 
     /**
-     * 检查连接配置是否可用
+     * InspectionConnectConfigureYesNoAvailable Lawyers
      */
     public boolean isAlive(String instanceId, ConnectorConfig config) {
         Assert.hasText(instanceId, "ConnectorConfigId can not be null.");
@@ -135,18 +135,18 @@ public class ConnectorFactory implements DisposableBean {
     }
 
     /**
-     * 获取配置表
+     * AccessConfigureTable
      */
     public List<Table> getTables(ConnectorInstance connectorInstance, ConnectorServiceContext context) {
         Assert.notNull(connectorInstance, "ConnectorInstance can not be null.");
         List<Table> tableList = getConnectorService(connectorInstance.getConfig()).getTable(connectorInstance, context);
-        // 按升序展示表
+        // Ups 55/2
         Collections.sort(tableList, Comparator.comparing(Table::getName));
         return tableList;
     }
 
     /**
-     * 获取配置表元信息
+     * AccessConfigureTableMetaInfo
      */
     public List<MetaInfo> getMetaInfo(ConnectorInstance connectorInstance, ConnectorServiceContext context) {
         Assert.notNull(connectorInstance, "ConnectorInstance can not be null.");
@@ -159,7 +159,7 @@ public class ConnectorFactory implements DisposableBean {
     }
 
     /**
-     * 获取连接器同步参数
+     * AccessConnectorSyncParameter
      */
     public Map<String, String> getCommand(CommandConfig sourceCommandConfig, CommandConfig targetCommandConfig) {
         Assert.notNull(sourceCommandConfig, "SourceCommandConfig can not be null.");
@@ -239,16 +239,16 @@ public class ConnectorFactory implements DisposableBean {
     }
 
     /**
-     * 断开连接
+     * Disconnect
      */
     public void disconnect(String instanceId) {
         ConnectorInstance instance = pool.get(instanceId);
         if (instance == null) {
             return;
         }
-        // 原子性地移除实例，但不在回调中执行阻塞操作
+        // Atomically remove instance, but do not block backActions
         pool.computeIfPresent(instanceId, (k, v) -> (v == instance) ? null : v);
-        // 在锁外执行断开连接操作，避免阻塞其他线程
+        // Execute outside lockDisconnectActions，Avoid blocking.OtherThreads
         disconnect(instance);
     }
 

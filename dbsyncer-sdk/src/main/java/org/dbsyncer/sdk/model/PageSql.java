@@ -6,12 +6,12 @@ public class PageSql {
 
     private String querySql;
 
-    // 过滤条件
+    // Filter Conditions
     private String queryFilter;
 
     private List<String> primaryKeys;
 
-    // 字段
+    // Field
     private List<Field> fields;
 
     public PageSql(String querySql, String queryFilter, List<String> primaryKeys, List<Field> fields) {

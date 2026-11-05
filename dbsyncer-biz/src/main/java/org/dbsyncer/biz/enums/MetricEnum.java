@@ -4,7 +4,7 @@ import org.dbsyncer.biz.BizException;
 import org.dbsyncer.common.util.StringUtil;
 
 /**
- * 系统指标
+ * System indicators
  *
  * @author AE86
  * @version 1.0.0
@@ -13,29 +13,29 @@ import org.dbsyncer.common.util.StringUtil;
 public enum MetricEnum {
 
     /**
-     * 线程活跃数
+     * ThreadsLiveNumber
      */
-    THREADS_LIVE("jvm.threads.live", "应用线程", "活跃"),
+    THREADS_LIVE("jvm.threads.live", "App threads", "Live"),
 
     /**
-     * 线程峰值
+     * ThreadsPeak
      */
-    THREADS_PEAK("jvm.threads.peak", "应用线程", "峰值"),
+    THREADS_PEAK("jvm.threads.peak", "App threads", "Peak"),
 
     /**
-     * 内存已用
+     * MemoryUsed
      */
-    MEMORY_USED("jvm.memory.used", "内存", "已用"),
+    MEMORY_USED("jvm.memory.used", "Memory", "Used"),
 
     /**
-     * 内存空闲
+     * MemoryFree
      */
-    MEMORY_COMMITTED("jvm.memory.committed", "内存", "空闲"),
+    MEMORY_COMMITTED("jvm.memory.committed", "Memory", "Free"),
 
     /**
-     * 内存总共
+     * MemoryTotal
      */
-    MEMORY_MAX("jvm.memory.max", "内存", "总共"),
+    MEMORY_MAX("jvm.memory.max", "Memory", "Total"),
 
     /**
      * GC
@@ -43,14 +43,14 @@ public enum MetricEnum {
     GC_PAUSE("jvm.gc.pause", "GC", ""),
 
     /**
-     * CPU已用
+     * CPUUsed
      */
     CPU_USAGE("system.cpu.usage", "CPU", ""),
 
     /**
-     * 系统环境
+     * System Environment
      */
-    SYSTEM_ENV("system.info", "运行环境", "");
+    SYSTEM_ENV("system.info", "Operating environment", "");
 
     private final String code;
     private final String group;

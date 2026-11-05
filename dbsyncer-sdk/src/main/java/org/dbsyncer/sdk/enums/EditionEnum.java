@@ -4,7 +4,7 @@
 package org.dbsyncer.sdk.enums;
 
 /**
- * 版本类型
+ * VersionType
  *
  * @author AE86
  * @version 1.0.0
@@ -13,14 +13,14 @@ package org.dbsyncer.sdk.enums;
 public enum EditionEnum {
 
     /**
-     * 社区版
+     * Community
      */
-    COMMUNITY("community", "社区版"),
+    COMMUNITY("community", "Community"),
 
     /**
-     * 专业版
+     * Professional
      */
-    PROFESSIONAL("professional", "专业版");
+    PROFESSIONAL("professional", "Professional");
 
     private final String code;
     private final String message;

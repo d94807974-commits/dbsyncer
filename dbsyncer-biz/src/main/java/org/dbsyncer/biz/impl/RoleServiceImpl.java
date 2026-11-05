@@ -35,7 +35,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * {@link RoleService} 实现。
+ * {@link RoleService} Achieved.
  *
  * @author wuji
  * @version 1.0.0
@@ -74,9 +74,9 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public RoleVO getRole(String roleId) {
-        Assert.hasText(roleId, "角色ID不能为空");
+        Assert.hasText(roleId, "Role ID cannot be empty.");
         Role role = rbacProfile.getRoleById(roleId);
-        Assert.notNull(role, "角色不存在");
+        Assert.notNull(role, "Role does not exist");
         return toRoleVO(role, true);
     }
 
@@ -117,7 +117,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public synchronized String add(Map<String, String> params) {
-        Assert.notNull(params, "参数不能为空");
+        Assert.notNull(params, "Parameter cannot be empty");
         String currentUserName = params.get(UserConfigService.CURRENT_USER_NAME);
         permissionChecker.requirePermission(currentUserName, PERM_USER_EDIT);
 
@@ -130,9 +130,9 @@ public class RoleServiceImpl implements RoleService {
         role.setCreateTime(now);
         role.setUpdateTime(now);
         String roleId = rbacProfile.addRole(role);
-        Assert.hasText(roleId, "创建角色失败");
+        Assert.hasText(roleId, "Creating Role Failed");
         Role created = rbacProfile.getRoleById(roleId);
-        Assert.notNull(created, "创建角色失败");
+        Assert.notNull(created, "Creating Role Failed");
         roleId = created.getId();
 
         bindPermissions(roleId, selected, now);
@@ -141,14 +141,14 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public synchronized String edit(Map<String, String> params) {
-        Assert.notNull(params, "参数不能为空");
+        Assert.notNull(params, "Parameter cannot be empty");
         String currentUserName = params.get(UserConfigService.CURRENT_USER_NAME);
         permissionChecker.requirePermission(currentUserName, PERM_USER_EDIT);
 
         String roleId = params.get("roleId");
-        Assert.hasText(roleId, "角色ID不能为空");
+        Assert.hasText(roleId, "Role ID cannot be empty.");
         Role role = rbacProfile.getRoleById(roleId);
-        Assert.notNull(role, "角色不存在");
+        Assert.notNull(role, "Role does not exist");
 
         String name = requireName(params.get("name"));
         List<Permission> selected = resolveSelectedPermissions(params.get("permissionCodes"));
@@ -163,22 +163,22 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public synchronized String remove(Map<String, String> params) {
-        Assert.notNull(params, "参数不能为空");
+        Assert.notNull(params, "Parameter cannot be empty");
         String currentUserName = params.get(UserConfigService.CURRENT_USER_NAME);
         permissionChecker.requirePermission(currentUserName, PERM_USER_EDIT);
 
         String roleId = params.get("roleId");
-        Assert.hasText(roleId, "角色ID不能为空");
+        Assert.hasText(roleId, "Role ID cannot be empty.");
         Role role = rbacProfile.getRoleById(roleId);
-        Assert.notNull(role, "角色不存在");
+        Assert.notNull(role, "Role does not exist");
 
         List<?> bound = rbacProfile.listUserRolesByRoleId(roleId);
-        Assert.isTrue(CollectionUtils.isEmpty(bound), "角色仍有用户绑定，无法删除");
+        Assert.isTrue(CollectionUtils.isEmpty(bound), "Role still bound by user, cannot be deleted");
 
         rbacProfile.removeRolePermissionsByRoleId(roleId);
         rbacProfile.removeRole(roleId);
         resourceAclService.revokeAllForSubject(ResourceAclSubjectEnum.ROLE.getCode(), roleId);
-        return "删除角色成功";
+        return "Delete Role Of Successful";
     }
 
     private void bindPermissions(String roleId, List<Permission> selected, long now) {
@@ -209,7 +209,7 @@ public class RoleServiceImpl implements RoleService {
         for (String code : codes) {
             Permission permission = byCode.get(code);
             if (permission == null) {
-                throw new BizException("未知权限码: " + code);
+                throw new BizException("Unknown permission code: " + code);
             }
             selected.add(permission);
         }
@@ -217,9 +217,9 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private String requireName(String raw) {
-        Assert.hasText(raw, "角色名称不能为空");
+        Assert.hasText(raw, "Role name cannot be empty");
         String name = raw.trim();
-        Assert.isTrue(name.length() <= 64, "角色名称过长");
+        Assert.isTrue(name.length() <= 64, "Role name too long");
         return name;
     }
 

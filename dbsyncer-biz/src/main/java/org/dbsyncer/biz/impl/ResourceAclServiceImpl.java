@@ -56,7 +56,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * {@link ResourceAclService} 实现。
+ * {@link ResourceAclService} Achieved.
  *
  * @author wuji
  * @version 1.0.0
@@ -158,15 +158,15 @@ public class ResourceAclServiceImpl implements ResourceAclService {
 
     @Override
     public ResourceAclVO get(String id) {
-        Assert.hasText(id, "授权ID不能为空");
+        Assert.hasText(id, "Authorized ID is not empty.");
         ResourceAcl acl = resourceAclProfile.get(id);
-        Assert.notNull(acl, "授权不存在");
+        Assert.notNull(acl, "License does not exist");
         return toResourceAclVO(acl);
     }
 
     @Override
     public synchronized String save(Map<String, String> params) {
-        Assert.notNull(params, "参数不能为空");
+        Assert.notNull(params, "Parameter cannot be empty");
         String currentUserName = params.get(UserConfigService.CURRENT_USER_NAME);
         permissionChecker.requirePermission(currentUserName, PERM_ACL_EDIT);
 
@@ -175,18 +175,18 @@ public class ResourceAclServiceImpl implements ResourceAclService {
         int permission = normalizePermission(params.get("permission"));
 
         String id = params.get("id");
-        // 编辑单条：带 id 时只更新该记录
+        // EditSingle strip: tapeid Only the record is updated
         if (StringUtil.isNotBlank(id)) {
             String resourceType = normalizeResourceType(params.get("resourceType"));
             List<String> resourceIds = parseResourceIds(params.get("resourceIds"), params.get("resourceId"));
-            Assert.isTrue(!CollectionUtils.isEmpty(resourceIds), "请选择资源");
+            Assert.isTrue(!CollectionUtils.isEmpty(resourceIds), "Select Resources");
             String resourceId = resourceIds.get(0);
             assertResourceExists(resourceType, resourceId);
             ResourceAcl existing = resourceAclProfile.get(id);
-            Assert.notNull(existing, "授权不存在");
+            Assert.notNull(existing, "License does not exist");
             ResourceAcl conflict = resourceAclProfile.getByUnique(subjectType, subjectId, resourceType, resourceId);
             Assert.isTrue(conflict == null || StringUtil.equals(conflict.getId(), id),
-                    "该主体已存在相同资源授权，请勿重复");
+                    "The subject already has the same resource authorization, please do not repeat");
             existing.setSubjectType(subjectType);
             existing.setSubjectId(subjectId);
             existing.setResourceType(resourceType);
@@ -197,9 +197,9 @@ public class ResourceAclServiceImpl implements ResourceAclService {
             return existing.getId();
         }
 
-        // 新增：支持多类型批量，payload 形如 group:id1,id2|connector:id3
+        // Insert：SupportINTERTypeBulk,payload Likegroup:id1,id2|connector:id3
         List<String[]> bindings = parseResourceBindings(params);
-        Assert.isTrue(!CollectionUtils.isEmpty(bindings), "请选择资源");
+        Assert.isTrue(!CollectionUtils.isEmpty(bindings), "Select Resources");
         int created = 0;
         int updated = 0;
         for (String[] binding : bindings) {
@@ -212,7 +212,7 @@ public class ResourceAclServiceImpl implements ResourceAclService {
                 updated++;
             }
         }
-        return String.format("成功授权 %d 项（新增 %d，覆盖 %d）", bindings.size(), created, updated);
+        return String.format("Could not close temporary folder: %s", bindings.size(), created, updated);
     }
 
     @Override
@@ -235,9 +235,9 @@ public class ResourceAclServiceImpl implements ResourceAclService {
     }
 
     /**
-     * 按唯一键新增或覆盖权限。
+     * Press the only keyInsertorOverwritePermissions。
      *
-     * @return true 新增，false 覆盖
+     * @return true Insert，false Overwrite
      */
     private boolean upsertAcl(int subjectType, String subjectId, String resourceType, String resourceId, int permission) {
         long now = System.currentTimeMillis();
@@ -261,8 +261,8 @@ public class ResourceAclServiceImpl implements ResourceAclService {
     }
 
     /**
-     * 解析批量资源：优先 resourcePayload（type:id,...|type:id），否则单类型 resourceType + resourceIds。
-     * 每项为 [resourceType, resourceId]。
+     * Parsing.Resource：PriorityresourcePayload（type:id,...|type:id），NoOnlyType resourceType + resourceIds。
+     * Each one is[resourceType, resourceId]。
      */
     private List<String[]> parseResourceBindings(Map<String, String> params) {
         List<String[]> bindings = new ArrayList<>();
@@ -304,15 +304,15 @@ public class ResourceAclServiceImpl implements ResourceAclService {
 
     @Override
     public synchronized String remove(Map<String, String> params) {
-        Assert.notNull(params, "参数不能为空");
+        Assert.notNull(params, "Parameter cannot be empty");
         String currentUserName = params.get(UserConfigService.CURRENT_USER_NAME);
         permissionChecker.requirePermission(currentUserName, PERM_ACL_EDIT);
         String id = params.get("id");
-        Assert.hasText(id, "授权ID不能为空");
+        Assert.hasText(id, "Authorized ID is not empty.");
         ResourceAcl acl = resourceAclProfile.get(id);
-        Assert.notNull(acl, "授权不存在");
+        Assert.notNull(acl, "License does not exist");
         resourceAclProfile.remove(id);
-        return "删除成功";
+        return "Deleted successfully";
     }
 
     @Override
@@ -366,8 +366,8 @@ public class ResourceAclServiceImpl implements ResourceAclService {
 
     @Override
     public void require(String username, String resourceType, String resourceId, String action) {
-        Assert.hasText(username, "无法获取登录用户.");
-        Assert.isTrue(check(username, resourceType, resourceId, action), "无资源权限");
+        Assert.hasText(username, "Unable to get logged-in user.");
+        Assert.isTrue(check(username, resourceType, resourceId, action), "No resource permission");
     }
 
     @Override
@@ -552,68 +552,68 @@ public class ResourceAclServiceImpl implements ResourceAclService {
 
     private String normalizeResourceType(String raw) {
         String type = StringUtil.isBlank(raw) ? ResourceTypeEnum.GROUP.getCode() : raw.trim();
-        Assert.isTrue(ResourceTypeEnum.isSupported(type), "不支持的资源类型: " + type);
+        Assert.isTrue(ResourceTypeEnum.isSupported(type), "Unsupported resource type: " + type);
         return type;
     }
 
     private void assertResourceExists(String resourceType, String resourceId) {
         ResourceTypeEnum type = ResourceTypeEnum.get(resourceType);
-        Assert.notNull(type, "不支持的资源类型: " + resourceType);
+        Assert.notNull(type, "Unsupported resource type: " + resourceType);
         switch (type) {
             case GROUP:
-                Assert.notNull(groupProfile.getGroup(resourceId), "分组不存在");
+                Assert.notNull(groupProfile.getGroup(resourceId), "Group does not exist");
                 return;
             case CONNECTOR:
-                Assert.notNull(connectorProfile.getConnector(resourceId), "连接不存在");
+                Assert.notNull(connectorProfile.getConnector(resourceId), "Technical connection does not exist");
                 return;
             case MAPPING:
-                Assert.notNull(mappingProfile.get(resourceId), "同步任务不存在");
+                Assert.notNull(mappingProfile.get(resourceId), "Sync task does not exist");
                 return;
             case VALIDATE_SYNC:
-                Assert.notNull(validateSyncProfile.get(resourceId), "订正校验任务不存在");
+                Assert.notNull(validateSyncProfile.get(resourceId), "The revised verification task does not exist");
                 return;
             case DATABASE_SYNC:
-                Assert.notNull(databaseSyncProfile.get(resourceId), "整库迁移任务不存在");
+                Assert.notNull(databaseSyncProfile.get(resourceId), "The vault migration task does not exist");
                 return;
             default:
-                throw new IllegalArgumentException("不支持的资源类型: " + resourceType);
+                throw new IllegalArgumentException("Unsupported resource type: " + resourceType);
         }
     }
 
     private String resolveSubjectId(int subjectType, String subjectId, String username) {
         ResourceAclSubjectEnum subject = ResourceAclSubjectEnum.get(subjectType);
-        Assert.notNull(subject, "主体类型仅支持用户/角色");
+        Assert.notNull(subject, "Subject type only supports users/roles");
         if (StringUtil.isNotBlank(subjectId)) {
             if (subject.isRole()) {
-                Assert.notNull(rbacProfile.getRoleById(subjectId), "角色不存在");
+                Assert.notNull(rbacProfile.getRoleById(subjectId), "Role does not exist");
             } else {
-                Assert.notNull(userProfile.getById(subjectId), "用户不存在");
+                Assert.notNull(userProfile.getById(subjectId), "User does not exist");
             }
             return subjectId;
         }
         if (subject.isRole()) {
-            throw new IllegalArgumentException("请选择角色");
+            throw new IllegalArgumentException("Please select a role");
         }
-        Assert.hasText(username, "请选择用户");
+        Assert.hasText(username, "Select User");
         UserInfo user = userProfile.getByUsername(username.trim());
-        Assert.notNull(user, "用户不存在");
-        Assert.hasText(user.getId(), "用户ID无效");
+        Assert.notNull(user, "User does not exist");
+        Assert.hasText(user.getId(), "User ID invalid");
         return user.getId();
     }
 
     private int normalizeSubjectType(String raw) {
-        Assert.hasText(raw, "主体类型不能为空");
-        Assert.isTrue(NumberUtil.isCreatable(raw.trim()), "主体类型无效");
+        Assert.hasText(raw, "Subject type cannot be empty");
+        Assert.isTrue(NumberUtil.isCreatable(raw.trim()), "Invalid Subject Type");
         int code = NumberUtil.toInt(raw.trim());
-        Assert.isTrue(ResourceAclSubjectEnum.isSupported(code), "主体类型仅支持用户/角色");
+        Assert.isTrue(ResourceAclSubjectEnum.isSupported(code), "Subject type only supports users/roles");
         return code;
     }
 
     private int normalizePermission(String raw) {
-        Assert.hasText(raw, "请选择权限");
-        Assert.isTrue(NumberUtil.isCreatable(raw.trim()), "权限无效");
+        Assert.hasText(raw, "Please select permissions");
+        Assert.isTrue(NumberUtil.isCreatable(raw.trim()), "Permission invalid");
         int code = NumberUtil.toInt(raw.trim());
-        Assert.isTrue(ResourceAclPermissionEnum.isSupported(code), "权限仅支持只读/可读写");
+        Assert.isTrue(ResourceAclPermissionEnum.isSupported(code), "Permissions only to read/read/write");
         return code;
     }
 }

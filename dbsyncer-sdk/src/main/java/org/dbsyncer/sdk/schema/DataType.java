@@ -9,37 +9,37 @@ import org.dbsyncer.sdk.model.Field;
 import java.util.Set;
 
 /**
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2024-11-23 23:00
  */
 public interface DataType {
 
     /**
-     * 获取支持的转换类型
+     * SupportedConvertType
      */
     Set<String> getSupportedTypeName();
 
     /**
-     * 转换为标准数据类型
+     * ConvertAs Standard DataType
      *
-     * @param val   转换值
-     * @param field 数据类型
+     * @param val   ConvertValue
+     * @param field Data FactType
      * @return Object
      */
     Object mergeValue(Object val, Field field);
 
     /**
-     * 转换为指定数据类型
+     * ConvertAssign DataType
      *
-     * @param val   转换值
-     * @param field 数据类型
+     * @param val   ConvertValue
+     * @param field Data FactType
      * @return Object
      */
     Object convertValue(Object val, Field field);
 
     /**
-     * 获取数据类型
+     * Getting dataType
      */
     DataTypeEnum getType();
 }

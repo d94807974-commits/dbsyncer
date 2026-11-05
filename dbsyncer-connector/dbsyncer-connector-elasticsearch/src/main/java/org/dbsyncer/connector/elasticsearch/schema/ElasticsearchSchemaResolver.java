@@ -21,10 +21,10 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * Elasticsearch 异构数据类型解析器
- * 支持 ES 所有标准数据类型的映射和转换
+ * Elasticsearch Isomer DataTypeParser
+ * SupportES All standard dataTypeMap andConvert
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-01-13 00:16
  */

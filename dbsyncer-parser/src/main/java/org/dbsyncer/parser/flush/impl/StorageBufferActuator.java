@@ -26,7 +26,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 
 /**
- * 持久化执行器
+ * Storage actuator
  *
  * @author AE86
  * @version 1.0.0
@@ -72,7 +72,7 @@ public final class StorageBufferActuator extends AbstractBufferActuator<StorageR
     @Override
     public void pull(StorageResponse response) {
         String shardId = response.getTaskDetailShardId();
-        // 必须拷贝：process() finally 会 clearDataList，异步写不能共用同一 LinkedList（并发 clear 会把节点 item 置 null → NPE）
+        // Must copy:process() finally Yes.clearDataList，I can't do it.TotalUse the sameLinkedList（Parallelclear Yes.Nodes item Setnull → NPE）
         List<Map> batch = new ArrayList<>(response.getDataList());
         storageExecutor.execute(() -> storageService.addBatch(StorageEnum.TASK_DETAIL, shardId, batch));
     }

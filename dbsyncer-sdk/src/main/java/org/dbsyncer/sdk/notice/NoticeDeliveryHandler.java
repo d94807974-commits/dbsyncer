@@ -6,7 +6,7 @@ package org.dbsyncer.sdk.notice;
 import org.dbsyncer.sdk.model.NoticeContent;
 
 /**
- * 将通知投递到已启用的全局渠道。
+ * Can not open messageEnabledThe global channel.
  *
  * @author wuji
  * @version 1.0.0
@@ -15,9 +15,9 @@ import org.dbsyncer.sdk.model.NoticeContent;
 public interface NoticeDeliveryHandler {
 
     /**
-     * 投递通知到全局已启用渠道。
+     * Send Preventive Notification to GlobalEnabledChannels.
      *
-     * @param noticeContent 通知内容
+     * @param noticeContent Contents of notice
      */
     void deliver(NoticeContent noticeContent);
 }

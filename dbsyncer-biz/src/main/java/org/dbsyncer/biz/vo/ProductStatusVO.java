@@ -4,9 +4,9 @@
 package org.dbsyncer.biz.vo;
 
 /**
- * 授权产品状态
+ * AuthorizationProductsStatus
  *
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2026-07-12 22:20
  */

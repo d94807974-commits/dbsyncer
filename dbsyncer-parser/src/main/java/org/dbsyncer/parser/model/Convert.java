@@ -3,7 +3,7 @@ package org.dbsyncer.parser.model;
 import org.dbsyncer.parser.enums.ConvertEnum;
 
 /**
- * 字段转换
+ * FieldConvert
  *
  * @author AE86
  * @version 1.0.0
@@ -12,25 +12,25 @@ import org.dbsyncer.parser.enums.ConvertEnum;
 public class Convert {
 
     /**
-     * 字段名称
+     * Field nameClaims
      */
     private String name;
 
     /**
-     * 转换名称
+     * ConvertName
      * @see ConvertEnum
      */
     private String convertName;
 
     /**
-     * 转换方式
+     * ConvertModalities
      *
      * @see ConvertEnum
      */
     private String convertCode;
 
     /**
-     * 转换参数
+     * ConvertParameter
      *
      * @see ConvertEnum
      */

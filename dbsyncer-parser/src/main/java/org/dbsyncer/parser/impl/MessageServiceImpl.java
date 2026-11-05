@@ -52,11 +52,11 @@ public class MessageServiceImpl implements MessageService {
     public String testSendMessage() {
         NoticeConfig noticeConfig = systemConfigProfile.getSystemConfig().getNoticeConfig();
         if (noticeConfig == null) {
-            throw new ParserException("请先保存告警配置");
+            throw new ParserException("Please save the alarm configuration.");
         }
         TestNoticeContent noticeContent = new TestNoticeContent();
-        noticeContent.setTitle("手动测试消息");
-        noticeContent.setContent("告警通知配置成功");
+        noticeContent.setTitle("Manual Test Message");
+        noticeContent.setContent("The alarm notice was configured.");
         sendMessage(noticeContent);
         return "success";
     }

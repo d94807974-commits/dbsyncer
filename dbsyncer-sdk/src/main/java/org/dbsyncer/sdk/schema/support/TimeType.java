@@ -10,7 +10,7 @@ import org.dbsyncer.sdk.schema.AbstractDataType;
 import java.sql.Time;
 
 /**
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2024-11-21 23:56
  */

@@ -7,7 +7,7 @@ import org.dbsyncer.connector.redis.util.RedisUtil;
 import org.dbsyncer.sdk.model.ConnectorConfig;
 
 /**
- * Redis连接配置
+ * RedisConnectConfigure
  */
 public class RedisConfig extends ConnectorConfig {
 

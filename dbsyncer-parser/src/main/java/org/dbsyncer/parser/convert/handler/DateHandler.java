@@ -6,7 +6,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 
 /**
- * 系统日期
+ * System Date
  *
  * @author AE86
  * @version 1.0.0

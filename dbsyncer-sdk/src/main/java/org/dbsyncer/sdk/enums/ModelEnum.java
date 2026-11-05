@@ -7,7 +7,7 @@ import org.dbsyncer.common.util.StringUtil;
 import org.dbsyncer.sdk.SdkException;
 
 /**
- * 同步方式枚举
+ * Sync Enumeration
  *
  * @author AE86
  * @version 1.0.0
@@ -16,17 +16,17 @@ import org.dbsyncer.sdk.SdkException;
 public enum ModelEnum {
 
     /**
-     * 全量
+     * Full
      */
-    FULL("full", "全量"),
+    FULL("full", "Full"),
     /**
-     * 增量
+     * Incremental
      */
-    INCREMENT("increment", "增量"),
+    INCREMENT("increment", "Incremental"),
     /**
-     * 全量+增量 (全量+增量)
+     * Full + incremental (Full + incremental)
      */
-    FULL_INCREMENT("fullIncrement", "全量+增量");
+    FULL_INCREMENT("fullIncrement", "Full + incremental");
 
     private final String code;
     private final String name;

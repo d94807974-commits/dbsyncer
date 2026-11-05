@@ -13,27 +13,27 @@ import java.util.Properties;
 public class Table {
 
     /**
-     * 表名
+     * TableFirst Name
      */
     private String name;
 
     /**
-     * 表类型[TABLE、VIEW、MATERIALIZED VIEW]
+     * TableType[TABLE、VIEW、MATERIALIZED VIEW]
      * {@link TableTypeEnum}
      */
     private String type;
 
     /**
-     * 属性字段
-     * 格式：[{"name":"ID","typeName":"INT","type":"4"},{"name":"NAME","typeName":"VARCHAR","type":"12"}]
+     * PropertiesField
+     * Mostly in the[{"name":"ID","typeName":"INT","type":"4"},{"name":"NAME","typeName":"VARCHAR","type":"12"}]
      */
     private List<Field> column;
 
-    // 总数
+    // Total
     private long count;
 
     /**
-     * 扩展配置
+     * Extension Configuration
      */
     private Properties extInfo = new Properties();
 

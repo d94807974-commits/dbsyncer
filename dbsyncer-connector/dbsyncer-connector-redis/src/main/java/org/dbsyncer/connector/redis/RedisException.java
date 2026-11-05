@@ -4,7 +4,7 @@
 package org.dbsyncer.connector.redis;
 
 /**
- * Redis连接器异常
+ * RedisConnectorError
  */
 public class RedisException extends RuntimeException {
 

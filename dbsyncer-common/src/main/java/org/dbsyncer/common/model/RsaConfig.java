@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * RSA配置
+ * RSAConfigure
  *
  * @version 1.0.0
- * @Author 穿云
+ * @Author The clouds.
  * @Date 2026-01-15 08:30
  */
 public class RsaConfig {

@@ -87,7 +87,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
- * ES连接器实现
+ * ESConnectorAchieved
  *
  * @Author AE86
  * @Version 1.0.0
@@ -164,8 +164,8 @@ public final class ElasticsearchConnector extends AbstractConnector implements C
             String clusterName = response.getClusterName();
             return Collections.singletonList(clusterName);
         } catch (IOException e) {
-            logger.error("获取ES集群名称失败: {}", e.getMessage());
-            throw new ElasticsearchException("获取ES集群名称失败: " + e.getMessage(), e);
+            logger.error("Could not close temporary folder: %s", e.getMessage());
+            throw new ElasticsearchException("Could not close temporary folder: %s " + e.getMessage(), e);
         }
     }
 
@@ -177,7 +177,7 @@ public final class ElasticsearchConnector extends AbstractConnector implements C
             GetAliasesResponse indicesAlias = indices.getAlias(aliasesRequest, RequestOptions.DEFAULT);
             Map<String, Set<AliasMetadata>> aliases = indicesAlias.getAliases();
             if (!CollectionUtils.isEmpty(aliases)) {
-                // 排除系统索引
+                // Exclude SystemIndex
                 return aliases.keySet().stream().filter(index -> !StringUtil.startsWith(index, StringUtil.POINT)).map(name -> {
                     Table table = new Table();
                     table.setName(name);
@@ -197,7 +197,7 @@ public final class ElasticsearchConnector extends AbstractConnector implements C
         List<MetaInfo> metaInfos = new ArrayList<>();
         try {
             for (Table table : context.getTablePatterns()) {
-                // 自定义SQL
+                // CustomSQL
                 if (TableTypeEnum.getTableType(table.getType()) == getExtendedTableType()) {
                     getExtendedMetaInfo(connectorInstance, metaInfos, table);
                     continue;
@@ -207,11 +207,11 @@ public final class ElasticsearchConnector extends AbstractConnector implements C
                 GetIndexResponse indexResponse = connectorInstance.getConnection().indices().get(request, RequestOptions.DEFAULT);
                 MappingMetadata mappingMetaData = indexResponse.getMappings().get(index);
                 List<Field> fields = new ArrayList<>();
-                // 低于7.x 版本
+                // Less than7.x Version
                 if (EasyVersion.V_7_0_0.after(connectorInstance.getVersion())) {
                     Map<String, Object> sourceMap = XContentHelper.convertToMap(mappingMetaData.source().compressedReference(), true, null).v2();
                     if (CollectionUtils.isEmpty(sourceMap)) {
-                        throw new ElasticsearchException("未获取到索引配置");
+                        throw new ElasticsearchException("No index configuration retrieved");
                     }
                     Iterator<String> iterator = sourceMap.keySet().iterator();
                     String indexType = null;
@@ -220,14 +220,14 @@ public final class ElasticsearchConnector extends AbstractConnector implements C
                         parseProperties(fields, (Map) sourceMap.get(indexType));
                     }
                     if (StringUtil.isBlank(indexType)) {
-                        throw new ElasticsearchException("索引type为空");
+                        throw new ElasticsearchException("Index type is empty");
                     }
                     metaInfos.add(buildMetaInfo(table.getType(), index, fields, indexType));
                     continue;
                 }
 
-                // 7.x 版本以上
-                // 升级变动：https://www.elastic.co/guide/en/elasticsearch/reference/7.0/breaking-changes-7.0.html#breaking_70_mappings_changes
+                // 7.x VersionAbove
+                // Promotion change:https://www.elastic.co/guide/en/elasticsearch/reference/7.0/breaking-changes-7.0.html#breaking_70_mappings_changes
                 parseProperties(fields, mappingMetaData.sourceAsMap());
                 metaInfos.add(buildMetaInfo(table.getType(), index, fields, null));
             }
@@ -245,11 +245,11 @@ public final class ElasticsearchConnector extends AbstractConnector implements C
         metaInfo.setColumn(table.getColumn());
         Properties extInfo = metaInfo.getExtInfo();
         extInfo.putAll(table.getExtInfo());
-        // 低于7.x 版本
+        // Less than7.x Version
         if (EasyVersion.V_7_0_0.after(connectorInstance.getVersion())) {
             extInfo.put(_TYPE, null);
         } else {
-            // 设置默认值
+            // SettingsDefault value
             extInfo.setProperty(_TYPE, extInfo.getProperty(_TYPE, "_doc"));
         }
         metaInfos.add(metaInfo);
@@ -272,7 +272,7 @@ public final class ElasticsearchConnector extends AbstractConnector implements C
             Map<String, String> command = metaContext.getCommand();
             SearchSourceBuilder builder = new SearchSourceBuilder();
             genSearchSourceBuilder(builder, command, metaContext.isTargetConnector());
-            // 7.x 版本以上
+            // 7.x VersionAbove
             if (EasyVersion.V_7_0_0.onOrBefore(connectorInstance.getVersion())) {
                 builder.trackTotalHits(true);
             }
@@ -293,11 +293,11 @@ public final class ElasticsearchConnector extends AbstractConnector implements C
     public Result reader(ESConnectorInstance connectorInstance, ReaderContext context) {
         Table table = context.getSourceTable();
         try {
-            // 订正校验场景
+            // Data validationscene
             if (!StringUtil.isBlank(context.getCommandKey())) {
                 return searchByFilter(connectorInstance, context);
             }
-            // 分页查询
+            // minPageQuestion
             return searchDeep(connectorInstance, context, table);
         } catch (IOException e) {
             logger.error(e.getMessage());
@@ -326,7 +326,7 @@ public final class ElasticsearchConnector extends AbstractConnector implements C
 
     private Result searchResult(ESConnectorInstance connectorInstance, ReaderContext context, String index, SearchSourceBuilder builder) throws IOException {
         if (StringUtil.isBlank(index)) {
-            throw new ElasticsearchException("查询索引不能为空.");
+            throw new ElasticsearchException("Query index cannot be empty.");
         }
         SearchRequest rq = new SearchRequest(new String[]{index}, builder);
         SearchResponse searchResponse = connectorInstance.getConnection().searchWithVersion(rq, RequestOptions.DEFAULT);
@@ -392,7 +392,7 @@ public final class ElasticsearchConnector extends AbstractConnector implements C
                 result.getSuccessData().add(data.get(i));
             }
         } catch (Exception e) {
-            // 记录错误数据
+            // RecordsErrorData Fact
             result.addFailData(data);
             result.getError().append(e.getMessage()).append(System.lineSeparator());
             logger.error(e.getMessage());
@@ -403,7 +403,7 @@ public final class ElasticsearchConnector extends AbstractConnector implements C
     @Override
     public Map<String, String> getSourceCommand(CommandConfig commandConfig) {
         Map<String, String> command = new HashMap<>();
-        // 查询字段
+        // QuestionField
         Table table = commandConfig.getTable();
         command.put(_SOURCE_INDEX, table.getName());
         command.put(ConnectorConstant.OPERTION_QUERY_COUNT, table.getName());
@@ -414,7 +414,7 @@ public final class ElasticsearchConnector extends AbstractConnector implements C
             command.put(ConnectorConstant.OPERTION_QUERY, StringUtil.join(fieldNames, ","));
         }
 
-        // 过滤条件
+        // Filter Conditions
         List<Filter> filter = commandConfig.getFilter();
         if (!CollectionUtils.isEmpty(filter)) {
             command.put(ConnectorConstant.OPERTION_QUERY_FILTER, JsonUtil.objToJson(filter));
@@ -461,11 +461,11 @@ public final class ElasticsearchConnector extends AbstractConnector implements C
 
     private void parseProperties(List<Field> fields, Map<String, Object> sourceMap) {
         if (CollectionUtils.isEmpty(sourceMap)) {
-            throw new ElasticsearchException("未获取到索引字段.");
+            throw new ElasticsearchException("No index field retrieved.");
         }
         Map<String, Object> properties = (Map<String, Object>) sourceMap.get(ESUtil.PROPERTIES);
         if (CollectionUtils.isEmpty(properties)) {
-            throw new ElasticsearchException("查询字段不能为空.");
+            throw new ElasticsearchException("Query fields cannot be empty.");
         }
         properties.forEach((fieldName, c) -> {
             Map fieldDesc = (Map) c;
@@ -475,7 +475,7 @@ public final class ElasticsearchConnector extends AbstractConnector implements C
                 columnType = ESFieldTypeEnum.OBJECT.getCode();
             }
 
-            // 如果时间类型做了format, 按字符串类型处理
+            // IfTimeTypeYes.format, By StringTypeProcessing
             if (StringUtil.equals(ESFieldTypeEnum.DATE.getCode(), columnType)) {
                 Object format = fieldDesc.get("format");
                 if (format != null) {
@@ -490,7 +490,7 @@ public final class ElasticsearchConnector extends AbstractConnector implements C
     }
 
     /**
-     * 全量同步 / count 不走定时监听器替换，系统占位符不能作为 ES 字面量下发
+     * Full sync / count I'm not leaving.ScheduledListenerReplace，System placeholder cannot actES Declining
      */
     private List<Filter> excludeQuartzPlaceholderFilters(List<Filter> filters) {
         if (CollectionUtils.isEmpty(filters)) {
@@ -502,7 +502,7 @@ public final class ElasticsearchConnector extends AbstractConnector implements C
     }
 
     /**
-     * 根据BooleanFilter 构建查询语句
+     * Based onBooleanFilter Build query statement
      */
     private QueryBuilder buildFilterToQuery(BooleanFilter root) {
         if (root == null) {
@@ -520,7 +520,7 @@ public final class ElasticsearchConnector extends AbstractConnector implements C
     }
 
     /**
-     * 子句列表：子句之间用子句上的
+     * Sub sentencesList：In between the lines.
      */
     private QueryBuilder combineFilters(List<BooleanFilter> clauses) {
         QueryBuilder acc = null;
@@ -548,7 +548,7 @@ public final class ElasticsearchConnector extends AbstractConnector implements C
     }
 
     /**
-     * 合并 平铺查询条件
+     * Merge Scroll QueryCondition
      */
     private QueryBuilder combineFlatFilterList(List<AbstractFilter> filters) {
         if (CollectionUtils.isEmpty(filters)) {

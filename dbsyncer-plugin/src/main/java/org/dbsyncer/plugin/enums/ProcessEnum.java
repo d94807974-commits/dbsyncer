@@ -11,17 +11,17 @@ package org.dbsyncer.plugin.enums;
 public enum ProcessEnum {
 
     /**
-     * 全量同步前置处理
+     * Full syncPreprocess
      */
     BEFORE,
 
     /**
-     * 全量同步/增量同步转换
+     * Full sync/Incremental syncConvert
      */
     CONVERT,
 
     /**
-     * 全量同步/增量同步后置处理
+     * Full sync/Incremental syncPost-processing
      */
     AFTER;
 }

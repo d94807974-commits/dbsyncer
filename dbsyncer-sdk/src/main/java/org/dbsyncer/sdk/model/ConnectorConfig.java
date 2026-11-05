@@ -5,7 +5,7 @@ import org.dbsyncer.sdk.util.PropertiesUtil;
 import java.util.Properties;
 
 /**
- * 连接器配置
+ * ConnectorConfigure
  * @author AE86
  * @version 1.0.0
  * @date 2019/9/21 0:01
@@ -13,17 +13,17 @@ import java.util.Properties;
 public abstract class ConnectorConfig {
 
     /**
-     * 连接器类型
+     * ConnectorType
      */
     private String connectorType;
 
     /**
-     * 连接参数
+     * Connection parameters
      */
     private Properties properties = new Properties();
 
     /**
-     * 扩展配置
+     * Extension Configuration
      */
     private Properties extInfo = new Properties();
 

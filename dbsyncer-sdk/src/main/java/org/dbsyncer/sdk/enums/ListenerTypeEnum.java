@@ -10,11 +10,11 @@ import org.dbsyncer.common.util.StringUtil;
 public enum ListenerTypeEnum {
 
     /**
-     * 定时
+     * Scheduled
      */
     TIMING("timing"),
     /**
-     * 日志
+     * Log
      */
     LOG("log");
 

@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Web 控制台跨节点 SSO：短时票据签发、白名单校验、一次性消费。
+ * Web Console breachNodes SSO：Short-term bills issued, white lists verified, one-time consumption.
  *
  * @author wuji
  * @version 1.0.0
@@ -33,7 +33,7 @@ public class SsoTicketServiceImpl implements SsoTicketService {
     private static final Logger logger = LoggerFactory.getLogger(SsoTicketServiceImpl.class);
 
     /**
-     * 票据有效期（毫秒）
+     * InstrumentsValid until（ms）
      */
     private static final long TICKET_TTL_MS = 30_000L;
 
@@ -50,22 +50,22 @@ public class SsoTicketServiceImpl implements SsoTicketService {
     private ClusterService clusterService;
 
     /**
-     * 已消费 jti → 过期时间，本机防重放
+     * Consumptionjti → Expiration time，It's reset.
      */
     private final Map<String, Long> usedJti = new ConcurrentHashMap<>();
 
     /**
-     * 签发跳转票据。
+     * Issuance of jumper.
      *
-     * @param username 用户名
-     * @param roleCode 角色
-     * @param target   目标节点，推荐 {@code ip:port}；也兼容 {@code http(s)://ip:port}
-     * @return JWT 票据
+     * @param username Username
+     * @param roleCode Role
+     * @param target   Objective CombinedNodes，Recommendations{@code ip:port}；It's compatible.{@code http(s)://ip:port}
+     * @return JWT Instruments
      */
     @Override
     public String issue(String username, String roleCode, String target) {
         if (StringUtil.isBlank(username) || StringUtil.isBlank(target)) {
-            throw new BizException("SSO 参数不完整");
+            throw new BizException("SSO parameter incomplete");
         }
         String targetHost = resolveTargetHost(target);
         long now = System.currentTimeMillis();
@@ -79,16 +79,16 @@ public class SsoTicketServiceImpl implements SsoTicketService {
         try {
             return jwtSecretManager.signPayload(ticket);
         } catch (Exception e) {
-            logger.error("签发 SSO 票据失败", e);
-            throw new BizException("签发 SSO 票据失败");
+            logger.error("Failed to issue SSO instrument", e);
+            throw new BizException("Failed to issue SSO instrument");
         }
     }
 
     /**
-     * 校验并消费票据（一次性）。
+     * Validation and Originally Consumed Documents (one-time).
      *
      * @param rawTicket JWT
-     * @return 有效票据；失败返回 null
+     * @return Effective instruments;FailedBack null
      */
     @Override
     public WebSsoTicket consume(String rawTicket) {
@@ -100,7 +100,7 @@ public class SsoTicketServiceImpl implements SsoTicketService {
         try {
             ticket = jwtSecretManager.verifyPayload(rawTicket, WebSsoTicket.class);
         } catch (Exception e) {
-            logger.warn("SSO 票据验签异常: {}", e.getMessage());
+            logger.warn("SSO instrument check exception: {", e.getMessage());
             return null;
         }
         if (ticket == null || StringUtil.isBlank(ticket.getUsername()) || StringUtil.isBlank(ticket.getJti())) {
@@ -108,22 +108,22 @@ public class SsoTicketServiceImpl implements SsoTicketService {
         }
         Long exp = ticket.getExp();
         if (exp == null || exp < System.currentTimeMillis()) {
-            logger.warn("SSO 票据已过期, jti={}", ticket.getJti());
+            logger.warn("SSO instrument expired, jti=}", ticket.getJti());
             return null;
         }
         Long prev = usedJti.putIfAbsent(ticket.getJti(), exp);
         if (prev != null) {
-            logger.warn("SSO 票据重放, jti={}", ticket.getJti());
+            logger.warn("SSO Instrument Replay, jti=}", ticket.getJti());
             return null;
         }
         return ticket;
     }
 
     /**
-     * 目标 URL 是否属于集群节点。
+     * Objective Combined URL YesNoClusterNodes。
      *
-     * @param target 目标 URL
-     * @return true 允许
+     * @param target Objective Combined URL
+     * @return true verifie
      */
     @Override
     public boolean isAllowedTarget(String target) {
@@ -132,18 +132,18 @@ public class SsoTicketServiceImpl implements SsoTicketService {
     }
 
     /**
-     * 规范化为 {@code http(s)://ip:port[/context-path]}（无尾斜杠；协议与路径跟随本机
+     * Regulate into{@code http(s)://ip:port[/context-path]}（Nonetail slash; protocolandPath Follower
      * {@code server.ssl.enabled}、{@code server.servlet.context-path}）。
      *
-     * @param target 目标 URL
-     * @return 根地址
+     * @param target Objective Combined URL
+     * @return Root Address
      */
     @Override
     public String normalizeTargetBase(String target) {
         String host = resolveTargetHost(target);
         int idx = host.lastIndexOf(':');
         if (idx <= 0) {
-            throw new BizException("无效的目标地址");
+            throw new BizException("Invalid target URL");
         }
         String ip = host.substring(0, idx);
         int port = Integer.parseInt(host.substring(idx + 1));
@@ -151,10 +151,10 @@ public class SsoTicketServiceImpl implements SsoTicketService {
     }
 
     /**
-     * 仅允许相对路径，防止开放重定向。
+     * Only relative paths are allowed to prevent open re-direction.
      *
-     * @param redirect 跳转路径
-     * @return 安全路径
+     * @param redirect Jump Path
+     * @return Secure Path
      */
     @Override
     public String sanitizeRedirect(String redirect) {
@@ -170,7 +170,7 @@ public class SsoTicketServiceImpl implements SsoTicketService {
 
     private String resolveTargetHost(String target) {
         if (StringUtil.isBlank(target)) {
-            throw new BizException("目标地址为空");
+            throw new BizException("Destination address is empty");
         }
         String trimmed = target.trim();
         try {
@@ -181,11 +181,11 @@ public class SsoTicketServiceImpl implements SsoTicketService {
                 port = url.getDefaultPort();
             }
             if (StringUtil.isBlank(host) || port <= 0) {
-                throw new BizException("无效的目标地址");
+                throw new BizException("Invalid target URL");
             }
             return host + ":" + port;
         } catch (MalformedURLException e) {
-            throw new BizException("无效的目标地址");
+            throw new BizException("Invalid target URL");
         }
     }
 

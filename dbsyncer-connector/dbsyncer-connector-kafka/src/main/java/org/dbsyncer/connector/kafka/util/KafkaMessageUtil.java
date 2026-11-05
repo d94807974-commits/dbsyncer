@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-06 22:30
  */
@@ -25,7 +25,7 @@ public final class KafkaMessageUtil {
     }
 
     /**
-     * 返回的数据格式：{
+     * Backdata format:{
      *   "table": "orders",
      *   "event": "UPDATE",
      *   "data": { "id": 1001, "status": "paid", "amount": 99.9 }

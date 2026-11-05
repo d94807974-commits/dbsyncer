@@ -9,7 +9,7 @@ import org.dbsyncer.parser.model.Connector;
 import java.util.List;
 
 /**
- * 连接器配置读写与反序列化（抽象 {@code ConnectorConfig} 按 connectorType 还原）。
+ * ConnectorConfigureRead and writeandInverse sequence (abstract){@code ConnectorConfig} PressconnectorType Revert.
  *
  * @author wuji
  * @version 1.0.0
@@ -17,58 +17,58 @@ import java.util.List;
 public interface ConnectorProfile {
 
     /**
-     * 连接器 JSON → 模型（含具体 Config 实现类）。
+     * Connector JSON → Models (with specificConfig Category of achievement).
      */
     Connector parseConnector(String json);
 
     /**
-     * 按 id 查询连接器。
+     * Pressid QuestionConnector。
      */
     Connector getConnector(String connectorId);
 
     /**
-     * 全部连接器。
+     * AllConnector。
      */
     List<Connector> getConnectorAll();
 
     /**
-     * 分页查询连接器（按名称模糊、更新时间倒序）。
+     * minPageQuestionConnector（PressNameFuzzy AdministerUpdated atRewind.
      *
-     * @param pageNum   页码，从 1 开始
-     * @param pageSize  每页大小
-     * @param searchKey 名称关键字，可空
-     * @param role      角色过滤：{@code source} 仅 IS_SOURCE=1，{@code target} 仅 IS_TARGET=1，其它不过滤
-     * @param ids 资源 ID；空则不加 ID 条件
+     * @param pageNum   PageCode, from1 Start
+     * @param pageSize  EveryPage/5/
+     * @param searchKey NameKeyword，Empty
+     * @param role      RoleFilter:{@code source} OnlyIS_SOURCE=1，{@code target} OnlyIS_TARGET=1，Other without filtering
+     * @param ids Resource ID；Nothing.ID Condition
      */
     Paging<Connector> queryConnectors(int pageNum, int pageSize, String searchKey, String role, List<String> ids);
 
     /**
-     * 添加连接器。
+     * Add ConnectionThe device.
      */
     String addConnector(Connector connector);
 
     /**
-     * 批量添加连接器（配置包导入）。
+     * BatchAdd ConnectionInstrument(s)ConfigurePackageImport）。
      */
     void addConnectorBatch(List<Connector> connectors);
 
     /**
-     * 更新连接器。
+     * UpdateConnector。
      */
     String updateConnector(Connector connector);
 
     /**
-     * 删除连接器。
+     * DeleteConnector。
      */
     void removeConnector(String id);
 
     /**
-     * 连接器总数。
+     * ConnectorTotal。
      */
     int countConnectors();
 
     /**
-     * 从 connector.json 数组批量导入。
+     * Fromconnector.json SeriesImport。
      */
     void importConnectorsFromJson(String json);
 }

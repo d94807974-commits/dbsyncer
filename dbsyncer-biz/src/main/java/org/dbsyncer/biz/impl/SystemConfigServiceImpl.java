@@ -84,7 +84,7 @@ public class SystemConfigServiceImpl implements SystemConfigService {
     public String edit(Map<String, String> params) {
         SystemConfig systemConfig = systemConfigChecker.checkEditConfigModel(params);
         systemConfigProfile.saveSystemConfig(systemConfig);
-        return "修改成功.";
+        return "Change successfully.";
     }
 
     @Override
@@ -92,7 +92,7 @@ public class SystemConfigServiceImpl implements SystemConfigService {
         SystemConfig systemConfig = noticeConfigChecker.checkEditConfigModel(params);
         systemConfigProfile.saveSystemConfig(systemConfig);
         preloadTemplate.loadNotificationChannel();
-        return "修改成功.";
+        return "Change successfully.";
     }
 
     @Override
@@ -143,7 +143,7 @@ public class SystemConfigServiceImpl implements SystemConfigService {
         FileSuffixEnum fileSuffix = FileSuffixEnum.getFileSuffix(suffix);
         Assert.notNull(fileSuffix, "Illegal file suffix");
         boolean supported = FileSuffixEnum.ZIP == fileSuffix;
-        Assert.isTrue(supported, String.format("不正确的文件扩展名 \"%s\"，只支持 \"%s\" 的文件扩展名。",
+        Assert.isTrue(supported, String.format("Invalid file extension \"%s\", only \"%s\" is supported.",
                 filename, FileSuffixEnum.ZIP.getName()));
     }
 
@@ -164,7 +164,7 @@ public class SystemConfigServiceImpl implements SystemConfigService {
 
     @Override
     public RsaVersion createRSAConfig(int keyLength) {
-        Assert.isTrue(keyLength >= 1024 && keyLength <= 8192, "密钥长度支持的范围[1024-8192]");
+        Assert.isTrue(keyLength >= 1024 && keyLength <= 8192, "Scope of key length support [1024-8192]");
         return RSAUtil.createKeys(keyLength);
     }
 }

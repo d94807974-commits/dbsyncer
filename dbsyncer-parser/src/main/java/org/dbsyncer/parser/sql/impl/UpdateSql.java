@@ -52,7 +52,7 @@ public final class UpdateSql implements SqlParser {
     public String parse() {
         try {
             Update update = (Update) CCJSqlParserUtil.parse(sql);
-            // 替换表名
+            // ReplaceTable name
             Table table = new Table();
             table.setName(targetTableName);
             update.setTable(table);

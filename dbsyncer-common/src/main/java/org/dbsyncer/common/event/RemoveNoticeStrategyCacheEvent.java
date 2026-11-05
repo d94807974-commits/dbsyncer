@@ -7,7 +7,7 @@ import org.dbsyncer.common.message.impl.RemoveCacheMessage;
 import org.springframework.context.ApplicationContext;
 
 /**
- * 告警策略配置缓存失效。
+ * Police strategy CorruptConfigureCache failed.
  *
  * @author wuji
  * @version 1.0.0

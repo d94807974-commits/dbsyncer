@@ -3,7 +3,7 @@ package org.dbsyncer.parser.model;
 import org.dbsyncer.sdk.model.Field;
 
 /**
- * 字段映射关系
+ * FieldMapping
  *
  * @author AE86
  * @version 1.0.0

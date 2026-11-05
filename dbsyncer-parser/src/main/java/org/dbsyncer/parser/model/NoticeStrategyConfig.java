@@ -7,7 +7,7 @@ import org.dbsyncer.common.model.ConfigModel;
 import org.dbsyncer.sdk.constant.ConfigConstant;
 
 /**
- * 告警策略配置（表 dbsyncer_notice_strategy），每种通知类型一行。
+ * Police strategy CorruptConfigure（Tabledbsyncer_notice_strategy），Each noticeTypeOne line.
  *
  * @author wuji
  * @version 1.0.0
@@ -15,27 +15,27 @@ import org.dbsyncer.sdk.constant.ConfigConstant;
 public class NoticeStrategyConfig extends ConfigModel {
 
     /**
-     * 通知类型码，存 {@link org.dbsyncer.sdk.enums.NoticeTypeEnum#getCode()}
+     * AnnouncementsTypeCode, deposit.{@link org.dbsyncer.sdk.enums.NoticeTypeEnum#getCode()}
      */
     private int noticeTypes;
 
     /**
-     * 是否启用：0 否 / 1 是
+     * YesNoEnable：0 No / 1 Yes
      */
     private int enabled = 1;
 
     /**
-     * 频率：0-IMMEDIATE / 1-INTERVAL
+     * Frequency:0-IMMEDIATE / 1-INTERVAL
      */
     private int frequency;
 
     /**
-     * 周期 Cron（INTERVAL 时必填）
+     * CycleCron（INTERVAL 78.
      */
     private String cron;
 
     /**
-     * 备注说明
+     * Remarks
      */
     private String remark;
 

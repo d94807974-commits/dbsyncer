@@ -17,7 +17,7 @@ public final class DatetimeV2Deserialize {
         int yearMonth = bitSlice(datetime, 1, 17, 40);
         int fsp = deserializeFractionalSeconds(meta, inputStream);
 
-        // 提取日期时间各部分
+        // Extract DateTimeMinistriesmin
         int year = yearMonth / 13;
         int month = yearMonth % 13;
         int day = bitSlice(datetime, 18, 5, 40);
@@ -26,24 +26,24 @@ public final class DatetimeV2Deserialize {
         int second = bitSlice(datetime, 34, 6, 40);
         int nano = fsp * 1000;
 
-        // 检查是否为 MySQL 的零日期 (0000-00-00 00:00:00)
-        // MySQL 从5.7开始默认不允许零日期 Java LocalDateTime 不支持
-        // 零日期的特征：year=0 或 month=0 或 day=0
+        // InspectionYesNoYesMySQL Other Organiser(0000-00-00 00:00:00)
+        // MySQL From5.7Start default zero date not allowedJava LocalDateTime Not supported
+        // Characteristics of date zero:year=0 ormonth=0 orday=0
         if (year == 0 || month == 0 || day == 0) {
-            // 返回 null 表示零日期，避免抛出异常
+            // Back null For Taskforce Zero Date, Avoid ThrowingError
             return null;
         }
 
-        // 额外的安全检查：确保日期时间值在有效范围内
+        // Additional security checks: ensure datesTimeValueWithin the limits of effectiveness
         if (month < 1 || day < 1 || day > 31 || hour < 0 || hour > 23 || minute < 0 || minute > 59 || second < 0 || second > 59) {
-            // 日期时间值超出有效范围，返回 null
+            // DateTimeValueIt's beyond the scope.Back null
             return null;
         }
         return toTimestamp(year, month, day, hour, minute, second, nano);
     }
 
     /**
-     * 解析旧版 DATETIME 二进制格式（非 DATETIME2），按字面量读取，避免按 GMT 转 Unix 时间戳产生时区偏差。
+     * Parsing old versionsDATETIME Binary FormatDATETIME2），Read it literally, avoid pressingGMT TurnUnix TimeThe puncture occurs.
      */
     public Serializable deserializeDatetime(ByteArrayInputStream inputStream) throws IOException {
         int[] parts = split(inputStream.readLong(8), 100, 6);

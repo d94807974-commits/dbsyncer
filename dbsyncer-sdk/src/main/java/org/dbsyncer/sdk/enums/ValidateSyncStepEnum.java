@@ -4,18 +4,18 @@
 package org.dbsyncer.sdk.enums;
 
 /**
- * 订正校验表级快照阶段（写入 {@code CommonTaskSnapshot.step}）。
+ * Data validationTable snapshot phase (written){@code CommonTaskSnapshot.step}）。
  *
  * @author wuji
  * @version 1.0.0
  * @date 2026-07-08 20:09
  */
 public enum ValidateSyncStepEnum {
-    TABLE_SCHEMA("tableSchema", "表结构"),
-    TABLE_SCHEMA_SYNC("tableSchemaSync", "表结构订正"),
-    ROW_DATA("rowData", "行数据"),
-    ROW_DATA_SYNC("rowDataSync", "行数据订正"),
-    ROW_DATA_REVERSE_SYNC("rowDataReverseSync", "行数据反向订正");
+    TABLE_SCHEMA("tableSchema", "Table schema"),
+    TABLE_SCHEMA_SYNC("tableSchemaSync", "Schema fix"),
+    ROW_DATA("rowData", "Row data"),
+    ROW_DATA_SYNC("rowDataSync", "Row data fix"),
+    ROW_DATA_REVERSE_SYNC("rowDataReverseSync", "Reverse row data fix");
 
     private final String code;
     private final String message;

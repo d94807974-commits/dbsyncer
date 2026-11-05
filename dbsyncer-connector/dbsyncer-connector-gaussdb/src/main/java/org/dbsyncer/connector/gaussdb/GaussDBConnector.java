@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * GaussDB 连接器（PostgreSQL 协议，适用于 openGauss / GaussDB）
+ * GaussDB Connector（PostgreSQL Agreement, applicable toopenGauss / GaussDB）
  *
  * @author wuji
  * @version 1.0.0
@@ -39,8 +39,8 @@ import java.util.Map;
 public final class GaussDBConnector extends PostgreSQLConnector {
 
     /**
-     * GaussDB / openGauss 无 pg_class.relispartition（PostgreSQL 10+），
-     * 用 pg_inherits 排除继承子表，避免子分区与主表重复列出。
+     * GaussDB / openGauss None pg_class.relispartition（PostgreSQL 10+），
+     * Usepg_inherits Remove the inheritance watch, avoid the child.minSector EntitiesandMain TableRepeat.
      */
     private static final String QUERY_TABLE = "SELECT c.relname AS table_name, "
             + "CASE c.relkind WHEN 'v' THEN 'VIEW' WHEN 'm' THEN 'MATERIALIZED VIEW' ELSE 'TABLE' END AS table_type "
@@ -117,8 +117,8 @@ public final class GaussDBConnector extends PostgreSQLConnector {
     }
 
     /**
-     * 冲突忽略：GaussDB / openGauss 通用 ON DUPLICATE KEY UPDATE NOTHING
-     * （不使用 PostgreSQL 的 ON CONFLICT / OVERRIDING SYSTEM VALUE）
+     * Conflict Neglect:GaussDB / openGauss UniversalON DUPLICATE KEY UPDATE NOTHING
+     * （Do Not UsePostgreSQL Yes.ON CONFLICT / OVERRIDING SYSTEM VALUE）
      */
     @Override
     public String buildInsertSql(SqlBuilderConfig config) {
@@ -128,7 +128,7 @@ public final class GaussDBConnector extends PostgreSQLConnector {
     }
 
     /**
-     * 覆盖更新：GaussDB / openGauss 通用 ON DUPLICATE KEY UPDATE col = VALUES(col)
+     * OverwriteUpdate:GaussDB / openGauss UniversalON DUPLICATE KEY UPDATE col = VALUES(col)
      */
     @Override
     public String buildUpsertSql(DatabaseConnectorInstance connectorInstance, SqlBuilderConfig config) {
@@ -173,7 +173,7 @@ public final class GaussDBConnector extends PostgreSQLConnector {
     }
 
     /**
-     * INSERT / UPSERT 拼装中间结果
+     * INSERT / UPSERT Collapse MiddleResult
      */
     private static final class UpsertParts {
         private String uniqueCode;

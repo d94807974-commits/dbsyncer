@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * DuckDB 浮点类型
+ * DuckDB Floating PointType
  *
  * @author wuji
  * @version 1.0.0

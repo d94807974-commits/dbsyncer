@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-06 20:00
  */
@@ -131,8 +131,8 @@ public abstract class MongoUtil {
     }
 
     /**
-     * 查询条件值类型扩展：异构同步时 MySQL 整型主键常被 schema 写成 Mongo 字符串 _id，
-     * {@code $in:[625]} 匹配不到 {@code "_id":"625"}，需同时带上 Number/String 候选值。
+     * QuestionConditionValue TypeExtension: When isomer syncsMySQL IntegerPrimary keyI've been...schema WrittenMongo String  id，
+     * {@code $in:[625]} Can not match{@code "_id":"625"}，It needs to be on both.Number/String CandidatesValue。
      */
     public static List<Object> expandQueryValues(String fieldName, Object value) {
         Set<Object> expanded = new LinkedHashSet<>();
@@ -141,7 +141,7 @@ public abstract class MongoUtil {
     }
 
     /**
-     * 批量扩展 IN 列表中的每个绑定值。
+     * Batch ExtensionIN ListEach of them boundValue。
      */
     public static List<Object> expandQueryValues(String fieldName, Collection<?> values) {
         Set<Object> expanded = new LinkedHashSet<>();
@@ -179,7 +179,7 @@ public abstract class MongoUtil {
             if (StringUtil.isBlank(text) || !NumberUtil.isCreatable(text)) {
                 return;
             }
-            // 避免把合法 ObjectId 十六进制误解析成数字（normalizeId 已转 ObjectId 的不会走到这里）
+            // Avoid legalizing.ObjectId Hexadecimal misunderstanding to numericnormalizeId RotatedObjectId ♪ Won't come here ♪
             if (text.indexOf('.') >= 0 || text.indexOf('e') >= 0 || text.indexOf('E') >= 0) {
                 return;
             }

@@ -4,7 +4,7 @@
 package org.dbsyncer.sdk.enums;
 
 /**
- * 支持同步的DDL命令
+ * Synchronisation SupportedDDLYou can't.
  *
  * @version 1.0.0
  * @Author life
@@ -12,19 +12,19 @@ package org.dbsyncer.sdk.enums;
  */
 public enum DDLOperationEnum {
     /**
-     * 变更字段属性
+     * ChangeFieldProperties
      */
     ALTER_MODIFY,
     /**
-     * 新增字段
+     * InsertField
      */
     ALTER_ADD,
     /**
-     * 变更字段名称
+     * ChangeField nameClaims
      */
     ALTER_CHANGE,
     /**
-     * 删除字段
+     * DeleteField
      */
     ALTER_DROP;
 }

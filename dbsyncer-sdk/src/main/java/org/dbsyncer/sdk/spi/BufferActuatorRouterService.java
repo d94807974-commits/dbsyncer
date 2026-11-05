@@ -9,7 +9,7 @@ import org.dbsyncer.sdk.model.BufferActuatorMetric;
 import java.util.List;
 
 /**
- * 增量缓存执行器路由
+ * IncrementalCache Executor Route
  *
  * @author wuji
  * @version 1.0.0
@@ -18,47 +18,47 @@ import java.util.List;
 public interface BufferActuatorRouterService {
 
     /**
-     * 绑定同步任务的增量执行器。
+     * TieSync taskYes.IncrementalExecutor.
      *
-     * @param taskId           同步任务ID
-     * @param sourceTableNames 源表名列表
-     * @param channelSize      执行器数
+     * @param taskId           Sync taskID
+     * @param sourceTableNames Source Table NameList
+     * @param channelSize      Executors
      */
     void bind(String taskId, List<String> sourceTableNames, int channelSize);
 
     /**
-     * 解绑并停止该驱动下的执行器。
+     * UntieStopTheMappingUnder the implementer.
      *
-     * @param taskId 同步任务ID
+     * @param taskId Sync taskID
      */
     void unbind(String taskId);
 
     /**
-     * 投递增量变更事件。
+     * OrganisationIncrementalChangeEvent。
      *
-     * @param taskId 同步任务ID
-     * @param event  变更事件
+     * @param taskId Sync taskID
+     * @param event  ChangeEvent
      */
     void execute(String taskId, ChangedEvent event);
 
     /**
-     * 路由内所有执行器队列堆积总数（不含通用执行器）。
+     * Queue Addressing All Executors within RouteBacklogTotal（does not containGeneral actuator）。
      *
-     * @return 堆积数
+     * @return BacklogNumber
      */
     long getQueueSize();
 
     /**
-     * 路由内所有执行器队列容量总和（不含通用执行器）。
+     * Sum of Queue Capacity of All Executors within RoutesGeneral actuator）。
      *
-     * @return 容量
+     * @return Capacity
      */
     long getQueueCapacity();
 
     /**
-     * 执行器监控快照。
+     * Execut MOUMonitorSc 49.
      *
-     * @return 快照列表，无执行器时返回空列表
+     * @return PhotoList，NoneExecutor onBackEmptyList
      */
     List<BufferActuatorMetric> listMetrics();
 }

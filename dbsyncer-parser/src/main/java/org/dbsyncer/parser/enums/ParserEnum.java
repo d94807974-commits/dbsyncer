@@ -1,7 +1,7 @@
 package org.dbsyncer.parser.enums;
 
 /**
- * 解析器参数枚举
+ * ParserParameterEnumeration
  *
  * @author AE86
  * @version 1.0.0
@@ -10,37 +10,37 @@ package org.dbsyncer.parser.enums;
 public enum ParserEnum {
 
     /**
-     * 游标
+     * Cursor
      */
     CURSOR("cursor", 0),
 
     /**
-     * 页数
+     * PageNumber
      */
     PAGE_INDEX("pageIndex", 1),
 
     /**
-     * 执行的表映射关系索引
+     * ImplementedMap relationIndex
      */
     TABLE_GROUP_INDEX("tableGroupIndex", 0),
 
     /**
-     * 全量多表进度
+     * FullMultiple progress
      */
     TABLE_PROGRESS("tableProgress", 0),
 
     /**
-     * 全量+增量阶段: full(全量中) / increment(增量中)
+     * Full + incrementalPhase: full(FullMedium) / increment(IncrementalMedium)
      */
     FULL_INCREMENT_PHASE("fullIncrementPhase", 0);
 
     /**
-     * 编码
+     * Encoded
      */
     private final String code;
 
     /**
-     * 默认值
+     * Default value
      */
     private final int defaultValue;
 

@@ -6,7 +6,7 @@ package org.dbsyncer.sdk.model;
 import org.dbsyncer.common.util.StringUtil;
 
 /**
- * 库级映射配置（持久化于 task.JSON；不含表映射）。
+ * LibraryLevel MapConfigure（Enduringontask.JSON；Does not contain Transparency Maps.
  *
  * @author wuji
  * @version 1.0.0
@@ -15,37 +15,37 @@ import org.dbsyncer.common.util.StringUtil;
 public class DatabaseMapping {
 
     /**
-     * 序号（从小到大，任务执行/恢复时按此顺序处理）
+     * No.（From childhood to age,Tasksin this order)
      */
     private int index;
 
     /**
-     * 源库名
+     * Source databaseFirst Name
      */
     private String sourceDatabase;
 
     /**
-     * 源 Schema
+     * Source schema
      */
     private String sourceSchema;
 
     /**
-     * 源端连接器 ID
+     * SourceConnector ID
      */
     private String sourceConnectorId;
 
     /**
-     * 目标端连接器 ID
+     * Objective CombinedEndConnector ID
      */
     private String targetConnectorId;
 
     /**
-     * 目标库名
+     * Target database name
      */
     private String targetDatabase;
 
     /**
-     * 目标 Schema（可选）
+     * Target schema（Optional)
      */
     private String targetSchema;
 
@@ -106,7 +106,7 @@ public class DatabaseMapping {
     }
 
     /**
-     * 库维度聚合键：源/目标连接器 + 库 + schema（不含表名），与 TableGroup#buildDatabaseMappingKey 同规则。
+     * LibraryWidth 7-11 Key: Source/Target ConnectionDevice+ Library + schema（does not containTable name），and TableGroup#buildDatabaseMappingKey The same rule.
      */
     public String buildDatabaseMappingKey() {
         return String.join("|",

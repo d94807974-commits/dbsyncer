@@ -11,7 +11,7 @@ import org.dbsyncer.sdk.schema.SchemaResolver;
 import java.util.Map;
 
 /**
- * 全量页级结果落库。集群和单机实现差异
+ * FullPageLevelResultDropLibrary。Clusters and single machines achievedVariance
  *
  * @author wuji
  * @version 1.0.0
@@ -20,12 +20,12 @@ import java.util.Map;
 public interface FullFlushService {
 
     /**
-     * 全量页级结果落库。
+     * FullPageLevelResultDropLibrary。
      *
-     * @param task                 运行态（分片执行时 id 为分片计划 ID）
-     * @param result               本批写结果
-     * @param targetSchemaResolver 目标库类型解析
-     * @param targetFieldMap       目标字段
+     * @param task                 Run a stateminOn Snippetid YesminPlanID）
+     * @param result               StatementsResult
+     * @param targetSchemaResolver Target databaseTypeParsing
+     * @param targetFieldMap       Target fields
      */
     void flush(Task task, Result result, SchemaResolver targetSchemaResolver, Map<String, Field> targetFieldMap);
 }

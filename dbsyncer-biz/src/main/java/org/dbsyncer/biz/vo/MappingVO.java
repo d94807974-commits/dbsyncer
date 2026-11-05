@@ -10,11 +10,11 @@ import org.dbsyncer.parser.model.Mapping;
  */
 public class MappingVO extends Mapping {
 
-    // 连接器
+    // Connector
     private final Connector sourceConnector;
     private final Connector targetConnector;
 
-    // 元信息
+    // MetaInfo
     private final MetaVO meta;
 
     public MappingVO(Connector sourceConnector, Connector targetConnector, MetaVO meta) {

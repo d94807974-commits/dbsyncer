@@ -8,89 +8,89 @@ package org.dbsyncer.sdk.constant;
 public class ConnectorConstant {
 
     /**
-     * 新增
+     * Insert
      */
     public static final String OPERTION_INSERT = "INSERT";
 
     /**
-     * 更新
+     * Update
      */
     public static final String OPERTION_UPDATE = "UPDATE";
 
     /**
-     * 覆盖更新
+     * OverwriteUpdate
      */
     public static final String OPERTION_UPSERT = "UPSERT";
 
     /**
-     * 删除
+     * Delete
      */
     public static final String OPERTION_DELETE = "DELETE";
 
     /**
-     * 表结构更改
+     * TableStructureChange
      */
     public static final String OPERTION_ALTER = "ALTER";
 
     /**
-     * 查询
+     * Question
      */
     public static final String OPERTION_QUERY = "QUERY";
 
     /**
-     * 查询游标
+     * Query Curve
      */
     public static final String OPERTION_QUERY_CURSOR = "QUERY_CURSOR";
 
     /**
-     * 分页查询目标端
+     * minPageQuestionObjective CombinedEnd
      */
     public static final String OPERTION_QUERY_TARGET = "QUERY_TARGET";
 
     /**
-     * 目标端按主键批量 IN 查询（无分页）
+     * Objective CombinedEnd PressPrimary keyBatchIN QueryNoneminPage）
      */
     public static final String OPERTION_QUERY_TARGET_IN = "QUERY_TARGET_IN";
 
     /**
-     * 目标端游标查询
+     * Objective CombinedEnd CursorQuery
      */
     public static final String OPERTION_QUERY_TARGET_CURSOR = "QUERY_TARGET_CURSOR";
 
     /**
-     * 源端按主键批量 IN 查询（无分页）
+     * SourcePressPrimary keyBatchIN QueryNoneminPage）
      */
     public static final String OPERTION_QUERY_SOURCE_IN = "QUERY_SOURCE_IN";
 
     /**
-     * 游标分页实际使用的主键名列表（逗号分隔），与 QUERY_CURSOR 的 SQL 占位符一致。
+     * CursorminPageActualPrimary keyFirst NameList（CommaminPhoto from Flickr by Flickr user pic.twitter.comand QUERY_CURSOR Yes.SQL Placeholders agree.
      */
     public static final String CURSOR_PK_NAMES = "CURSOR_PK_NAMES";
 
     /**
-     * 查询过滤条件
+     * QuestionFilter Conditions
      */
     public static final String OPERTION_QUERY_FILTER = "QUERY_FILTER";
 
     /**
-     * 目标端查询字段列表（ES fetchSource 等），逗号分隔；与源端 {@link #OPERTION_QUERY} 对应。
+     * Objective CombinedEnd QueryFieldList（ES fetchSource ( will will will will will will, will will, will will will, will, will, will will will, will will will will, will will, will will will, will will will will will, will will will, will will will will, will will will will, will will will will will will will, will will will,, will will will will will, will will will,, will will will will will will will will,, will will will will,, will will will will will will will will will will,, will will will will,,, will will will will will will will will will will will will,,, will will will will,,,, will will will will will will will will,, will will will will will will will will will,,, will will meeting, will will will will will,,, meeting will will will will will will will will will will will meeting,,, will will will will will will will will meeting meeting,,,,, meeting will will will will will will will will meeting meeting meeting,,,, will will will will meeting meeting meeting meeting meeting meeting meeting,, will will will meeting, will meeting,,, will meeting meeting,, will will meeting will meeting, will will will willmin(c) Separation;andSource {@link #OPERTION_QUERY} Correspond.
      */
     public static final String OPERTION_TARGET_QUERY_FIELDS = "TARGET_QUERY_FIELDS";
 
     /**
-     * 查询总数
+     * QuestionTotal
      */
     public static final String OPERTION_QUERY_COUNT = "QUERY_COUNT";
 
     /**
-     * 目标表查询总数
+     * Target tableQuestionTotal
      */
     public static final String TARGET_QUERY_COUNT = "TARGET_QUERY_COUNT";
 
     /**
-     * 主表，扩展表映射关系
-     * <p>场景1:支持自定义SQL作为新表，需要根据主表监听增量数据
-     * <p>场景2:支持自定义半结构化字段作为新表，需要根据Topic（Kafka），FileName（File）监听增量数据
+     * Main Table，ExtensionMap relation
+     * <p>scene1:SupportCustomSQLAs a new table, need to be based onMain TableListenIncrementalData Fact
+     * <p>scene2:SupportCustomSemi-structuredFieldAs a new table, need to be based onTopic（Kafka），FileName（File）ListenIncrementalData Fact
      */
     public static final String CUSTOM_TABLE_MAIN = "CT_MAIN";
 

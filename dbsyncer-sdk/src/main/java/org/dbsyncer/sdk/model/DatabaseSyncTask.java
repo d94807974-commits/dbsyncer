@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 整库迁移任务配置（仅持久化配置到 {@code dbsyncer_task.JSON}）。
- * <p>库映射轻量列表写入 task.JSON（不含表）；表映射存 {@code dbsyncer_table_group}。
- * 运行进度与本轮完成态一律在 {@code dbsyncer_meta}（任务级 STATE/时间/库摘要 + 明细 SNAPSHOT）。</p>
+ * Library Migration TaskConfigure（OnlyEnduringConfigurePresent.{@code dbsyncer_task.JSON}）。
+ * <p>LibraryMap LightListWritingtask.JSON（excluding tables;form map storage{@code dbsyncer_table_group}。
+ * Run progressandCurrent roundFinishIt's always there.{@code dbsyncer_meta}（TasksAdministrationSTATE/Time/LibrarySummary+ DetailsSNAPSHOT）。</p>
  *
  * @author wuji
  * @version 1.0.0
@@ -25,39 +25,39 @@ public class DatabaseSyncTask extends ConfigModel {
     }
 
     /**
-     * 是否复制表结构
+     * YesNoCopy table schema
      */
     private boolean enableCopySchema;
     /**
-     * 表结构是否覆盖（目标已存在时）
+     * TableStructureOverwrite?（Objective Combined(when existing)
      */
     private boolean overwriteSchema;
     /**
-     * 是否同步数据
+     * YesNoSync data
      */
     private boolean enableCopyData;
     /**
-     * 数据是否覆盖（目标已存在时）
+     * Data FactOverwrite?（Objective Combined(when existing)
      */
     private boolean overwriteData;
 
     /**
-     * 库级映射（持久化到 task.JSON，不含 tableMappings）
+     * LibraryLevel MapEnduringPresent.task.JSON，does not containtableMappings）
      */
     private List<DatabaseMapping> databaseMappings = new ArrayList<>();
 
     /**
-     * 分页读取条数
+     * minPageRead the number of bars
      */
     private int readNum = 10000;
 
     /**
-     * 单次写入条数
+     * Single writeNumber of bars
      */
     private int batchNum = 1000;
 
     /**
-     * 表级并发线程数（预留，与订正校验 threadNum 一致）
+     * TableLevelParallelThreads（set aside,andData validation threadNum Unanimously)
      */
     private int threadNum = 5;
 

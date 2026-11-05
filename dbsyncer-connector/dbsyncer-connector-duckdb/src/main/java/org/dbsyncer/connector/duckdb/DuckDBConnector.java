@@ -38,9 +38,9 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * DuckDB 连接器（本地文件库，可作为 Mapping 源/目标）。
+ * DuckDB Connector（LocalDocumentationLibrary，AsMapping Source/Objective Combined）。
  * <p>
- * 连接配置 {@code serviceName} 指向 .duckdb 文件。整库迁移相关能力暂不支持（与 H2 一致）。
+ * ConnectConfigure {@code serviceName} Point.duckdb Documentation。Database migrationRelevant capabilities are not supported (and H2 (d) Unanimously.
  * </p>
  *
  * @author wuji
@@ -77,7 +77,7 @@ public final class DuckDBConnector extends AbstractDatabaseConnector {
 
     @Override
     public String buildJdbcUrl(DatabaseConfig config, String database) {
-        // jdbc:duckdb:/path/to/file.duckdb ；空路径为内存库
+        // jdbc:duckdb:/path/to/file.duckdb ；Empty path isMemoryLibrary
         if (StringUtil.isBlank(database) || ":memory:".equalsIgnoreCase(database.trim())) {
             return "jdbc:duckdb:";
         }
@@ -93,7 +93,7 @@ public final class DuckDBConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * UI「数据库」列表返回 schema；选择结果常写入 catalog，故解析时 catalog/schema 互通。
+     * UI「Data FactLibrary」ListBack schema；SelectionResultWriting oftencatalog，Other Organisercatalog/schema Connect.
      */
     @Override
     protected String getCatalog(String database, Connection connection) {
@@ -159,12 +159,12 @@ public final class DuckDBConnector extends AbstractDatabaseConnector {
 
     @Override
     public String buildCreateDatabaseSql(String databaseName, String schemaName) {
-        throw new DuckDBException("DuckDB 暂时不支持该功能");
+        throw new DuckDBException("DuckDB does not support this feature yet");
     }
 
     @Override
     public boolean databaseExists(DatabaseConnectorInstance connectorInstance, String databaseName, String schemaName) {
-        throw new DuckDBException("DuckDB 暂时不支持该功能");
+        throw new DuckDBException("DuckDB does not support this feature yet");
     }
 
     @Override
@@ -174,7 +174,7 @@ public final class DuckDBConnector extends AbstractDatabaseConnector {
 
     @Override
     public String getSourceTableDDL(DatabaseConnectorInstance sourceInstance, String sourceTableName) {
-        throw new DuckDBException("DuckDB 暂时不支持该功能");
+        throw new DuckDBException("DuckDB does not support this feature yet");
     }
 
     @Override
@@ -230,7 +230,7 @@ public final class DuckDBConnector extends AbstractDatabaseConnector {
     public String buildModifyColumnsSql(DatabaseConnectorInstance targetInstance, ValidateSyncTask task,
                                         String targetTableName, List<Field> sourceDefinitions,
                                         List<String> targetColumnNames) {
-        throw new DuckDBException("DuckDB 暂时不支持该功能");
+        throw new DuckDBException("DuckDB does not support this feature yet");
     }
 
     @Override
@@ -292,8 +292,8 @@ public final class DuckDBConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * DuckDB JDBC 的 setObject(sqlType) 不支持 Types.BLOB/VARBINARY（会报 Unknown target type）；
-     * 二进制列改走 setBytes。
+     * DuckDB JDBC Yes.setObject(sqlType) Not supportedTypes.BLOB/VARBINARY（Report.Unknown target type）；
+     * Binary column removedsetBytes。
      */
     @Override
     protected Object wrapBindParameter(Field field, Object val) {

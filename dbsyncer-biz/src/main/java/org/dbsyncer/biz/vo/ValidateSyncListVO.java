@@ -6,7 +6,7 @@ package org.dbsyncer.biz.vo;
 import java.math.BigDecimal;
 
 /**
- * 订正校验列表行（仅列表展示字段，不含完整配置）。
+ * Data validationListLine (only)ListPresentationField，Other OrganiserConfigure）。
  *
  * @author wuji
  * @version 1.0.0

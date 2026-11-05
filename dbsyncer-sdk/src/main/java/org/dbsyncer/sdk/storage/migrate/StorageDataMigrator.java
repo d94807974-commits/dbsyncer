@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 存储结构兼容升级（临时）：混存 config 拆表、STATUS→meta、嵌套表映射物化、预建表级 Meta / task_detail。
- * <p><b>兼容若干版本后可整包删除</b>（含 H2/MySQL 子类与 initTable 调用）。不迁旧明细数据、不 DROP 旧表。
+ * Storage structure compatibility upgrade (temporary): mixingconfig Schedules,STATUS→meta、Embedded matrix mapping, preset scaleMeta / task_detail。
+ * <p><b>Compatibility of severalVersionThen you can pack it all.Delete</b>（HamH2/MySQL Subcategoryand initTable Call. Don't change.Detailed data、Oh, no.DROP Old table Exceptional.
  *
  * @author wuji
  * @version 1.0.0
@@ -53,29 +53,29 @@ public abstract class StorageDataMigrator {
     }
 
     /**
-     * 启动入口：有旧数据则拆分；随后幂等物化嵌套表映射并预建 detail 分表。
+     * StartEntry: old data available or removedmin；And then the entropy matrix is mapped and pre-formed.detail minTable.
      */
     public final void run() {
         try {
             if (needSplit()) {
-                logger.warn("执行存储兼容升级（临时脚本），请确认已备份；旧表不删除、旧明细不迁移");
+                logger.warn("Execute storage compatibility upgrades（Temporary script），Please confirm backup；AppealTableOh, no.Delete、The old ones don't move.");
                 splitConfig();
                 migrateStandaloneMapping();
                 migrateTaskStatusToMeta();
-                logger.info("存储兼容升级：config 拆分完成");
+                logger.info("Storage Compatibility Upgrade：config OpenminFinish");
             }
             materializeNestedTableMappings();
-            // 每个 table_group 需有表级 Meta（TASK_ID=table_group.id, IS_TASK_DETAIL=1），校验/整库启动靠它筛选未完成表
+            // Eachtable_group Form requiredMeta（TASK_ID=table_group.id, IS_TASK_DETAIL=1），Validation/correctionLibraryStartYou can't use it.FinishTable
             ensureTableGroupDetailMetas();
             ensureTaskDetailTables();
             migrateEnterpriseTaskTypeCodes();
         } catch (Exception e) {
-            logger.error("存储兼容升级失败: {}", e.getMessage(), e);
+            logger.error("Storage compatibility upgrade failed: {}", e.getMessage(), e);
         }
     }
 
     /**
-     * 订正校验 / 整库迁移任务 TYPE：历史大写 → 驼峰 code；同步改列与 JSON.type（幂等）。
+     * Data validation / Library Migration Task TYPE：Framework→ Peakcode；Sync to Rowand JSON.type（I'm sorry.
      */
     private void migrateEnterpriseTaskTypeCodes() {
         if (!tableExists(T_TASK)) {
@@ -120,12 +120,12 @@ public abstract class StorageDataMigrator {
             updated++;
         }
         if (updated > 0) {
-            logger.info("存储兼容升级：企业任务 TYPE 驼峰化完成, rows={}", updated);
+            logger.info("Storage Compatibility Upgrade：Corporate tasks TYPE The camel peak is complete., rows={}", updated);
         }
     }
 
     /**
-     * @return 新 code；非历史大写则返回原值
+     * @return Newcode；Non-History CapitalBackOriginalValue
      */
     private static String mapLegacyTaskType(String type) {
         if (StringUtil.equals(type, "VALIDATE_SYNC")) {
@@ -173,11 +173,11 @@ public abstract class StorageDataMigrator {
                     break;
             }
         }
-        // 拆分完成后清理旧混存：仅保留 system 配置
+        // OpenminFinishAfter cleaning old mix: keep onlysystem Configure
         cleanupMigratedConfig();
     }
 
-    /** dbsyncer_config 仅保留 type=system，其余已迁至独立表。 */
+    /** dbsyncer_config Keep onlytype=system，The rest has been moved to the stand-alone table.*/
     private void cleanupMigratedConfig() {
         if (!tableExists(T_CONFIG)) {
             return;
@@ -186,7 +186,7 @@ public abstract class StorageDataMigrator {
         query.setType(StorageEnum.CONFIG);
         query.addFilter(ConfigConstant.CONFIG_MODEL_TYPE, FilterEnum.NOT_EQUAL, ConfigConstant.SYSTEM);
         storage.delete(query);
-        logger.info("存储兼容升级：已清理 dbsyncer_config 非 system 数据");
+        logger.info("Storage Compatibility Upgrade：Already3, 2, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 3, 3, 4, 3, 3, 3, 4, 4, favoured, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 10, 3 dbsyncer_config Not system Data Fact");
     }
 
     private void migrateStandaloneMapping() {
@@ -265,7 +265,7 @@ public abstract class StorageDataMigrator {
         p.put(ConfigConstant.CONFIG_MODEL_JSON, StringUtil.isBlank(json) ? "{}" : json);
         p.put(ConfigConstant.CONFIG_MODEL_CREATE_TIME, num(row, "createTime", "CREATE_TIME", System.currentTimeMillis()));
         p.put(ConfigConstant.CONFIG_MODEL_UPDATE_TIME, num(row, "updateTime", "UPDATE_TIME", System.currentTimeMillis()));
-        // 历史 config 无角色列；与离线 SQL 迁移及 Connector 默认值一致，缺省均可作源/目标、在线
+        // Historyconfig NoneRoleColumns;andOffline SQL Migration andConnector Default valueUnanimously, defaults can be sourced/Objective Combined、Online
         p.put(ConfigConstant.CONNECTOR_IS_SOURCE, YesNoEnum.YES.getCode());
         p.put(ConfigConstant.CONNECTOR_IS_TARGET, YesNoEnum.YES.getCode());
         p.put(ConfigConstant.CONNECTOR_STATUS, CommonTaskStatusEnum.RUNNING.getCode());
@@ -379,7 +379,7 @@ public abstract class StorageDataMigrator {
     }
 
     /**
-     * 仅补缺：已有任务级 meta 不覆盖（config.meta.state 优先）。
+     * Filled only: already existingTasksAdministrationmeta Oh, no.Overwrite（config.meta.state Priority.
      */
     private void migrateTaskStatusToMeta() {
         if (!tableExists(T_TASK) || !columnExists(T_TASK, "STATUS") || !tableExists(T_META)) {
@@ -521,8 +521,8 @@ public abstract class StorageDataMigrator {
     }
 
     /**
-     * 为每个 table_group 补表级 Meta：TASK_ID=table_group.id，IS_TASK_DETAIL=1，STATE=0。
-     * <p>ValidateSync / DatabaseSync 启动靠 dm JOIN dtg ON dtg.ID = dm.TASK_ID 拉取未完成表。
+     * For eachtable_group Table LevelMeta：TASK_ID=table_group.id，IS_TASK_DETAIL=1，STATE=0。
+     * <p>ValidateSync / DatabaseSync StartShit.dm JOIN dtg ON dtg.ID = dm.TASK_ID Pull not yetFinishTable.
      */
     private void ensureTableGroupDetailMetas() {
         if (!tableExists(T_TABLE_GROUP) || !tableExists(T_META)) {
@@ -570,7 +570,7 @@ public abstract class StorageDataMigrator {
             try {
                 storage.clear(StorageEnum.TASK_DETAIL, taskId);
             } catch (Exception e) {
-                logger.warn("预建 task_detail 失败 {}: {}", taskId, e.getMessage());
+                logger.warn("Prebuild task_detail Failed {}: {}", taskId, e.getMessage());
             }
         }
     }

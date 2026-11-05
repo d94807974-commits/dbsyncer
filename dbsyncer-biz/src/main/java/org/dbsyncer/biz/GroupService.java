@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 业务分组服务（资源与分组多对多）。
+ * Business groupServicesResourceandGroupMany pairs more.
  *
  * @author wuji
  * @version 1.0.0
@@ -19,83 +19,83 @@ import java.util.Map;
 public interface GroupService {
 
     /**
-     * 新建分组（仅名称）。
+     * New group（OnlyName）。
      *
-     * @param params 含 name
-     * @return 分组 ID
+     * @param params Hamname
+     * @return Group ID
      */
     String add(Map<String, String> params);
 
     /**
-     * 编辑分组（改名）。
+     * Edit Group（Change of name.
      *
-     * @param params 含 id、name
-     * @return 分组 ID
+     * @param params Hamid、name
+     * @return Group ID
      */
     String edit(Map<String, String> params);
 
     /**
-     * 删除分组并级联清 rel。
+     * Delete groupConvergencerel。
      *
-     * @param id 分组 ID
-     * @return 分组 ID
+     * @param id Group ID
+     * @return Group ID
      */
     String remove(String id);
 
     /**
-     * 全部分组列表。
+     * AllGroupList。
      */
     List<Group> list();
 
     /**
-     * 按 id 查分组。
+     * Pressid Cha.Group。
      */
     Group get(String id);
 
     /**
-     * 分组下成员数（删组确认文案用）。
+     * GroupNext members (number deleted)ConfirmIt's in the text.
      */
     int countMembers(String id);
 
     /**
-     * 挂到指定分组（幂等；已存在则忽略）。{@code groupId} 空表示清除该资源全部归属。
+     * Hang to SpecifyGroup（)。, etc.; already exists and ignored).{@code groupId} EmptyClearTheResourceAllAttribution.
      *
-     * @param groupId      目标分组 ID，空或空白=清除全部归属
+     * @param groupId      Objective CombinedGroup ID，Empty or empty=ClearAllAttribution
      * @param resourceType connector / mapping / validateSync / databaseSync
-     * @param resourceId   资源 ID
+     * @param resourceId   Resource ID
      */
     void bind(String groupId, String resourceType, String resourceId);
 
     /**
-     * 批量挂组。{@code groupId} 空表示批量清除这些资源的全部归属。
+     * Batch-mounted groups.{@code groupId} Empty as batchClearThese.ResourceYes.AllAttribution.
      */
     void bindBatch(String groupId, String resourceType, List<String> resourceIds);
 
     /**
-     * 从指定分组移出（不影响其它组归属）。
+     * From SpecifyGroupOut (without prejudice to Each other group).
      */
     void unbind(String groupId, String resourceType, String resourceId);
 
     /**
-     * 批量从指定分组移出。
+     * Batch from SpecifiedGroupMove out.
      */
     void unbindBatch(String groupId, String resourceType, List<String> resourceIds);
 
     /**
-     * 查询资源当前全部归属。
+     * QuestionResourceCurrentAllAttribution.
      */
     List<GroupRel> listByResource(String resourceType, String resourceId);
 
     /**
-     * 按分组+类型取资源 ID 列表。
+     * PressGroup+TypeRemoveResource ID List。
      */
     List<String> listResourceIds(String groupId, String resourceType);
 
     /**
-     * 解析列表页 groupId 筛选项。
+     * ParsingListPage groupId Filter entry.
      *
-     * @param groupIdParam 缺省/空/null=全部；其它=真实分组 ID
-     * @param resourceType 资源类型
+     * @param groupIdParam Default/empty/null=All；Other=RealGroup ID
+     * @param resourceType Resource type
      */
     GroupSearchFilter resolveSearchFilter(String groupIdParam, String resourceType);
 }

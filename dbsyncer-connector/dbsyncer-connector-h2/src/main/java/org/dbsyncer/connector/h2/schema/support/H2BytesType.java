@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * H2 二进制类型
+ * H2 BinaryType
  */
 public final class H2BytesType extends BytesType {
 

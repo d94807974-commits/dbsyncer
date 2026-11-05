@@ -4,7 +4,7 @@
 package org.dbsyncer.sdk.model;
 
 /**
- * 缓存执行器监控快照（表执行器或增量管道）。
+ * Cache ExecutorMonitorSnapshotTable-group actuatororIncrementalPipeline.
  *
  * @author wuji
  * @version 1.0.0
@@ -13,32 +13,32 @@ package org.dbsyncer.sdk.model;
 public class BufferActuatorMetric {
 
     /**
-     * 驱动 Meta ID
+     * Mapping Meta ID
      */
     private String taskId;
 
     /**
-     * 展示名：开源为源表名，商业版为管道名
+     * Presentation name: Open SourceSource Table Name，Business version is Pipename
      */
     private String name;
 
     /**
-     * 缓存队列堆积数
+     * Cache Que InstitutionBacklogNumber
      */
     private int queueSize;
 
     /**
-     * 缓存队列容量
+     * Cache Queue Capacity
      */
     private int queueCapacity;
 
     /**
-     * 写线程池活跃线程数
+     * WriteThreadsJi.LiveThreads
      */
     private int activeCount;
 
     /**
-     * 写线程池最大线程数
+     * WriteThreadsThe pool is LandlockedThreads
      */
     private int maxPoolSize;
 
@@ -51,7 +51,7 @@ public class BufferActuatorMetric {
     }
 
     /**
-     * 写线程池已完成任务数
+     * WriteThreadsJi.CompletedTasksNumber
      */
     private long completedTaskCount;
 

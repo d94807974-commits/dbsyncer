@@ -3,22 +3,22 @@ package org.dbsyncer.sdk.listener;
 public interface QuartzFilter<T> {
 
     /**
-     * 获取默认参数
+     * 71. Get DefaultParameter
      */
     T getObject();
 
     /**
-     * 反解参数
+     * CountermeasureParameter
      */
     T getObject(String s);
 
     /**
-     * 转String类型
+     * TurnStringType
      */
     String toString(T value);
 
     /**
-     * 是否开始字段
+     * YesNoStartField
      */
     boolean begin();
 }

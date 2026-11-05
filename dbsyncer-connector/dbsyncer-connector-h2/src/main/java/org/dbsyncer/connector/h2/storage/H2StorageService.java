@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 将存储数据写入 H2（嵌入式）
+ * Write stored dataH2（Embedded)
  *
  * @author AE86
  * @version 1.0.0
@@ -84,7 +84,7 @@ public class H2StorageService extends AbstractStorageService {
     }
 
     /**
-     * MODE=MySQL 下 H2 默认在 PUBLIC schema 建表，启动时显式确保 schema 存在。
+     * MODE=MySQL DownH2 Default inPUBLIC schema Form.StartShowtime ensuresschema There.
      */
     private void ensureSchema() {
         connectorInstance.execute(databaseTemplate -> {
@@ -107,8 +107,8 @@ public class H2StorageService extends AbstractStorageService {
             if (CollectionUtils.isEmpty(data)) {
                 return new ArrayList<>();
             }
-            // H2 列名常为大写/折叠大小写：下划线转小驼峰；其余保留原 key，并用大小写不敏感 Map，
-            // 保证 AS sourceTable / SOURCETABLE 都能按 camelCase 读取（与结构化查询 normalizeResultKeys 语义对齐）
+            // H2 Listing is often in upper case/fold case: underlined to minnow; remaining retention Originalkey，And it's not sensitive in case.Map，
+            // Promise.AS sourceTable / SOURCETABLE You can press it.camelCase ReadandStructured queriesnormalizeResultKeys Semantic Alignment)
             List<Map<String, Object>> normalized = new ArrayList<>(data.size());
             for (Map<String, Object> row : data) {
                 Map<String, Object> newRow = new LinkedCaseInsensitiveMap<>();
@@ -166,7 +166,7 @@ public class H2StorageService extends AbstractStorageService {
     @Override
     protected Paging select(String sharding, Query query) {
         Paging paging = new Paging(query.getPageNum(), query.getPageSize());
-        // 读路径：分表不存在时不建表，避免错误 shardId 产生孤儿表
+        // Read path:minDo not form when a table does not exist, avoidError shardId Create an orphan watch
         Executor executor = getExecutor(query.getType(), sharding, false);
         if (executor == null) {
             return paging;
@@ -200,7 +200,7 @@ public class H2StorageService extends AbstractStorageService {
 
     @Override
     protected Map selectOne(String sharding, Query query) {
-        // 读路径：分表不存在时不建表
+        // Read path:minDo not make a table when it does not exist
         Executor executor = getExecutor(query.getType(), sharding, false);
         if (executor == null) {
             return null;
@@ -243,13 +243,13 @@ public class H2StorageService extends AbstractStorageService {
     @Override
     protected void deleteAll(String sharding) {
         Executor executor = tables.remove(sharding);
-        // 系统表：截断后放回缓存
+        // System chart: release back after cut
         if (executor != null && executor.isSystemTable()) {
             tables.put(sharding, executor);
             executeSql(String.format(TRUNCATE_TABLE, PREFIX_TABLE.concat(sharding)));
             return;
         }
-        // 动态分表：物理 DROP（删除任务）
+        // DynamicShit.minTable: PhysicsDROP（DeleteTasks）
         String tableName = PREFIX_TABLE.concat(sharding);
         try {
             executeSql(String.format(DROP_TABLE, tableName));
@@ -307,7 +307,7 @@ public class H2StorageService extends AbstractStorageService {
                 sql.append(", ");
             }
             String quotation = connector.buildWithQuotation(column);
-            // 原子加减，结果小于 0 时钳为 0
+            // Atom plus minus,Resultless than0 Timepliers0
             sql.append(quotation).append(" = GREATEST(").append(quotation).append(" + ?, 0)");
             args.add(entry.getValue());
             hasColumn = true;
@@ -370,15 +370,15 @@ public class H2StorageService extends AbstractStorageService {
     }
 
     /**
-     * @param createIfAbsent true：写路径，分表不存在则建表；false：读/删路径，不存在则返回 null，避免错误 shard 产生孤儿表
+     * @param createIfAbsent true：Write a path,minIf they do not exist, form;false：Read/ Deleting Path, do not existBack null，AvoidError shard Create an orphan watch
      */
     private Executor getExecutor(StorageEnum type, String sharding, boolean createIfAbsent) {
         Executor template = tables.get(type.getType());
         if (template == null) {
-            throw new NullExecutorException("未知的存储类型");
+            throw new NullExecutorException("Unknown storage type");
         }
         String physicalTable = PREFIX_TABLE.concat(sharding);
-        // 读路径：缓存命中也要校验物理表，避免 DROP 后仍查已失效的 Executor
+        // Read path: Check the physical chart in Cache, avoidDROP I'm still checking explains Physically.Executor
         if (!createIfAbsent && !template.isSystemTable()) {
             if (!tableExists(physicalTable)) {
                 tables.remove(sharding);
@@ -554,7 +554,7 @@ public class H2StorageService extends AbstractStorageService {
     }
 
     /**
-     * 展开 IN：生成 {@code IN (?,?,?)} 并逐个绑定参数（逗号拼接值或 {@link InFilter#getBindValues()}）。
+     * ExpandIN：Generate {@code IN (?,?,?)} And bind them one by one.Parameter（Comma SpellingValueor{@link InFilter#getBindValues()}）。
      */
     private void appendInClause(AbstractFilter filter, List<Object> args, StringBuilder sql) {
         List<Object> binds;
@@ -613,7 +613,7 @@ public class H2StorageService extends AbstractStorageService {
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_NAME, ConfigConstant.CONFIG_MODEL_TYPE, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME, ConfigConstant.CONFIG_MODEL_JSON);
         List<Field> configFields = builder.getFields();
 
-        // 用户配置：一行一用户，严格按 dbsyncer_user 拆分列
+        // User Configuration：Line one.User，Strictly pressdbsyncer_user OpenminColumns
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.USER_USERNAME, ConfigConstant.USER_PASSWORD, ConfigConstant.USER_NICKNAME,
                 ConfigConstant.USER_ROLE,
@@ -626,7 +626,7 @@ public class H2StorageService extends AbstractStorageService {
                 ConfigConstant.CONFIG_MODEL_JSON);
         List<Field> connectorFields = builder.getFields();
 
-        // 表映射关系：关联信息拆分列 + json(字段映射/command等)
+        // Map relation：AssociationInfoOpenminreorganize+ json(Field mapping/commandWait.)
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.TABLE_GROUP_TASK_ID, ConfigConstant.TABLE_GROUP_SORT_INDEX,
                 ConfigConstant.TABLE_GROUP_SOURCE_CONNECTOR_ID, ConfigConstant.TABLE_GROUP_TARGET_CONNECTOR_ID,
@@ -637,74 +637,74 @@ public class H2StorageService extends AbstractStorageService {
                 ConfigConstant.CONFIG_MODEL_JSON);
         List<Field> tableGroupFields = builder.getFields();
 
-        // 任务执行结果：严格按 dbsyncer_meta 拆分列(无 name/type/json)
+        // Mandate performance：Strictly pressdbsyncer_meta OpenminColumns(None name/type/json)
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.META_START_TIME, ConfigConstant.META_TASK_ID, ConfigConstant.META_STATE, ConfigConstant.META_IS_TASK_DETAIL,
                 ConfigConstant.META_TOTAL, ConfigConstant.META_SUCCESS, ConfigConstant.META_FAIL,
                 ConfigConstant.META_DIFF, ConfigConstant.META_FIXED, ConfigConstant.META_SNAPSHOT);
         List<Field> metaFields = builder.getFields();
 
-        // 任务执行明细：按任务分表(无 TASK_ID 列，靠 TABLE_GROUP_ID 关联)
+        // TasksImplementation Details：PressTasksminTable(None TASK_ID Ray, fuck.TABLE_GROUP_ID Association)
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.DATA_TABLE_GROUP_ID, ConfigConstant.CONFIG_MODEL_TYPE,
                 ConfigConstant.DETAIL_TARGET_TABLE, ConfigConstant.DETAIL_IS_SUCCESS, ConfigConstant.DATA_ERROR,
                 ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME, ConfigConstant.BINLOG_DATA);
         List<Field> taskDetailFields = builder.getFields();
 
-        // 日志
+        // Log
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_TYPE,
                 ConfigConstant.LOG_USERNAME, ConfigConstant.LOG_IP, ConfigConstant.LOG_STATUS,
                 ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_JSON);
         List<Field> logFields = builder.getFields();
 
-        // 任务配置表(同步/校验/迁移统一)：ID/NAME/TYPE/JSON/时间
+        // Task Profile(Synchronization/validation/transfer)：ID/NAME/TYPE/JSON/Time
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_NAME, ConfigConstant.CONFIG_MODEL_TYPE,
                 ConfigConstant.CONFIG_MODEL_JSON, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME);
         List<Field> taskFields = builder.getFields();
 
-        // 业务分组
+        // Business group
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_NAME,
                 ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.CONFIG_MODEL_JSON);
         List<Field> groupFields = builder.getFields();
 
-        // 业务分组关系
+        // Business groupRelations
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.GROUP_REL_GROUP_ID, ConfigConstant.GROUP_REL_RESOURCE_TYPE, ConfigConstant.GROUP_REL_RESOURCE_ID);
         List<Field> groupRelFields = builder.getFields();
 
-        // 角色
+        // Role
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.CONFIG_MODEL_NAME);
         List<Field> roleFields = builder.getFields();
 
-        // 菜单权限
+        // MenuPermissions
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.PERMISSION_CODE, ConfigConstant.CONFIG_MODEL_NAME, ConfigConstant.PERMISSION_MODULE);
         List<Field> permissionFields = builder.getFields();
 
-        // 角色-权限
+        // Role-Permissions
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.ROLE_PERMISSION_ROLE_ID, ConfigConstant.ROLE_PERMISSION_PERMISSION_ID);
         List<Field> rolePermissionFields = builder.getFields();
 
-        // 用户-角色
+        // User-Role
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.USER_ROLE_USER_ID, ConfigConstant.USER_ROLE_ROLE_ID);
         List<Field> userRoleFields = builder.getFields();
 
-        // 资源 ACL
+        // Resource ACL
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.RESOURCE_ACL_SUBJECT_TYPE, ConfigConstant.RESOURCE_ACL_SUBJECT_ID,
                 ConfigConstant.GROUP_REL_RESOURCE_TYPE, ConfigConstant.GROUP_REL_RESOURCE_ID, ConfigConstant.RESOURCE_ACL_PERMISSION);
         List<Field> resourceAclFields = builder.getFields();
 
-        // 告警通知规则
+        // Alert notificationRule
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.NOTICE_RULE_SCOPE_TYPE, ConfigConstant.NOTICE_RULE_SCOPE_ID,
                 ConfigConstant.NOTICE_RULE_AT_ALL, ConfigConstant.NOTICE_RULE_AT_PHONES, ConfigConstant.NOTICE_RULE_EMAILS);
         List<Field> noticeRuleFields = builder.getFields();
 
-        // 告警策略
+        // Police strategy Corrupt
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_NAME,
                 ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.NOTICE_STRATEGY_NOTICE_TYPES, ConfigConstant.NOTICE_STRATEGY_ENABLED,
@@ -712,7 +712,7 @@ public class H2StorageService extends AbstractStorageService {
                 ConfigConstant.NOTICE_STRATEGY_REMARK);
         List<Field> noticeStrategyFields = builder.getFields();
 
-        // 同步任务 Meta 日汇总
+        // Sync task Meta Summary
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.META_DAILY_STAT_DATE,
                 ConfigConstant.META_TOTAL, ConfigConstant.META_SUCCESS, ConfigConstant.META_FAIL,
                 ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME);
@@ -737,7 +737,7 @@ public class H2StorageService extends AbstractStorageService {
         tables.computeIfAbsent(StorageEnum.NOTICE_STRATEGY.getType(), k -> new Executor(k, noticeStrategyFields, true, true));
         tables.computeIfAbsent(StorageEnum.META_DAILY.getType(), k -> new Executor(k, metaDailyFields, true, true));
 
-        // 建表前：新拆表齐全且 task 无 STATUS → 新版本跳过数据升级
+        // Before form: New list is completetask None STATUS → NewVersionSkip Data Upgrade
         boolean newStorageSchema = isNewStorageSchema();
         tables.forEach((tableName, e) -> {
             if (e.isSystemTable()) {
@@ -754,17 +754,17 @@ public class H2StorageService extends AbstractStorageService {
             logger.error(e.getMessage(), e);
         }
 
-        // 兼容升级（临时脚本，若干版本后可删）
+        // Compatibility upgrade (temporary scripts, selected)Versionto be deleted
         StorageDataMigrator migrator = new H2StorageDataMigrator(this, connectorInstance);
         if (!newStorageSchema) {
-            logger.info("未检测到完整新存储拆表（或仍含 task.STATUS / 历史企业任务 TYPE），执行兼容升级");
+            logger.info("No complete new storage scrapping form (or still contains task.STATUS/ History enterprise task TYPE) detected to perform compatibility upgrades");
         }
         migrator.run();
         dropTaskStatusColumnIfPresent();
     }
 
     /**
-     * 是否已是新版本存储：关键拆表齐全，dbsyncer_task 无旧 STATUS 列，且无历史企业任务 TYPE。
+     * YesNoAlreadyYesNewVersionStorage: All critical pieces of material,dbsyncer_task NoneOldSTATUS rows, andNoneHistorical enterpriseTasks TYPE。
      */
     private boolean isNewStorageSchema() {
         String taskTable = PREFIX_TABLE.concat(StorageEnum.TASK.getType());
@@ -778,7 +778,7 @@ public class H2StorageService extends AbstractStorageService {
     }
 
     /**
-     * 任务表是否仍存在历史大写 TYPE（VALIDATE_SYNC / DATABASE_SYNC），需跑驼峰化迁移。
+     * TasksTableYesNoThere's still history.TYPE（VALIDATE_SYNC / DATABASE_SYNC），It/1992.
      */
     private boolean hasLegacyEnterpriseTaskType(String taskTable) {
         if (StringUtil.isBlank(taskTable) || !tableExists(taskTable)) {
@@ -811,7 +811,7 @@ public class H2StorageService extends AbstractStorageService {
     }
 
     /**
-     * 删除旧 dbsyncer_task.STATUS 及依赖索引（与当前 DDL 对齐）。
+     * DeleteOlddbsyncer_task.STATUS And dependence.Index（andCurrentDDL Alignment.
      */
     private void dropTaskStatusColumnIfPresent() {
         String table = PREFIX_TABLE.concat(StorageEnum.TASK.getType());
@@ -824,9 +824,9 @@ public class H2StorageService extends AbstractStorageService {
             executeSql(String.format("ALTER TABLE %s DROP COLUMN %s",
                     connector.buildWithQuotation(table),
                     connector.buildWithQuotation("STATUS")));
-            logger.info("已删除 {}.STATUS", table);
+            logger.info("Deleted {}.STATUS", table);
         } catch (Exception e) {
-            logger.warn("删除 {}.STATUS 失败: {}", table, e.getMessage());
+            logger.warn("Delete {}.STATUS failed: }", table, e.getMessage());
         }
     }
 
@@ -842,7 +842,7 @@ public class H2StorageService extends AbstractStorageService {
     }
 
     /**
-     * 表不存在则创建；返回是否本次新建（复用已有 tableExists 判断）。
+     * Create tables if they do not exist;BackYesNoNew this time (reused already)tableExists The judge.
      */
     private boolean createTableIfNotExist(String table, Executor executor) {
         table = PREFIX_TABLE.concat(table);
@@ -852,11 +852,11 @@ public class H2StorageService extends AbstractStorageService {
             created = true;
         }
 
-        // 老版本升级：动态补齐新增字段/索引
+        // OldVersionUpgrade: dynamic completionCreateField/Index
         upgradeTableColumns(executor.getType(), table);
 
         List<Field> fields = executor.getFields();
-        // 主键列名须与 Field.name 一致（如 ID），不可用 label（id），否则 H2 引号标识符大小写敏感
+        // Primary keyListing requirementsand Field.name Consistent (e.g.)ID），Not Availablelabel（id），NothenH2 Quote identifier sensitive
         final SqlBuilderConfig config = new SqlBuilderConfig(connector, "", table, buildPrimaryKeys(fields), fields, "");
 
         String query = SqlBuilderEnum.QUERY.getSqlBuilder().buildQuerySql(config);
@@ -868,10 +868,10 @@ public class H2StorageService extends AbstractStorageService {
     }
 
     /**
-     * 老版本升级：按表类型动态补齐新增字段/索引（已存在则跳过）
+     * OldVersionUpgrade: by tableTypeDynamic CompletionCreateField/Index（Existing and Skipping)
      *
-     * @param type  存储类型
-     * @param table 已带前缀的表名
+     * @param type  StorageType
+     * @param table PrefixedTable name
      */
     private void upgradeTableColumns(String type, String table) {
         if (StringUtil.isBlank(type)) {
@@ -895,21 +895,21 @@ public class H2StorageService extends AbstractStorageService {
             return;
         }
         if (StorageEnum.TASK_DETAIL.getType().equals(type)) {
-            // H2 索引名全局唯一：按表名哈希后缀，避免多分表冲突
+            // H2 IndexGlobal Unique: PressTable nameHash suffix, avoid more.minTable Conflict
             String suffix = Integer.toHexString(table.hashCode() & 0xffff);
             createIndexIfNotExist(table, "IDX_TG_UPD_" + suffix, "`TABLE_GROUP_ID`,`UPDATE_TIME`");
             return;
         }
-        // 任务执行明细按任务分表(每表数据量有限)，H2 索引名为 schema 全局唯一，分表间不再单独建二级索引
+        // TasksImplementation DetailsPressTasksminTable(Limited amount per table)，H2 IndexNameschema The only one in the world.minNo more separate level two.Index
         if (StorageEnum.META.getType().equals(type)) {
             addColumnIfNotExist(table, "START_TIME", "BIGINT NOT NULL DEFAULT 0");
             createIndexIfNotExist(table, "IDX_STATE_UPDATE_TIME", "`STATE`,`UPDATE_TIME`");
-            // 对齐 MySQL：按 TASK_ID + IS_TASK_DETAIL 查询/重置明细 Meta
+            // AlignmentMySQL：PressTASK_ID + IS_TASK_DETAIL Ask/ResetDetailsMeta
             createIndexIfNotExist(table, "IDX_TASK_IS_DETAIL", "`TASK_ID`,`IS_TASK_DETAIL`");
             return;
         }
         if (StorageEnum.TASK.getType().equals(type)) {
-            // STATUS 列须在数据迁移后删除，见 dropTaskStatusColumnIfPresent()
+            // STATUS Other OrganiserData MigrationBackDelete，SeedropTaskStatusColumnIfPresent()
             createIndexIfNotExist(table, "IDX_UPDATE_TIME", "`UPDATE_TIME`");
             createIndexIfNotExist(table, "IDX_TYPE_UPDATE_TIME", "`TYPE`,`UPDATE_TIME`");
             return;
@@ -926,7 +926,7 @@ public class H2StorageService extends AbstractStorageService {
     }
 
     /**
-     * 列不存在则追加。
+     * Adds if columns do not exist.
      */
     private void addColumnIfNotExist(String table, String columnName, String columnDef) {
         if (columnExists(table, columnName)) {
@@ -937,18 +937,18 @@ public class H2StorageService extends AbstractStorageService {
                     connector.buildWithQuotation(table),
                     connector.buildWithQuotation(columnName),
                     columnDef));
-            logger.info("已补齐 {}.{}", table, columnName);
+            logger.info("Other Organiser", table, columnName);
         } catch (Exception e) {
-            logger.warn("补齐 {}.{} 失败: {}", table, columnName, e.getMessage());
+            logger.warn("Other Organiser", table, columnName, e.getMessage());
         }
     }
 
     /**
-     * 普通二级索引不存在则创建
+     * General Level 2IndexCreate without
      *
-     * @param table        已带前缀的表名
-     * @param indexName    索引名
-     * @param indexColumns 索引列定义
+     * @param table        PrefixedTable name
+     * @param indexName    IndexFirst Name
+     * @param indexColumns IndexColumn definition
      */
     private void createIndexIfNotExist(String table, String indexName, String indexColumns) {
         if (indexExists(table, indexName)) {
@@ -1040,7 +1040,7 @@ public class H2StorageService extends AbstractStorageService {
     }
 
     /**
-     * H2（MODE=MySQL）JDBC 返回的列名多为大写且无下划线
+     * H2（MODE=MySQL）JDBC BackMost listings are capital SizeNoneUnderline
      */
     private List<Map<String, Object>> normalizeResultKeys(List<Map<String, Object>> data, List<Field> fields) {
         if (CollectionUtils.isEmpty(data) || CollectionUtils.isEmpty(fields)) {

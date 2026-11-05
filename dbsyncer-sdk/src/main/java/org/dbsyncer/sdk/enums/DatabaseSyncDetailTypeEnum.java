@@ -6,7 +6,7 @@ package org.dbsyncer.sdk.enums;
 import org.dbsyncer.common.enums.CommonTaskStatusEnum;
 
 /**
- * 整库迁移明细类型（{@code dbsyncer_task_database_sync_detail.TYPE}）。
+ * Database migrationDetailsType（{@code dbsyncer_task_database_sync_detail.TYPE}）。
  *
  * @author wuji
  * @version 1.0.0
@@ -15,11 +15,11 @@ import org.dbsyncer.common.enums.CommonTaskStatusEnum;
 public enum DatabaseSyncDetailTypeEnum {
 
     /**
-     * 结构迁移
+     * Structure Migration
      */
     TABLE_SCHEMA("tableSchema"),
     /**
-     * 数据迁移
+     * Data FactMigration
      */
     ROW_DATA("rowData");
 
@@ -46,7 +46,7 @@ public enum DatabaseSyncDetailTypeEnum {
     }
 
     /**
-     * 结构阶段是否已结束（含跳过）；已进入数据阶段视为结构已完成。
+     * Structure phaseYesNoSide Closed (includes skipping); data phase considered structuralCompleted。
      */
     public boolean isSchemaPhaseDone(int status) {
         if (this == ROW_DATA) {
@@ -56,14 +56,14 @@ public enum DatabaseSyncDetailTypeEnum {
     }
 
     /**
-     * 数据阶段是否已结束（含跳过）。
+     * Data FactPhaseYesNoClosed (includes skipping).
      */
     public boolean isDataPhaseDone(int status) {
         return this == ROW_DATA && CommonTaskStatusEnum.isDone(status);
     }
 
     /**
-     * 根据阶段编码判断结构阶段是否已结束。
+     * Structure stage judged by stage codeYesNoClosed.
      */
     public static boolean isSchemaPhaseDone(String stepCode, int status) {
         DatabaseSyncDetailTypeEnum step = ofCode(stepCode);
@@ -71,7 +71,7 @@ public enum DatabaseSyncDetailTypeEnum {
     }
 
     /**
-     * 根据阶段编码判断数据阶段是否已结束。
+     * Data phase judged by stage codeYesNoClosed.
      */
     public static boolean isDataPhaseDone(String stepCode, int status) {
         DatabaseSyncDetailTypeEnum step = ofCode(stepCode);

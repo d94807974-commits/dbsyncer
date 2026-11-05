@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 整库迁移：库映射与 table_group 辅助方法。
+ * Database migration：LibraryTable Groupand table_group ComplementaryShh..
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-07-20 15:30
  */
@@ -25,7 +25,7 @@ public abstract class DatabaseSyncMappingUtil {
     }
 
     /**
-     * 构建单表映射。
+     * Build 3/Map.
      */
     public static TableMapping toTableMapping(String sourceTable, String targetTable, int sortIndex) {
         TableMapping tm = new TableMapping();
@@ -36,7 +36,7 @@ public abstract class DatabaseSyncMappingUtil {
     }
 
     /**
-     * 按 index 升序返回库映射列表（副本）。
+     * Pressindex RaiseBackLibraryTable GroupList（Copy that.
      */
     public static List<DatabaseMapping> sortByIndex(List<DatabaseMapping> mappings) {
         if (CollectionUtils.isEmpty(mappings)) {

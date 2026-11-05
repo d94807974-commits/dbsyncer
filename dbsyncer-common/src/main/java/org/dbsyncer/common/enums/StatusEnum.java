@@ -4,7 +4,7 @@
 package org.dbsyncer.common.enums;
 
 /**
- * 通用状态（整型落库：0-失败；1-成功）。
+ * UniversalStatus（Integer DownLibrary：0-Failed；1-Success）。
  *
  * @author wuji
  * @version 1.0.0
@@ -13,14 +13,14 @@ package org.dbsyncer.common.enums;
 public enum StatusEnum {
 
     /**
-     * 失败
+     * Failed
      */
-    FAIL(0, "失败"),
+    FAIL(0, "Failed"),
 
     /**
-     * 成功
+     * Success
      */
-    SUCCESS(1, "成功");
+    SUCCESS(1, "Success");
 
     private final int code;
     private final String message;
@@ -39,20 +39,20 @@ public enum StatusEnum {
     }
 
     /**
-     * 布尔 → 状态。
+     * Boolean→ Status。
      *
-     * @param success true 为成功
-     * @return 成功/失败
+     * @param success true YesSuccess
+     * @return Success/Failed
      */
     public static StatusEnum of(boolean success) {
         return success ? SUCCESS : FAIL;
     }
 
     /**
-     * 按 code 解析；未知值返回 null。
+     * Presscode Analysis;UnknownValueBack null。
      *
-     * @param code 状态码
-     * @return 枚举或 null
+     * @param code StatusCode
+     * @return Enumer Sexualitynull
      */
     public static StatusEnum get(Integer code) {
         if (code == null) {

@@ -50,12 +50,12 @@ public class PluginFactory implements DisposableBean {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
-     * 插件路径dbsyncer/plugin/
+     * PluginPathdbsyncer/plugin/
      */
     private final String PLUGIN_PATH = System.getProperty("user.dir") + File.separatorChar + "plugins" + File.separatorChar;
 
     /**
-     * 依赖路径dbsyncer/lib/
+     * Reliance Pathdbsyncer/lib/
      */
     private final String LIBRARY_PATH = System.getProperty("user.dir") + File.separatorChar + "lib" + File.separatorChar;
 
@@ -64,12 +64,12 @@ public class PluginFactory implements DisposableBean {
     private final Map<String, PluginService> service = new ConcurrentHashMap<>();
 
     /**
-     * 上传 JAR 对应的 ClassLoader（按文件名）。
+     * Upload JAR CorrespondingClassLoader（PressFilename）。
      */
     private final Map<String, URLClassLoader> classLoaders = new ConcurrentHashMap<>();
 
     /**
-     * 加载用临时副本（key=原文件名）。ClassLoader 只打开副本，Windows 下 plugins 原文件可删/覆盖。
+     * Loading temporary copy(s)key=OriginalFilename）。ClassLoader Only the copy is open.Windows Downplugins OriginalDocumentationDeleted/Overwrite。
      */
     private final Map<String, File> loadCopies = new ConcurrentHashMap<>();
 
@@ -95,7 +95,7 @@ public class PluginFactory implements DisposableBean {
     }
 
     public synchronized void loadPlugins() {
-        // 先释放已加载的上传插件，避免 Windows 下 JAR 文件锁导致无法覆盖/删除
+        // Release loaded first.UploadPlugin，AvoidWindows DownJAR DocumentationLock causedNoneFrenchOverwrite/Delete
         unloadAllUploaded();
         if (!CollectionUtils.isEmpty(plugins)) {
             List<Plugin> unmodifiablePlugin = plugins.stream().filter(Plugin::isUnmodifiable).collect(Collectors.toList());
@@ -127,28 +127,28 @@ public class PluginFactory implements DisposableBean {
     }
 
     /**
-     * 仅卸载内存中的上传插件（关 SPI + ClassLoader），不删文件。覆盖上传前调用。
+     * Unmount onlyMemoryMediumUploadPlugin（OffSPI + ClassLoader），No, no, no.Documentation。OverwriteUploadCall before.
      *
-     * @param fileName 插件文件名
+     * @param fileName PluginFilename
      */
     public synchronized void unloadPlugin(String fileName) {
-        Assert.hasText(fileName, "插件文件名不能为空");
+        Assert.hasText(fileName, "Plugin filename cannot be empty");
         if (!PluginFile.isSafeName(fileName)) {
-            throw new IllegalArgumentException("插件文件名不合法，仅支持字母、数字、点、下划线和短横线");
+            throw new IllegalArgumentException("Invalid plugin filename; only letters, digits, dots, underscores and hyphens are allowed");
         }
         unloadJar(fileName);
     }
 
     /**
-     * 删除上传的插件：先卸载内存（SPI + ClassLoader + 临时副本），再删 {@code plugins/} 原文件。
-     * <p>仅删磁盘文件不够——运行中加载的是临时副本，不卸载则列表/转换仍可能命中旧实例。
+     * DeleteUploadYes.Plugin：Unmount firstMemory（SPI + ClassLoader + temporary copy, delete{@code plugins/} OriginalDocumentation。
+     * <p>Delete onlyDiskDocumentationNot enough.——RunningUrbanYesTemporary copy, no unloaded ruleList/ConvertIt's still possible to hit old cases.
      *
-     * @param fileName 插件文件名（须为合法 jar 名）
+     * @param fileName PluginFilename（It Given the Lawjar First name)
      */
     public synchronized void deletePlugin(String fileName) {
-        Assert.hasText(fileName, "插件文件名不能为空");
+        Assert.hasText(fileName, "Plugin filename cannot be empty");
         if (!PluginFile.isSafeName(fileName)) {
-            throw new IllegalArgumentException("插件文件名不合法，仅支持字母、数字、点、下划线和短横线");
+            throw new IllegalArgumentException("Invalid plugin filename; only letters, digits, dots, underscores and hyphens are allowed");
         }
         File file = new File(PLUGIN_PATH, fileName);
         boolean known = classLoaders.containsKey(fileName) || loadCopies.containsKey(fileName);
@@ -156,24 +156,24 @@ public class PluginFactory implements DisposableBean {
             if (StringUtil.equals(fileName, plugin.getFileName())) {
                 known = true;
                 if (plugin.isUnmodifiable()) {
-                    throw new IllegalArgumentException("内置插件不能删除");
+                    throw new IllegalArgumentException("Internal plugin cannot be deleted");
                 }
             }
         }
         if (!file.exists() && !known) {
-            throw new IllegalArgumentException("插件文件不存在: " + fileName);
+            throw new IllegalArgumentException("Plugin file does not exist: " + fileName);
         }
-        // 1) 卸掉已加载实例（含临时副本 ClassLoader）
+        // 1) Unload loaded instance (including temporary copy)ClassLoader）
         unloadJar(fileName);
-        // 2) 再删 plugins 目录原文件（原文件未被 ClassLoader 打开，Windows 可删）
+        // 2) Again.plugins Table of contentsDocumentation（OriginalDocumentationNotClassLoader OpenWindows Deleted)
         if (file.exists()) {
             deleteFileWithRetry(file);
         }
-        logger.info("已卸载并删除插件: {}", fileName);
+        logger.info("Unmounted and deleted plugin: {", fileName);
     }
 
     /**
-     * 全量同步/增量同步处理
+     * Full sync/Incremental syncProcessing
      *
      * @param context
      */
@@ -203,11 +203,11 @@ public class PluginFactory implements DisposableBean {
     }
 
     /**
-     * SPI：扫描 jar 扩展实现。
-     * <p>必须从临时副本加载：Windows 上 {@link URLClassLoader} 会锁住 jar，
-     * 若直接加载 {@code plugins/} 原文件，不停止进程则无法手动/接口删除。
+     * SPI：Scanjar Extension achieved.
+     * <p>A temporary copy must be loaded:Windows Let's go.{@link URLClassLoader} It'll lock.jar，
+     * If directly loaded{@code plugins/} OriginalDocumentation，Oh, no.StopProcessNoneManual/InterfaceDelete。
      *
-     * @param jar plugins 目录下的原文件
+     * @param jar plugins Original under DirectoryDocumentation
      */
     private void loadPlugin(File jar) {
         String fileName = jar.getName();
@@ -252,7 +252,7 @@ public class PluginFactory implements DisposableBean {
             }
             if (!loaded) {
                 closeClassLoader(fileName);
-                logger.warn("JAR 未发现 PluginService 实现: {}", fileName);
+                logger.warn("JAR did not find PluginService", fileName);
             }
         } catch (Throwable e) {
             rollbackLoaded(addedIds, addedPlugins, addedServices, replacedServices);
@@ -262,7 +262,7 @@ public class PluginFactory implements DisposableBean {
     }
 
     /**
-     * 加载中途失败：摘掉本次注册，恢复被覆盖的实例，此时 ClassLoader 仍开着。
+     * Load MidwayFailed：Remove this registration and restore it.OverwriteAn example, at this timeClassLoader Still on.
      */
     private void rollbackLoaded(List<String> addedIds, List<Plugin> addedPlugins, List<PluginService> addedServices,
                                 List<PluginService> replacedServices) {
@@ -326,7 +326,7 @@ public class PluginFactory implements DisposableBean {
             try {
                 loader.close();
             } catch (IOException e) {
-                logger.warn("关闭插件 ClassLoader 失败, file={}, err={}", fileName, e.getMessage());
+                logger.warn("ClassLoader failed, file=}, err={", fileName, e.getMessage());
             }
         }
         File copy = loadCopies.remove(fileName);
@@ -346,12 +346,12 @@ public class PluginFactory implements DisposableBean {
         }
         if (copy.exists()) {
             copy.deleteOnExit();
-            logger.warn("插件临时副本暂未删掉，已登记 JVM 退出时清理: {}", copy.getAbsolutePath());
+            logger.warn("A temporary copy of the plugin is not deleted. A registered JVM is cleared on exit: {", copy.getAbsolutePath());
         }
     }
 
     /**
-     * 删除 plugins 原文件。若仍被占用则改名移出目录（不再被扫描加载）。
+     * Delete plugins OriginalDocumentation。If still occupied, change of name from the directory (no longer scanned).
      */
     private void deleteFileWithRetry(File file) {
         final int attempts = 3;
@@ -375,10 +375,10 @@ public class PluginFactory implements DisposableBean {
         File tombstone = new File(file.getParentFile(), file.getName() + ".deleted." + System.currentTimeMillis());
         if (file.renameTo(tombstone)) {
             tombstone.deleteOnExit();
-            logger.warn("插件文件仍被占用，已改名移出插件目录: {}", tombstone.getName());
+            logger.warn("Plugin files are still occupied and renamed out of plugin directory: {", tombstone.getName());
             return;
         }
-        throw new IllegalStateException("插件文件删除失败（可能仍被占用）: " + file.getName());
+        throw new IllegalStateException("Plugin file deletion failed (possibly still occupied): " + file.getName());
     }
 
     @Override

@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * OceanBase Oracle 模式双精度浮点
+ * OceanBase Oracle Double ModeOutlook saluteFloating Point
  *
  * @author wuji
  * @version 1.0.0

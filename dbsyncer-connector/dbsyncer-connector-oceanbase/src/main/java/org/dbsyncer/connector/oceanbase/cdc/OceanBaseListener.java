@@ -10,9 +10,9 @@ import org.dbsyncer.connector.oceanbase.OceanBaseException;
 import org.dbsyncer.sdk.config.DatabaseConfig;
 
 /**
- * OceanBase 增量监听，基于 Binlog 服务输出的 MySQL Binlog V4 协议
+ * OceanBase IncrementalListening, based onBinlog Service OutputMySQL Binlog V4 Agreements
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-05 00:20
  */
@@ -22,18 +22,18 @@ public final class OceanBaseListener extends MySQLListener {
     protected BinaryLogClient createBinlogClient(DatabaseConfig config) throws Exception {
         String host = OceanBaseBinlogConfig.getBinlogHost(config);
         int port = OceanBaseBinlogConfig.getBinlogPort(config);
-        logger.info("连接 OceanBase Binlog 服务 {}:{}", host, port);
+        logger.info("Connect to OceanBase Binlog Service", host, port);
         return new BinaryLogRemoteClient(host, port, config.getUsername(), config.getPassword());
     }
 
     @Override
     protected String getAlreadyStartedMessage() {
-        return "OceanBase Binlog 监听器已启动";
+        return "Transform the OceanBase Binlog listening device";
     }
 
     @Override
     protected String getCaptureSnapshotFailedMessage() {
-        return "捕获 OceanBase Binlog 位点失败:{}";
+        return "Failed to capture OceanBase Bin log bits: }";
     }
 
     @Override

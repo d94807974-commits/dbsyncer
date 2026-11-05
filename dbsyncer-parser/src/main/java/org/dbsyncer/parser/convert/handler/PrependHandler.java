@@ -3,7 +3,7 @@ package org.dbsyncer.parser.convert.handler;
 import org.dbsyncer.parser.convert.Handler;
 
 /**
- * 前面追加
+ * Add Before
  *
  * @author AE86
  * @version 1.0.0

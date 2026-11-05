@@ -26,10 +26,10 @@ public class SqlBuilderInsert extends AbstractSqlBuilder {
         List<String> fs = new ArrayList<>();
         List<String> vs = new ArrayList<>();
         for (Field f : config.getFields()) {
-            // 添加字段名
+            // AddField name
             fs.add(database.buildWithQuotation(f.getName()));
 
-            // 处理特殊类型的值表达式
+            // Deal with specialTypeYes.ValueExpression
             if (database.buildCustomValue(vs, f)) {
                 continue;
             }

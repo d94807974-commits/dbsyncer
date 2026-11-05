@@ -7,7 +7,7 @@ import org.dbsyncer.common.model.ConfigModel;
 import org.dbsyncer.sdk.constant.ConfigConstant;
 
 /**
- * 角色。
+ * Role。
  *
  * @author wuji
  * @version 1.0.0

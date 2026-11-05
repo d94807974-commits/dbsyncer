@@ -10,9 +10,9 @@ public class CheckSumUtil {
     private static final String HEX_DIGITS = "0123456789abcdef";
 
     /**
-     * hmac_sha1算法计算内容摘要
-     * @param value 原始数据
-     * @param keyBytes 密钥
+     * hmac_sha1Summary of algorithmic calculations
+     * @param value Original data
+     * @param keyBytes Key
      * @return
      */
     public static String hmacSha1(String value, byte[] keyBytes) {
@@ -29,7 +29,7 @@ public class CheckSumUtil {
     }
 
     /**
-     *二进制字节数组转十六进制
+     *Binary bytes to hexadecimal
      * @param v
      * @return
      */

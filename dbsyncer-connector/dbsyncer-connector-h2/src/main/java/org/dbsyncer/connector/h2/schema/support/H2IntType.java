@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * H2 整型
+ * H2 Integer
  */
 public final class H2IntType extends IntType {
 

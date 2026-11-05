@@ -59,9 +59,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * MongoDB 连接器实现
+ * MongoDB ConnectorAchieved
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-06 20:00
  */
@@ -199,7 +199,7 @@ public final class MongoDBConnector extends AbstractConnector implements Connect
 
     @Override
     public Result reader(MongoConnectorInstance connectorInstance, ReaderContext context) {
-        // 订正校验场景：按 BooleanFilter（含主键 IN）查询
+        // Data validationscene: pressBooleanFilter（HamPrimary key IN）Question
         if (StringUtil.isNotBlank(context.getCommandKey())) {
             return readByFilter(connectorInstance, context);
         }
@@ -207,12 +207,12 @@ public final class MongoDBConnector extends AbstractConnector implements Connect
     }
 
     /**
-     * 全量/分页读取
+     * Full/minPageRead
      */
     private Result readPage(MongoConnectorInstance connectorInstance, ReaderContext context) {
         Map<String, String> command = context.getCommand();
         String databaseName = command.get(DATABASE);
-        // 异构校验/读目标：合并 command 常仅有 TARGET_COLLECTION，需按读写侧解析集合名
+        // Isomer verification/readingObjective Combined：Mergecommand Often onlyTARGET_COLLECTION，Read-write profile group names
         String collectionName = resolveReadCollection(command, context.isTargetConnector());
         if (StringUtil.isBlank(databaseName) || StringUtil.isBlank(collectionName)) {
             throw new MongoDBException("MongoDB reader database or collection is empty.");
@@ -238,7 +238,7 @@ public final class MongoDBConnector extends AbstractConnector implements Connect
     }
 
     /**
-     * 订正校验：按运行时 BooleanFilter（如主键 IN）批量读目标/源集合
+     * Data validation：Press Run-timeBooleanFilter（LikePrimary key IN）Batch readingObjective Combined/Source set
      */
     private Result readByFilter(MongoConnectorInstance connectorInstance, ReaderContext context) {
         Map<String, String> command = context.getCommand();
@@ -262,7 +262,7 @@ public final class MongoDBConnector extends AbstractConnector implements Connect
                 ? ConnectorConstant.OPERTION_QUERY_TARGET
                 : ConnectorConstant.OPERTION_QUERY;
         String projectionFields = command.get(projectionKey);
-        // 历史 command 可能把集合名写在 QUERY_TARGET 上，不能当作字段投影
+        // Historycommand Could be the name of the collection.QUERY_TARGET Go on, don't take it.FieldProjection
         if (StringUtil.equals(projectionFields, collectionName)) {
             projectionFields = null;
         }
@@ -303,17 +303,17 @@ public final class MongoDBConnector extends AbstractConnector implements Connect
                 if (StringUtil.equals(event, ConnectorConstant.OPERTION_DELETE)) {
                     Bson filter = buildPkFilter(pkFields, row);
                     if (collection.deleteOne(filter).getDeletedCount() == 0) {
-                        throw new MongoDBException("删除数据不存在");
+                        throw new MongoDBException("Delete data does not exist");
                     }
                 } else if (context.isForceUpdate()) {
-                    // 覆盖写入：目标已存在主键时 insert 会 E11000，改为按主键 upsert
+                    // OverwriteWriting:Objective CombinedExistsPrimary keyTimeinsert Yes.E11000，Replace byPrimary key upsert
                     collection.replaceOne(buildPkFilter(pkFields, row), document, upsertOptions);
                 } else if (StringUtil.equals(event, ConnectorConstant.OPERTION_INSERT)) {
                     collection.insertOne(document);
                 } else if (StringUtil.equals(event, ConnectorConstant.OPERTION_UPDATE)) {
                     Bson filter = buildPkFilter(pkFields, row);
                     if (collection.replaceOne(filter, document).getMatchedCount() == 0) {
-                        throw new MongoDBException("更新数据不存在");
+                        throw new MongoDBException("Update data does not exist");
                     }
                 } else {
                     collection.replaceOne(buildPkFilter(pkFields, row), document, upsertOptions);
@@ -378,7 +378,7 @@ public final class MongoDBConnector extends AbstractConnector implements Connect
     }
 
     /**
-     * 读集合名：源侧用 SOURCE_COLLECTION；目标侧/异构校验合并 command 时常仅有 TARGET_*。
+     * Read collective name: Source sideSOURCE_COLLECTION；Objective CombinedSide/isomer verification mergercommand Sometimes only.TARGET_*。
      */
     private String resolveReadCollection(Map<String, String> command, boolean targetConnector) {
         if (command == null) {
@@ -402,7 +402,7 @@ public final class MongoDBConnector extends AbstractConnector implements Connect
     }
 
     /**
-     * 根据 BooleanFilter 构建 Mongo 查询条件（对齐 ES buildFilterToQuery）
+     * Based onBooleanFilter BuildMongo QuestionCondition（AlignmentES buildFilterToQuery）
      */
     private Bson buildFilterToBson(BooleanFilter root) {
         if (root == null) {
@@ -511,7 +511,7 @@ public final class MongoDBConnector extends AbstractConnector implements Connect
     }
 
     /**
-     * 等值匹配：兼容 Number/String 主键类型差异
+     * Wait.ValueMatch: CompatibilityNumber/String Primary keyTypeVariance
      */
     private Bson buildValueMatchFilter(String field, Object value) {
         List<Object> values = MongoUtil.expandQueryValues(field, value);
@@ -561,7 +561,7 @@ public final class MongoDBConnector extends AbstractConnector implements Connect
     }
 
     /**
-     * 解析库名：优先任务所选 catalog（mapping.sourceDatabase），其次 schema，最后连接器默认 database。
+     * ParsingLibraryName: PriorityTasksSelectedcatalog（mapping.sourceDatabase），Secondschema，Finally.ConnectorDefaultdatabase。
      */
     private String resolveDatabaseName(CommandConfig commandConfig) {
         if (commandConfig == null) {

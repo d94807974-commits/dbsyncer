@@ -7,33 +7,33 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * 表基本信息
+ * Table basicInfo
  *
  * @author AE86
  * @ClassName: MetaInfo
- * @Description: 包括字段信息、总条数
- * @date: 2017年7月20日 下午3:37:59
+ * @Description: IncludingFieldInfo、Total number of articles
+ * @date: 2017Year7Intern20p.m.3:37:59
  */
 public class MetaInfo {
 
     /**
-     * 表
+     * Table
      */
     private String table;
 
     /**
-     * 表类型
+     * TableType
      */
     private String tableType;
 
     /**
-     * 属性字段
-     * 格式：[{"name":"ID","typeName":"INT","type":"4"},{"name":"NAME","typeName":"VARCHAR","type":"12"}]
+     * PropertiesField
+     * Mostly in the[{"name":"ID","typeName":"INT","type":"4"},{"name":"NAME","typeName":"VARCHAR","type":"12"}]
      */
     private List<Field> column;
 
     /**
-     * 扩展配置
+     * Extension Configuration
      */
     private Properties extInfo = new Properties();
 

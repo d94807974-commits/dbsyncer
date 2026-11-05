@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * GaussDB MySQL 兼容连接器（适用于 GaussDB for MySQL）
+ * GaussDB MySQL CompatibilityConnector（Applicable toGaussDB for MySQL）
  *
  * @author wuji
  * @version 1.0.0

@@ -7,7 +7,7 @@ import org.dbsyncer.sdk.enums.StorageEnum;
 import org.dbsyncer.sdk.storage.Strategy;
 
 /**
- * 用户角色关系：单表存储
+ * UserRoleRelationship: Form storage
  *
  * @author wuji
  * @version 1.0.0

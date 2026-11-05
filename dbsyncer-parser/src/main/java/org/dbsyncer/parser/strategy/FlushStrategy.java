@@ -7,7 +7,7 @@ import org.dbsyncer.sdk.schema.SchemaResolver;
 import java.util.Map;
 
 /**
- * 记录同步数据策略
+ * RecordsSync dataPolicy
  *
  * @author AE86
  * @version 1.0.0
@@ -16,31 +16,31 @@ import java.util.Map;
 public interface FlushStrategy {
 
     /**
-     * 记录全量同步数据
+     * RecordsFullSync data
      *
-     * @param result 同步结果
-     * @param targetSchemaResolver 目标字段解析器
-     * @param targetFieldMap 目标表字段集合
+     * @param result SyncResult
+     * @param targetSchemaResolver Target fieldsParser
+     * @param targetFieldMap Destination Table FieldsGather!
      */
     void flushFullData(Result result, SchemaResolver targetSchemaResolver, Map<String, Field> targetFieldMap);
 
     /**
-     * 记录增量同步数据
+     * RecordsIncrementalSync data
      *
-     * @param result 同步结果
-     * @param targetSchemaResolver 目标字段解析器
-     * @param targetFieldMap 目标表字段集合
+     * @param result SyncResult
+     * @param targetSchemaResolver Target fieldsParser
+     * @param targetFieldMap Destination Table FieldsGather!
      */
     void flushIncrementData(Result result, SchemaResolver targetSchemaResolver, Map<String, Field> targetFieldMap);
 
     /**
-     * 仅写入成功/失败明细到存储，不刷新 Meta 计数。
-     * <p>供已单独汇总成功/失败计数的路径使用，避免与 Meta 双计。
-     * 失败明细受「记录同步失败数据」开关控制；成功明细需同时开启「记录全量数据」与「记录同步成功数据」。
+     * Write OnlySuccess/Failed12 to storage, no.Refresh Meta Count.
+     * <p>For individual summarySuccess/FailedCount path usage, avoidand Meta Double count Obtained.
+     * FailedDetailed「Recording Synchronising Failed Data」Switch control;SuccessAt the same time.On「Record full volume data」and「Record synchronised successful data」。
      *
-     * @param result               同步结果（须已设置 taskId，明细分表键）
-     * @param targetSchemaResolver 目标字段解析器
-     * @param targetFieldMap       目标表字段集合
+     * @param result               SyncResult（RequiredSettings taskId，DetailsminTable keys)
+     * @param targetSchemaResolver Target fieldsParser
+     * @param targetFieldMap       Destination Table FieldsGather!
      */
     void writeStorageOnly(Result result, SchemaResolver targetSchemaResolver, Map<String, Field> targetFieldMap);
 }

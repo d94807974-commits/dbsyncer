@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * DuckDB HUGEINT / UHUGEINT，按字符串传输避免精度丢失
+ * DuckDB HUGEINT / UHUGEINT，Transfer avoided by stringOutlook saluteLost
  *
  * @author wuji
  * @version 1.0.0

@@ -8,7 +8,7 @@ import org.dbsyncer.sdk.listener.ChangedEvent;
 import org.dbsyncer.sdk.model.ChangedOffset;
 
 /**
- * 通用变更事件
+ * Generic changeEvent
  *
  * @version 1.0.0
  * @Author AE86
@@ -22,17 +22,17 @@ public abstract class CommonChangedEvent implements ChangedEvent {
     private String traceId = StringUtil.EMPTY;
 
     /**
-     * 变更表名称
+     * Change tableName
      */
     private String sourceTableName;
 
     /**
-     * 变更事件
+     * ChangeEvent
      */
     private String event;
 
     /**
-     * 增量偏移量
+     * IncrementalOffset
      */
     private final ChangedOffset changedOffset = new ChangedOffset();
 

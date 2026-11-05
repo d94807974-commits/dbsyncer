@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * CDC-ES定时监听器
+ * CDC-ESScheduledListener
  *
  * @Author AE86
  * @Version 1.0.0
@@ -47,7 +47,7 @@ public final class ESQuartzListener extends AbstractQuartzListener {
     }
 
     /**
-     * 全量+增量：以当前时刻冻结 begin 类系统参数（如 $timestamp_begin$），全量结束后增量从该水位继续拉取
+     * Full + incremental：Freeze at current timebegin CategorySystem Parameters（Like$timestamp_begin$），FullAfterIncrementalKeep pulling from that level.
      */
     private void collectBeginQuartzPoint(TableGroupQuartzCommand cmd, int index, Map<String, String> captured) {
         Map<String, String> command = cmd.getCommand();
@@ -67,7 +67,7 @@ public final class ESQuartzListener extends AbstractQuartzListener {
                 continue;
             }
             if (!seenBeginPlaceholder.add(placeholder)) {
-                throw new ElasticsearchException(String.format("系统参数%s存在多个.", placeholder));
+                throw new ElasticsearchException(String.format("Multiple system parameters found for %s.", placeholder));
             }
             if (!filterEnum.getQuartzFilter().begin()) {
                 continue;
@@ -82,7 +82,7 @@ public final class ESQuartzListener extends AbstractQuartzListener {
 
     @Override
     protected Point checkLastPoint(TableGroupQuartzCommand cmd, int index) {
-        // 检查是否存在系统参数
+        // InspectionYesNoExistenceSystem Parameters
         Map<String, String> command = cmd.getCommand();
         String filterJson = command.get(ConnectorConstant.OPERTION_QUERY_FILTER);
         if (StringUtil.isBlank(filterJson)) {
@@ -93,24 +93,24 @@ public final class ESQuartzListener extends AbstractQuartzListener {
             return new Point(command, new ArrayList<>());
         }
 
-        // 存在系统参数，替换
+        // ExistenceSystem Parameters，Replace
         Point point = new Point();
         Set<String> set = new HashSet<>();
         for (Filter f : filters) {
             if (set.contains(f.getValue())) {
-                throw new ElasticsearchException(String.format("系统参数%s存在多个.", f.getValue()));
+                throw new ElasticsearchException(String.format("Multiple system parameters found for %s.", f.getValue()));
             }
             QuartzFilterEnum filterEnum = QuartzFilterEnum.getQuartzFilterEnum(f.getValue());
             if (null != filterEnum) {
-                // 标记防重
+                // Mark against weight
                 set.add(f.getValue());
 
                 final QuartzFilter quartzFilter = filterEnum.getQuartzFilter();
 
-                // 创建参数索引key
+                // CreateParameterIndexkey
                 final String key = index + filterEnum.getType();
 
-                // 开始位置
+                // Organisation Authorities
                 if (quartzFilter.begin()) {
                     if (!snapshot.containsKey(key)) {
                         f.setValue(quartzFilter.toString(quartzFilter.getObject()));
@@ -118,13 +118,13 @@ public final class ESQuartzListener extends AbstractQuartzListener {
                         continue;
                     }
 
-                    // 读取历史增量点
+                    // Read HistoryIncrementalPoints 71
                     f.setValue((String) snapshot.get(key));
                     point.setBeginKey(key);
                     point.setBeginValue(quartzFilter.toString(quartzFilter.getObject()));
                     continue;
                 }
-                // 结束位置(刷新)
+                // End Location(Refresh)
                 f.setValue(quartzFilter.toString(quartzFilter.getObject()));
                 point.setBeginValue(f.getValue());
             }

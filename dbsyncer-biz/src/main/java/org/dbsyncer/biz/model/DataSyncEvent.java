@@ -6,19 +6,19 @@ package org.dbsyncer.biz.model;
 import java.util.List;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-02-23 15:27
  */
 public class DataSyncEvent {
 
     /**
-     * 事件类型 INSERT/UPDATE/DELETE {@link org.dbsyncer.sdk.constant.ConnectorConstant}
+     * EventType INSERT/UPDATE/DELETE {@link org.dbsyncer.sdk.constant.ConnectorConstant}
      */
     private String event;
 
     /**
-     * 变更的行数据
+     * ChangedRow data
      */
     private List<Object> data;
 

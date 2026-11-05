@@ -11,45 +11,45 @@ import org.dbsyncer.sdk.model.Table;
 import java.util.Map;
 
 /**
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2024-12-05 00:59
  */
 public interface BaseContext {
 
     /**
-     * 是否是目标连接器
+     * YesNoYesTarget ConnectionDevice
      */
     default boolean isTargetConnector() {
         return false;
     }
 
     /**
-     * 获取源表信息
+     * AccessSource tableInfo
      */
     Table getSourceTable();
 
     /**
-     * 执行命令
+     * Execute Command
      */
     Map<String, String> getCommand();
 
     void setCommand(Map<String, String> command);
 
     /**
-     * 数据源连接实例
+     * Data FactSourceConnectExamples
      */
     ConnectorInstance getSourceConnectorInstance();
 
     void setSourceConnectorInstance(ConnectorInstance sourceConnectorInstance);
 
     /**
-     * 获取RSA加密类（http连接器场景）
+     * AccessRSAIllicit Classes（httpConnectorThe scene)
      */
     RsaManager getRsaManager();
 
     /**
-     * 获取RSA配置（http连接器场景）
+     * AccessRSAConfigure（httpConnectorThe scene)
      */
     RsaConfig getRsaConfig();
 }

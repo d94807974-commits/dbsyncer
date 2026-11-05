@@ -26,7 +26,7 @@ public class RSAUtil {
     public static final String RSA_ALGORITHM = "RSA";
 
     public static RsaVersion createKeys(int keySize) {
-        // 为RSA算法创建一个KeyPairGenerator对象
+        // YesRSAAlgorithm CreateKeyPairGeneratorObject
         KeyPairGenerator kpg;
         try {
             kpg = KeyPairGenerator.getInstance(RSA_ALGORITHM);
@@ -34,14 +34,14 @@ public class RSAUtil {
             throw new IllegalArgumentException("No such algorithm-->[" + RSA_ALGORITHM + "]");
         }
 
-        // 初始化KeyPairGenerator对象,密钥长度
+        // InitializeKeyPairGeneratorObject,KeyLength
         kpg.initialize(keySize);
-        // 生成密匙对
+        // GenerateKeys.
         KeyPair keyPair = kpg.generateKeyPair();
-        // 得到公钥
+        // Get Bermuda
         Key publicKey = keyPair.getPublic();
         String publicKeyStr = Base64.encodeBase64URLSafeString(publicKey.getEncoded());
-        // 得到私钥
+        // Get Private Keys
         Key privateKey = keyPair.getPrivate();
         String privateKeyStr = Base64.encodeBase64URLSafeString(privateKey.getEncoded());
         RsaVersion rsaConfig = new RsaVersion();
@@ -52,13 +52,13 @@ public class RSAUtil {
     }
 
     /**
-     * 得到公钥
+     * Get Bermuda
      *
-     * @param publicKey 密钥字符串（经过base64编码）
+     * @param publicKey Key Stringbase64Encoding)
      * @throws Exception
      */
     public static RSAPublicKey getPublicKey(String publicKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        // 通过X509编码的Key指令获得公钥对象
+        // Based on the pass.X509EncodedKeyCommand to get public key objects
         KeyFactory keyFactory = KeyFactory.getInstance(RSA_ALGORITHM);
         X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(Base64.decodeBase64(publicKey));
         RSAPublicKey key = (RSAPublicKey) keyFactory.generatePublic(x509KeySpec);
@@ -66,20 +66,20 @@ public class RSAUtil {
     }
 
     /**
-     * 得到私钥
+     * Get Private Keys
      *
-     * @param privateKey 密钥字符串（经过base64编码）
+     * @param privateKey Key Stringbase64Encoding)
      * @throws Exception
      */
     public static RSAPrivateKey getPrivateKey(String privateKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        // 通过PKCS#8编码的Key指令获得私钥对象
+        // Based on the pass.PKCS#8EncodedKeyNo No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No No
         KeyFactory keyFactory = KeyFactory.getInstance(RSA_ALGORITHM);
         PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(Base64.decodeBase64(privateKey));
         return (RSAPrivateKey) keyFactory.generatePrivate(pkcs8KeySpec);
     }
 
     /**
-     * 公钥加密
+     * Public Key Encryption
      */
     public static String publicEncrypt(String data, RSAPublicKey publicKey) {
         try {
@@ -87,12 +87,12 @@ public class RSAUtil {
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             return Base64.encodeBase64URLSafeString(rsaSplitCodec(cipher, Cipher.ENCRYPT_MODE, data.getBytes(CHARSET), publicKey.getModulus().bitLength()));
         } catch (Exception e) {
-            throw new RuntimeException("加密字符串[" + data + "]时遇到异常", e);
+            throw new RuntimeException("Encrypt String[s]" + data + "] encountered an exception", e);
         }
     }
 
     /**
-     * 公钥解密
+     * Public Key Decrypt
      */
     public static String publicDecrypt(String data, RSAPublicKey publicKey) {
         try {
@@ -100,12 +100,12 @@ public class RSAUtil {
             cipher.init(Cipher.DECRYPT_MODE, publicKey);
             return new String(rsaSplitCodec(cipher, Cipher.DECRYPT_MODE, Base64.decodeBase64(data), publicKey.getModulus().bitLength()), CHARSET);
         } catch (Exception e) {
-            throw new RuntimeException("解密字符串[" + data + "]时遇到异常", e);
+            throw new RuntimeException("Decrypt String[s]" + data + "] encountered an exception", e);
         }
     }
 
     /**
-     * 私钥解密
+     * Private key decryption
      */
     public static String privateDecrypt(String data, RSAPrivateKey privateKey) {
         try {
@@ -113,12 +113,12 @@ public class RSAUtil {
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
             return new String(rsaSplitCodec(cipher, Cipher.DECRYPT_MODE, Base64.decodeBase64(data), privateKey.getModulus().bitLength()), CHARSET);
         } catch (Exception e) {
-            throw new RuntimeException("解密字符串[" + data + "]时遇到异常", e);
+            throw new RuntimeException("Decrypt String[s]" + data + "] encountered an exception", e);
         }
     }
 
     /**
-     * 私钥加密
+     * Private Key Encryption
      */
     public static String privateEncrypt(String data, RSAPrivateKey privateKey) {
         try {
@@ -126,16 +126,16 @@ public class RSAUtil {
             cipher.init(Cipher.ENCRYPT_MODE, privateKey);
             return Base64.encodeBase64URLSafeString(rsaSplitCodec(cipher, Cipher.ENCRYPT_MODE, data.getBytes(CHARSET), privateKey.getModulus().bitLength()));
         } catch (Exception e) {
-            throw new RuntimeException("加密字符串[" + data + "]时遇到异常", e);
+            throw new RuntimeException("Encrypt String[s]" + data + "] encountered an exception", e);
         }
     }
 
     /**
-     * RSA-SHA256签名（使用私钥签名）
+     * RSA-SHA256Signature (with private key)
      * 
-     * @param data 要签名的数据
-     * @param privateKey RSA私钥
-     * @return Base64编码的签名
+     * @param data Data to sign
+     * @param privateKey RSA private key
+     * @return Base64Encoded Signature
      */
     public static String signSHA256(String data, RSAPrivateKey privateKey) {
         try {
@@ -145,17 +145,17 @@ public class RSAUtil {
             byte[] signBytes = signature.sign();
             return Base64.encodeBase64URLSafeString(signBytes);
         } catch (Exception e) {
-            throw new RuntimeException("RSA-SHA256签名失败", e);
+            throw new RuntimeException("Failed to sign RSA-SHA256", e);
         }
     }
 
     /**
-     * RSA-SHA256验证签名（使用公钥验证）
+     * RSA-SHA256Validate signature (validate with public key)
      *
-     * @param data 原始数据
-     * @param signature Base64编码的签名
-     * @param publicKey RSA公钥
-     * @return 验证结果
+     * @param data Original data
+     * @param signature Base64Encoded Signature
+     * @param publicKey RSA Public Key
+     * @return AuthenticationResult
      */
     public static boolean verifySHA256(String data, String signature, RSAPublicKey publicKey) {
         try {
@@ -192,7 +192,7 @@ public class RSAUtil {
                 offSet = i * maxBlock;
             }
         } catch (Exception e) {
-            throw new RuntimeException("加解密阀值为[" + maxBlock + "]的数据时发生异常", e);
+            throw new RuntimeException("Dec HNP" + maxBlock + "There's been an anomaly in the data.", e);
         }
         byte[] result = out.toByteArray();
         IOUtils.closeQuietly(out);

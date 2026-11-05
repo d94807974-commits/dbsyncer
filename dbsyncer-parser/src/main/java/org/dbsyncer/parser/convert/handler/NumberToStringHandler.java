@@ -3,7 +3,7 @@ package org.dbsyncer.parser.convert.handler;
 import org.dbsyncer.parser.convert.AbstractHandler;
 
 /**
- * Number转String
+ * Number to String
  *
  * @author AE86
  * @version 1.0.0

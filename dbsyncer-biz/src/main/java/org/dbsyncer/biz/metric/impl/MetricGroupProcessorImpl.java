@@ -24,7 +24,7 @@ public final class MetricGroupProcessorImpl implements MetricGroupProcessor {
         Iterator<MetricResponseVO> iterator = metrics.iterator();
         while (iterator.hasNext()) {
             MetricResponseVO metric = iterator.next();
-            // 应用性能指标
+            // Application of performance indicators
             MetricEnum metricEnum = MetricEnum.getMetric(metric.getCode());
             if (metricEnum != null) {
                 switch (metricEnum) {

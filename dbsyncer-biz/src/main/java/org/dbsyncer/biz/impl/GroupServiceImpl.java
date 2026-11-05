@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * {@link GroupService} 实现。
+ * {@link GroupService} Achieved.
  *
  * @author wuji
  * @version 1.0.0
@@ -49,7 +49,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public String add(Map<String, String> params) {
-        Assert.notNull(params, "参数不能为空");
+        Assert.notNull(params, "Parameter cannot be empty");
         String name = validateAndNormalizeName(params.get(ConfigConstant.CONFIG_MODEL_NAME), null);
         long now = System.currentTimeMillis();
         Group group = new Group();
@@ -61,11 +61,11 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public String edit(Map<String, String> params) {
-        Assert.notNull(params, "参数不能为空");
+        Assert.notNull(params, "Parameter cannot be empty");
         String id = StringUtil.trim(params.get(ConfigConstant.CONFIG_MODEL_ID));
-        Assert.hasText(id, "分组ID不能为空");
+        Assert.hasText(id, "Group ID cannot be empty");
         Group group = groupProfile.getGroup(id);
-        Assert.notNull(group, "分组不存在");
+        Assert.notNull(group, "Group does not exist");
         String name = validateAndNormalizeName(params.get(ConfigConstant.CONFIG_MODEL_NAME), id);
         group.setName(name);
         group.setUpdateTime(System.currentTimeMillis());
@@ -74,15 +74,15 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public String remove(String id) {
-        Assert.hasText(id, "分组ID不能为空");
+        Assert.hasText(id, "Group ID cannot be empty");
         Group group = groupProfile.getGroup(id);
-        Assert.notNull(group, "分组不存在");
-        // 铁律②：先清 rel 再删组
+        Assert.notNull(group, "Group does not exist");
+        // Iron.②：Clear first.rel Then delete the group.
         groupRelProfile.removeByGroup(id);
         groupProfile.removeGroup(id);
-        //删除授权资源
+        //DeleteAuthorizationResource
         resourceAclService.revokeAllForResource(ConfigConstant.GROUP, id);
-        //删除告警通知规则
+        //DeleteAlert notificationRule
         noticeRuleProfile.removeByScopeId(ConfigConstant.GROUP, id);
         return id;
     }
@@ -99,24 +99,24 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public int countMembers(String id) {
-        Assert.hasText(id, "分组ID不能为空");
+        Assert.hasText(id, "Group ID cannot be empty");
         return groupRelProfile.countByGroup(id);
     }
 
     @Override
     public void bind(String groupId, String resourceType, String resourceId) {
-        Assert.hasText(resourceType, "资源类型不能为空");
-        Assert.hasText(resourceId, "资源ID不能为空");
+        Assert.hasText(resourceType, "Resource type cannot be empty");
+        Assert.hasText(resourceId, "Resource ID cannot be empty.");
         if (!ResourceTypeEnum.isLeaf(resourceType)) {
-            throw new BizException("不支持的资源类型: " + resourceType);
+            throw new BizException("Unsupported resource type: " + resourceType);
         }
-        // 空 groupId = 清除该资源全部归属
+        // EmptygroupId = ClearTheResourceAllAttribution
         if (StringUtil.isBlank(groupId)) {
             groupRelProfile.removeByResource(resourceType, resourceId);
             return;
         }
         Group group = groupProfile.getGroup(groupId);
-        Assert.notNull(group, "分组不存在");
+        Assert.notNull(group, "Group does not exist");
         if (groupRelProfile.getByGroupAndResource(groupId, resourceType, resourceId) != null) {
             return;
         }
@@ -145,11 +145,11 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void unbind(String groupId, String resourceType, String resourceId) {
-        Assert.hasText(groupId, "分组ID不能为空");
-        Assert.hasText(resourceType, "资源类型不能为空");
-        Assert.hasText(resourceId, "资源ID不能为空");
+        Assert.hasText(groupId, "Group ID cannot be empty");
+        Assert.hasText(resourceType, "Resource type cannot be empty");
+        Assert.hasText(resourceId, "Resource ID cannot be empty.");
         if (!ResourceTypeEnum.isLeaf(resourceType)) {
-            throw new BizException("不支持的资源类型: " + resourceType);
+            throw new BizException("Unsupported resource type: " + resourceType);
         }
         groupRelProfile.removeByGroupAndResource(groupId, resourceType, resourceId);
     }
@@ -179,7 +179,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupSearchFilter resolveSearchFilter(String groupIdParam, String resourceType) {
-        // 空 / null = 不过滤（全部）
+        // Promotenull = Do Not FilterAll）
         if (StringUtil.isBlank(groupIdParam)) {
             return GroupSearchFilter.NONE;
         }
@@ -191,17 +191,17 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-     * 校验并规范化分组名称；excludeId 非空时允许同名属于自身（编辑场景）。
+     * Verify and regularizeGroup Name；excludeId When not available, allow the same name to belong to itself.EditThe scene.
      */
     private String validateAndNormalizeName(String rawName, String excludeId) {
         String name = StringUtil.trim(rawName);
-        Assert.hasText(name, "分组名称不能为空");
+        Assert.hasText(name, "Group name cannot be empty");
         if (name.length() > NAME_MAX_LEN) {
-            throw new BizException("分组名称不能超过" + NAME_MAX_LEN + "个字符");
+            throw new BizException("Group names cannot exceed" + NAME_MAX_LEN + "Character");
         }
         Group existing = groupProfile.getByName(name);
         if (existing != null && !StringUtil.equals(existing.getId(), excludeId)) {
-            throw new BizException("分组名称已存在");
+            throw new BizException("Group name already exists");
         }
         return name;
     }

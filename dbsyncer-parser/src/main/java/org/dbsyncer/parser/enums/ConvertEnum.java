@@ -25,7 +25,7 @@ import org.dbsyncer.parser.convert.handler.TimestampToLongHandler;
 import org.dbsyncer.parser.convert.handler.UUIDHandler;
 
 /**
- * 支持的转换类型
+ * SupportedConvertType
  *
  * @author AE86
  * @version 1.0.0
@@ -34,93 +34,93 @@ import org.dbsyncer.parser.convert.handler.UUIDHandler;
 public enum ConvertEnum {
 
     /**
-     * 默认值
+     * Default value
      */
-    DEFAULT("DEFAULT", "默认值", 1, new DefaultHandler()),
+    DEFAULT("DEFAULT", "Default value", 1, new DefaultHandler()),
     /**
-     * 系统时间戳
+     * System Timetamp
      */
-    SYSTEM_TIMESTAMP("SYSTEM_TIMESTAMP", "系统时间戳", 0, new TimestampHandler()),
+    SYSTEM_TIMESTAMP("SYSTEM_TIMESTAMP", "System Timetamp", 0, new TimestampHandler()),
     /**
-     * 系统日期Date
+     * System DateDate
      */
-    SYSTEM_DATE("SYSTEM_DATE", "系统日期", 0, new DateHandler()),
+    SYSTEM_DATE("SYSTEM_DATE", "System Date", 0, new DateHandler()),
     /**
-     * Timestamp转Date
+     * Timestamp to Date.
      */
-    TIMESTAMP_TO_DATE("TIMESTAMP_TO_DATE", "Timestamp转Date", 0, new TimestampToDateHandler()),
+    TIMESTAMP_TO_DATE("TIMESTAMP_TO_DATE", "Timestamp to Date.", 0, new TimestampToDateHandler()),
     /**
-     * Timestamp转中国标准时间
+     * TimestampTransfer to Chinese standardTime
      */
-    TIMESTAMP_TO_CHINESE_STANDARD_TIME("TIMESTAMP_TO_CHINESE_STANDARD_TIME", "Timestamp转yyyy-MM-dd HH:mm:ss", 0, new TimestampToChineseStandardTimeHandler()),
+    TIMESTAMP_TO_CHINESE_STANDARD_TIME("TIMESTAMP_TO_CHINESE_STANDARD_TIME", "Timestamp turns yyyy-MM-dd HH:mm:ss", 0, new TimestampToChineseStandardTimeHandler()),
     /**
-     * Timestamp转Long
+     * Timestamp turns Long
      */
-    TIMESTAMP_TO_LONG("TIMESTAMP_TO_LONG", "Timestamp转Long", 0, new TimestampToLongHandler()),
+    TIMESTAMP_TO_LONG("TIMESTAMP_TO_LONG", "Timestamp turns Long", 0, new TimestampToLongHandler()),
     /**
-     * Long转Timestamp
+     * Long turns Timestamp
      */
-    LONG_TO_TIMESTAMP("LONG_TO_TIMESTAMP", "Long转Timestamp", 0, new LongToTimestampHandler()),
+    LONG_TO_TIMESTAMP("LONG_TO_TIMESTAMP", "Long turns Timestamp", 0, new LongToTimestampHandler()),
     /**
-     * String转Timestamp
+     * String to Timestamp
      */
-    STRING_TO_TIMESTAMP("STRING_TO_TIMESTAMP", "String转Timestamp", 0, new StringToTimestampHandler()),
+    STRING_TO_TIMESTAMP("STRING_TO_TIMESTAMP", "String to Timestamp", 0, new StringToTimestampHandler()),
     /**
-     * String转日期自定义格式
+     * StringDate of transferCustomFormat
      */
-    STRING_TO_FORMAT_DATE("STRING_TO_FORMAT_DATE", "String转Date自定义格式", 1, new StringToFormatDateHandler()),
+    STRING_TO_FORMAT_DATE("STRING_TO_FORMAT_DATE", "Spring to Date Custom", 1, new StringToFormatDateHandler()),
     /**
-     * Number转String
+     * Number to String
      */
-    NUMBER_TO_STRING("NUMBER_TO_STRING", "Number转String", 0, new NumberToStringHandler()),
+    NUMBER_TO_STRING("NUMBER_TO_STRING", "Number to String", 0, new NumberToStringHandler()),
     /**
-     * Byte[]转String
+     * Byte [ ] Turning
      */
-    BYTES_TO_STRING("BYTES_TO_STRING", "Byte[]转String", 0, new BytesToStringHandler()),
+    BYTES_TO_STRING("BYTES_TO_STRING", "Byte [ ] Turning", 0, new BytesToStringHandler()),
     /**
-     * 替换
+     * Replace
      */
-    REPLACE("REPLACE", "替换", 2, new ReplaceHandler()),
+    REPLACE("REPLACE", "Replace", 2, new ReplaceHandler()),
     /**
-     * 追加在前面,例如“张三”追加123 => 123张三
+     * Add to Front,For example:Chang Empower”App Authority123 => 123Chang Empower
      */
-    PREPEND("PREPEND", "前面追加", 1, new PrependHandler()),
+    PREPEND("PREPEND", "Add Before", 1, new PrependHandler()),
     /**
-     * 追加在后面,例如“张三”追加123 => 张三123
+     * Add to Back,For example:Chang Empower”App Authority123 => Chang Empower123
      */
-    APPEND("APPEND", "后面追加", 1, new AppendHandler()),
+    APPEND("APPEND", "Add after", 1, new AppendHandler()),
     /**
      * UUID
      */
     UUID("UUID", "UUID", 0, new UUIDHandler()),
     /**
-     * 去掉首字符
+     * Operationally remove the first character
      */
-    REM_STR_FIRST("REM_STR_FIRST", "去掉首字符", 0, new RemStrFirstHandler()),
+    REM_STR_FIRST("REM_STR_FIRST", "Operationally remove the first character", 0, new RemStrFirstHandler()),
     /**
-     * 去掉尾字符
+     * Remove End Character
      */
-    REM_STR_LAST("REM_STR_LAST", "去掉尾字符", 0, new RemStrLastHandler()),
+    REM_STR_LAST("REM_STR_LAST", "Remove End Character", 0, new RemStrLastHandler()),
     /**
-     * 从前面截取N个字符
+     * Remove N characters from front
      */
-    SUB_STR_FIRST("SUB_STR_FIRST", "从前面截取N个字符", 1, new SubStrFirstHandler()),
+    SUB_STR_FIRST("SUB_STR_FIRST", "Remove N characters from front", 1, new SubStrFirstHandler()),
     /**
-     * 从后面截取N个字符
+     * Remove N characters from behind
      */
-    SUB_STR_LAST("SUB_STR_LAST", "从后面截取N个字符", 1, new SubStrLastHandler()),
+    SUB_STR_LAST("SUB_STR_LAST", "Remove N characters from behind", 1, new SubStrLastHandler()),
     /**
-     * 清空
+     * Clear
      */
-    CLEAR("CLEAR", "清空", 0, new ClearHandler());
+    CLEAR("CLEAR", "Clear", 0, new ClearHandler());
 
-    // 转换编码
+    // ConvertEncoded
     private final String code;
-    // 转换名称
+    // ConvertName
     private final String name;
-    // 参数个数
+    // ParameterNumber
     private final int argNum;
-    // 转换实现
+    // ConvertAchieved
     private final Handler handler;
 
     ConvertEnum(String code, String name, int argNum, Handler handler) {

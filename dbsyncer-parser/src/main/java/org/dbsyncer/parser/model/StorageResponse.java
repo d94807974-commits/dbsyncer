@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 明细分表批量写入响应。
+ * DetailsminTables are written in response.
  *
  * @author AE86
  * @version 1.0.0
@@ -20,7 +20,7 @@ import java.util.Map;
 public class StorageResponse implements BufferResponse {
 
     /**
-     * 明细分表分片键（任务 ID）
+     * DetailsminTableminSnippetsTasks ID）
      */
     private String taskDetailShardId;
     private List<Map> dataList = new LinkedList<>();

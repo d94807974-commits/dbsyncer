@@ -6,7 +6,7 @@ package org.dbsyncer.connector.rocketmq.schema;
 import org.dbsyncer.connector.kafka.schema.KafkaSchemaResolver;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-07 01:00
  */

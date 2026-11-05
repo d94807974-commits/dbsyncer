@@ -10,31 +10,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 数据分片工具
- * 用于大数据量传输时的分片处理
+ * Data FactminSnippets
+ * For large data volume transferminPiece processing
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  */
 public class DataChunkUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(DataChunkUtil.class);
 
-    // 默认分片大小：1MB（字节）
+    // DefaultminArea size:1MB（bytes)
     private static final int DEFAULT_CHUNK_SIZE = 1024 * 1024;
 
-    // 最大分片大小：10MB
+    // MaxminArea size:10MB
     private static final int MAX_CHUNK_SIZE = 10 * 1024 * 1024;
 
-    // 最小分片大小：100KB
+    // MinminArea size:100KB
     private static final int MIN_CHUNK_SIZE = 100 * 1024;
 
     /**
-     * 将数据分片
+     * Other OrganiserminSnippets
      * 
-     * @param data 原始数据（JSON字符串）
-     * @param chunkSize 分片大小（字节），如果<=0则使用默认值
-     * @return 分片列表
+     * @param data Source data (%2)JSONString)
+     * @param chunkSize minArea size (bytes), if<=0UseDefault value
+     * @return minSnippetsList
      */
     public static List<DataChunk> chunkData(String data, int chunkSize) {
         if (StringUtil.isBlank(data)) {
@@ -45,14 +45,14 @@ public class DataChunkUtil {
             chunkSize = DEFAULT_CHUNK_SIZE;
         }
 
-        // 限制分片大小范围
+        // LimitsminArea
         if (chunkSize > MAX_CHUNK_SIZE) {
             chunkSize = MAX_CHUNK_SIZE;
-            logger.warn("分片大小超过最大值，使用最大值: {}MB", MAX_CHUNK_SIZE / 1024 / 1024);
+            logger.warn("The fraction size organises more than the maximum, using the maximum: {MB", MAX_CHUNK_SIZE / 1024 / 1024);
         }
         if (chunkSize < MIN_CHUNK_SIZE) {
             chunkSize = MIN_CHUNK_SIZE;
-            logger.warn("分片大小小于最小值，使用最小值: {}KB", MIN_CHUNK_SIZE / 1024);
+            logger.warn("The fraction size is less than the minimum, using the minimum: {KB", MIN_CHUNK_SIZE / 1024);
         }
 
         byte[] dataBytes = data.getBytes(java.nio.charset.StandardCharsets.UTF_8);
@@ -78,84 +78,84 @@ public class DataChunkUtil {
             chunks.add(chunk);
         }
 
-        logger.info("数据分片完成，总大小: {}KB, 分片数: {}, 分片大小: {}KB", totalSize / 1024, totalChunks, chunkSize / 1024);
+        logger.info("Data fraction completed, total size: }KB, fraction: {, fraction size: }KB", totalSize / 1024, totalChunks, chunkSize / 1024);
 
         return chunks;
     }
 
     /**
-     * 将数据分片（使用默认分片大小）
+     * Other OrganiserminSnippet (using default)minSize)
      * 
-     * @param data 原始数据（JSON字符串）
-     * @return 分片列表
+     * @param data Source data (%2)JSONString)
+     * @return minSnippetsList
      */
     public static List<DataChunk> chunkData(String data) {
         return chunkData(data, DEFAULT_CHUNK_SIZE);
     }
 
     /**
-     * 合并分片数据
+     * MergeminSnippets
      * 
-     * @param chunks 分片列表
-     * @return 合并后的数据
+     * @param chunks minSnippetsList
+     * @return Combined data
      */
     public static String mergeChunks(List<DataChunk> chunks) {
         if (chunks == null || chunks.isEmpty()) {
             return "";
         }
 
-        // 按索引排序
+        // PressIndexSort
         chunks.sort((a, b)->Integer.compare(a.getChunkIndex(), b.getChunkIndex()));
 
-        // 验证分片完整性
+        // AuthenticationminArea Integrity
         String chunkId = chunks.get(0).getChunkId();
         int totalChunks = chunks.get(0).getTotalChunks();
 
         if (chunks.size() != totalChunks) {
-            throw new RuntimeException(String.format("分片不完整，期望: %d, 实际: %d", totalChunks, chunks.size()));
+            throw new RuntimeException(String.format("Part incomplete, expected: %d, actual: %d", totalChunks, chunks.size()));
         }
 
         for (int i = 0; i < chunks.size(); i++) {
             DataChunk chunk = chunks.get(i);
             if (!chunkId.equals(chunk.getChunkId())) {
-                throw new RuntimeException(String.format("分片ID不一致，索引: %d", i));
+                throw new RuntimeException(String.format("Division ID is inconsistent, index: %d", i));
             }
             if (chunk.getChunkIndex() != i) {
-                throw new RuntimeException(String.format("分片索引不连续，期望: %d, 实际: %d", i, chunk.getChunkIndex()));
+                throw new RuntimeException(String.format("Part index is inconsistent, expected: %d, actual: %d", i, chunk.getChunkIndex()));
             }
             if (chunk.getTotalChunks() != totalChunks) {
-                throw new RuntimeException(String.format("分片总数不一致，索引: %d", i));
+                throw new RuntimeException(String.format("Total number of fractions inconsistent, index: %d", i));
             }
         }
 
-        // 合并数据
+        // Merge Data
         StringBuilder sb = new StringBuilder();
         for (DataChunk chunk : chunks) {
             sb.append(chunk.getData());
         }
 
-        logger.info("分片合并完成，分片数: {}, 总大小: {}KB", totalChunks, sb.length() / 1024);
+        logger.info("Split merge completed, fractions: {, total size: }KB", totalChunks, sb.length() / 1024);
 
         return sb.toString();
     }
 
     /**
-     * 生成分片ID
+     * GenerateminSnippetsID
      */
     private static String generateChunkId() {
         return UUIDUtil.getUUID();
     }
 
     /**
-     * 数据分片
+     * Data FactminSnippets
      */
     public static class DataChunk {
 
-        private String chunkId; // 分片ID（同一批分片使用相同ID）
-        private int chunkIndex; // 分片索引（从0开始）
-        private int totalChunks; // 总分片数
-        private String data; // 分片数据
-        private int size; // 分片大小（字节）
+        private String chunkId; // minSnippetsID（Same one.minThe tablet is the sameID）
+        private int chunkIndex; // minSnippetsIndex（From0Start
+        private int totalChunks; // TotalminNumber of pieces
+        private String data; // minSnippets
+        private int size; // minArea Size (bytes)
 
         public String getChunkId() {
             return chunkId;

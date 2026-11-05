@@ -4,9 +4,9 @@
 package org.dbsyncer.connector.oracle.logminer.parser;
 
 /**
- * LogMiner UPDATE redo 中未出现的列占位（区别于显式 SQL NULL）。
+ * LogMiner UPDATE redo No-occupying ranking (except for visibleSQL NULL）。
  * <p>
- * 写入前须由 {@code OracleListener} 按主键回查源表覆盖，避免全字段 UPDATE/MERGE 把目标 LOB 清空。
+ * Before writing by{@code OracleListener} PressPrimary keyCheck back.Source tableOverwrite，Avoid AllField UPDATE/MERGE PutObjective Combined LOB Clear。
  *
  * @author wuji
  * @version 1.0.0

@@ -10,7 +10,7 @@ package org.dbsyncer.sdk.model;
  */
 public class TableMapping {
     /**
-     * 序号（从小到大，同一库映射内按此顺序处理）
+     * No.（From childhood to age, same.LibraryIn this order)
      */
     private int index;
 

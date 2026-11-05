@@ -156,7 +156,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
     private ResourceAclService resourceAclService;
 
     /**
-     * 任务启停锁
+     * TasksTurn off the lock.
      */
     private static final Object LOCK = new Object();
 
@@ -169,9 +169,9 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
     public String add(Map<String, String> params) {
         ValidateSyncTask task = new ValidateSyncTask();
         checkTask(task, params);
-        // 默认检查行数据
+        // Default checkRow data
         task.setEnableRowData(true);
-        // 关联同步任务
+        // Other Organiser 88
         String mappingId = params.get("mappingId");
         if (StringUtil.isNotBlank(mappingId)) {
             Mapping mapping = mappingProfile.get(mappingId);
@@ -187,7 +187,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
             task.setReadNum(mapping.getReadNum());
             task.setBatchNum(mapping.getBatchNum());
             task.setThreadNum(mapping.getThreadNum());
-            // 复制表组列表
+            // CopyTable groupsList
             tableGroupProfile.pageScanTableGroups(mappingId, ConfigConstant.PAGE_SIZE, tableGroupAll -> {
                 if (CollectionUtils.isEmpty(tableGroupAll)) {
                     return;
@@ -202,7 +202,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
                     tableGroupProfile.addTableGroup(newTable);
                 }
             });
-            // 合并任务公共字段
+            // MergeTasksMaleTotalField
             mergeTaskColumn(task);
             String id = validateSyncProfile.add(task);
             validateSyncProfile.syncTaskTableMetaDetails(id);
@@ -211,26 +211,26 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
                     ConfigConstant.VALIDATE_SYNC, id);
             return id;
         } else {
-            Assert.hasText(params.get("sourceConnectorId"), "数据源不能为空");
-            Assert.hasText(params.get("targetConnectorId"), "目标源不能为空");
+            Assert.hasText(params.get("sourceConnectorId"), "Data source cannot be empty");
+            Assert.hasText(params.get("targetConnectorId"), "Target source cannot be empty");
             task.setSourceConnectorId(params.get("sourceConnectorId"));
             task.setSourceDatabase(params.get("sourceDatabase"));
             task.setSourceSchema(params.get("sourceSchema"));
             task.setTargetConnectorId(params.get("targetConnectorId"));
             task.setTargetDatabase(params.get("targetDatabase"));
             task.setTargetSchema(params.get("targetSchema"));
-            // 先持久化再建连，才能拉取到所有表
+            // FirstEnduringOnce again, we can pull all the watches.
             String id = validateSyncProfile.add(task);
             preloadTemplate.reConnect(task);
             ValidateSyncTask validateSyncTask = refreshTablesAndGet(id);
-            // 勾选「匹配相似表」时异步自动匹配，否则解析自定义表映射文本
+            // Check「Match similar tables」It's an automatic match between steps.NoParsingCustom tableMap text
             if (StringUtil.isNotBlank(params.get("autoMatchTable"))) {
                 List<Table> sourceTables = validateSyncTask.getSourceTable();
                 List<Table> targetTables = validateSyncTask.getTargetTable();
                 if (CollectionUtils.isEmpty(sourceTables) || CollectionUtils.isEmpty(targetTables)) {
-                    throw new BizException("未获取到源库或目标库表列表，无法匹配相似表");
+                    throw new BizException("No source library or target library table list obtained, matching similar table not possible");
                 }
-                // 异步匹配结束时会 sync；此处仅预清分表，避免空表残留
+                // At the end of the walk-in.sync；This is foreclosed.minTable, avoid 29.
                 taskDetailMetaProfile.clearData(id);
                 submitValidateSyncMatchTableTask(id);
             } else {
@@ -238,7 +238,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
                 if (StringUtil.isNotBlank(tableGroups)) {
                     matchCustomizedTableGroups(validateSyncTask, tableGroups);
                 }
-                // sync 内部会 TRUNCATE 一次并重建骨架，勿再提前 clearData
+                // sync Internal meetingsTRUNCATE One time and rebuild the skeleton, no advance.clearData
                 validateSyncProfile.syncTaskTableMetaDetails(id);
             }
             resourceAclService.grantOwner(params.get(UserConfigService.CURRENT_USER_NAME),
@@ -257,7 +257,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
     }
 
     /**
-     * 提交异步匹配相似表任务
+     * SubmitA walk.Match similar tablesTasks
      */
     private void submitValidateSyncMatchTableTask(String taskId) {
         ValidateSyncMatchTableTask task = (ValidateSyncMatchTableTask) validateSyncMatchTableTask.clone();
@@ -266,14 +266,14 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
     }
 
     /**
-     * 自定义配置表映射关系（与 MappingServiceImpl 文本格式一致）。
-     * 批量落库，不逐表 sync；由调用方收尾对齐明细。
+     * CustomConfigureMap relation（and MappingServiceImpl Text format is consistent).
+     * BatchdownLibrary，Not by Tablesync；Lined by the caller.
      */
     private void matchCustomizedTableGroups(ValidateSyncTask validateSyncTask, String tableGroups) {
         List<Table> sourceTables = validateSyncTask.getSourceTable();
         List<Table> targetTables = validateSyncTask.getTargetTable();
         if (CollectionUtils.isEmpty(sourceTables) || CollectionUtils.isEmpty(targetTables)) {
-            throw new BizException("未获取到源库或目标库表列表，无法解析表映射关系");
+            throw new BizException("Could not close temporary folder: %s");
         }
         Map<String, Table> sourceTableMap = toTableNameMap(sourceTables);
         Map<String, Table> targetTableMap = toTableNameMap(targetTables);
@@ -282,7 +282,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
         synchronized (LOCK) {
             int baseIndex = tableGroupProfile.getTableGroupCount(validateSyncTask.getId());
             List<TableGroup> models = new ArrayList<>();
-            // 数据源表|目标源表=源表字段A1*|目标字段A2*
+            // Source table|Target table=Source fieldsA1*|Target fieldsA2*
             for (String line : lines) {
                 if (StringUtil.isBlank(line)) {
                     continue;
@@ -295,7 +295,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
                 Table sourceTable = sourceTableMap.get(tableGroupNames[0].toUpperCase(Locale.ROOT));
                 Table targetTable = targetTableMap.get(tableGroupNames[1].toUpperCase(Locale.ROOT));
                 if (sourceTable == null || targetTable == null) {
-                    logger.warn("自定义表映射未找到表: {} >> {}", tableGroupNames[0], tableGroupNames[1]);
+                    logger.warn("Custom table map not found: { > {", tableGroupNames[0], tableGroupNames[1]);
                     continue;
                 }
                 try {
@@ -313,9 +313,9 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
                     model.setIndex(baseIndex + models.size() + 1);
                     models.add(model);
                 } catch (RepeatedTableGroupException e) {
-                    // 已存在则跳过
+                    // Existing Skip
                 } catch (Exception e) {
-                    logger.error("添加表映射失败: {} >> {}, {}", sourceTable.getName(), targetTable.getName(), e.getMessage());
+                    logger.error("Add chart map failed: {, {", sourceTable.getName(), targetTable.getName(), e.getMessage());
                 }
             }
             if (!CollectionUtils.isEmpty(models)) {
@@ -340,7 +340,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
     public String edit(Map<String, String> params) {
         ValidateSyncTask task = validateSyncProfile.get(params.get("id"));
         if (task == null) {
-            throw new BizException("任务不存在");
+            throw new BizException("Task does not exist");
         }
         assertRunning(task.getId());
         checkTask(task, params);
@@ -371,7 +371,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
             });
         }
         String id = validateSyncProfile.update(task);
-        // 表级 Meta 归零；明细分表由 sync 一次性 TRUNCATE 并重建骨架（勿再 clearRunData，否则会 TRUNCATE 两次）
+        // TableMeta zero; breakdownminTable bysync One-timeRevolutionTRUNCATE And rebuild the skeleton.clearRunData，NoThen I will.TRUNCATE (twice)
         taskProfile.resetTableDetailMetas(id);
         validateSyncProfile.syncTaskTableMetaDetails(id);
         return id;
@@ -384,11 +384,11 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
         String json = JsonUtil.objToJson(task);
         ValidateSyncTask newTask = JsonUtil.jsonToObj(json, ValidateSyncTask.class);
         newTask.setId(String.valueOf(snowflakeIdWorker.nextId()));
-        newTask.setName(newTask.getName() + "(复制)");
+        newTask.setName(newTask.getName() + "(Copy)");
         newTask.setType(CommonTaskTypeEnum.VALIDATE_SYNC.getCode());
         newTask.setUpdateTime(System.currentTimeMillis());
         String newId = validateSyncProfile.add(newTask);
-        // 深拷贝 table_group（关联已下沉到该表）
+        // Deep Copytable_group（Association sunk to this table)
         tableGroupProfile.pageScanTableGroups(id, ConfigConstant.PAGE_SIZE, sourceGroups -> {
             if (CollectionUtils.isEmpty(sourceGroups)) {
                 return;
@@ -422,26 +422,26 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
         validateSyncProfile.delete(id);
         groupService.bind(null, ConfigConstant.VALIDATE_SYNC, id);
         resourceAclService.revokeAllForResource(ConfigConstant.VALIDATE_SYNC, id);
-        return "删除成功";
+        return "Deleted successfully";
     }
 
     @Override
     public String start(String id) {
-        Assert.isTrue(tableGroupProfile.getTableGroupCount(id) > 0, "任务未配置表映射，无法启动");
-        Assert.isTrue(!dispatchTaskService.isRunning(id), "表映射正在匹配中，请稍候再启动");
+        Assert.isTrue(tableGroupProfile.getTableGroupCount(id) > 0, "Task not configured map, not enabled");
+        Assert.isTrue(!dispatchTaskService.isRunning(id), "Map is matching, please start later");
         ValidateSyncTask task = validateSyncProfile.get(id);
-        Assert.notNull(task, "任务不存在");
+        Assert.notNull(task, "Task does not exist");
         synchronized (LOCK) {
 
             Meta meta = taskMetaProfile.getMeta(id);
             if (meta != null && CommonTaskStatusEnum.isDone(meta.getState())) {
-                // 整轮重跑：任务级 Meta 归零 + 表级 Meta 归零 + 明细分表 TRUNCATE 一次并重建骨架
+                // Round run:TasksAdministrationMeta nil+ TableMeta nil+ DetailsminTableTRUNCATE One Families and Rebuild Bones
                 taskMetaProfile.resetMeta(id);
                 taskProfile.resetTableDetailMetas(id);
                 validateSyncProfile.syncTaskTableMetaDetails(id);
             }
             clusterService.start(task, false);
-            return "启动成功";
+            return "Started successfully";
         }
     }
 
@@ -454,7 +454,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
             taskMetaProfile.updateMeta(taskMeta);
         }
         clusterService.stop(id, CommonTaskTypeEnum.VALIDATE_SYNC);
-        return "停止成功";
+        return "Stopped successfully";
     }
 
     @Override
@@ -494,7 +494,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
         if (task == null) {
             return null;
         }
-        // 复用查表组
+        // Reuse Checklist Group
         params.put("mappingId", task.getId());
         return tableGroupService.search(params);
     }
@@ -509,7 +509,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
         int pageNum = NumberUtil.toInt(params.get("pageNum"), 1);
         int pageSize = Math.max(10, Math.min(200, NumberUtil.toInt(params.get("pageSize"), 50)));
 
-        // 是否过滤已配置的表（exclude=1 表示不过滤）
+        // YesNoFilteredConfigureTableexclude=1 Other Organiser
         boolean excludeMapped = NumberUtil.toInt(params.get("exclude"), 0) != YesNoEnum.YES.getCode();
 
         ValidateSyncTask task = validateSyncProfile.get(id);
@@ -519,7 +519,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
         List<Table> tables = isSource ? task.getSourceTable() : task.getTargetTable();
         tables = CollectionUtils.isEmpty(tables) ? Collections.emptyList() : tables;
 
-        // 已映射/已配置的表名
+        // Mapd/ConfigureYes.Table name
         Set<String> mappedTableNames;
         if (excludeMapped) {
             mappedTableNames = new HashSet<>();
@@ -541,7 +541,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
             mappedTableNames = Collections.emptySet();
         }
 
-        // 精准匹配（tableNames: a|b|c）
+        // Precision Match(s)tableNames: a|b|c）
         Set<String> exactNames = new HashSet<>();
         if (StringUtil.isNotBlank(tableNames)) {
             String[] nameArray = StringUtil.split(tableNames, "\\|");
@@ -584,7 +584,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
     @Override
     public Paging searchResult(Map<String, String> params) {
         String taskId = params.get("taskId");
-        Assert.hasText(taskId, "任务ID不能为空");
+        Assert.hasText(taskId, "Task ID cannot be empty");
         int pageNum = NumberUtil.toInt(params.get("pageNum"), 1);
         int pageSize = NumberUtil.toInt(params.get("pageSize"), 10);
         String detailStatus = StringUtil.trimToEmpty(params.get("detailStatus"));
@@ -596,15 +596,15 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
 
     @Override
     public Object getValidateResultDetail(String taskId, String id) {
-        Assert.hasText(taskId, "任务ID不能为空");
-        Assert.hasText(id, "明细ID不能为空");
+        Assert.hasText(taskId, "Task ID cannot be empty");
+        Assert.hasText(id, "The details cannot be empty.");
         return taskDetailProfile.getDetail(TaskDetailQuery.of(taskId).setDetailId(id));
     }
 
     @Override
     public Object manualReviseDetail(String taskId, String detailId) {
-        Assert.hasText(taskId, "任务ID不能为空");
-        Assert.hasText(detailId, "明细ID不能为空");
+        Assert.hasText(taskId, "Task ID cannot be empty");
+        Assert.hasText(detailId, "The details cannot be empty.");
         return validateSyncDetailService.manualRevise(taskId, detailId);
     }
 
@@ -615,7 +615,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
     }
 
     /**
-     * 拉取并回写源/目标表列表，返回已刷新的任务对象（供创建后立即匹配使用）。
+     * Rip & Back Source/Target tableList，BackAlreadyRefreshYes.Tasksobject (for matching immediately after creation).
      */
     private ValidateSyncTask refreshTablesAndGet(String id) {
         ValidateSyncTask task = validateSyncProfile.get(id);
@@ -657,7 +657,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
                 mergeTaskColumn(task);
                 return 1 < models.size() ? String.valueOf(models.size()) : models.get(0).getId();
             } finally {
-                // 表映射变更后对齐明细
+                // Align details with map change
                 validateSyncProfile.syncTaskTableMetaDetails(taskId);
             }
         }
@@ -675,22 +675,22 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
                 return;
             }
             mergeTaskColumn(task);
-            // 整批结束后只对齐一次明细
+            // Only once after the whole batch is finished
             validateSyncProfile.syncTaskTableMetaDetails(taskId);
         }
     }
 
     /**
-     * 校验并批量落库表映射。
+     * Verify and BatchLibraryMap.
      *
-     * @param skipRepeated true 时遇重复跳过该表；false 时遇重复抛出
+     * @param skipRepeated true Repeatedly skips the table;false Time and again throw
      */
     private List<TableGroup> createAndPersistTableGroups(ValidateSyncTask task, Map<String, String> params, boolean skipRepeated) {
         String taskId = task.getId();
         String[] sourceTableArray = StringUtil.split(params.get("sourceTable"), StringUtil.VERTICAL_LINE);
         String[] targetTableArray = StringUtil.split(params.get("targetTable"), StringUtil.VERTICAL_LINE);
         int tableSize = sourceTableArray.length;
-        Assert.isTrue(tableSize == targetTableArray.length, "数据源表和目标源表关系必须为一组");
+        Assert.isTrue(tableSize == targetTableArray.length, "Data source table and target source table relationships must be set");
 
         int baseIndex = tableGroupProfile.getTableGroupCount(taskId);
         List<TableGroup> models = new ArrayList<>(tableSize);
@@ -734,15 +734,15 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
         Assert.hasText(ids, "TableGroup ids can not be null");
         ValidateSyncTask task = validateSyncProfile.get(taskId);
         assertRunning(taskId);
-        // 批量删除表
+        // BatchDeleteTable
         Stream.of(StringUtil.split(ids, ",")).parallel().forEach(id -> {
             tableGroupProfile.removeTableGroup(id);
         });
-        // 合并任务公共字段
+        // MergeTasksMaleTotalField
         mergeTaskColumn(task);
-        // 重置排序
+        // ResetSort
         resetTableGroupAllIndex(taskId);
-        // 对齐删除已无表映射的明细
+        // AlignmentDeleteAlreadyNoneDetails of the map
         validateSyncProfile.syncTaskTableMetaDetails(taskId);
         return taskId;
     }
@@ -753,7 +753,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
         String instanceId = ConnectorInstanceUtil.buildConnectorInstanceId(context.getMappingId(), context.getConnectorId(), context.getSuffix());
         ConnectorInstance connectorInstance = connectorFactory.connect(instanceId);
         List<Table> tables = connectorFactory.getTables(connectorInstance, context);
-        // 按升序展示表
+        // Ups 55/2
         Collections.sort(tables, Comparator.comparing(Table::getName));
         return tables;
     }
@@ -799,7 +799,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
     }
 
     /**
-     * 列表行数据
+     * ListRow data
      */
     private ValidateSyncListVO convertTask2ListVo(ValidateSyncTask task) {
         if (task == null) {
@@ -854,7 +854,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
         task.setCreateTime(null == task.getCreateTime() ? now : task.getCreateTime());
         task.setUpdateTime(now);
         task.setName(params.get("name"));
-        // 过滤条件
+        // Filter Conditions
         String filterJson = params.get("filter");
         if (StringUtil.isNotBlank(filterJson)) {
             List<Filter> list = JsonUtil.jsonToArray(filterJson, Filter.class);
@@ -876,12 +876,12 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
         task.setEnableReverseSync(StringUtil.isNotBlank(params.get("enableReverseSync")));
         task.setEnableSchema(StringUtil.isNotBlank(params.get("enableSchema")));
         task.setEnableRowData(StringUtil.isNotBlank(params.get("enableRowData")));
-        // 统一前置条件：行数据未开启，则反向扫描、反向同步全部禁用
+        // Unified prefixCondition：Row dataNotOn，Scan backwards, sync backwardsAllDisable
         if (!task.isEnableRowData()) {
             task.setEnableReverseScan(false);
             task.setEnableReverseSync(false);
         } else if (!task.isEnableReverseScan()) {
-            // 行数据开启，但反向扫描关闭 → 同步关闭反向订正
+            // Row dataOn，But a reverse scan.Close → SyncCloseReverse Revision
             task.setEnableReverseSync(false);
         }
         task.setEnableIndex(StringUtil.isNotBlank(params.get("enableIndex")));
@@ -925,7 +925,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
     }
 
     /**
-     * 已完成表数：明细 Meta 快照中 status=已完成 的个数。
+     * CompletedTable: DetailsMeta Quickshot.status=Completed The number.
      */
     private int countCompletedTables(boolean roundDone, int totalSize, List<CommonTaskSnapshot> tableSnapshots) {
         if (roundDone) {
@@ -941,7 +941,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
     }
 
     /**
-     * 进度百分比：completed / 表总数 * 100。
+     * Progress is 100%.minBy:completed / TableTotal * 100。
      */
     private BigDecimal calculateProgressPercent(boolean roundDone, int totalSize, List<CommonTaskSnapshot> tableSnapshots) {
         if (roundDone) {

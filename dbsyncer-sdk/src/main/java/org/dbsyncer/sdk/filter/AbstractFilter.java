@@ -7,7 +7,7 @@ import org.dbsyncer.sdk.enums.FilterTypeEnum;
 import org.dbsyncer.sdk.model.Filter;
 
 /**
- * 过滤语法实现
+ * Filter Syntax:
  *
  * @Author AE86
  * @Version 1.0.0
@@ -16,12 +16,12 @@ import org.dbsyncer.sdk.model.Filter;
 public abstract class AbstractFilter extends Filter {
 
     /**
-     * 返回是否显示高亮
+     * BackYesNoHighlight
      */
     private boolean enableHighLightSearch;
 
     /**
-     * 参数类型
+     * ParameterType
      *
      * @return
      */

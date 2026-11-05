@@ -34,7 +34,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 将通知投递到全局已启用渠道；按分组/同步任务覆盖企微/钉钉 @ 与邮件收件人。
+ * Can not open messageEnabledchannels;byGroup/Sync taskOverwriteMicro/ MicroNail. @ andEmailRecipient.
  *
  * @author wuji
  * @version 1.0.0
@@ -87,7 +87,7 @@ public class NoticeChannelDispatcher implements NoticeDeliveryHandler {
     }
 
     /**
-     * 解析规则：MAPPING 优先，否则合并所属 GROUP；无规则返回 {@code null}。
+     * Parsing rules:MAPPING It's a priority.NoMergeGROUP；NoneRuleBack {@code null}。
      */
     private NoticeConfig copyWithAtOverride(NoticeConfig source, NoticeRule rule) {
         if (rule == null) {
@@ -170,7 +170,7 @@ public class NoticeChannelDispatcher implements NoticeDeliveryHandler {
             return;
         }
         channel.setAtAll(rule.isAtAll());
-        // Robot API 字段仍为 atMobiles，取值来自规则 atPhones
+        // Robot API FieldStillatMobiles，RemoveValueFrom RulesatPhones
         channel.setAtMobiles(rule.getAtPhones());
     }
 

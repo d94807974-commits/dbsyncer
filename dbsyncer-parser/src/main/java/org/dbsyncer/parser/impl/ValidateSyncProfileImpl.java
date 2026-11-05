@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-09-29 20:21
  */
@@ -104,13 +104,13 @@ public final class ValidateSyncProfileImpl extends AbstractConfigModelProfile<Va
     }
 
     /**
-     * 保存/编辑时重建明细分表骨架行：先清空分表，再按当前表映射 × 开启类型全量插入 READY 行。
+     * Save/EditTime to recreate detailminCobra line: FirstClearminTable, then map the current table× OnTypeFullInsertREADY All right.
      */
     @Override
     public void syncTaskTableMetaDetails(String taskId) {
-        Assert.hasText(taskId, "任务ID不能为空");
+        Assert.hasText(taskId, "Task ID cannot be empty");
         ValidateSyncTask task = get(taskId);
-        Assert.notNull(task, "任务不存在");
+        Assert.notNull(task, "Task does not exist");
         taskDetailMetaProfile.clearData(taskId);
         List<String> types = resolveEnabledDetailTypes(task);
         if (types.isEmpty()) {
@@ -156,7 +156,7 @@ public final class ValidateSyncProfileImpl extends AbstractConfigModelProfile<Va
         row.put(ConfigConstant.DATA_TABLE_GROUP_ID, tableGroupId);
         row.put(ConfigConstant.CONFIG_MODEL_TYPE, type);
         row.put(ConfigConstant.DETAIL_TARGET_TABLE, StringUtil.getIfBlank(targetTable, StringUtil.EMPTY));
-        // 成败字段默认失败位；生命周期在 DATA.status / meta.STATE
+        // Success or failureFieldDefaultFailedposition;life cycle inDATA.status / meta.STATE
         row.put(ConfigConstant.DETAIL_IS_SUCCESS, StorageDataStatusEnum.FAIL.getValue());
         row.put(ConfigConstant.BINLOG_DATA, TaskDetailUtil.serializeContent(content));
         row.put(ConfigConstant.CONFIG_MODEL_CREATE_TIME, now);

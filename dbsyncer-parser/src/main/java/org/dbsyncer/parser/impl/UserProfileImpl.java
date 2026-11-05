@@ -27,7 +27,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * {@link UserProfile} 实现。
+ * {@link UserProfile} Achieved.
  *
  * @author wuji
  * @version 1.0.0
@@ -48,7 +48,7 @@ public final class UserProfileImpl implements UserProfile {
             return null;
         }
         UserConfig config = new UserConfig();
-        config.setName("用户配置");
+        config.setName("User Configuration");
         config.setUserInfoList(users);
         return config;
     }

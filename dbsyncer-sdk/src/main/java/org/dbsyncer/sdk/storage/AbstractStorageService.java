@@ -32,30 +32,30 @@ import java.util.Map;
 public abstract class AbstractStorageService implements StorageService, DisposableBean {
 
     /**
-     * 灌入/补齐默认告警策略（按通知类型 ID 幂等，已存在则跳过）。
+     * Default for injection/fillingPolice strategy Corrupt（By NotificationType ID )。 and so on, and so forth.
      */
     protected void initNoticeStrategy() {
         long now = System.currentTimeMillis();
         String sharding = getSharding(StorageEnum.NOTICE_STRATEGY, null);
         List<Map> missing = new ArrayList<>(9);
-        offerNoticeStrategyIfAbsent(missing, sharding, NoticeTypeEnum.TEST_MESSAGE, "测试消息",
-                NoticeFrequencyEnum.IMMEDIATE, StringUtil.EMPTY, "立即通知", now);
-        offerNoticeStrategyIfAbsent(missing, sharding, NoticeTypeEnum.CONNECTOR_OFFLINE, "连接离线",
-                NoticeFrequencyEnum.IMMEDIATE, StringUtil.EMPTY, "5秒通知一次", now);
-        offerNoticeStrategyIfAbsent(missing, sharding, NoticeTypeEnum.MAPPING_ERROR, "同步任务失败",
-                NoticeFrequencyEnum.IMMEDIATE, StringUtil.EMPTY, "10分钟检测有失败数据,通知一次", now);
-        offerNoticeStrategyIfAbsent(missing, sharding, NoticeTypeEnum.MAPPING_STOP, "手动停止同步任务",
-                NoticeFrequencyEnum.IMMEDIATE, StringUtil.EMPTY, "立即通知", now);
-        offerNoticeStrategyIfAbsent(missing, sharding, NoticeTypeEnum.VALIDATE_SYNC_FAIL, "订正校验失败",
-                NoticeFrequencyEnum.IMMEDIATE, StringUtil.EMPTY, "任务执行完成,通知一次", now);
-        offerNoticeStrategyIfAbsent(missing, sharding, NoticeTypeEnum.LICENSE_EXCEPTION, "授权异常",
-                NoticeFrequencyEnum.INTERVAL, "0 */10 * * * ?", "十分钟通知一次", now);
-        offerNoticeStrategyIfAbsent(missing, sharding, NoticeTypeEnum.LICENSE_EXPIRE_REMIND, "授权到期提醒",
-                NoticeFrequencyEnum.INTERVAL, "0 0 9 * * ?", "每天通知一次", now);
-        offerNoticeStrategyIfAbsent(missing, sharding, NoticeTypeEnum.LICENSE_EXPIRED, "授权已过期",
-                NoticeFrequencyEnum.INTERVAL, "0 0 9 * * ?", "每天通知一次", now);
-        offerNoticeStrategyIfAbsent(missing, sharding, NoticeTypeEnum.MAPPING_FULL_COMPLETE, "全量同步完成",
-                NoticeFrequencyEnum.IMMEDIATE, StringUtil.EMPTY, "立即通知", now);
+        offerNoticeStrategyIfAbsent(missing, sharding, NoticeTypeEnum.TEST_MESSAGE, "CCPR Test Message",
+                NoticeFrequencyEnum.IMMEDIATE, StringUtil.EMPTY, "Notification", now);
+        offerNoticeStrategyIfAbsent(missing, sharding, NoticeTypeEnum.CONNECTOR_OFFLINE, "Connect Offline",
+                NoticeFrequencyEnum.IMMEDIATE, StringUtil.EMPTY, "Five seconds to call.", now);
+        offerNoticeStrategyIfAbsent(missing, sharding, NoticeTypeEnum.MAPPING_ERROR, "Synchronising tasks failed",
+                NoticeFrequencyEnum.IMMEDIATE, StringUtil.EMPTY, "10 minutes to test for failure data.", now);
+        offerNoticeStrategyIfAbsent(missing, sharding, NoticeTypeEnum.MAPPING_STOP, "Stop Sync Task Manually",
+                NoticeFrequencyEnum.IMMEDIATE, StringUtil.EMPTY, "Notification", now);
+        offerNoticeStrategyIfAbsent(missing, sharding, NoticeTypeEnum.VALIDATE_SYNC_FAIL, "Revision verification failed",
+                NoticeFrequencyEnum.IMMEDIATE, StringUtil.EMPTY, "Mission accomplished, once notified.", now);
+        offerNoticeStrategyIfAbsent(missing, sharding, NoticeTypeEnum.LICENSE_EXCEPTION, "Authorization irregular.",
+                NoticeFrequencyEnum.INTERVAL, "0 */10 * * * ?", "Ten minutes to call.", now);
+        offerNoticeStrategyIfAbsent(missing, sharding, NoticeTypeEnum.LICENSE_EXPIRE_REMIND, "Organisation",
+                NoticeFrequencyEnum.INTERVAL, "0 0 9 * * ?", "Once a day.", now);
+        offerNoticeStrategyIfAbsent(missing, sharding, NoticeTypeEnum.LICENSE_EXPIRED, "Mandate expired",
+                NoticeFrequencyEnum.INTERVAL, "0 0 9 * * ?", "Once a day.", now);
+        offerNoticeStrategyIfAbsent(missing, sharding, NoticeTypeEnum.MAPPING_FULL_COMPLETE, "Full Sync",
+                NoticeFrequencyEnum.IMMEDIATE, StringUtil.EMPTY, "Notification", now);
         if (!CollectionUtils.isEmpty(missing)) {
             batchInsert(StorageEnum.NOTICE_STRATEGY, sharding, missing);
         }
@@ -71,7 +71,7 @@ public abstract class AbstractStorageService implements StorageService, Disposab
         try {
             existing = selectOne(sharding, query);
         } catch (NullExecutorException e) {
-            // 表未就绪时跳过，下次启动再补
+            // Skipped when the table was not ready. Next time.StartI'll make it up.
         }
         if (existing != null && !existing.isEmpty()) {
             return;
@@ -98,7 +98,7 @@ public abstract class AbstractStorageService implements StorageService, Disposab
     protected abstract Paging select(String sharding, Query query);
 
     /**
-     * 按条件查询单条
+     * PressConditionQuery Line
      */
     protected abstract Map selectOne(String sharding, Query query);
 
@@ -107,7 +107,7 @@ public abstract class AbstractStorageService implements StorageService, Disposab
     protected abstract void deleteAll(String sharding);
 
     /**
-     * 清空分片表数据并保留表结构（TRUNCATE）。
+     * ClearminTable data and keepTable schema（TRUNCATE）。
      */
     protected abstract void truncateAll(String sharding);
 
@@ -134,9 +134,9 @@ public abstract class AbstractStorageService implements StorageService, Disposab
             String sharding = getSharding(query.getType(), query.getTaskId());
             return select(sharding, query);
         } catch (NullExecutorException e) {
-            // 存储表不存在或已删除，请重试
+            // Storage form does not exist orDeleted，Please.Try again
         } catch (SdkException e) {
-            // 动态分表尚未创建（任务未启动/无明细）时按空结果返回
+            // DynamicShit.minTable not createdTasksNot started/None) When the details are clear, press emptyResultBack
             if (isMissingStorageTable(e)) {
                 return new Paging(query.getPageNum(), query.getPageSize());
             }
@@ -158,7 +158,7 @@ public abstract class AbstractStorageService implements StorageService, Disposab
             query.setPageSize(1);
             return selectOne(getSharding(query.getType(), query.getTaskId()), query);
         } catch (NullExecutorException e) {
-            // 存储表不存在或已删除，请重试
+            // Storage form does not exist orDeleted，Please.Try again
         } catch (SdkException e) {
             if (isMissingStorageTable(e)) {
                 return null;
@@ -172,14 +172,14 @@ public abstract class AbstractStorageService implements StorageService, Disposab
     public void delete(Query query) {
         BooleanFilter q = query.getBooleanFilter();
         if (CollectionUtils.isEmpty(q.getClauses()) && CollectionUtils.isEmpty(q.getFilters())) {
-            throw new SdkException("必须包含删除条件");
+            throw new SdkException("Must include conditions for deletion");
         }
 
         try {
             String sharding = getSharding(query.getType(), query.getTaskId());
             delete(sharding, query);
         } catch (NullExecutorException e) {
-            // 存储表不存在或已删除，请重试
+            // Storage form does not exist orDeleted，Please.Try again
         }
     }
 
@@ -188,14 +188,14 @@ public abstract class AbstractStorageService implements StorageService, Disposab
         try {
             String sharding = getSharding(type, taskId);
             if (type == StorageEnum.TASK_DETAIL) {
-                // 任务仍在：保证分表存在后只清数据，避免 DROP + 重建
+                // TasksStill: PromiseminWhen tables exist, only data are cleared and avoidedDROP + Reconstruction
                 ensureShard(type, sharding);
                 truncateAll(sharding);
             } else {
                 deleteAll(sharding);
             }
         } catch (NullExecutorException e) {
-            // 存储表不存在或已删除，请重试
+            // Storage form does not exist orDeleted，Please.Try again
         }
     }
 
@@ -204,15 +204,15 @@ public abstract class AbstractStorageService implements StorageService, Disposab
         try {
             deleteAll(getSharding(type, taskId));
         } catch (NullExecutorException e) {
-            // 存储表不存在或已删除，请重试
+            // Storage form does not exist orDeleted，Please.Try again
         }
     }
 
     /**
-     * 确保分片物理表存在（仅 DDL，不写数据）。
+     * EnsureminPhysical table exists (only)DDL，Do not write data.
      *
-     * @param type     存储类型
-     * @param sharding 分片名（如 task_detail_{taskId}）
+     * @param type     StorageType
+     * @param sharding minTitletask_detail_{taskId}）
      */
     protected abstract void ensureShard(StorageEnum type, String sharding);
 
@@ -272,7 +272,7 @@ public abstract class AbstractStorageService implements StorageService, Disposab
         try {
             batchIncrement(type, getSharding(type, null), id, deltas);
         } catch (NullExecutorException e) {
-            // 存储表不存在或已删除，请重试
+            // Storage form does not exist orDeleted，Please.Try again
         }
     }
 
@@ -291,12 +291,12 @@ public abstract class AbstractStorageService implements StorageService, Disposab
     }
 
     /**
-     * 原生 SQL 查询。
+     * NativeSQL query.
      */
     protected abstract List<Map<String, Object>> selectList(String sql, Object[] args);
 
     /**
-     * 原生 SQL 分页查询（由实现类按方言追加 LIMIT）。
+     * NativeSQL minPageQuery (additional by dialect of category of realization)LIMIT）。
      */
     protected abstract List<Map<String, Object>> selectList(String sql, int pageNum, int pageSize, Object[] args);
 

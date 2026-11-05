@@ -87,7 +87,7 @@ public class DatabaseConnectorInstance implements ConnectorInstance<DatabaseConf
     @Override
     public Connection getConnection() throws Exception {
         Connection connection = dataSource.getConnection();
-        // 动态设置数据库和模式
+        // DynamicShit.SettingsData FactLibraryand mode
         if (connection instanceof SimpleConnection) {
             SimpleConnection simpleConnection = (SimpleConnection) connection;
             try {
@@ -99,7 +99,7 @@ public class DatabaseConnectorInstance implements ConnectorInstance<DatabaseConf
                 }
             } catch (SQLException e) {
                 logger.warn("Failed to set catalog/schema: {}", e.getMessage());
-                // 不抛出异常，允许连接继续使用
+                // Do not throwError，verifieConnectContinue
             }
         }
         return connection;

@@ -4,7 +4,7 @@
 package org.dbsyncer.common.config;
 
 /**
- * 配置导入导出 ZIP 包格式约定（formatVersion=2）。
+ * ConfigureImportExport ZIP Package format as agreedformatVersion=2）。
  *
  * @author wuji
  * @version 1.0.0
@@ -13,7 +13,7 @@ package org.dbsyncer.common.config;
 public final class PackageFormatConfig {
 
     /**
-     * 新 ZIP 分片格式版本号
+     * NewZIP minSnippet FormatVersionNo. No.
      */
     public static final int FORMAT_VERSION = 2;
 
@@ -22,28 +22,28 @@ public final class PackageFormatConfig {
     public static final String USER = "user.json";
     public static final String CONNECTOR = "connector.json";
     /**
-     * 任务表全量（同步 mapping / 订正校验 / 整库迁移）
+     * TasksTableFull（Syncmapping / Data validation / Database migration）
      */
     public static final String TASK = "task.json";
     /**
-     * 兼容旧 ZIP：仅含同步任务
+     * Old CompatibilityZIP：OnlySync task
      */
     public static final String MAPPING = "mapping.json";
     public static final String META = "meta.json";
     /**
-     * 任务明细动态分表结构清单（仅 taskIds，不导出行数据；导入时预建空表）
+     * TasksDetailed dynamicsminTable schemaListtaskIds，Oh, no.ExportRow data；Import)
      */
     public static final String TASK_DETAIL = "task_detail.json";
     public static final String TABLE_GROUP_DIR = "table_group/";
     public static final String NDJSON_SUFFIX = ".ndjson";
 
     /**
-     * 导入时 table_group / task 等批量写库批次大小
+     * ImportTimetable_group / task Equal BatchLibraryBatch Size
      */
     public static final int IMPORT_BATCH_SIZE = 200;
 
     /**
-     * 列表页导出体积粗估：每条配置约占用字节（未压缩）
+     * ListPageExportCrude size estimate: eachConfigureAbout bytes (uncompressed)
      */
     public static final long ESTIMATE_BYTES_PER_ROW = 2048L;
 

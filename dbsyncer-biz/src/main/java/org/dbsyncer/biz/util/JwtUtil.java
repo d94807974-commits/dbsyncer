@@ -21,10 +21,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * JWT工具类
- * 支持生成、验证、刷新token
+ * JWTTool class
+ * SupportGenerate、Validation,Refreshtoken
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  */
 public abstract class JwtUtil {
@@ -35,16 +35,16 @@ public abstract class JwtUtil {
     private static final String TYP = "JWT";
     private static final String ALG = "HS256";
 
-    // Token有效期：2小时（毫秒）
+    // TokenValid until：2hours（ms）
     private static final long TOKEN_EXPIRE_TIME = 2 * 60 * 60 * 1000L;
 
-    // Token刷新时间窗口：1.5小时（毫秒），在此时间窗口内可以刷新token
+    // TokenRefreshTimeWindow:1.5hours（ms），Here.TimeInner windowRefreshtoken
     private static final long TOKEN_REFRESH_TIME = (long) (1.5 * 60 * 60 * 1000);
 
     /**
-     * 生成JWT Token
+     * GenerateJWT Token
      *
-     * @param secret 密钥
+     * @param secret Key
      * @return JWT Token
      */
     public static String generateToken(String secret) throws NoSuchAlgorithmException, InvalidKeyException {
@@ -60,9 +60,9 @@ public abstract class JwtUtil {
 
         // Payload
         TokenInfo payload = new TokenInfo();
-        // 过期时间
+        // Expiration time
         payload.setExp(expireTime);
-        // 签发时间
+        // IssuanceTime
         payload.setIat(now);
         String payloadJson = JsonUtil.objToJson(payload);
         String payloadBase64 = base64UrlEncode(payloadJson.getBytes(StandardCharsets.UTF_8));
@@ -75,15 +75,15 @@ public abstract class JwtUtil {
     }
 
     /**
-     * 对任意载荷签名为 JWT。
+     * Other OrganiserJWT。
      *
-     * @param payload 载荷对象
-     * @param secret  密钥
+     * @param payload Load Object
+     * @param secret  Key
      * @return JWT
      */
     public static String signPayload(Object payload, String secret) throws NoSuchAlgorithmException, InvalidKeyException {
         if (payload == null || StringUtil.isBlank(secret)) {
-            throw new IllegalArgumentException("payload/secret 不能为空");
+            throw new IllegalArgumentException("Payload/secret cannot be empty");
         }
         Map<String, String> header = new HashMap<>();
         header.put("typ", TYP);
@@ -96,13 +96,13 @@ public abstract class JwtUtil {
     }
 
     /**
-     * 验签并解析载荷（不校验过期，由调用方处理）。
+     * Sign and parse the load (no check expired, processed by the caller).
      *
      * @param token  JWT
-     * @param secret 密钥
-     * @param type   载荷类型
-     * @param <T>    载荷类型
-     * @return 载荷，失败返回 null
+     * @param secret Key
+     * @param type   LoadType
+     * @param <T>    LoadType
+     * @return Load,FailedBack null
      */
     public static <T> T verifyPayload(String token, String secret, Class<T> type)
             throws NoSuchAlgorithmException, InvalidKeyException {
@@ -111,13 +111,13 @@ public abstract class JwtUtil {
         }
         String[] parts = token.split("\\.");
         if (parts.length != 3) {
-            logger.error("Token格式错误，部分数量: {}", parts.length);
+            logger.error("Token format error, part number: {", parts.length);
             return null;
         }
         String data = parts[0] + "." + parts[1];
         String expectedSignature = base64UrlEncode(hmacSha256(data, secret).getBytes(StandardCharsets.UTF_8));
         if (!expectedSignature.equals(parts[2])) {
-            logger.error("Token签名验证失败");
+            logger.error("Token signature authentication failed");
             return null;
         }
         String payloadJson = new String(base64UrlDecode(parts[1]), StandardCharsets.UTF_8);
@@ -125,11 +125,11 @@ public abstract class JwtUtil {
     }
 
     /**
-     * 验证JWT Token
+     * AuthenticationJWT Token
      *
      * @param token  JWT Token
-     * @param secret 密钥
-     * @return Token信息，验证失败返回null
+     * @param secret Key
+     * @return TokenInfo，AuthenticationFailedBacknull
      */
     public static TokenInfo verifyToken(String token, String secret) throws NoSuchAlgorithmException, InvalidKeyException {
         if (StringUtil.isBlank(token) || StringUtil.isBlank(secret)) {
@@ -138,26 +138,26 @@ public abstract class JwtUtil {
 
         String[] parts = token.split("\\.");
         if (parts.length != 3) {
-            logger.error("Token格式错误，部分数量: {}", parts.length);
+            logger.error("Token format error, part number: {", parts.length);
             return null;
         }
 
-        // 验证签名
+        // Authenticate signature
         String data = parts[0] + "." + parts[1];
         String expectedSignature = base64UrlEncode(hmacSha256(data, secret).getBytes(StandardCharsets.UTF_8));
         if (!expectedSignature.equals(parts[2])) {
-            logger.error("Token签名验证失败");
+            logger.error("Token signature authentication failed");
             return null;
         }
 
-        // 解析Payload
+        // ParsingPayload
         String payloadJson = new String(base64UrlDecode(parts[1]), StandardCharsets.UTF_8);
         TokenInfo tokenInfo = JsonUtil.jsonToObj(payloadJson, TokenInfo.class);
 
-        // 验证过期时间
+        // AuthenticationExpiration time
         Long exp = tokenInfo.getExp();
         if (exp == null || exp < System.currentTimeMillis()) {
-            logger.warn("Token已过期，exp: {}", exp);
+            logger.warn("Token expired, ext.", exp);
             return null;
         }
 
@@ -165,12 +165,12 @@ public abstract class JwtUtil {
     }
 
     /**
-     * 刷新Token
-     * 如果token在刷新时间窗口内，可以刷新生成新token
+     * RefreshToken
+     * IftokenYes.RefreshTimewindow, canRefreshGenerateNewtoken
      *
-     * @param token  原Token
-     * @param secret 密钥
-     * @return 新Token，如果不在刷新窗口内返回null
+     * @param token  OriginalToken
+     * @param secret Key
+     * @return NewToken，If not,RefreshWindowBacknull
      */
     public static String refreshToken(String token, String secret) throws NoSuchAlgorithmException, InvalidKeyException {
         TokenInfo tokenInfo = verifyToken(token, secret);
@@ -181,18 +181,18 @@ public abstract class JwtUtil {
         long now = System.currentTimeMillis();
         long elapsed = now - tokenInfo.getIat();
 
-        // 检查是否在刷新时间窗口内
+        // InspectionYesNoYes.RefreshTimeWindow
         if (elapsed > TOKEN_REFRESH_TIME) {
-            logger.warn("Token不在刷新时间窗口内，elapsed: {}ms", elapsed);
+            logger.warn("Token is not in the refreshing time window.", elapsed);
             return null;
         }
 
-        // 生成新token
+        // GenerateNewtoken
         return generateToken(secret);
     }
 
     /**
-     * HMAC-SHA256签名
+     * HMAC-SHA256Signature
      */
     private static String hmacSha256(String data, String secret) throws NoSuchAlgorithmException, InvalidKeyException {
         Mac mac = Mac.getInstance(ALGORITHM);
@@ -203,14 +203,14 @@ public abstract class JwtUtil {
     }
 
     /**
-     * Base64 URL安全编码
+     * Base64 URLSecurity Code
      */
     private static String base64UrlEncode(byte[] data) {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(data);
     }
 
     /**
-     * Base64 URL安全解码
+     * Base64 URLSecurity Decoding
      */
     private static byte[] base64UrlDecode(String data) {
         return Base64.getUrlDecoder().decode(data);

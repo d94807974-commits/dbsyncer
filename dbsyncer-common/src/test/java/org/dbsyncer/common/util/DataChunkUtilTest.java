@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 /**
- * 数据分片工具测试
+ * Data FactminSnippetsTest
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  */
 public class DataChunkUtilTest {
@@ -24,184 +24,184 @@ public class DataChunkUtilTest {
 
     @Test
     public void testChunkData_SmallData() {
-        logger.info("=== 测试小数据分片 ===");
-        String smallData = "这是测试数据，内容较少";
+        logger.info("== sync, corrected by elderman == @elder man");
+        String smallData = "Here's the test data.";
 
         List<DataChunk> chunks = DataChunkUtil.chunkData(smallData);
-        Assert.assertNotNull("分片列表不应为空", chunks);
-        Assert.assertEquals("小数据应只有1个分片", 1, chunks.size());
+        Assert.assertNotNull("Shard list must not be empty", chunks);
+        Assert.assertEquals("There should be only one fraction of the small data.", 1, chunks.size());
 
         DataChunk chunk = chunks.get(0);
-        Assert.assertNotNull("分片ID不应为空", chunk.getChunkId());
-        Assert.assertEquals("分片索引应为0", 0, chunk.getChunkIndex());
-        Assert.assertEquals("总分片数应为1", 1, chunk.getTotalChunks());
-        Assert.assertEquals("分片数据应相同", smallData, chunk.getData());
+        Assert.assertNotNull("Part ID should not be empty.", chunk.getChunkId());
+        Assert.assertEquals("The fraction index should read 0", 0, chunk.getChunkIndex());
+        Assert.assertEquals("The total number of fractions should read 1", 1, chunk.getTotalChunks());
+        Assert.assertEquals("The fraction data should be the same.", smallData, chunk.getData());
 
-        logger.info("小数据分片测试通过，分片数: {}", chunks.size());
+        logger.info("Small data fraction tested, fraction: {", chunks.size());
     }
 
     @Test
     public void testChunkData_LargeData() {
-        logger.info("=== 测试大数据分片 ===");
-        // 生成约2MB的数据（使用ASCII字符，避免多字节字符分片问题）
+        logger.info("== sync, corrected by elderman == @elder man");
+        // GenerateApproximately2MBData (UseASCIICharacters, avoid multibytesminQuestion
         StringBuilder largeData = new StringBuilder();
         for (int i = 0; i < 200000; i++) {
             largeData.append("test_data_").append(i).append(",");
         }
         String largeDataStr = largeData.toString();
 
-        // 使用500KB分片大小
+        // Use500KBminBlock Size
         int chunkSize = 500 * 1024;
         List<DataChunk> chunks = DataChunkUtil.chunkData(largeDataStr, chunkSize);
 
-        Assert.assertNotNull("分片列表不应为空", chunks);
-        Assert.assertTrue("大数据应被分成多个分片", chunks.size() > 1);
+        Assert.assertNotNull("Shard list must not be empty", chunks);
+        Assert.assertTrue("Big data should be divided into multiple fractions", chunks.size() > 1);
 
-        // 验证所有分片的chunkId相同
+        // Verify AllminPieces.chunkIdSame
         String firstChunkId = chunks.get(0).getChunkId();
         for (DataChunk chunk : chunks) {
-            Assert.assertEquals("所有分片的chunkId应相同", firstChunkId, chunk.getChunkId());
-            Assert.assertEquals("总分片数应一致", chunks.size(), chunk.getTotalChunks());
+            Assert.assertEquals("All pieces of chunkId should be the same.", firstChunkId, chunk.getChunkId());
+            Assert.assertEquals("Total fractions should be consistent", chunks.size(), chunk.getTotalChunks());
         }
 
-        logger.info("大数据分片测试通过，数据大小: {}KB, 分片数: {}, 分片大小: {}KB", largeDataStr.length() / 1024, chunks.size(), chunkSize / 1024);
+        logger.info("Large data fraction tested, data size: }KB, fraction: {, fraction size: }KB", largeDataStr.length() / 1024, chunks.size(), chunkSize / 1024);
     }
 
     @Test
     public void testChunkData_CustomSize() {
-        logger.info("=== 测试自定义分片大小 ===");
-        // 生成约500KB的数据
+        logger.info("== sync, corrected by elderman == @elder man");
+        // GenerateApproximately500KBData
         StringBuilder data = new StringBuilder();
         for (int i = 0; i < 50000; i++) {
-            data.append("测试数据").append(i);
+            data.append("Test Data").append(i);
         }
         String dataStr = data.toString();
 
-        // 使用100KB分片大小
+        // Use100KBminBlock Size
         int chunkSize = 100 * 1024;
         List<DataChunk> chunks = DataChunkUtil.chunkData(dataStr, chunkSize);
 
-        Assert.assertTrue("应被分成多个分片", chunks.size() > 1);
+        Assert.assertTrue("It should be divided into separate pieces.", chunks.size() > 1);
 
-        // 验证分片大小
+        // AuthenticationminBlock Size
         for (int i = 0; i < chunks.size() - 1; i++) {
             DataChunk chunk = chunks.get(i);
-            Assert.assertTrue("分片大小应在合理范围内", chunk.getSize() <= chunkSize && chunk.getSize() > 0);
+            Assert.assertTrue("The fraction size should be within reasonable limits.", chunk.getSize() <= chunkSize && chunk.getSize() > 0);
         }
 
-        logger.info("自定义分片大小测试通过，分片数: {}", chunks.size());
+        logger.info("Custom fraction size tested, fraction: {", chunks.size());
     }
 
     @Test
     public void testMergeChunks() {
-        logger.info("=== 测试合并分片 ===");
-        String originalData = "这是测试数据，需要被分片和合并";
+        logger.info("== sync, corrected by elderman ==");
+        String originalData = "This is the test data. It needs to be split and merged.";
 
-        // 分片
-        List<DataChunk> chunks = DataChunkUtil.chunkData(originalData, 10); // 使用很小的分片大小
+        // minSnippets
+        List<DataChunk> chunks = DataChunkUtil.chunkData(originalData, 10); // 3.1.4 Use of smallminBlock Size
 
-        // 合并
+        // Merge
         String mergedData = DataChunkUtil.mergeChunks(chunks);
-        Assert.assertEquals("合并后的数据应相同", originalData, mergedData);
+        Assert.assertEquals("The consolidated data should be the same", originalData, mergedData);
 
-        logger.info("合并分片测试通过");
+        logger.info("We're going to test the sub-section.");
     }
 
     @Test
     public void testMergeChunks_LargeData() {
-        logger.info("=== 测试大数据合并 ===");
-        // 生成约1MB的数据（使用ASCII字符，避免多字节字符分片问题）
+        logger.info("== sync, corrected by elderman ==");
+        // GenerateApproximately1MBData (UseASCIICharacters, avoid multibytesminQuestion
         StringBuilder largeData = new StringBuilder();
         for (int i = 0; i < 100000; i++) {
             largeData.append("test_data_").append(i).append(",");
         }
         String originalData = largeData.toString();
 
-        // 分片
-        List<DataChunk> chunks = DataChunkUtil.chunkData(originalData, 200 * 1024); // 200KB分片
+        // minSnippets
+        List<DataChunk> chunks = DataChunkUtil.chunkData(originalData, 200 * 1024); // 200KBminSnippets
 
-        // 合并
+        // Merge
         String mergedData = DataChunkUtil.mergeChunks(chunks);
-        Assert.assertEquals("大数据合并后应相同", originalData, mergedData);
+        Assert.assertEquals("Big data should be the same after consolidation", originalData, mergedData);
 
-        logger.info("大数据合并测试通过，原始大小: {}KB, 分片数: {}", originalData.length() / 1024, chunks.size());
+        logger.info("Large data merge test passed, original size: {KB, fraction:{", originalData.length() / 1024, chunks.size());
     }
 
     @Test
     public void testMergeChunks_Incomplete() {
-        logger.info("=== 测试不完整分片合并 ===");
-        // 生成足够大的数据，确保有多个分片
+        logger.info("PARTICIPATION OF INSPECTIONS");
+        // GenerateIt's big enough to make sure there' Institutions are multiple.minSnippets
         StringBuilder data = new StringBuilder();
         for (int i = 0; i < 1000; i++) {
             data.append("test_data_").append(i).append(",");
         }
-        List<DataChunk> chunks = DataChunkUtil.chunkData(data.toString(), 100); // 使用小分片确保有多个分片
+        List<DataChunk> chunks = DataChunkUtil.chunkData(data.toString(), 100); // Use smallminMake sure there' 1-3.minSnippets
 
         if (chunks.size() > 1) {
-            // 移除一个分片，模拟不完整
+            // RemoveminFilm, simulation incomplete Lower
             chunks.remove(0);
 
             try {
                 DataChunkUtil.mergeChunks(chunks);
-                Assert.fail("不完整分片应抛出异常");
+                Assert.fail("The incomplete fraction should be thrown out of the ordinary.");
             } catch (RuntimeException e) {
-                Assert.assertTrue("应抛出分片不完整异常", e.getMessage().contains("分片不完整"));
-                logger.info("不完整分片测试通过，异常: {}", e.getMessage());
+                Assert.assertTrue("We should throw out the partial anomaly.", e.getMessage().contains("Split incomplete."));
+                logger.info("Incomplete fraction test passed.", e.getMessage());
             }
         } else {
-            logger.info("数据太小，无法测试不完整分片，跳过");
+            logger.info("Data is too small to test incomplete fractions. Skip");
         }
     }
 
     @Test
     public void testMergeChunks_InvalidOrder() {
-        logger.info("=== 测试分片顺序验证 ===");
+        logger.info("== sync, corrected by elderman ==");
         String data = "test_data_1234567890";
         List<DataChunk> chunks = DataChunkUtil.chunkData(data, 5);
 
         if (chunks.size() > 1) {
-            // 打乱顺序
+            // Break the order.
             DataChunk temp = chunks.get(0);
             chunks.set(0, chunks.get(1));
             chunks.set(1, temp);
 
-            // mergeChunks会自动排序，所以应该能正常合并
+            // mergeChunksIt's sorted automatically, so it should.NormalMerge
             String mergedData = DataChunkUtil.mergeChunks(chunks);
-            // mergeChunks方法会按索引排序，所以应该能正确合并
-            Assert.assertEquals("合并后的数据应相同", data, mergedData);
-            logger.info("分片顺序测试通过");
+            // mergeChunksThe Experience will press.IndexSort so you can merge correctly
+            Assert.assertEquals("The consolidated data should be the same", data, mergedData);
+            logger.info("Serial test passed.");
         } else {
-            logger.info("数据太小，无法测试顺序，跳过");
+            logger.info("Data is too small to test order, skip");
         }
     }
 
     @Test
     public void testChunkData_Empty() {
-        logger.info("=== 测试空数据分片 ===");
+        logger.info("== sync, corrected by elderman ==");
         List<DataChunk> chunks = DataChunkUtil.chunkData("");
-        Assert.assertNotNull("空数据分片列表不应为null", chunks);
-        Assert.assertTrue("空数据应返回空列表", chunks.isEmpty());
+        Assert.assertNotNull("EmptyEWS list should not be null", chunks);
+        Assert.assertTrue("Empty data should return empty list", chunks.isEmpty());
 
         chunks = DataChunkUtil.chunkData(null);
-        Assert.assertNotNull("null数据分片列表不应为null", chunks);
-        Assert.assertTrue("null数据应返回空列表", chunks.isEmpty());
+        Assert.assertNotNull("Null data fraction list should not be nulla", chunks);
+        Assert.assertTrue("Null data should return empty list", chunks.isEmpty());
 
-        logger.info("空数据分片测试通过");
+        logger.info("45. Empty data fraction test passed.");
     }
 
     @Test
     public void testChunkData_SizeLimits() {
-        logger.info("=== 测试分片大小限制 ===");
-        String data = "测试数据";
+        logger.info("== sync, corrected by elderman ==");
+        String data = "Test Data";
 
-        // 测试超过最大值的分片大小
+        // TestMore than maximumValueYes.minBlock Size
         List<DataChunk> chunks1 = DataChunkUtil.chunkData(data, 20 * 1024 * 1024); // 20MB
-        Assert.assertNotNull("分片列表不应为空", chunks1);
+        Assert.assertNotNull("Shard list must not be empty", chunks1);
 
-        // 测试小于最小值的分片大小
+        // TestLess than MinimumValueYes.minBlock Size
         List<DataChunk> chunks2 = DataChunkUtil.chunkData(data, 10 * 1024); // 10KB
-        Assert.assertNotNull("分片列表不应为空", chunks2);
+        Assert.assertNotNull("Shard list must not be empty", chunks2);
 
-        logger.info("分片大小限制测试通过");
+        logger.info("The size limit test passed.");
     }
 }

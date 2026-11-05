@@ -6,7 +6,7 @@ package org.dbsyncer.biz.vo;
 import org.dbsyncer.parser.model.Permission;
 
 /**
- * 权限点展示。
+ * PermissionsPoint show.
  *
  * @author wuji
  * @version 1.0.0
@@ -15,12 +15,12 @@ import org.dbsyncer.parser.model.Permission;
 public class PermissionVO extends Permission {
 
     /**
-     * 模块展示名
+     * ModulePresentation Name
      */
     private String moduleName;
 
     /**
-     * 是否已授予当前编辑角色
+     * YesNoGranted to CurrentEditRole
      */
     private boolean granted;
 

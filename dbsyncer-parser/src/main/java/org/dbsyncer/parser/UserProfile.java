@@ -9,7 +9,7 @@ import org.dbsyncer.parser.model.UserInfo;
 import java.util.List;
 
 /**
- * 用户配置（一行一用户落库；聚合模型 {@link UserConfig} 供 UI/导入导出）。
+ * User Configuration（Line one.UserDropLibrary；Aggregation Model{@link UserConfig} ForUI/ImportExport）。
  *
  * @author wuji
  * @version 1.0.0
@@ -17,59 +17,59 @@ import java.util.List;
 public interface UserProfile {
 
     /**
-     * 获取聚合用户配置（无用户时返回 null）。
+     * Get AggregationUser Configuration（NoneUserTimeBack null）。
      */
     UserConfig getUserConfig();
 
     /**
-     * 列出全部用户行。
+     * ListAllUserAll right.
      */
     List<UserInfo> listUserInfos();
 
     /**
-     * 按账号查询用户行。
+     * PressAccountQuestionUserAll right.
      */
     UserInfo getByUsername(String username);
 
     /**
-     * 按用户 ID 查询用户行。
+     * PressUser ID QuestionUserAll right.
      */
     UserInfo getById(String id);
 
     /**
-     * 按账号同步增删改用户行（替代原 OperationTemplate.syncUserConfig）。
+     * PressAccountSync Add & DeleteUserRows (replacement)OperationTemplate.syncUserConfig）。
      *
-     * @return 首个用户 id（兼容旧返回值）
+     * @return FirstUser id（Old CompatibilityBackValue）
      */
     String saveUserConfig(UserConfig config);
 
     /**
-     * 用户行数。
+     * UserLine number.
      */
     int countUsers();
 
     /**
-     * 从 user.json 数组导入。
+     * Fromuser.json ArrayImport。
      */
     void importFromJson(String json);
 
     /**
-     * 更新登录失败次数与锁定截止时间（单用户行）。
+     * UpdateLogin failedNumberandLock deadlineTime（SingleUserAll right.
      *
-     * @param username       账号
-     * @param loginFailCount 失败次数
-     * @param lockUntil      锁定截止毫秒时间戳，0 表示未锁定
-     * @return 是否找到并更新
+     * @param username       Account
+     * @param loginFailCount FailedNumber
+     * @param lockUntil      Lock deadlinemsTimePoke.0 Not locked
+     * @return YesNoFind and update
      */
     boolean updateLoginLock(String username, int loginFailCount, long lockUntil);
 
     /**
-     * 记录一次登录失败；达阈值则写入锁定截止时间。
+     * Record it once.Login failed；Reaching the thresholdValueWrite lock deadlineTime。
      *
-     * @param username    账号
-     * @param maxAttempts 连续失败上限
-     * @param lockMillis  锁定时长（毫秒）
-     * @return null 表示用户不存在；否则表示更新后是否处于锁定
+     * @param username    Account
+     * @param maxAttempts ContinuousFailedUpper limit
+     * @param lockMillis  LockScheduledLongms）
+     * @return null OrganisationUser does not exist；NoIt's an update.YesNoLocked
      */
     Boolean recordLoginFailure(String username, int maxAttempts, long lockMillis);
 }

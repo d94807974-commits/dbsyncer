@@ -40,7 +40,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-06 18:30
  */
@@ -130,7 +130,7 @@ public class KingbaseListener extends AbstractDatabaseListener {
             worker.setDaemon(false);
             worker.start();
         } catch (Exception e) {
-            logger.error("启动失败:{}", e.getMessage());
+            logger.error("Start failed: {}", e.getMessage());
             DatabaseUtil.close(stream);
             DatabaseUtil.close(connection);
             throw new KingbaseException(e);
@@ -151,7 +151,7 @@ public class KingbaseListener extends AbstractDatabaseListener {
             DatabaseUtil.close(connection);
             dropReplicationSlot();
         } catch (Exception e) {
-            logger.error("关闭失败:{}", e.getMessage());
+            logger.error("Close failed: {}", e.getMessage());
         }
     }
 
@@ -174,7 +174,7 @@ public class KingbaseListener extends AbstractDatabaseListener {
             captured.put(LSN_POSITION, lsn);
             return captured;
         } catch (Exception e) {
-            logger.error("捕获Kingbase LSN位点失败:{}", e.getMessage(), e);
+            logger.error("Could not close temporary folder: %s", e.getMessage(), e);
             return Collections.emptyMap();
         }
     }

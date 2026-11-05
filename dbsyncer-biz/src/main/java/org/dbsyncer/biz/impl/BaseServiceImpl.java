@@ -21,7 +21,7 @@ public class BaseServiceImpl {
     private MessageService messageService;
 
     /**
-     * 驱动启停锁
+     * MappingTurn off the lock.
      */
     protected static final Object LOCK = new Object();
 
@@ -36,12 +36,12 @@ public class BaseServiceImpl {
 
     protected void assertRunning(String taskId) {
         synchronized (LOCK) {
-            Assert.isTrue(!isRunning(taskId), "任务正在运行, 请先停止.");
+            Assert.isTrue(!isRunning(taskId), "The task is running, please stop.");
         }
     }
 
     /**
-     * 发送通知消息
+     * Organisation
      */
     protected void sendNotifyMessage(NoticeContent content) {
         messageService.sendMessage(content);

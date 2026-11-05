@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <div th:fragment="content">
     <div class="grid grid-cols-2">
         <div class="form-item">
             <label class="form-label">
-                URL<i class="fa fa-question-circle" title="多个使用英文逗号，例如：192.168.1.100:9092,192.168.1.200:9092"></i>
+                URL<i class="fa fa-question-circle" title="Various commas in English, e.g.: 192.168.1.100: 9092, 192.168.1.200:9092"></i>
                 <strong class="text-primary">*</strong>
             </label>
             <div class="form-control-area">
@@ -17,7 +17,7 @@
 
     <div class="grid mt-4">
         <div class="form-item">
-            <label class="form-label">连接参数<strong class="text-primary">*</strong></label>
+            <label class="form-label">Connection parameters<strong class="text-primary">*</strong></label>
             <div class="form-control-area">
                 <textarea name="properties" class="form-control" maxlength="1024" rows="4" required>
 [[${connector?.config?.propertiesText ?:
@@ -31,7 +31,7 @@ metadata.max.age.ms=300000'}]]</textarea>
 
     <div class="grid mt-4">
         <div class="form-item">
-            <label class="form-label">消费者参数<strong class="text-primary">*</strong></label>
+            <label class="form-label">Consumer parameters<strong class="text-primary">*</strong></label>
             <div class="form-control-area">
                 <textarea name="consumerProperties" class="form-control" maxlength="1024" rows="8" required>
 [[${connector?.config?.extInfo?.consumerProperties ?:
@@ -53,7 +53,7 @@ session.timeout.ms=10000'}]]</textarea>
 
     <div class="grid mt-4">
         <div class="form-item">
-            <label class="form-label">生产者参数<strong class="text-primary">*</strong></label>
+            <label class="form-label">Producer parameters<strong class="text-primary">*</strong></label>
             <div class="form-control-area">
                 <textarea name="producerProperties" class="form-control" maxlength="1024" rows="8" required>
 [[${connector?.config?.extInfo?.producerProperties ?:

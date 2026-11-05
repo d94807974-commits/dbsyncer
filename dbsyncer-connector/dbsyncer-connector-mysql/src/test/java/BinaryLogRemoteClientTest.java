@@ -84,17 +84,17 @@ public class BinaryLogRemoteClientTest {
 
             @Override
             public void onConnect(BinaryLogRemoteClient client) {
-                logger.info("建立连接");
+                logger.info("Create Connection");
             }
 
             @Override
             public void onException(BinaryLogRemoteClient client, Exception ex) {
-                logger.error("连接异常", ex);
+                logger.error("Connection abnormal.", ex);
             }
 
             @Override
             public void onDisconnect(BinaryLogRemoteClient client) {
-                logger.error("断开连接");
+                logger.error("Disconnect");
             }
         });
 

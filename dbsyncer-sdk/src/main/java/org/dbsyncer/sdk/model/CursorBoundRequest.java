@@ -6,7 +6,7 @@ package org.dbsyncer.sdk.model;
 import java.util.Map;
 
 /**
- * 分片游标边界解析请求：按起始游标与行预算解析结束游标。
+ * minSni Expected Boundary Resolution Request: By Initial CurveandThe budget resolves the cursor.
  *
  * @author wuji
  * @version 1.0.0
@@ -15,22 +15,22 @@ import java.util.Map;
 public class CursorBoundRequest {
 
     /**
-     * 表映射已保存的执行命令（含 QUERY / QUERY_CURSOR / CURSOR_PK_NAMES 等）
+     * TableTable GroupSavedEnforcement ordersQUERY / QUERY_CURSOR / CURSOR_PK_NAMES Wait.
      */
     private Map<String, String> command;
 
     /**
-     * 源表（含字段与主键标记）
+     * Source table（HamFieldandLordKey Tags）
      */
     private Table sourceTable;
 
     /**
-     * 起始游标（排他下界）；空串表示表头
+     * Start Cursor (Strength Line); empty string indicates the header
      */
     private String startCursor = "";
 
     /**
-     * 本片最大行数
+     * Maximum number Policies
      */
     private int budget;
 

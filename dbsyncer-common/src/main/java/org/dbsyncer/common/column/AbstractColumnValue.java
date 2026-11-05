@@ -23,7 +23,7 @@ public abstract class AbstractColumnValue<T> implements ColumnValue {
     }
 
     /**
-     * 检查值是否为空（null、空字符串或字符串"null"）
+     * InspectionValueYesNoFamiliesnull、Empty string or string"null"）
      */
     protected boolean isEmpty(String value) {
         return value == null || StringUtil.isBlank(value) || "null".equalsIgnoreCase(value);

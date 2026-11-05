@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public abstract class PickerUtil {
 
     /**
-     * 合并参数配置、过滤条件、转换配置、插件配置、目标源字段、数据源字段
+     * MergeParameterConfigure、Filter Conditions、Convert Configuration、Plugin Configuration、Target source field、Source fields
      *
      * @param mapping
      * @param tableGroup
@@ -31,24 +31,24 @@ public abstract class PickerUtil {
         TableGroup group = new TableGroup();
         BeanUtils.copyProperties(tableGroup, group);
 
-        // 参数配置(默认使用全局)
+        // ParameterConfigure(Default global use)
         group.setParams(CollectionUtils.isEmpty(tableGroup.getParams()) ? mapping.getParams() : tableGroup.getParams());
-        // 过滤条件(默认使用全局)
+        // Filter Conditions(Default global use)
         group.setFilter(CollectionUtils.isEmpty(tableGroup.getFilter()) ? mapping.getFilter() : tableGroup.getFilter());
-        // 转换配置(默认使用全局)
+        // Convert Configuration(Default global use)
         group.setConvert(CollectionUtils.isEmpty(tableGroup.getConvert()) ? mapping.getConvert() : tableGroup.getConvert());
-        // 插件配置(默认使用全局)
+        // Plugin Configuration(Default global use)
         group.setPlugin(null == tableGroup.getPlugin() ? mapping.getPlugin() : tableGroup.getPlugin());
-        // 插件参数(默认使用全局)
+        // PluginParameter(Default global use)
         group.setPluginExtInfo(StringUtil.isBlank(tableGroup.getPluginExtInfo()) ? mapping.getPluginExtInfo() : tableGroup.getPluginExtInfo());
 
-        // 合并增量配置/过滤条件/转换配置字段
+        // MergeIncrementalConfigure/Filter Conditions/Convert ConfigurationField
         appendFieldMapping(mapping, group);
         return group;
     }
 
     /**
-     * 订正校验任务合并表组配置、过滤条件、转换配置、插件配置、目标源字段、数据源字段
+     * Revised verification tasksMerge Table GroupConfigure、Filter Conditions、Convert Configuration、Plugin Configuration、Target source field、Source fields
      */
     public static TableGroup mergeTableGroupConfig(ValidateSyncTask task, TableGroup tableGroup) {
         TableGroup group = new TableGroup();
@@ -63,7 +63,7 @@ public abstract class PickerUtil {
     }
 
     /**
-     * 订正校验做字段映射
+     * Data validationDo it.Field mapping
      */
     private static void mapFieldsForSyncValidate(TableGroup group) {
         final List<FieldMapping> fieldMapping = group.getFieldMapping();
@@ -82,21 +82,21 @@ public abstract class PickerUtil {
     private static void appendFieldMapping(Mapping mapping, TableGroup group) {
         final List<FieldMapping> fieldMapping = group.getFieldMapping();
 
-        // 检查增量字段是否在映射关系中
+        // InspectionIncrementalFieldYesNoYes.MappingMedium
         String eventFieldName = mapping.getListener() != null ? mapping.getListener().getEventFieldName() : null;
         if (StringUtil.isNotBlank(eventFieldName)) {
             Map<String, Field> fields = convert2Map(group.getSourceTable().getColumn());
             addFieldMapping(fieldMapping, eventFieldName, fields, true);
         }
 
-        // 检查过滤条件是否在映射关系中
+        // InspectionFilter ConditionsYesNoYes.MappingMedium
         List<Filter> filter = group.getFilter();
         if (!CollectionUtils.isEmpty(filter)) {
             Map<String, Field> fields = convert2Map(group.getSourceTable().getColumn());
             filter.forEach(f->addFieldMapping(fieldMapping, f.getName(), fields, true));
         }
 
-        // 检查转换配置是否在映射关系中
+        // InspectionConvert ConfigurationYesNoYes.MappingMedium
         List<Convert> convert = group.getConvert();
         if (!CollectionUtils.isEmpty(convert)) {
             Map<String, Field> fields = convert2Map(group.getTargetTable().getColumn());

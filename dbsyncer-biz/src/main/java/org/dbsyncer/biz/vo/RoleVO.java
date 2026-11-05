@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 角色展示（含已绑权限码）。
+ * RolePresentation (included)PermissionsThe code.
  *
  * @author wuji
  * @version 1.0.0
@@ -18,12 +18,12 @@ import java.util.List;
 public class RoleVO extends Role {
 
     /**
-     * 已绑定权限数量
+     * boundPermissionsVolume
      */
     private int permissionCount;
 
     /**
-     * 已绑定权限码
+     * boundPermissionsCode
      */
     private List<String> permissionCodes = new ArrayList<>();
 

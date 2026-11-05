@@ -4,7 +4,7 @@
 package org.dbsyncer.sdk.enums;
 
 /**
- * 支持的排序方式
+ * Supported Sorting
  *
  * @author AE86
  * @version 1.0.0
@@ -13,11 +13,11 @@ package org.dbsyncer.sdk.enums;
 public enum SortEnum {
 
     /**
-     * 升序
+     * Raise
      */
     ASC("asc"),
     /**
-     * 降序
+     * Dec Terminating
      */
     DESC("desc");
 
@@ -32,7 +32,7 @@ public enum SortEnum {
     }
 
     /**
-     * 是否降序
+     * YesNoDec Terminating
      *
      * @return
      */

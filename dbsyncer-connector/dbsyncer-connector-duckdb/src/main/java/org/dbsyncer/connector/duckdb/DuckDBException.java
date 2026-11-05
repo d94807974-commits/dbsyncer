@@ -4,7 +4,7 @@
 package org.dbsyncer.connector.duckdb;
 
 /**
- * DuckDB 连接器异常
+ * DuckDB ConnectorError
  *
  * @author wuji
  * @version 1.0.0

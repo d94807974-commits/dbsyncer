@@ -4,15 +4,15 @@
 package org.dbsyncer.common.model;
 
 /**
- * JWT 密钥版本信息（历史密钥，用于验证旧 Token）
+ * JWT KeyVersionInfo（History key to validate oldToken）
  *
- * @author 穿云
+ * @author The clouds.
  * @version 2.0.0
  */
 public class JwtSecretVersion extends ConfigVersion {
 
     /**
-     * JWT 签名密钥（Base64 编码）
+     * JWT Signing key(s)Base64 Encoding)
      */
     private String secret;
 

@@ -18,42 +18,42 @@ import java.util.function.Consumer;
 public abstract class BatchTaskUtil {
 
     /**
-     * 默认线程池大小
+     * DefaultThreadsPool Size
      */
     private static final int DEFAULT_THREAD_POOL_SIZE = 10;
 
     /**
-     * 默认任务超时时间（秒）
+     * DefaultTasksTimeoutTime（seconds）
      */
     private static final int DEFAULT_TIMEOUT_SECONDS = 300;
 
     /**
-     * 默认线程队列大小
+     * DefaultThreadsQueue Size
      */
     private static final int DEFAULT_QUEUE_SIZE = 1024;
 
     /**
-     * 创建线程池
+     * CreateThreadsJi.
      */
     public static ExecutorService createExecutor(int threadPoolSize, int maximumPoolSize, int queueSize) {
-        return new ThreadPoolExecutor(threadPoolSize, // 核心线程数
-                maximumPoolSize, // 最大线程数
-                60L, // 线程空闲时间
-                TimeUnit.SECONDS, // 过期时间单位
-                new ArrayBlockingQueue<>(queueSize), // 有界队列
-                Executors.defaultThreadFactory(), // 线程工厂
-                new ThreadPoolExecutor.CallerRunsPolicy()); // 拒绝策略, 当队列满时，由调用线程执行任务
+        return new ThreadPoolExecutor(threadPoolSize, // CoreThreads
+                maximumPoolSize, // MaxThreads
+                60L, // ThreadsFreeTime
+                TimeUnit.SECONDS, // Expiration timeunits
+                new ArrayBlockingQueue<>(queueSize), // There's a line.
+                Executors.defaultThreadFactory(), // ThreadsPlant
+                new ThreadPoolExecutor.CallerRunsPolicy()); // Reject Policy, When queue full, callThreadsImplementationTasks
     }
 
     /**
-     * 并行处理列表数据
+     * Parallel processingColumnsTable data
      *
-     * @param dataList       数据列表
-     * @param processor      数据处理函数
-     * @param threadPoolSize 线程池大小
-     * @param <T>            数据类型
-     * @param <R>            结果类型
-     * @return 处理结果列表
+     * @param dataList       Data FactList
+     * @param processor      Data processingFunctions
+     * @param threadPoolSize ThreadsPool Size
+     * @param <T>            Data FactType
+     * @param <R>            ResultType
+     * @return ProcessingResultList
      */
     public static <T, R> List<R> submit(Collection<T> dataList, Processor<T, R> processor, int threadPoolSize, Logger logger) {
         if (CollectionUtils.isEmpty(dataList)) {
@@ -65,19 +65,19 @@ public abstract class BatchTaskUtil {
         List<R> results = new ArrayList<>();
 
         try {
-            // 提交所有任务
+            // SubmitAllTasks
             for (T data : dataList) {
                 futures.add(executor.submit(() -> {
                     try {
                         return processor.process(data);
                     } catch (Throwable e) {
-                        logger.error("任务执行异常", e);
+                        logger.error("Task execution error", e);
                         return null;
                     }
                 }));
             }
 
-            // 等待所有任务完成
+            // OwnershipTasksFinish
             for (Future<R> future : futures) {
                 try {
                     R result = future.get(DEFAULT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
@@ -85,9 +85,9 @@ public abstract class BatchTaskUtil {
                         results.add(result);
                     }
                 } catch (TimeoutException e) {
-                    logger.error("任务执行超时", e);
+                    logger.error("Task execution timeout", e);
                 } catch (Exception e) {
-                    logger.error("任务执行异常", e);
+                    logger.error("Task execution error", e);
                 }
             }
         } finally {
@@ -106,12 +106,12 @@ public abstract class BatchTaskUtil {
     }
 
     /**
-     * 并行处理列表数据（无返回值）
+     * Parallel processingColumnsTable dataNoneBackValue）
      *
-     * @param dataList 数据列表
-     * @param consumer 数据处理消费者
-     * @param logger   日志记录器
-     * @param <T>      数据类型
+     * @param dataList Data FactList
+     * @param consumer Data-processing consumers
+     * @param logger   LogRecorder
+     * @param <T>      Data FactType
      */
     public static <T> void execute(Collection<T> dataList, Consumer<T> consumer, Logger logger) {
         if (CollectionUtils.isEmpty(dataList)) {
@@ -122,25 +122,25 @@ public abstract class BatchTaskUtil {
         List<Future<?>> futures = new ArrayList<>();
 
         try {
-            // 提交所有任务
+            // SubmitAllTasks
             for (T data : dataList) {
                 futures.add(executor.submit(() -> {
                     try {
                         consumer.accept(data);
                     } catch (Throwable e) {
-                        logger.error("任务执行异常", e);
+                        logger.error("Task execution error", e);
                     }
                 }));
             }
 
-            // 等待所有任务完成
+            // OwnershipTasksFinish
             for (Future<?> future : futures) {
                 try {
                     future.get(DEFAULT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
                 } catch (TimeoutException e) {
-                    logger.error("任务执行超时", e);
+                    logger.error("Task execution timeout", e);
                 } catch (Exception e) {
-                    logger.error("任务执行异常", e);
+                    logger.error("Task execution error", e);
                 }
             }
         } finally {
@@ -157,13 +157,13 @@ public abstract class BatchTaskUtil {
     }
 
     /**
-     * 并行处理列表数据（无返回值）
+     * Parallel processingColumnsTable dataNoneBackValue）
      *
-     * @param executor 自定义线程池
-     * @param dataList 数据列表
-     * @param consumer 数据处理消费者
-     * @param logger   日志记录器
-     * @param <T>      数据类型
+     * @param executor CustomThreadsJi.
+     * @param dataList Data FactList
+     * @param consumer Data-processing consumers
+     * @param logger   LogRecorder
+     * @param <T>      Data FactType
      */
     public static <T> void execute(ExecutorService executor, Collection<T> dataList, Consumer<T> consumer, Logger logger) {
         if (CollectionUtils.isEmpty(dataList)) {
@@ -171,37 +171,37 @@ public abstract class BatchTaskUtil {
         }
 
         List<Future<?>> futures = new ArrayList<>();
-        // 提交所有任务
+        // SubmitAllTasks
         for (T data : dataList) {
             futures.add(executor.submit(() -> {
                 try {
                     consumer.accept(data);
                 } catch (Throwable e) {
-                    logger.error("任务执行异常", e);
+                    logger.error("Task execution error", e);
                 }
             }));
         }
 
         try {
-            // 等待所有任务完成
+            // OwnershipTasksFinish
             for (Future<?> future : futures) {
                 try {
                     future.get(DEFAULT_TIMEOUT_SECONDS, TimeUnit.SECONDS);
                 } catch (TimeoutException e) {
-                    logger.error("任务执行超时", e);
+                    logger.error("Task execution timeout", e);
                 }
             }
         } catch (InterruptedException e) {
-            // 线程被中断，优雅处理
+            // ThreadsInterrupted, elegant.
             Thread.currentThread().interrupt();
-            // 取消所有未完成的任务
+            // CancelNoneFinishYes.Tasks
             for (Future<?> f : futures) {
                 if (!f.isDone()) {
                     f.cancel(true);
                 }
             }
         } catch (Exception e) {
-            logger.error("任务执行异常", e);
+            logger.error("Task execution error", e);
         }
     }
 
@@ -215,7 +215,7 @@ public abstract class BatchTaskUtil {
                 try {
                     function.execute(slice, executor);
                 } catch (Throwable e) {
-                    logger.error("任务执行异常", e);
+                    logger.error("Task execution error", e);
                 }
             });
         } finally {
@@ -225,25 +225,25 @@ public abstract class BatchTaskUtil {
 
     public static <T> void executeWithAwait(List<T> rows, ExecutorService executor, Consumer<T> consumer, Logger logger) {
         List<Future<?>> futures = new ArrayList<>();
-        // 提交所有任务
+        // SubmitAllTasks
         for (T data : rows) {
             futures.add(executor.submit(() -> {
                 try {
                     consumer.accept(data);
                 } catch (Throwable e) {
-                    logger.error("任务执行异常", e);
+                    logger.error("Task execution error", e);
                 }
             }));
         }
         try {
-            // 等待所有任务完成
+            // OwnershipTasksFinish
             for (Future<?> future : futures) {
                 future.get();
             }
         } catch (Exception e) {
-            // 线程被中断，优雅处理
+            // ThreadsInterrupted, elegant.
             Thread.currentThread().interrupt();
-            // 取消所有未完成的任务
+            // CancelNoneFinishYes.Tasks
             for (Future<?> f : futures) {
                 if (!f.isDone()) {
                     f.cancel(true);
@@ -254,23 +254,23 @@ public abstract class BatchTaskUtil {
 
     public static <T> void executeBatchWithoutAwait(List<T> rows, ExecutorService executor, Consumer<List<T>> consumer, Logger logger) {
         List<Future<?>> futures = new ArrayList<>();
-        // 提交所有任务
+        // SubmitAllTasks
         futures.add(executor.submit(() -> {
             try {
                 consumer.accept(rows);
             } catch (Throwable e) {
-                logger.error("任务执行异常", e);
+                logger.error("Task execution error", e);
             }
         }));
         try {
-            // 等待所有任务完成
+            // OwnershipTasksFinish
             for (Future<?> future : futures) {
                 future.get();
             }
         } catch (Exception e) {
-            // 线程被中断，优雅处理
+            // ThreadsInterrupted, elegant.
             Thread.currentThread().interrupt();
-            // 取消所有未完成的任务
+            // CancelNoneFinishYes.Tasks
             for (Future<?> f : futures) {
                 if (!f.isDone()) {
                     f.cancel(true);
@@ -280,10 +280,10 @@ public abstract class BatchTaskUtil {
     }
 
     /**
-     * 数据处理接口
+     * Data FactProcessingInterface
      *
-     * @param <T> 输入类型
-     * @param <R> 输出类型
+     * @param <T> InputType
+     * @param <R> OutputType
      */
     @FunctionalInterface
     public interface Processor<T, R> {

@@ -6,7 +6,7 @@ package org.dbsyncer.biz;
 import java.io.File;
 
 /**
- * 配置导入（ZIP formatVersion=2）。
+ * ConfigureImport（ZIP formatVersion=2）。
  *
  * @author wuji
  * @version 1.0.0
@@ -15,9 +15,9 @@ import java.io.File;
 public interface ConfigImportService {
 
     /**
-     * 从 ZIP 配置包导入。
+     * FromZIP ConfigurePackageImport。
      *
-     * @param file 临时配置文件
+     * @param file TemporaryConfigureDocumentation
      */
     void importConfig(File file);
 }

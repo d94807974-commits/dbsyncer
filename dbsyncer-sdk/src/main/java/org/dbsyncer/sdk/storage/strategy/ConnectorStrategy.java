@@ -7,7 +7,7 @@ import org.dbsyncer.sdk.enums.StorageEnum;
 import org.dbsyncer.sdk.storage.Strategy;
 
 /**
- * 连接配置：单表存储
+ * ConnectConfigure：Form Storage
  *
  * @Author AE86
  * @Version 1.0.0

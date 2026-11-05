@@ -8,9 +8,9 @@ import org.dbsyncer.parser.flush.BufferRequest;
 import java.util.Map;
 
 /**
- * 明细分表写入请求。
- * <p>{@code taskDetailShardId} 为任务 ID，对应 {@code dbsyncer_task_detail_{taskId}}；
- * {@link #getTaskId()} 为 BufferRequest 兼容别名，返回同一分片键。
+ * DetailsminThe table contains the request.
+ * <p>{@code taskDetailShardId} YesTasks ID，Correspond{@code dbsyncer_task_detail_{taskId}}；
+ * {@link #getTaskId()} YesBufferRequest It's a different name.BackThe same.minSnips.
  *
  * @author AE86
  * @version 1.0.0
@@ -19,7 +19,7 @@ import java.util.Map;
 public class StorageRequest implements BufferRequest {
 
     /**
-     * 明细分表分片键（任务 ID）
+     * DetailsminTableminSnippetsTasks ID）
      */
     private final String taskDetailShardId;
 
@@ -31,7 +31,7 @@ public class StorageRequest implements BufferRequest {
     }
 
     /**
-     * 明细分表分片键（任务 ID）。
+     * DetailsminTableminSnippetsTasks ID）。
      */
     public String getTaskDetailShardId() {
         return taskDetailShardId;

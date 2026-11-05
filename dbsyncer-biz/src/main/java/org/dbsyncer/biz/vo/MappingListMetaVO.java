@@ -6,7 +6,7 @@ package org.dbsyncer.biz.vo;
 import java.util.Map;
 
 /**
- * 同步任务列表：任务进度摘要。
+ * Sync taskList：TasksSummary of progress.
  *
  * @author wuji
  * @version 1.0.0
@@ -22,7 +22,7 @@ public class MappingListMetaVO {
     private long fail;
     private boolean counting;
     /**
-     * 仅保留列表展示阶段所需键。
+     * Keep onlyListKeys required for the presentation phase.
      */
     private Map<String, String> snapshot;
 

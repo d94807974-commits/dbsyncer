@@ -20,36 +20,36 @@ import java.util.Map;
 public interface MappingService {
 
     /**
-     * 新增驱动
+     * InsertMapping
      *
      * @param params
      */
     String add(Map<String, String> params);
 
     /**
-     * 复制驱动
+     * CopyMapping
      *
-     * @param id       源任务 ID
-     * @param username 操作者用户名（用于授予新资源 ACL）
+     * @param id       SourceTasks ID
+     * @param username ActionsWhoUsername（For awarding newResource ACL）
      */
     String copy(String id, String username);
 
     /**
-     * 修改驱动
+     * UpdateMapping
      *
      * @param params
      */
     String edit(Map<String, String> params);
 
     /**
-     * 删除驱动
+     * DeleteMapping
      *
      * @param id
      */
     String remove(String id);
 
     /**
-     * 获取驱动（不含全量表列表，表下拉请走 {@link #searchTables}）
+     * AccessMapping（Without AllVolumeTableList，Please leave.{@link #searchTables}）
      *
      * @param id
      * @return
@@ -57,7 +57,7 @@ public interface MappingService {
     MappingVO getMapping(String id);
 
     /**
-     * 获取驱动自定义表信息
+     * AccessMappingCustom tableInfo
      *
      * @param id
      * @param type
@@ -66,7 +66,7 @@ public interface MappingService {
     MappingCustomTableVO getMappingCustomTable(String id, String type);
 
     /**
-     * 分页搜索（列表轻量字段，不含完整配置/连接器敏感信息）
+     * minPageSearch（ListLightField，Other OrganiserConfigure/ConnectorSensitive.Info）
      *
      * @param params
      * @return
@@ -74,36 +74,36 @@ public interface MappingService {
     Paging<MappingListVO> search(Map<String, String> params);
 
     /**
-     * 同步任务详情：按表映射汇总成功/失败数。
+     * Sync taskDetails：Summary by MapSuccess/Failures。
      *
-     * @param params id=mappingId, detailStatus=fail|success|空, pageNum, pageSize
-     * @return 分页表映射汇总
+     * @param params id=mappingId, detailStatus=fail|success|Empty, pageNum, pageSize
+     * @return minPageMap Summary
      */
     Paging searchTableGroupResult(Map<String, String> params);
 
     /**
-     * 启动驱动
+     * StartMapping
      *
      * @param id
      */
     String start(String id);
 
     /**
-     * 停止驱动
+     * StopMapping
      *
      * @param id
      */
     String stop(String id);
 
     /**
-     * 刷新驱动数据源和目标源表
+     * RefreshMappingSourceandTarget table
      *
      * @param id
      */
     String refreshMappingTables(String id);
 
     /**
-     * 分页搜索驱动表（用于下拉框远程搜索）
+     * minPageSearchMappingTable (for bottom frame remote)Search）
      *
      * @param params
      * @return
@@ -111,7 +111,7 @@ public interface MappingService {
     Paging<Table> searchTables(Map<String, String> params);
 
     /**
-     * 查询自定义表
+     * QuestionCustom table
      *
      * @param params
      * @return
@@ -119,7 +119,7 @@ public interface MappingService {
     List<Table> searchCustomTable(Map<String, String> params);
 
     /**
-     * 保存自定义表
+     * Save Custom Table
      *
      * @param params
      * @return
@@ -127,7 +127,7 @@ public interface MappingService {
     String saveCustomTable(Map<String, String> params);
 
     /**
-     * 删除自定义表
+     * Delete custom table
      *
      * @param params
      * @return

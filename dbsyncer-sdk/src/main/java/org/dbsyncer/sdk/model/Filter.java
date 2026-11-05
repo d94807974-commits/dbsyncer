@@ -7,7 +7,7 @@ import org.dbsyncer.sdk.enums.FilterEnum;
 import org.dbsyncer.sdk.enums.OperationEnum;
 
 /**
- * 字段属性条件
+ * FieldPropertiesCondition
  * @author AE86
  * @version 1.0.0
  * @date 2019/9/30 15:10
@@ -15,7 +15,7 @@ import org.dbsyncer.sdk.enums.OperationEnum;
 public class Filter {
 
     /**
-     * 字段名，ID
+     * Field name，ID
      */
     private String name;
 
@@ -30,7 +30,7 @@ public class Filter {
     private String filter;
 
     /**
-     * 值
+     * Value
      */
     private String value;
 

@@ -7,7 +7,7 @@ import org.dbsyncer.common.model.ConfigModel;
 import org.dbsyncer.sdk.constant.ConfigConstant;
 
 /**
- * 告警通知规则：按分组或同步任务指定 @手机号与邮件。
+ * Alert notificationRule: PressGrouporSync taskAssign@phoneandEmail。
  *
  * @author wuji
  * @version 1.0.0
@@ -15,27 +15,27 @@ import org.dbsyncer.sdk.constant.ConfigConstant;
 public class NoticeRule extends ConfigModel {
 
     /**
-     * 作用域：{@code group} / {@code mapping}
+     * Scope：{@code group} / {@code mapping}
      */
     private String scopeType;
 
     /**
-     * 分组 ID 或同步任务 ID
+     * Group ID orSync task ID
      */
     private String scopeId;
 
     /**
-     * 是否 @所有人：0 否 / 1 是
+     * YesNo @everyone：0 No / 1 Yes
      */
     private int atAll;
 
     /**
-     * @用户手机号，多个用逗号分隔
+     * @UserCell phone number，Multiple commasminBreak
      */
     private String atPhones;
 
     /**
-     * 邮件地址，多个用逗号分隔
+     * EmailAddress, multiple commasminBreak
      */
     private String emails;
 

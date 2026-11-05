@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.zip.ZipFile;
 
 /**
- * 配置导入：ZIP(formatVersion=2) 委托各 Profile 落库，再经 PreloadTemplate 收尾启停。
+ * ConfigureImport：ZIP(formatVersion=2) Commission FormationProfile DropLibrary，Again.PreloadTemplate End of story.
  *
  * @author AE86
  * @version 1.0.0
@@ -83,7 +83,7 @@ public class ConfigImportServiceImpl implements ConfigImportService {
         Assert.notNull(file, "the config file is null.");
         String name = file.getName();
         Assert.isTrue(StringUtil.isNotBlank(name) && name.toLowerCase().endsWith(".zip"),
-                "仅支持导入 .zip 配置包");
+                "Only import .zip profile is supported");
         try {
             importZip(file);
         } finally {
@@ -120,12 +120,12 @@ public class ConfigImportServiceImpl implements ConfigImportService {
         } catch (IllegalArgumentException e) {
             throw new BizException(e.getMessage(), e);
         } catch (Exception e) {
-            throw new BizException("导入配置 ZIP 失败: " + e.getMessage(), e);
+            throw new BizException("Import configuration ZIP failed: " + e.getMessage(), e);
         }
     }
 
     /**
-     * 从 ZIP 导入 table_group/*.ndjson（不预建表级 Meta，Meta 由后续 meta.json 还原）。
+     * FromZIP Import table_group/*.ndjson（No Table Level PresetMeta，Meta By Follow-upmeta.json Revert.
      */
     private void importTableGroupsFromZip(ZipFile zip) throws IOException {
         if (zip == null) {

@@ -19,7 +19,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * OceanBase Oracle 模式字符类型（标准 JDBC Clob）
+ * OceanBase Oracle Mode CharacterType（StandardJDBC Clob）
  *
  * @author wuji
  * @version 1.0.0

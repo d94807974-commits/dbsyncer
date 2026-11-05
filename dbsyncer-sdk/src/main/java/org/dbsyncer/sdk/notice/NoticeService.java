@@ -9,7 +9,7 @@ import org.dbsyncer.sdk.model.NoticeMessage;
 public interface NoticeService {
 
     /**
-     * 发送通知消息
+     * Organisation
      */
     void notify(NoticeMessage notificationMessage);
 

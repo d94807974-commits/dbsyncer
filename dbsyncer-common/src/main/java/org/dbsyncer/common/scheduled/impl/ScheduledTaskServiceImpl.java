@@ -27,7 +27,7 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService, Disposabl
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
-     * 定时任务线程池
+     * ScheduledTasksThreadsJi.
      */
     @Resource
     private ThreadPoolTaskScheduler taskScheduler;
@@ -69,7 +69,7 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService, Disposabl
     private void apply(String key, ScheduledFutureMapper scheduledFutureMapper) {
         final ScheduledFuture scheduledFuture = map.get(key);
         if (null != scheduledFuture && !scheduledFuture.isCancelled()) {
-            String msg = "任务已启动";
+            String msg = "Instalment started";
             logger.error(msg);
             throw new CommonException(msg);
         }
@@ -89,7 +89,7 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService, Disposabl
     private interface ScheduledFutureMapper {
 
         /**
-         * 返回定时任务
+         * BackScheduledTasks
          *
          * @return
          */

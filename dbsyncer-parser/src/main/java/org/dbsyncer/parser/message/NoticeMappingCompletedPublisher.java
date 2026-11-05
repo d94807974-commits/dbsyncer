@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 /**
- * 纯全量自然完成后发送通知（单机 / 分布式共用）。
+ * PureFullNaturally.FinishSend notification after (single/)minPlankTotalUse it.
  *
  * @author wuji
  * @version 1.0.0
@@ -35,7 +35,7 @@ public class NoticeMappingCompletedPublisher {
     private TaskMetaProfile taskMetaProfile;
 
     /**
-     * 发送全量同步完成通知；失败仅记日志，不影响主流程。
+     * SendFull SyncNotification;FailedJust rememberLog，Does not affect the main process.
      */
     public void publish(Mapping mapping) {
         if (mapping == null) {
@@ -43,7 +43,7 @@ public class NoticeMappingCompletedPublisher {
         }
         try {
             MappingFullCompleteContent content = new MappingFullCompleteContent();
-            content.setTitle("全量同步完成");
+            content.setTitle("Full Sync");
             content.setName(mapping.getName());
             content.setModel(ModelEnum.getModelEnum(mapping.getModel()));
             content.setResourceType(ConfigConstant.MAPPING);
@@ -56,7 +56,7 @@ public class NoticeMappingCompletedPublisher {
             }
             messageService.sendMessage(content);
         } catch (Exception e) {
-            logger.error("发送全量完成通知失败: {}", e.getMessage(), e);
+            logger.error("Could not close temporary folder: %s", e.getMessage(), e);
         }
     }
 }

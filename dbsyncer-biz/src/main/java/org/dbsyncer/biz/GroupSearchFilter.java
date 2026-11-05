@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 按分组筛选资源列表的解析结果（仅支持 ID IN / 不过滤 / 空结果）。
+ * PressGroupFilterResourceListPar 147Result（Only supportID IN / Do not filter/ emptyResult）。
  *
  * @author wuji
  * @version 1.0.0
@@ -16,12 +16,12 @@ import java.util.List;
 public class GroupSearchFilter {
 
     /**
-     * 不过滤（全部）
+     * Do Not FilterAll）
      */
     public static final GroupSearchFilter NONE = new GroupSearchFilter(false, Collections.emptyList());
 
     /**
-     * 直接返回空分页（组内无成员）
+     * DirectBackEmptyminPage（GroupNoneMembers)
      */
     public static final GroupSearchFilter EMPTY = new GroupSearchFilter(true, Collections.emptyList());
 

@@ -159,7 +159,7 @@ public class MetricReporter implements ScheduledTaskJob {
         }
         MetricResponseInfo info = new MetricResponseInfo();
         info.setQueueUp(metric.getQueueSize());
-        String msg = "堆积" + StringUtil.COLON + info.getQueueUp() + StringUtil.FORWARD_SLASH + metric.getQueueCapacity() + StringUtil.SPACE
+        String msg = "Backlog" + StringUtil.COLON + info.getQueueUp() + StringUtil.FORWARD_SLASH + metric.getQueueCapacity() + StringUtil.SPACE
                 + ThreadPoolMetricEnum.CORE_SIZE.getMetricName() + StringUtil.COLON + metric.getActiveCount() + StringUtil.FORWARD_SLASH
                 + metric.getMaxPoolSize() + StringUtil.SPACE + ThreadPoolMetricEnum.COMPLETED.getMetricName() + StringUtil.COLON
                 + metric.getCompletedTaskCount();
@@ -169,13 +169,13 @@ public class MetricReporter implements ScheduledTaskJob {
 
     public AppReportMetric getAppReportMetric() {
         queryTime = LocalDateTime.now();
-        // 堆积任务(通用执行器 + 表执行器)
+        // BacklogTasks(General actuator + Table-group actuator)
         report.setQueueUp(bufferActuatorRouter.getQueueSize() + generalBufferActuator.getQueue().size());
         report.setQueueCapacity(bufferActuatorRouter.getQueueCapacity() + generalBufferActuator.getQueueCapacity());
-        // 持久化任务
+        // EnduringTasks
         report.setStorageQueueUp(storageBufferActuator.getQueue().size());
         report.setStorageQueueCapacity(storageBufferActuator.getQueueCapacity());
-        // 执行器TPS
+        // Executor TPS
         report.setTps(getOneMinBufferActuatorRate());
         return report;
     }
@@ -190,15 +190,15 @@ public class MetricReporter implements ScheduledTaskJob {
         if (running || null == queryTime) {
             return;
         }
-        // 非活动时间范围(30s内)
+        // InactiveTimeScope(30sInternal)
         if (LocalDateTime.now().minusSeconds(30).isAfter(queryTime)) {
             return;
         }
 
-        // 刷新报表
+        // RefreshReport
         try {
             running = true;
-            // 分页扫描任务级 Meta，按页累计，避免一次性装入内存
+            // minPageScanTasksAdministrationMeta，PressPageCumulative, avoid one-time loadingMemory
             AtomicLong successTotal = new AtomicLong();
             AtomicLong failTotal = new AtomicLong();
             AtomicLong mappingSuccessTotal = new AtomicLong();
@@ -271,7 +271,7 @@ public class MetricReporter implements ScheduledTaskJob {
     }
 
     /**
-     * 同步趋势：按固定日历窗口补齐日期点（缺日为 0）；历史日读 {@code dbsyncer_meta_agg}，今日用实时合计。
+     * Sync Trends：Completing date points by fixed calendar window0）；History Day Read{@code dbsyncer_meta_agg}，Today in real time.
      */
     private void updateSyncTrendFromDaily(long todaySuccess, long todayFail) {
         SyncTrendStackVO stack = dashboardMetric.getTrend();
@@ -309,14 +309,14 @@ public class MetricReporter implements ScheduledTaskJob {
     }
 
     /**
-     * 获取执行器TPS
+     * AccessExecutor TPS
      */
     public TpsVO getOneMinBufferActuatorRate() {
         Bucket[] buckets = timeRegistry.meter(TimeRegistry.GENERAL_BUFFER_ACTUATOR_TPS).getBucketAll();
         TpsVO vo = new TpsVO();
         Instant now = Instant.now();
         long oneMin = now.minus(1, ChronoUnit.MINUTES).toEpochMilli();
-        // 只显示1分钟内
+        // Show Only1minutesInternal
         Map<String, Long> map = new HashMap<>();
         Stream.of(buckets).filter(b -> b.getTime() >= oneMin).sorted(Comparator.comparing(Bucket::getTime))
                 .forEach(b -> map.put(DateFormatUtil.timestampToString(new Timestamp(b.getTime()), DateFormatUtil.HH_MM_SS), b.get()));
@@ -331,9 +331,9 @@ public class MetricReporter implements ScheduledTaskJob {
     }
 
     /**
-     * 当前秒执行器吞吐（最近时间片计数）。
+     * CurrentsecondsExecut MOUS 5.5%（RecentTimeThe count.
      *
-     * @return 条/秒
+     * @return ArticleSecond
      */
     public long getCurrentBufferActuatorTps() {
         TpsVO vo = getOneMinBufferActuatorRate();
@@ -348,7 +348,7 @@ public class MetricReporter implements ScheduledTaskJob {
     }
 
     /**
-     * 汇总当页任务级 Meta 计数器（SUCCESS / FAIL 等）。
+     * SummaryPageTasksAdministrationMeta Calculator(s)SUCCESS / FAIL Wait.
      */
     private long sumMetaCounter(List<Meta> page, Function<Meta, AtomicLong> getter) {
         if (CollectionUtils.isEmpty(page) || getter == null) {
@@ -387,7 +387,7 @@ public class MetricReporter implements ScheduledTaskJob {
         if (CollectionUtils.isEmpty(page)) {
             return 0L;
         }
-        // 明细分表：逐任务分表(dbsyncer_task_detail_{taskId})统计后累加
+        // DetailsminTable: IndividualTasksminTable(dbsyncer_task_detail_{taskId})After CAT, add
         long total = 0L;
         for (Meta meta : page) {
             if (meta == null || StringUtil.isBlank(meta.getTaskId())) {
@@ -409,7 +409,7 @@ public class MetricReporter implements ScheduledTaskJob {
         ThreadPoolTaskExecutor threadTask = (ThreadPoolTaskExecutor) bufferActuator.getExecutor();
         ThreadPoolExecutor pool = threadTask.getThreadPoolExecutor();
         info.setQueueUp(bufferActuator.getQueue().size());
-        String msg = "堆积" + StringUtil.COLON + info.getQueueUp() + StringUtil.FORWARD_SLASH + bufferActuator.getQueueCapacity() + StringUtil.SPACE + ThreadPoolMetricEnum.CORE_SIZE.getMetricName()
+        String msg = "Backlog" + StringUtil.COLON + info.getQueueUp() + StringUtil.FORWARD_SLASH + bufferActuator.getQueueCapacity() + StringUtil.SPACE + ThreadPoolMetricEnum.CORE_SIZE.getMetricName()
                 + StringUtil.COLON + pool.getActiveCount() + StringUtil.FORWARD_SLASH + pool.getMaximumPoolSize() + StringUtil.SPACE + ThreadPoolMetricEnum.COMPLETED.getMetricName() + StringUtil.COLON
                 + pool.getCompletedTaskCount();
         info.setResponse(new MetricResponse(code, group, metricName, Collections.singletonList(new Sample(StatisticEnum.COUNT.getTagValueRepresentation(), msg))));

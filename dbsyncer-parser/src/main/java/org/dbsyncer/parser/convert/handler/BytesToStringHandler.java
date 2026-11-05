@@ -3,7 +3,7 @@ package org.dbsyncer.parser.convert.handler;
 import org.dbsyncer.parser.convert.AbstractHandler;
 
 /**
- * Byte[]转String
+ * Byte [ ] Turning
  *
  * @author AE86
  * @version 1.0.0

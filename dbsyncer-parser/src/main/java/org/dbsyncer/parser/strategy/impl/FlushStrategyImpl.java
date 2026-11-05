@@ -70,9 +70,9 @@ public final class FlushStrategyImpl implements FlushStrategy {
 
     @Override
     public void flushFullData(Result result, SchemaResolver targetSchemaResolver, Map<String, Field> targetFieldMap) {
-        // 不记录全量数据, 只记录增量同步数据, 将异常记录到系统日志中
+        // Oh, no.Record full volume data, Record onlyIncrementalSync data, WillErrorRecordedSystem LogMedium
         if (!systemConfigProfile.getSystemConfig().isEnableStorageWriteFull()) {
-            // 不记录全量数据，只统计成功失败总数
+            // Oh, no.Record full volume data，Statistics onlySuccessFailedTotal
             refreshTotal(result);
 
             if (!CollectionUtils.isEmpty(result.getFailData())) {
@@ -101,7 +101,7 @@ public final class FlushStrategyImpl implements FlushStrategy {
         data.forEach(r -> {
             Map<String, Object> row = new HashMap<>();
             row.put(ConfigConstant.CONFIG_MODEL_ID, String.valueOf(snowflakeIdWorker.nextId()));
-            // 明细分表：TABLE_GROUP_ID 关联表映射；事件写入 TYPE；成功状态写入 IS_SUCCESS
+            // DetailsminTableTABLE_GROUP_ID (a) Associated map;EventWritingTYPE；SuccessStatusWritingIS_SUCCESS
             row.put(ConfigConstant.DETAIL_IS_SUCCESS, success ? StorageDataStatusEnum.SUCCESS.getValue() : StorageDataStatusEnum.FAIL.getValue());
             row.put(ConfigConstant.DATA_TABLE_GROUP_ID, tableGroupId);
             row.put(ConfigConstant.DETAIL_TARGET_TABLE, targetTableGroupName);
@@ -112,12 +112,12 @@ public final class FlushStrategyImpl implements FlushStrategy {
             try {
                 row.put(ConfigConstant.BINLOG_DATA, toBinlogBytes(schemaResolver, r, targetFieldMap));
             } catch (Exception e) {
-                // 构建详细类型信息
+                // ICALLYDetailsTypeInfo
                 StringBuilder typeInfo = new StringBuilder();
                 r.forEach((k, val) -> {
                     typeInfo.append(k).append("=").append(val == null ? "null" : val.getClass().getName()).append("; ");
                 });
-                logger.warn("可能存在Blob或inputStream大文件类型, 无法序列化。字段类型详情: {}", typeInfo, e);
+                logger.warn("There may be a large file type of Blob or inputstream, which cannot be sequenced. Field type details: {", typeInfo, e);
             }
             storageBufferActuator.offer(new StorageRequest(taskId, row));
         });
@@ -155,7 +155,7 @@ public final class FlushStrategyImpl implements FlushStrategy {
         if (success == 0 && fail == 0) {
             return;
         }
-        // 与 FullTableProgressUtil.save 共用 tableLock；进度更新走 updateMetaProgress（写前重载），避免覆盖原子计数
+        // and FullTableProgressUtil.save TotalUsetableLock；Update progressupdateMetaProgress（Reload before writing)OverwriteAtomic Count
         synchronized (MetaLockUtil.lock(writer.getTaskId())) {
             taskMetaProfile.incrementMeta(MetaIncrement.of(writer.getTaskId()).success(success).fail(fail));
         }
@@ -163,8 +163,8 @@ public final class FlushStrategyImpl implements FlushStrategy {
     }
 
     /**
-     * 同步表级 Meta 计数：taskId=table_group.id，isTaskDetail=1；主键由 ADD 路径生成雪花。
-     * <p>原子累加 success/fail；与 {@link FullTableProgressUtil#save} 共用表锁。
+     * Sync Table LevelMeta Count:taskId=table_group.id，isTaskDetail=1；Primary keyByADD PathGenerateSnowflake.
+     * <p>Atom Plussuccess/fail；and {@link FullTableProgressUtil#save} TotalUse the watch lock.
      */
     private void incrementTableMeta(String tableGroupId, long success, long fail) {
         if (StringUtil.isBlank(tableGroupId)) {
@@ -190,13 +190,13 @@ public final class FlushStrategyImpl implements FlushStrategy {
         refreshTotal(result);
 
         SystemConfig systemConfig = systemConfigProfile.getSystemConfig();
-        // 是否写失败数据
+        // YesNoWriteFailuresAccording to
         if (systemConfig.isEnableStorageWriteFail() && !CollectionUtils.isEmpty(result.getFailData())) {
             final String error = StringUtil.substring(result.getError().toString(), 0, systemConfig.getMaxStorageErrorLength());
             asyncWrite(result, schemaResolver, targetFieldMap, false, result.getFailData(), error);
         }
 
-        // 是否写成功数据
+        // YesNoWriteSuccessesAccording to
         if (systemConfig.isEnableStorageWriteSuccess() && !CollectionUtils.isEmpty(result.getSuccessData())) {
             asyncWrite(result, schemaResolver, targetFieldMap, true, result.getSuccessData(), "");
         }
@@ -212,7 +212,7 @@ public final class FlushStrategyImpl implements FlushStrategy {
             final String error = StringUtil.substring(result.getError().toString(), 0, systemConfig.getMaxStorageErrorLength());
             asyncWrite(result, targetSchemaResolver, targetFieldMap, false, result.getFailData(), error);
         }
-        // 全量成功行体量大，默认不落；与 flushFullData 开启「记录全量数据」后的成功写入语义对齐
+        // FullSuccess(a) A large line Ninety-five;and flushFullData On「Record full volume data」AfterSuccessWriting Semantic Alignment
         if (systemConfig.isEnableStorageWriteFull() && systemConfig.isEnableStorageWriteSuccess()
                 && !CollectionUtils.isEmpty(result.getSuccessData())) {
             asyncWrite(result, targetSchemaResolver, targetFieldMap, true, result.getSuccessData(), "");

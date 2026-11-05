@@ -6,7 +6,7 @@ package org.dbsyncer.sdk.model;
 import org.dbsyncer.common.util.StringUtil;
 
 /**
- * 分片游标边界：起始（排他）到结束（含），以及是否表尾。
+ * minSpeculation boundary: beginning (exclusive) to end (inclusive), andYesNoEnd of table.
  *
  * @author wuji
  * @version 1.0.0
@@ -15,35 +15,35 @@ import org.dbsyncer.common.util.StringUtil;
 public class CursorBound {
 
     /**
-     * 是否支持按游标划界；false 时调用方按整表一片处理
+     * YesNo(c) Supporting the demarcation of the boundary by cruise criteria;false The caller handles the entire table.
      */
     private boolean supported;
 
     /**
-     * 起始游标（回显请求）
+     * Initial Insert
      */
     private String startCursor = "";
 
     /**
-     * 结束游标（含）；无行时为空串
+     * End of cursor (include);NoneLine empty string
      */
     private String endCursor = "";
 
     /**
-     * 是否最后一页（本窗后无更多行）
+     * YesNoLastPage（Behind this window.NoneMore rows)
      */
     private boolean lastPage;
 
     /**
-     * 本窗实际扫到的定位键行数；0 表示空表或无后续行
+     * Number of positioning key lines actually scanned in this window;0 is an empty watch orNoneFollow-up
      */
     private int actualCount;
 
     /**
-     * 不支持游标划界。
+     * No support is given to the demarcation of the cruise.
      *
-     * @param startCursor 请求起始游标
-     * @return 结果
+     * @param startCursor Request Initial Cursor
+     * @return Result
      */
     public static CursorBound unsupported(String startCursor) {
         CursorBound bound = new CursorBound();
@@ -56,13 +56,13 @@ public class CursorBound {
     }
 
     /**
-     * 支持游标划界的结果。
+     * Support for the demarcation of the boundaryResult。
      *
-     * @param startCursor 起始游标
-     * @param endCursor   结束游标
-     * @param lastPage    是否最后一页
-     * @param actualCount 本窗行数
-     * @return 结果
+     * @param startCursor Turner
+     * @param endCursor   End Curve
+     * @param lastPage    YesNoLastPage
+     * @param actualCount Lines of this Window
+     * @return Result
      */
     public static CursorBound of(String startCursor, String endCursor, boolean lastPage, int actualCount) {
         CursorBound bound = new CursorBound();

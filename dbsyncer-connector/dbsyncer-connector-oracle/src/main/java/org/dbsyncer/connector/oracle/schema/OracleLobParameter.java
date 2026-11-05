@@ -14,7 +14,7 @@ import java.sql.Types;
 import java.util.Locale;
 
 /**
- * Oracle CLOB/NCLOB/LONG 写入绑定（须使用连接创建 LOB，MERGE 场景不支持 SerialClob）。
+ * Oracle CLOB/NCLOB/LONG Write binding (must use)ConnectTermsLOB，MERGE The scene is not supportedSerialClob）。
  */
 public final class OracleLobParameter implements BindParameter {
 

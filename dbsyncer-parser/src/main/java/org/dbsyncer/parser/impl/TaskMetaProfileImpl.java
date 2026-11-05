@@ -41,7 +41,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 /**
- * {@link TaskMetaProfile} 实现（dbsyncer_meta）。
+ * {@link TaskMetaProfile} Achieved (dbsyncer_meta）。
  *
  * @author wuji
  * @version 1.0.0
@@ -309,7 +309,7 @@ public final class TaskMetaProfileImpl extends AbstractConfigModelProfile<Meta> 
                     }
                     writer.flush();
                 } catch (IOException e) {
-                    throw new ParserException("导出 meta 失败: " + e.getMessage(), e);
+                    throw new ParserException("Failed to export meta: " + e.getMessage(), e);
                 }
             });
             writer.write(']');

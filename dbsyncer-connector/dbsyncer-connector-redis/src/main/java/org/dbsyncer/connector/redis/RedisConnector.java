@@ -46,9 +46,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Redis连接器实现
+ * RedisConnectorAchieved
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-05-29 23:20
  */
@@ -133,7 +133,7 @@ public class RedisConnector extends AbstractConnector implements ConnectorServic
 
     @Override
     public Result reader(RedisConnectorInstance connectorInstance, ReaderContext context) {
-        throw new RedisException("Redis暂不支持全量读取");
+        throw new RedisException("Redis does not support full reading");
     }
 
     @Override
@@ -162,7 +162,7 @@ public class RedisConnector extends AbstractConnector implements ConnectorServic
                 }
                 String value = JsonUtil.objToJson(row);
                 if (!StringUtil.equals(dataStructure, RedisConstant.DATA_TYPE_STRING)) {
-                    throw new RedisException("暂不支持的数据结构: " + dataStructure);
+                    throw new RedisException("Data structure not supported: " + dataStructure);
                 }
                 if (StringUtil.equals(expireType, RedisConstant.EXPIRE)) {
                     long ttlSeconds = NumberUtil.toLong(expireSeconds);

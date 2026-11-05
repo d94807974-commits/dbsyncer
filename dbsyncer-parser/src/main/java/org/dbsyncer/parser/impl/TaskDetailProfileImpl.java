@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * {@link TaskDetailProfile} 实现：task_detail JOIN meta / table_group，存储侧分页。
+ * {@link TaskDetailProfile} Achieved:task_detail JOIN meta / table_group，Storage SideminPage。
  *
  * @author wuji
  * @version 1.0.0
@@ -59,8 +59,8 @@ public final class TaskDetailProfileImpl implements TaskDetailProfile {
                     + "INNER JOIN dbsyncer_table_group tg ON tg.ID = d.TABLE_GROUP_ID ";
 
     /**
-     * 与 SELECT ... AS 一致的驼峰别名；H2 等可能折叠为 TYPE/UPDATETIME，
-     * 装配时读忽略大小写、写出固定用这些 key，保证前端 JSON 字段稳定。
+     * and SELECT ... AS and a single name for the camels.H2 When it's possible to foldTYPE/UPDATETIME，
+     * Read and write to fix these when matchingkey，Ensure FrontendJSON FieldSteady.
      */
     private static final String[] SELECT_ALIASES = {
             "id", "createTime", "startTime", "updateTime", "tableGroupId", "type", "targetTable",
@@ -75,7 +75,7 @@ public final class TaskDetailProfileImpl implements TaskDetailProfile {
 
     @Override
     public Paging queryResults(TaskDetailQuery query) {
-        Assert.notNull(query, "查询参数不能为空");
+        Assert.notNull(query, "Query parameters cannot be empty");
         String taskId = query.getTaskId();
         TaskDetailQuerySupport.assertTaskId(taskId);
         int pageNum = query.getPageNum();
@@ -109,7 +109,7 @@ public final class TaskDetailProfileImpl implements TaskDetailProfile {
 
     @Override
     public Map<String, Object> getDetail(TaskDetailQuery query) {
-        Assert.notNull(query, "查询参数不能为空");
+        Assert.notNull(query, "Query parameters cannot be empty");
         String taskId = query.getTaskId();
         TaskDetailQuerySupport.assertTaskId(taskId);
         if (StringUtil.isBlank(query.getDetailId())) {
@@ -157,7 +157,7 @@ public final class TaskDetailProfileImpl implements TaskDetailProfile {
     }
 
     private Map<String, Object> toDisplayRow(Map<String, Object> sqlRow) {
-        // 先按忽略大小写读取驱动结果，再写出固定驼峰别名（避免 JSON 出现 TYPE/UPDATETIME）
+        // Read first by IgnoreMappingResult，And write a fixed camel aliases.JSON Come on.TYPE/UPDATETIME）
         Map<String, Object> row = SqlResultRowUtil.toAliasRow(sqlRow, SELECT_ALIASES);
         TaskDetailUtil.mergeDetailRow(row);
 
@@ -178,7 +178,7 @@ public final class TaskDetailProfileImpl implements TaskDetailProfile {
         Object fixed = row.get(ConfigConstant.META_FIXED);
         Object state = row.get(ConfigConstant.META_STATE);
 
-        // 数据迁移：成功/失败以表级 Meta 为准（集群波次累加）；DATA 可覆盖 sourceTotal
+        // Data Migration：Success/FailedBy TableMeta Whichever is applicable (cluster waves added);DATA Yeah.Overwrite sourceTotal
         Map<String, Object> detailContent = TaskDetailUtil.deserializeContent(row.get(ConfigConstant.BINLOG_DATA));
         if (detailContent.get(ConfigConstant.TASK_SOURCE_TOTAL) != null) {
             sourceTotal = detailContent.get(ConfigConstant.TASK_SOURCE_TOTAL);
@@ -193,7 +193,7 @@ public final class TaskDetailProfileImpl implements TaskDetailProfile {
                 fail = detailContent.get(ConfigConstant.DATABASE_SYNC_DETAIL_FAIL_TOTAL);
             }
         }
-        // 类型级生命周期优先 DATA.status；表级回退 meta.state
+        // TypeI'm the one that's the one that's the one of the one of the, the one of the one of the, the one of the, the one of the, the one of the, the... the one of the, the... the one of the, the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the- the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the... the the... the- the- the... the the... the the- the... the- the... the... the- the... the... the... the the the the- the the... the... the- the... the the the the- the the the the the the the- the the the the the the the the the the the the the the the the the the the the the the the theDATA.status；Form Backmeta.state
         Object detailStatus = detailContent.get(ConfigConstant.TASK_STATUS);
         if (detailStatus != null) {
             state = detailStatus;
@@ -219,7 +219,7 @@ public final class TaskDetailProfileImpl implements TaskDetailProfile {
         putIfPresent(row, ConfigConstant.META_TOTAL, total);
         putIfPresent(row, ConfigConstant.META_STATE, state);
         if (state != null) {
-            // 展示用 status：已优先取 DATA.status，否则 meta.state
+            // Presentationstatus：PriorityDATA.status，Nothenmeta.state
             row.put(ConfigConstant.TASK_STATUS, state);
         }
         return row;

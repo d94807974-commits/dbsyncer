@@ -7,18 +7,18 @@ import com.alibaba.fastjson2.annotation.JSONCreator;
 import com.alibaba.fastjson2.annotation.JSONField;
 
 /**
- * 订正校验明细类型（{@code dbsyncer_task_validate_sync_detail.type}）。
+ * Data validationDetailsType（{@code dbsyncer_task_validate_sync_detail.type}）。
  *
  * @author wuji
  */
 public enum ValidateSyncDetailTypeEnum {
 
     /**
-     * 行数据校验
+     * Row dataVerify INTRODUCTION
      */
     ROW_DATA("rowData"),
     /**
-     * 表结构校验
+     * TableStructureVerify INTRODUCTION
      */
     TABLE_SCHEMA("tableSchema");
 

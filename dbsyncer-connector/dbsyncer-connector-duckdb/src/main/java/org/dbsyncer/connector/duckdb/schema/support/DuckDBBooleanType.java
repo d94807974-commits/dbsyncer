@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * DuckDB 布尔类型
+ * DuckDB BooleanType
  *
  * @author wuji
  * @version 1.0.0

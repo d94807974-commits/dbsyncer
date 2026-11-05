@@ -7,7 +7,7 @@ import org.dbsyncer.sdk.enums.StorageEnum;
 import org.dbsyncer.sdk.storage.Strategy;
 
 /**
- * 告警通知规则：单表存储
+ * Alert notificationRule: Form Storage
  *
  * @author wuji
  * @version 1.0.0

@@ -6,37 +6,37 @@ import java.util.List;
 public class Result<T> {
 
     /**
-     * 成功数据
+     * SuccessesAccording to
      */
     private final List<T> successData = new LinkedList<>();
 
     /**
-     * 错误数据
+     * ErrorData Fact
      */
     private final List<T> failData = new LinkedList<>();
 
     /**
-     * 错误日志
+     * ErrorLog
      */
     private final StringBuffer error = new StringBuffer();
 
     /**
-     * 驱动表映射关系ID
+     * MappingMap relationID
      */
     private String tableGroupId;
 
     /**
-     * 目标表名称
+     * Target list name
      */
     private String targetTableGroupName;
 
     /**
-     * 同步任务ID
+     * Sync taskID
      */
     private String taskId;
 
     /**
-     * 事件
+     * Event
      */
     private String event;
 
@@ -62,7 +62,7 @@ public class Result<T> {
     }
 
     /**
-     * 线程安全添加集合
+     * ThreadsClear.AddGather!
      */
     public void addFailData(List failData) {
         synchronized (LOCK) {
@@ -71,7 +71,7 @@ public class Result<T> {
     }
 
     /**
-     * 线程安全添加集合
+     * ThreadsClear.AddGather!
      */
     public void addSuccessData(List successData) {
         synchronized (LOCK) {

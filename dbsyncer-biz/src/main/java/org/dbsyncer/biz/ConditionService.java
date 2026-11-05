@@ -13,7 +13,7 @@ import org.dbsyncer.biz.vo.ConditionVO;
 public interface ConditionService {
 
     /**
-     * 获取过滤条件
+     * AccessFilter Conditions
      *
      * @return
      */

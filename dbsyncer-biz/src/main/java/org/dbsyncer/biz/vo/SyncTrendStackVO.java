@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * 同步趋势数据
+ * Sync TrendsData Fact
  *
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2025-12-20 02:33
  */

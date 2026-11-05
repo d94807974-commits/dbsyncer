@@ -4,7 +4,7 @@
 package org.dbsyncer.biz.model;
 
 /**
- * Web 控制台跨节点 SSO 短时票据载荷（与 OpenAPI TokenInfo 分离）。
+ * Web Console breachNodes SSO actuaireand OpenAPI TokenInfo minLeave.
  *
  * @author wuji
  * @version 1.0.0
@@ -12,32 +12,32 @@ package org.dbsyncer.biz.model;
 public class WebSsoTicket {
 
     /**
-     * 用户名
+     * Username
      */
     private String username;
 
     /**
-     * 角色编码（逗号分隔，与 UserInfo.roleCode 一致）
+     * RoleEncoding (Comma)minI Linguistics.and UserInfo.roleCode Unanimously)
      */
     private String roleCode;
 
     /**
-     * 一次性票据 ID，用于防重放
+     * One-time notesID，It's for retrofitting.
      */
     private String jti;
 
     /**
-     * 目标节点 host，格式 {@code ip:httpPort}
+     * Objective CombinedNodes host，Format{@code ip:httpPort}
      */
     private String targetHost;
 
     /**
-     * 签发时间（毫秒）
+     * IssuanceTime（ms）
      */
     private Long iat;
 
     /**
-     * 过期时间（毫秒）
+     * Expiration time（ms）
      */
     private Long exp;
 

@@ -7,30 +7,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * IP白名单配置
- * 支持单个IP和IP段（CIDR）配置
+ * IP whitelistConfigure
+ * Support individualIPandIPParagraphCIDR）Configure
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  */
 public class IpWhitelistConfig {
 
     /**
-     * 启用IP白名单
+     * EnableIP whitelist
      */
     private boolean enabled = false;
 
     /**
-     * IP白名单列表
-     * 支持格式：
-     * - 单个IP: 192.168.1.1
-     * - IP段（CIDR）: 192.168.1.0/24
-     * - IP范围: 192.168.1.1-192.168.1.100
+     * IP whitelistList
+     * Support format:
+     * - SingleIP: 192.168.1.1
+     * - IPParagraphCIDR）: 192.168.1.0/24
+     * - IPScope: 192.168.1.1-192.168.1.100
      */
     private List<String> whitelist;
 
     /**
-     * 是否允许内网IP（127.0.0.1, localhost等）
+     * YesNoAllow IntranetIP（127.0.0.1, localhostWait.
      */
     private boolean allowLocalhost = true;
 
@@ -54,9 +54,9 @@ public class IpWhitelistConfig {
     }
 
     /**
-     * 添加IP到白名单
+     * AddIPTo White List
      *
-     * @param ip IP地址或IP段
+     * @param ip IPAddress orIPParagraph
      */
     public void addIp(String ip) {
         if (whitelist == null) {
@@ -68,9 +68,9 @@ public class IpWhitelistConfig {
     }
 
     /**
-     * 移除IP
+     * RemoveIP
      *
-     * @param ip IP地址或IP段
+     * @param ip IPAddress orIPParagraph
      */
     public void removeIp(String ip) {
         if (whitelist != null) {

@@ -19,8 +19,8 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * {@link NoticeStrategyProfile} 实现：单条读走 {@link AbstractConfigModelProfile} 缓存，
- * 写后本地失效并通知集群其它节点。
+ * {@link NoticeStrategyProfile} Achieved Inclusive: single reading{@link AbstractConfigModelProfile} Cache,
+ * Contents Locally invalid and notify other clustersNodes。
  *
  * @author wuji
  * @version 1.0.0
@@ -51,7 +51,7 @@ public class NoticeStrategyProfileImpl extends AbstractConfigModelProfile<Notice
     @Override
     public String add(NoticeStrategyConfig config) {
         String id = operationTemplate.execute(config, CommandEnum.OPR_ADD);
-        // 新增也需通知集群，其它节点重建策略运行态
+        // InsertWe need to notify the cluster.NodesRebuild policy running state
         removeCacheAndNotice(id);
         return id;
     }

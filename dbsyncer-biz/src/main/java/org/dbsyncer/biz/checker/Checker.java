@@ -12,12 +12,12 @@ import java.util.Map;
 public interface Checker {
 
     /**
-     * 新增配置
+     * InsertConfigure
      */
     ConfigModel checkAddConfigModel(Map<String, String> params);
 
     /**
-     * 修改配置
+     * UpdateConfigure
      */
     ConfigModel checkEditConfigModel(Map<String, String> params);
 }

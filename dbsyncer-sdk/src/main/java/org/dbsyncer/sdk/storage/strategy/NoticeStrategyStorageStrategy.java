@@ -7,7 +7,7 @@ import org.dbsyncer.sdk.enums.StorageEnum;
 import org.dbsyncer.sdk.storage.Strategy;
 
 /**
- * 告警策略：单表存储
+ * Police strategy Corrupt：Form Storage
  *
  * @author wuji
  * @version 1.0.0

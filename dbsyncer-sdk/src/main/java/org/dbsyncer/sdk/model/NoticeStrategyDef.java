@@ -4,7 +4,7 @@
 package org.dbsyncer.sdk.model;
 
 /**
- * 可持久化的告警策略定义（DTO，对应表 dbsyncer_notice_strategy）。
+ * Yeah.EnduringYes.Police strategy CorruptDefinitionsDTO，Corresponding Tabledbsyncer_notice_strategy）。
  *
  * @author wuji
  * @version 1.0.0
@@ -16,7 +16,7 @@ public class NoticeStrategyDef {
     private String name;
 
     /**
-     * 是否启用
+     * YesNoEnable
      */
     private boolean enabled = true;
 
@@ -26,7 +26,7 @@ public class NoticeStrategyDef {
     private int frequency;
 
     /**
-     * 周期 Cron（INTERVAL 时必填）
+     * CycleCron（INTERVAL 78.
      */
     private String cron;
 
@@ -36,7 +36,7 @@ public class NoticeStrategyDef {
     private int noticeTypes;
 
     /**
-     * 备注说明
+     * Remarks
      */
     private String remark;
 

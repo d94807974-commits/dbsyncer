@@ -11,87 +11,87 @@ package org.dbsyncer.sdk.enums;
 public enum StorageEnum {
 
     /**
-     * 全局配置：收窄为系统配置(system)/通知配置(notice)
+     * GlobalConfigure：Shrink AsSystem settings(system)/AnnouncementsConfigure(notice)
      */
     CONFIG("config"),
     /**
-     * 用户配置
+     * User Configuration
      */
     USER("user"),
     /**
-     * 连接配置
+     * ConnectConfigure
      */
     CONNECTOR("connector"),
     /**
-     * 表映射关系配置
+     * TableMappingConfigure
      */
     TABLE_GROUP("table_group"),
     /**
-     * 任务执行结果(meta)
+     * Mandate performance(meta)
      */
     META("meta"),
     /**
-     * 日志：连接器、驱动、映射关系、同步信息、系统日志
+     * Log：Connector、Mapping、Mapping、SyncInfo、System Log
      */
     LOG("log"),
     /**
-     * 任务
+     * Tasks
      */
     TASK("task"),
     /**
-     * 任务执行明细(统一 同步数据/订正校验/整库迁移 明细)
+     * TasksImplementation Details(HarmonizationSync data/Data validation/Database migration Details)
      */
     TASK_DETAIL("task_detail"),
     /**
-     * 集群节点
+     * ClusterNodes
      */
     CLUSTER_NODE("cluster_node"),
     /**
-     * 集群任务调度
+     * ClusterTasksMovement control
      */
     CLUSTER_TASK("cluster_task"),
     /**
-     * 任务分片计划
+     * TasksminPlan
      */
     TASK_PLAN("cluster_task_plan"),
     /**
-     * 业务分组
+     * Business group
      */
     GROUP("group"),
     /**
-     * 业务分组关系
+     * Business groupRelations
      */
     GROUP_REL("group_rel"),
     /**
-     * 角色
+     * Role
      */
     ROLE("role"),
     /**
-     * 权限点
+     * PermissionsPoints 71
      */
     PERMISSION("permission"),
     /**
-     * 角色-权限
+     * Role-Permissions
      */
     ROLE_PERMISSION("role_permission"),
     /**
-     * 用户-角色
+     * User-Role
      */
     USER_ROLE("user_role"),
     /**
-     * 资源访问控制
+     * ResourceAccess control
      */
     RESOURCE_ACL("resource_acl"),
     /**
-     * 告警通知规则
+     * Alert notificationRule
      */
     NOTICE_RULE("notice_rule"),
     /**
-     * 告警策略
+     * Police strategy Corrupt
      */
     NOTICE_STRATEGY("notice_strategy"),
     /**
-     * 同步任务 Meta 汇总
+     * Sync task Meta Summary
      */
     META_DAILY("meta_agg");
 

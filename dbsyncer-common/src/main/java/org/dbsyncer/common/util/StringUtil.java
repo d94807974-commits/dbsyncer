@@ -112,7 +112,7 @@ public abstract class StringUtil {
     }
 
     /**
-     * 首字母转小写
+     * First letter to lower
      *
      * @param s
      * @return

@@ -7,7 +7,7 @@ import org.dbsyncer.common.util.StringUtil;
 import org.dbsyncer.sdk.constant.ConfigConstant;
 
 /**
- * 任务明细列表状态筛选（success / fail）。
+ * TasksDetailsListStatusFiltersuccess / fail）。
  *
  * @author wuji
  * @version 1.0.0
@@ -16,12 +16,12 @@ import org.dbsyncer.sdk.constant.ConfigConstant;
 public enum TaskDetailStatusEnum {
 
     /**
-     * 成功（对应指标列 = 0）
+     * Success（Corresponding indicator column= 0）
      */
     SUCCESS(ConfigConstant.META_SUCCESS),
 
     /**
-     * 失败（对应指标列 &gt; 0）
+     * Failed（Corresponding indicator column&gt; 0）
      */
     FAIL(ConfigConstant.META_FAIL);
 
@@ -32,10 +32,10 @@ public enum TaskDetailStatusEnum {
     }
 
     /**
-     * 解析请求参数；空白或无法识别时返回 {@code null}（表示不按状态筛选）。
+     * ParsingRequest parameters；Space orNoneTraditionally.Back {@code null}（Means no pressStatusAgriculture
      *
-     * @param value success / fail（忽略大小写）
-     * @return 枚举或 null
+     * @param value success / fail（Ignore case)
+     * @return Enumer Sexualitynull
      */
     public static TaskDetailStatusEnum from(String value) {
         if (StringUtil.isBlank(value)) {

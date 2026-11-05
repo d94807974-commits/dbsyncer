@@ -23,12 +23,12 @@ public final class JsonBinaryDeserialize {
     private static final byte[] EMPTY_JSON_BYTES = "".getBytes(StandardCharsets.UTF_8);
 
     /**
-     * 读取并解析 JSON 列的 binary 内容为 UTF-8 文本。
+     * Read and parseJSON Columnbinary ContentsUTF-8 text.
      *
-     * @param meta        长度字段占用字节数
-     * @param inputStream binlog 事件流
-     * @return JSON 文本的 UTF-8 字节；空内容或解析失败时返回空串
-     * @throws IOException 读取 binlog 流失败时抛出
+     * @param meta        LengthFieldBytes occupied
+     * @param inputStream binlog EventStream
+     * @return JSON TextUTF-8 bytes; empty or BasedFailedTimeBackEmpty string
+     * @throws IOException Readbinlog StreamFailedTime Throw
      */
     public byte[] deserializeJson(int meta, ByteArrayInputStream inputStream) throws IOException {
         int blobLength = inputStream.readInteger(meta);
@@ -40,7 +40,7 @@ public final class JsonBinaryDeserialize {
         try {
             return new JsonBinary(bytes).getString().getBytes(StandardCharsets.UTF_8);
         } catch (Exception e) {
-            // JsonBinary.getString 可能将 IOException 包成 RuntimeException（如 EOFException）
+            // JsonBinary.getString Maybe.IOException Wrap it up.RuntimeException（LikeEOFException）
             logger.warn("Failed to parse JSON binary (len={}), fallback to empty string: {}",
                     bytes.length, e.toString());
             return EMPTY_JSON_BYTES;

@@ -4,9 +4,9 @@
 package org.dbsyncer.sdk.spi;
 
 /**
- * SPI服务工厂，集中管理，提高加载效率
+ * SPITRC Service plant, centralized management, increased load efficiency
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2025-08-09 00:48
  */

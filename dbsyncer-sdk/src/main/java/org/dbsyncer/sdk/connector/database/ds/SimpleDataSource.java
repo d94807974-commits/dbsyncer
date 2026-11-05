@@ -26,28 +26,28 @@ public class SimpleDataSource implements DataSource, AutoCloseable {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    // 从缓存队列获取连接次数
+    // Get from Cache QueueConnectNumber
     private final int MAX_PULL_TIME = 20;
-    // 有效检测时间（秒），默认10s
+    // Effective detectionTime（seconds），Default10s
     private final int VALID_TIMEOUT_SECONDS = 10;
-    // 创建连接重试次数
+    // CreateConnectTry againNumber
     private final int CREATE_RETRY_TIMES = 3;
-    // 创建连接重试间隔（毫秒）
+    // CreateConnectTry againIntervalms）
     private final long CREATE_RETRY_INTERVAL_MS = 500;
-    // 获取连接锁
+    // AccessConnectLock
     private final ReentrantLock lock = new ReentrantLock();
     private String driverClassName;
     private String url;
     private Properties properties;
-    // 连接池队列
+    // ConnectPool Queue
     private BlockingQueue<SimpleConnection> pool;
-    // 活跃连接数
+    // LiveConnectNumber
     private AtomicInteger activeNum;
-    // 最大连接数
+    // Max connections
     private int maxActive;
-    // 连接有效期(ms)
+    // ConnectValid until(ms)
     private long keepAlive;
-    // 是否是Oracle连接
+    // YesNoYesOracleConnect
     private boolean oracleDriver;
 
     public SimpleDataSource(String driverClassName, String url, Properties properties, int maxActive, long keepAlive) {
@@ -65,9 +65,9 @@ public class SimpleDataSource implements DataSource, AutoCloseable {
     public Connection getConnection() throws SQLException {
         try {
             lock.lock();
-            // 如果当前连接数大于或等于最大连接数
+            // If CurrentConnectNumber greater than or equal toMax connections
             if (activeNum.get() >= maxActive) {
-                throw new SdkException(String.format("数据库连接数超过上限%d，url=%s", maxActive, url));
+                throw new SdkException(String.format("Database connections exceeded ceiling %d,url=%s", maxActive, url));
             }
             int time = MAX_PULL_TIME;
             while (time-- > 0) {
@@ -75,16 +75,16 @@ public class SimpleDataSource implements DataSource, AutoCloseable {
                 if (null == poll) {
                     return createConnection();
                 }
-                // 连接无效或过期, 直接关闭连接
+                // ConnectNoneExpiry or expiry, DirectCloseConnect
                 if (!poll.isValid(VALID_TIMEOUT_SECONDS) || isExpired(poll)) {
                     closeQuietly(poll);
                     continue;
                 }
-                // 返回缓存连接
+                // BackCacheConnect
                 return poll;
             }
 
-            // 兜底方案，保证一定能获取连接
+            // The bottom line. Make sure you get it.Connect
             return createConnection();
         } finally {
             lock.unlock();
@@ -131,7 +131,7 @@ public class SimpleDataSource implements DataSource, AutoCloseable {
 
     @Override
     public void close() {
-        // 清空连接池并关闭所有连接，避免在遍历时修改集合
+        // ClearConnectICDCloseAllConnect，Avoiding all the timeUpdateGather!
         SimpleConnection connection;
         while ((connection = pool.poll()) != null) {
             closeQuietly(connection);
@@ -145,7 +145,7 @@ public class SimpleDataSource implements DataSource, AutoCloseable {
                 closeQuietly(simpleConnection);
                 return;
             }
-            // 回收连接；入池失败必须关闭，避免连接游离在池外且计数不回收
+            // RecoveryConnect；Into the pool.FailedI have to.Close，AvoidConnectOutside the pool and 2016 will not be recovered
             if (!pool.offer(simpleConnection)) {
                 closeQuietly(simpleConnection);
             }
@@ -153,7 +153,7 @@ public class SimpleDataSource implements DataSource, AutoCloseable {
     }
 
     /**
-     * 丢弃不可用连接，避免回收到连接池
+     * Discard Not AvailableConnect，Avoid recovery toConnectJi.
      */
     public void discard(Connection connection) {
         if (connection instanceof SimpleConnection) {
@@ -162,7 +162,7 @@ public class SimpleDataSource implements DataSource, AutoCloseable {
     }
 
     /**
-     * 关闭物理连接并回收活跃计数。
+     * ClosePhysicsConnectAnd recover.LiveCount.
      */
     private void closeQuietly(SimpleConnection connection) {
         if (connection == null) {
@@ -171,7 +171,7 @@ public class SimpleDataSource implements DataSource, AutoCloseable {
         try {
             connection.close();
         } catch (Exception e) {
-            String msg = String.format("关闭连接失败, url=%s", url);
+            String msg = String.format("Closing connection failed, url=%s", url);
             logger.error(msg, e);
         } finally {
             activeNum.decrementAndGet();
@@ -179,7 +179,7 @@ public class SimpleDataSource implements DataSource, AutoCloseable {
     }
 
     /**
-     * 连接是否过期
+     * ConnectYesNoExpiry
      */
     private boolean isExpired(SimpleConnection connection) {
         return connection.getActiveTime() + keepAlive < Instant.now().toEpochMilli();
@@ -194,7 +194,7 @@ public class SimpleDataSource implements DataSource, AutoCloseable {
     }
 
     /**
-     * 创建新连接
+     * Create NewConnect
      */
     private SimpleConnection createConnection() {
         SQLException lastException = null;

@@ -1,7 +1,7 @@
 package org.dbsyncer.biz.enums;
 
 /**
- * 缓存执行器指标
+ * Cache Executor Indicators
  *
  * @author AE86
  * @version 1.0.0
@@ -10,17 +10,17 @@ package org.dbsyncer.biz.enums;
 public enum BufferActuatorMetricEnum {
 
     /**
-     * 持久化执行器
+     * Storage actuator
      */
-    STORAGE("buffer.actuator.storage", "持久化执行器", ""),
+    STORAGE("buffer.actuator.storage", "Storage actuator", ""),
     /**
-     * 通用执行器
+     * General actuator
      */
-    GENERAL("buffer.actuator.general", "通用执行器", ""),
+    GENERAL("buffer.actuator.general", "General actuator", ""),
     /**
-     * 表执行器
+     * TableExecut MOU
      */
-    TABLE_GROUP("buffer.actuator.table.group", "表执行器", "");
+    TABLE_GROUP("buffer.actuator.table.group", "Table-group actuator", "");
 
     private final String code;
     private final String group;

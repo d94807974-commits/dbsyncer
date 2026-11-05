@@ -8,7 +8,7 @@ import org.dbsyncer.parser.enums.TaskDetailOrderEnum;
 import org.dbsyncer.parser.enums.TaskDetailStatusEnum;
 
 /**
- * 任务明细查询参数。
+ * TasksDetailed queriesParameter。
  *
  * @author wuji
  * @version 1.0.0
@@ -29,10 +29,10 @@ public class TaskDetailQuery {
     }
 
     /**
-     * 按任务 ID 构建查询。
+     * PressTasks ID Builds a query.
      *
-     * @param taskId 任务 ID
-     * @return 查询参数
+     * @param taskId Tasks ID
+     * @return QuestionParameter
      */
     public static TaskDetailQuery of(String taskId) {
         TaskDetailQuery query = new TaskDetailQuery();
@@ -41,7 +41,7 @@ public class TaskDetailQuery {
     }
 
     /**
-     * 设置分页。
+     * SettingsminPage。
      */
     public TaskDetailQuery setPage(int pageNum, int pageSize) {
         this.pageNum = pageNum;
@@ -50,7 +50,7 @@ public class TaskDetailQuery {
     }
 
     /**
-     * 按明细 ID 查询单条。
+     * By DetailsID Query a single bar.
      */
     public TaskDetailQuery setDetailId(String detailId) {
         this.detailId = detailId;
@@ -58,7 +58,7 @@ public class TaskDetailQuery {
     }
 
     /**
-     * 按明细类型筛选。
+     * By DetailsTypeFilter.
      */
     public TaskDetailQuery setDetailType(String detailType) {
         this.detailType = detailType;
@@ -66,8 +66,8 @@ public class TaskDetailQuery {
     }
 
     /**
-     * 按明细状态筛选。
-     * <p>与 {@link #setStatusMetric(TaskDetailMetricEnum)} 成对使用，仅设状态不设指标会在查询时断言失败。
+     * By DetailsStatusFilter.
+     * <p>and {@link #setStatusMetric(TaskDetailMetricEnum)} Use in pairs onlyStatusNo Submittion will assert when searchingFailed。
      */
     public TaskDetailQuery setDetailStatus(TaskDetailStatusEnum detailStatus) {
         this.detailStatus = detailStatus;
@@ -75,8 +75,8 @@ public class TaskDetailQuery {
     }
 
     /**
-     * 状态筛选所依据的 Meta 指标（DIFF / FAIL）。
-     * <p>设置 {@link #setDetailStatus(TaskDetailStatusEnum)} 时必填，禁止静默默认。
+     * StatusFilter basisMeta Organizational (indicators)DIFF / FAIL）。
+     * <p>Settings {@link #setDetailStatus(TaskDetailStatusEnum)} It must be filled in, silent acquiescence is forbidden.
      */
     public TaskDetailQuery setStatusMetric(TaskDetailMetricEnum statusMetric) {
         this.statusMetric = statusMetric;
@@ -84,7 +84,7 @@ public class TaskDetailQuery {
     }
 
     /**
-     * 显式排序（与指标无关时使用）。
+     * Visible Sorting (andIndicatorsNoneUsed at close.
      */
     public TaskDetailQuery setOrderBy(TaskDetailOrderEnum orderBy) {
         this.orderBy = orderBy;

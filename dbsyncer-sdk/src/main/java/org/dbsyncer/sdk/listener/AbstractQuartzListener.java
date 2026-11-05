@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 定时抽取
+ * ScheduledExtract
  *
  * @version 1.0.0
  * @Author AE86
@@ -54,7 +54,7 @@ public abstract class AbstractQuartzListener extends AbstractListener implements
     private final Lock lock = new ReentrantLock();
 
     /**
-     * 获取增量参数
+     * AccessIncrementalParameter
      */
     protected abstract Point checkLastPoint(TableGroupQuartzCommand command, int index);
 
@@ -79,7 +79,7 @@ public abstract class AbstractQuartzListener extends AbstractListener implements
 
         flushPoint();
         scheduledTaskService.start(taskKey, listenerConfig.getCron(), this);
-        logger.info("启动定时任务:{}[{}]", mappingName, listenerConfig.getCron());
+        logger.info("Start a time-bound task: }[{}]", mappingName, listenerConfig.getCron());
     }
 
     @Override
@@ -89,7 +89,7 @@ public abstract class AbstractQuartzListener extends AbstractListener implements
         try {
             locked = taskLock.tryLock(3, TimeUnit.SECONDS);
             if (locked) {
-                logger.info("执行定时任务:{}[{}]", mappingName, listenerConfig.getCron());
+                logger.info("Timed tasks: }[}", mappingName, listenerConfig.getCron());
                 for (int i = 0; i < commands.size(); i++) {
                     execute(commands.get(i), i);
                 }
@@ -131,7 +131,7 @@ public abstract class AbstractQuartzListener extends AbstractListener implements
     private void flushPoint() {
         if (CollectionUtils.isEmpty(snapshot)) {
             for (int i = 0; i < commands.size(); i++) {
-                // 更新最新增量点
+                // Update BestCreateMeasures.
                 Point point = checkLastPoint(commands.get(i), i);
                 if (!CollectionUtils.isEmpty(point.getPosition())) {
                     snapshot.putAll(point.getPosition());
@@ -144,7 +144,7 @@ public abstract class AbstractQuartzListener extends AbstractListener implements
     private void execute(TableGroupQuartzCommand cmd, int index) {
         final Table table = cmd.getTable();
 
-        // 检查增量点
+        // InspectionIncrementalPoints 71
         Point point = checkLastPoint(cmd, index);
         int pageIndex = 1;
         Object[] cursors = PrimaryKeyUtil.getLastCursors((String) snapshot.get(index + CURSOR));
@@ -192,19 +192,19 @@ public abstract class AbstractQuartzListener extends AbstractListener implements
                     trySendEvent(new ScanChangedEvent(table.getName(), ConnectorConstant.OPERTION_DELETE, cmd.getChangedRow(row)));
                 }
             }
-            // 更新记录点
+            // Update Record Point
             if (context.isSupportedCursor()) {
                 cursors = getLastCursors(cmd, data);
             }
             point.refresh();
 
-            // 及时清理对象
+            // Clean up objects on time
             if (!CollectionUtils.isEmpty(data)) {
                 data.clear();
             }
         }
 
-        // 持久化
+        // Enduring
         if (point.refreshed()) {
             snapshot.putAll(point.getPosition());
         }
@@ -223,7 +223,7 @@ public abstract class AbstractQuartzListener extends AbstractListener implements
     }
 
     private void trySendEvent(ChangedEvent event) {
-        // 如果消费事件失败，重试
+        // If you consumeEventFailed，Try again
         while (running) {
             try {
                 changeEvent(event);

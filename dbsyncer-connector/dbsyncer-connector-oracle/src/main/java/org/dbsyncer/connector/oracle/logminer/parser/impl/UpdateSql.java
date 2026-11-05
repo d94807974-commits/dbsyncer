@@ -34,7 +34,7 @@ public class UpdateSql extends AbstractParser {
     }
 
     /**
-     * UPDATE redo 常为部分列；缺列用哨兵，写入前按主键回查，避免当 null 清空目标 LOB。
+     * UPDATE redo Always.minColumns; missing sentry, pre-pressPrimary keyCheck it back.null ClearObjective Combined LOB。
      */
     @Override
     protected Object missingColumnValue() {

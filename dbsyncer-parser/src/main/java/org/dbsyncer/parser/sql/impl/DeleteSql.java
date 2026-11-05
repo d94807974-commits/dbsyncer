@@ -50,7 +50,7 @@ public final class DeleteSql implements SqlParser {
     public String parse() {
         try {
             Delete delete = (Delete) CCJSqlParserUtil.parse(sql);
-            // 替换表名
+            // ReplaceTable name
             Table table = new Table();
             table.setName(targetTableName);
             delete.setTable(table);

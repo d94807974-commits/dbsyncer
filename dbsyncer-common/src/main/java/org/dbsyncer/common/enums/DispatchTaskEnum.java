@@ -4,25 +4,25 @@
 package org.dbsyncer.common.enums;
 
 /**
- * 任务调度类型枚举
+ * TasksMovement controlTypeEnumeration
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2025-06-13 00:00
  */
 public enum DispatchTaskEnum {
 
-    /* 统计同步任务总数 */
-    MAPPING_COUNT("统计同步任务总数"),
+    /* Count sync tasks */
+    MAPPING_COUNT("Count sync tasks"),
 
-    /* 匹配相似表 */
-    MAPPING_MATCH_TABLE("匹配相似表"),
+    /* Match similar tables */
+    MAPPING_MATCH_TABLE("Match similar tables"),
 
-    /* 订正校验匹配相似表 */
-    VALIDATE_SYNC_MATCH_TABLE("订正校验匹配相似表"),
+    /* Validation match similar tables */
+    VALIDATE_SYNC_MATCH_TABLE("Validation match similar tables"),
 
-    /* 统计同步任务表总数 */
-    TABLE_GROUP_COUNT("统计同步任务表总数");
+    /* Count sync task tables */
+    TABLE_GROUP_COUNT("Count sync task tables");
 
     DispatchTaskEnum(String name) {
         this.name = name;

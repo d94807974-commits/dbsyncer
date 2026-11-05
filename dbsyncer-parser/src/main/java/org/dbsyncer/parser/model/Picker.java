@@ -48,7 +48,7 @@ public class Picker {
         }
         this.sFieldSize = sourceFields.size();
         this.tFieldSize = targetFields.size();
-        // 解析过滤条件
+        // ParsingFilter Conditions
         List<Filter> filter = tableGroup.getFilter();
         enabledFilter = !CollectionUtils.isEmpty(filter) && filter.stream().noneMatch(f->StringUtil.equals(f.getOperation(), OperationEnum.SQL.getName()));
         if (enabledFilter) {
@@ -78,9 +78,9 @@ public class Picker {
         Map<String, Object> source = null;
         Map<String, Object> target = null;
         for (List<Object> row : rows) {
-            // 排除下标不一致的数据
+            // Exclude data Addressing inconsistent subscripts
             if (row.size() != sourceOriginalFields.size()) {
-                logger.warn("源表结构发生变化，与当前表字段映射关系不一致，请检查重新配置");
+                logger.warn("Changes in the structure of the source table that are not consistent with the current field map, check the reconfiguration");
                 continue;
             }
             source = new HashMap<>();
@@ -89,7 +89,7 @@ public class Picker {
             }
             target = new HashMap<>();
             exchange(sFieldSize, tFieldSize, this.sourceFields, this.targetFields, source, target);
-            // 根据条件过滤数据
+            // Based onConditionFilter Data
             if (enableFilter && !filter(target)) {
                 continue;
             }
@@ -125,7 +125,7 @@ public class Picker {
             return true;
         }
         // where (id > 1 and id < 100) or (id = 100 or id =101)
-        // 或 关系(成立任意条件)
+        // or relationship(Establishment of arbitraryCondition)
         Object value = null;
         for (Filter f : or) {
             value = row.get(f.getName());
@@ -135,7 +135,7 @@ public class Picker {
         }
 
         boolean pass = false;
-        // 并 关系(成立所有条件)
+        // Relations(Create AllCondition)
         for (Filter f : add) {
             value = row.get(f.getName());
             if (!compareValueWithFilter(f, value)) {
@@ -148,27 +148,27 @@ public class Picker {
     }
 
     /**
-     * 比较值是否满足过滤条件
+     * ComparisonValueYesNoSatisfiedFilter Conditions
      *
-     * @param filter        过滤器
-     * @param comparedValue 比较值
+     * @param filter        Filter
+     * @param comparedValue ComparisonValue
      * @return
      */
     public boolean compareValueWithFilter(Filter filter, Object comparedValue) {
         final FilterEnum filterEnum = FilterEnum.getFilterEnum(filter.getFilter());
         final CompareFilter compareFilter = filterEnum.getCompareFilter();
 
-        // 支持 NULL 比较
+        // SupportNULL Comparison
         switch (filterEnum) {
             case IS_NULL:
             case IS_NOT_NULL:
-                // 此处传入 “not null” 表示有值，没必要对原始值进行转换
+                // Enter here'not null” Means yes.Value，There's no need for the original.ValueConductConvert
                 return compareFilter.compare(null == comparedValue ? null : "not null", filter.getValue());
             default:
                 break;
         }
 
-        // 支持时间比较
+        // SupportTimeComparison
         if (comparedValue instanceof Timestamp) {
             Timestamp comparedTimestamp = (Timestamp) comparedValue;
             Timestamp filterTimestamp = DateFormatUtil.stringToTimestamp(filter.getValue());
@@ -196,17 +196,17 @@ public class Picker {
             }
             if (null != sField && null != tField) {
                 v = source.get(sField.getName());
-                // 合并为标准数据类型
+                // Merge to Standard DataType
                 if (sourceResolver != null) {
                     v = sourceResolver.merge(v, sField);
                 }
                 tFieldName = tField.getName();
-                // 映射值
+                // Table GroupValue
                 if (!target.containsKey(tFieldName)) {
                     target.put(tFieldName, v);
                     continue;
                 }
-                // 合并值
+                // MergeValue
                 target.put(tFieldName, StringUtil.toString(target.get(tFieldName)) + StringUtil.toString(v));
             }
         }

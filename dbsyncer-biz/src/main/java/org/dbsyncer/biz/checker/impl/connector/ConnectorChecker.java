@@ -50,12 +50,12 @@ public class ConnectorChecker extends AbstractChecker {
         connector.setName(name);
         ConnectorConfig config = getConfig(connectorType);
         connector.setConfig(config);
-        // 修改基本配置
+        // UpdateBasicConfigure
         this.modifyConfigModel(connector, params);
         applySourceTargetFlags(connector, params);
-        // 校验并修改配置
+        // VerifyUpdateConfigure
         validateAndModifyConfig(config, params);
-        // 连接并获取数据库列表
+        // ConnectAnd get the data.LibraryList
         connectAndLoadDatabases(connector, config);
 
         return connector;
@@ -69,30 +69,30 @@ public class ConnectorChecker extends AbstractChecker {
         Connector connector = connectorProfile.getConnector(id);
         Assert.notNull(connector, "Can not find connector.");
         ConnectorConfig config = connector.getConfig();
-        // 修改基本配置
+        // UpdateBasicConfigure
         this.modifyConfigModel(connector, params);
         applySourceTargetFlags(connector, params);
-        // 校验并修改配置
+        // VerifyUpdateConfigure
         validateAndModifyConfig(config, params);
-        // 获取数据库列表
+        // Getting dataLibraryList
         connectAndLoadDatabases(connector, config);
 
         return connector;
     }
 
     /**
-     * 解析并校验「可作为源 / 可作为目标」开关（至少开启一个）。
+     * Parsing and Verifying「As Source / AsObjective Combined」Switches (at least)OnOne.
      */
     private void applySourceTargetFlags(Connector connector, Map<String, String> params) {
         boolean isSource = StringUtil.isNotBlank(params.get(ConfigConstant.CONNECTOR_IS_SOURCE));
         boolean isTarget = StringUtil.isNotBlank(params.get(ConfigConstant.CONNECTOR_IS_TARGET));
-        Assert.isTrue(isSource || isTarget, "至少开启「可作为源」或「可作为目标」之一");
+        Assert.isTrue(isSource || isTarget, "At least open as a source or as a target.");
         connector.setSource(isSource);
         connector.setTarget(isTarget);
     }
 
     /**
-     * 校验并修改配置
+     * VerifyUpdateConfigure
      */
     private void validateAndModifyConfig(ConnectorConfig config, Map<String, String> params) {
         ConnectorService connectorService = connectorFactory.getConnectorService(config.getConnectorType());
@@ -102,7 +102,7 @@ public class ConnectorChecker extends AbstractChecker {
     }
 
     /**
-     * 连接并加载数据库列表
+     * Connectand load dataLibraryList
      */
     private void connectAndLoadDatabases(Connector connector, ConnectorConfig config) {
         ConnectorInstance connectorInstance = connectorFactory.connect(connector.getId(), config, StringUtil.EMPTY, StringUtil.EMPTY);
@@ -119,7 +119,7 @@ public class ConnectorChecker extends AbstractChecker {
             return config;
         } catch (Exception e) {
             logger.error(e.getMessage());
-            throw new BizException("获取连接器配置异常.");
+            throw new BizException("Get connector configuration abnormal.");
         }
     }
 }

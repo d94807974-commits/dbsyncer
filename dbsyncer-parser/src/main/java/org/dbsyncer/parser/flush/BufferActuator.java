@@ -11,28 +11,28 @@ import java.util.concurrent.Executor;
 public interface BufferActuator {
 
     /**
-     * 提交任务
+     * SubmitTasks
      *
      * @param request
      */
     void offer(BufferRequest request);
 
     /**
-     * 获取缓存队列
+     * Fetch 2.1
      *
      * @return
      */
     Queue getQueue();
 
     /**
-     * 获取缓存队列容量
+     * Subprogramme 3
      *
      * @return
      */
     int getQueueCapacity();
 
     /**
-     * 获取线程池
+     * AccessThreadsJi.
      *
      * @return
      */

@@ -39,7 +39,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- * {@link TableGroupProfile} 实现（dbsyncer_table_group）。
+ * {@link TableGroupProfile} Achieved (dbsyncer_table_group）。
  *
  * @author wuji
  * @version 1.0.0
@@ -107,7 +107,7 @@ public final class TableGroupProfileImpl implements TableGroupProfile {
                     continue;
                 }
                 Meta meta = new Meta();
-                // id 由 OperationTemplate ADD 统一生成雪花；taskId 关联 table_group.id
+                // id ByOperationTemplate ADD HarmonizationGenerateSnowflake;taskId Associationtable_group.id
                 meta.setTaskId(id);
                 meta.setIsTaskDetail(TaskLevelEnum.TASK_DETAIL.getCode());
                 meta.setCreateTime(now);
@@ -145,10 +145,10 @@ public final class TableGroupProfileImpl implements TableGroupProfile {
         if (StringUtil.isBlank(taskId)) {
             return;
         }
-        // 删除表关联的meta
+        // DeleteTable Associatedmeta
         tableGroupProfile.pageScanTableGroups(taskId, ConfigConstant.PAGE_SIZE, tableGroups -> {
             List<String> groupIds = tableGroups.stream().map(TableGroup::getId).collect(Collectors.toList());
-            // 批量删除表meta数据
+            // BatchDeleteTablemetaData Fact
             taskDetailMetaProfile.deleteMetaByTableGroupIds(groupIds);
         });
 
@@ -208,7 +208,7 @@ public final class TableGroupProfileImpl implements TableGroupProfile {
 
     @Override
     public Paging queryTableGroupResults(String mappingId, String detailStatus, int pageNum, int pageSize) {
-        Assert.hasText(mappingId, "同步任务ID不能为空");
+        Assert.hasText(mappingId, "Synchronising task ID cannot be empty");
         int safePageNum = Math.max(pageNum, 1);
         int safePageSize = pageSize > 0 ? pageSize : ConfigConstant.PAGE_SIZE;
 
@@ -347,7 +347,7 @@ public final class TableGroupProfileImpl implements TableGroupProfile {
             if (model == null) {
                 continue;
             }
-            // 配置包 NDJSON 可能缺 createTime/updateTime，库列 NOT NULL
+            // ConfigurePackageNDJSON Probably not.createTime/updateTime，LibraryreorganizeNOT NULL
             if (model.getCreateTime() == null) {
                 model.setCreateTime(now);
             }

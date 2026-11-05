@@ -8,16 +8,16 @@ import org.dbsyncer.sdk.util.PropertiesUtil;
 import java.util.Properties;
 
 /**
- * Http 连接器工具类
+ * Http ConnectorTool class
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-02-12 01:04
  */
 public abstract class HttpUtil {
 
     /**
-     * 解析连接参数（支持换行符或 & 分隔）
+     * ParsingConnection parameters（Support line breaks or& minamend
      */
     public static Properties parse(String properties) {
         if (properties == null || properties.trim().isEmpty()) {
@@ -28,7 +28,7 @@ public abstract class HttpUtil {
     }
 
     /**
-     * 将 Properties 转为字符串（换行分隔，便于页面展示）
+     * WillProperties Convert to String (line break)minIt's easy.Page)
      */
     public static String toString(Properties properties) {
         if (properties == null || properties.isEmpty()) {

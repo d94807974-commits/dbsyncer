@@ -7,7 +7,7 @@ import org.dbsyncer.common.model.ConfigModel;
 import org.dbsyncer.sdk.constant.ConfigConstant;
 
 /**
- * 资源访问控制。
+ * ResourceAccess control.
  *
  * @author wuji
  * @version 1.0.0
@@ -16,7 +16,7 @@ import org.dbsyncer.sdk.constant.ConfigConstant;
 public class ResourceAcl extends ConfigModel {
 
     /**
-     * 主体类型：0-USER / 1-ROLE
+     * SubjectType：0-USER / 1-ROLE
      */
     private int subjectType;
 
@@ -30,7 +30,7 @@ public class ResourceAcl extends ConfigModel {
     private String resourceId;
 
     /**
-     * 0-只读 / 1-可读写
+     * 0-Read-only / 1-Read/Write
      */
     private int permission;
 

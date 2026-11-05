@@ -10,7 +10,7 @@
     <artifactId>dbsyncer-biz</artifactId>
 
     <dependencies>
-        <!-- Manager 控制器 -->
+        <!-- Manager controller -->
         <dependency>
             <groupId>org.ghi</groupId>
             <artifactId>dbsyncer-manager</artifactId>

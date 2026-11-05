@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * 整库迁移任务
+ * Library Migration Task
  *
  * @author wuji
  * @version 1.0.0
@@ -18,42 +18,42 @@ import java.util.function.Consumer;
 public interface DatabaseSyncProfile {
 
     /**
-     * 按 id 查询 Mapping 任务配置。
+     * Pressid QuestionMapping TasksConfigure。
      */
     DatabaseSyncTask get(String id);
 
     /**
-     * 新增任务配置。
+     * InsertTasksConfigure。
      */
     String add(DatabaseSyncTask task);
 
     /**
-     * 修改任务配置。
+     * UpdateTasksConfigure。
      */
     String update(DatabaseSyncTask tasks);
 
     /**
-     * 删除任务配置
+     * DeleteTasksConfigure
      */
     void delete(String id);
 
     void clearRunData(String id);
 
     /**
-     * 按模型类型分页查询任务，可选按名称模糊搜索。
+     * Press ModelTypeminPageQuestionTasks，Optional PressNameBlurSearch。
      *
-     * @param searchKey 可选；非空时对 {@code name} 做 LIKE
-     * @param ids 可选；按 ID IN 过滤。
+     * @param searchKey optional; non-empty time pair{@code name} Do it.LIKE
+     * @param ids optional 38.ID IN Filter.
      */
     Paging<DatabaseSyncTask> query(int pageNum, int pageSize, String searchKey, List<String> ids);
 
     /**
-     * 按模型类型分页回调遍历全部任务。
+     * Press ModelTypeminPageAll over the clock.AllTasks。
      */
     void pageScanTasks(int pageSize, Consumer<List<DatabaseSyncTask>> pageConsumer);
 
     /**
-     * 预建运行明细分表
+     * Pre-run DetailsminTable
      */
     void syncTaskTableMetaDetails(String taskId);
 

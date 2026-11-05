@@ -1,7 +1,7 @@
 package org.dbsyncer.sdk.model;
 
 /**
- * 增量偏移量
+ * IncrementalOffset
  *
  * @version 1.0.0
  * @author AE86
@@ -10,22 +10,22 @@ package org.dbsyncer.sdk.model;
 public final class ChangedOffset {
 
     /**
-     * 驱动ID
+     * MappingID
      */
     private String taskId;
 
     /**
-     * 增量文件名称
+     * IncrementalFilenameClaims
      */
     private String nextFileName;
 
     /**
-     * 增量偏移量
+     * IncrementalOffset
      */
     private Object position;
 
     /**
-     * 同步连续序号
+     * SynchronizationNo.
      */
     private long seq;
 

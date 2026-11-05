@@ -4,8 +4,8 @@
 package org.dbsyncer.sdk.model;
 
 /**
- * 全量同步任务运行态。
- * 父任务负责启停；子任务（按表）承载独立游标,委托父任务。
+ * FullSync taskRun the state.
+ * Father.TasksIn charge of the suspension;Tasks（By Table) Carrying Independent Curves,Delegated fatherTasks。
  */
 public class Task {
 
@@ -20,22 +20,22 @@ public class Task {
     private Object[] cursors;
 
     /**
-     * 本段结束游标（含）；空表示读到无数据为止
+     * End cursor (include); empty means read toNoneData to date
      */
     private Object[] endCursors;
 
     /**
-     * 是否跳过表级进度刷新事件
+     * YesNoSkip Table ProgressRefreshEvent
      */
     private boolean skipTableProgressEvent;
 
     /**
-     * 父任务（表级子任务时非空）
+     * Father.Tasks（FormTasksNon-empty)
      */
     private Task parent;
 
     /**
-     * 当前表映射 ID（表级子任务时非空）
+     * Current MapID（FormTasksNon-empty)
      */
     private String tableGroupId;
 
@@ -45,10 +45,10 @@ public class Task {
     }
 
     /**
-     * 创建表级子任务：共享启停，独立游标。
+     * Create TableTasks：TotalGet out of here, stand alone.
      *
-     * @param tableGroupId 表映射 ID
-     * @return 子任务
+     * @param tableGroupId MapID
+     * @return SonTasks
      */
     public Task createTableTask(String tableGroupId) {
         Task child = new Task(this.id);
@@ -131,11 +131,11 @@ public class Task {
 
     public enum StateEnum {
         /**
-         * 运行
+         * Run
          */
         RUNNING,
         /**
-         * 停止
+         * Stop
          */
         STOP;
     }

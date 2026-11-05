@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * 监听器接口，提供实现增量同步功能，支持定时和日志解析
+ * ListenerInterface，Provision for realizationIncremental syncFunctions, supportScheduledandLogParsing
  *
  * @Author AE86
  * @Version 1.0.0
@@ -18,70 +18,70 @@ import java.util.Map;
 public interface Listener {
 
     /**
-     * 初始化
+     * Initialize
      */
     default void init() {
     };
 
     /**
-     * 捕获当前增量位点（全量+增量模式启动全量前调用）
+     * Capture CurrentIncrementalBitsFull + incrementalModeStartFull(Appendix)
      *
-     * @return 捕获到的位点键值，未捕获返回空 Map
+     * @return bit keys capturedValue，Not capturedBackEmptyMap
      */
     default Map<String, String> captureSnapshot() {
         return Collections.emptyMap();
     }
 
     /**
-     * 启动定时/日志抽取任务
+     * StartScheduled/LogExtractTasks
      */
     void start();
 
     /**
-     * 关闭任务
+     * CloseTasks
      */
     void close();
 
     /**
-     * 注册监听事件（获取增量数据）
+     * Registered listeningEvent（AccessIncrementalData)
      *
      * @param watcher
      */
     void register(Watcher watcher);
 
     /**
-     * 数据变更前置事件
+     * Data FactChangeFrontSetEvent
      *
      * @param context
      */
     void changeEventBefore(QuartzListenerContext context);
 
     /**
-     * 数据变更事件
+     * Data FactChangeEvent
      *
      * @param event
      */
     void changeEvent(ChangedEvent event);
 
     /**
-     * 更新增量点
+     * UpdateIncrementalPoints 71
      *
      * @param offset
      */
     void refreshEvent(ChangedOffset offset);
 
     /**
-     * 刷新增量点事件
+     * B OBJECT.InsertMeasures.Event
      */
     void flushEvent();
 
     /**
-     * 强制刷新增量点事件
+     * Force BrushInsertMeasures.Event
      */
     void forceFlushEvent();
 
     /**
-     * 异常事件
+     * ErrorEvent
      *
      * @param e
      */

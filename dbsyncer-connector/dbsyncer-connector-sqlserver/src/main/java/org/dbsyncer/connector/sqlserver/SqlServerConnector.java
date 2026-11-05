@@ -40,7 +40,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * SqlServer连接器实现
+ * SqlServerConnectorAchieved
  *
  * @Author AE86
  * @Version 1.0.0
@@ -148,17 +148,17 @@ public final class SqlServerConnector extends AbstractDatabaseConnector {
 
     @Override
     public String getPageCursorSql(PageSql config) {
-        // 不支持游标查询
+        // Cursor query not supported
         if (!PrimaryKeyUtil.isSupportedCursor(config.getFields())) {
             return StringUtil.EMPTY;
         }
 
-        // 构建带游标条件的查询SQL（只添加WHERE条件，不添加ORDER BY）
+        // Build with CursorConditionQuerySQL（OnlyAddWHERECondition，Oh, no.AddORDER BY）
         StringBuilder innerSql = new StringBuilder(config.getQuerySql());
         buildCursorConditionOnly(innerSql, config);
 
-        // 使用 ROW_NUMBER() 方式分页（兼容 SQL Server 2008+）
-        // 外层的 ORDER BY 已经在 ROW_NUMBER() OVER(ORDER BY ...) 中处理
+        // UseROW_NUMBER() ModalitiesminPage（CompatibilitySQL Server 2008+）
+        // OuterORDER BY Already.ROW_NUMBER() OVER(ORDER BY ...) Processing
         List<String> primaryKeys = buildPrimaryKeys(config.getPrimaryKeys());
         String orderBy = StringUtil.join(primaryKeys, StringUtil.COMMA);
         return String.format(DatabaseConstant.SQLSERVER_PAGE_SQL, orderBy, innerSql);
@@ -169,20 +169,20 @@ public final class SqlServerConnector extends AbstractDatabaseConnector {
         int pageSize = context.getPageSize();
         Object[] cursors = context.getCursors();
         if (null == cursors || cursors.length == 0) {
-            // 第一页：BETWEEN 1 AND pageSize
+            // First footnote:Page：BETWEEN 1 AND pageSize
             return new Object[]{1, pageSize};
         }
-        // 使用基类的公共方法构建游标条件参数
+        // Use of base category publicTotalMethod to Build CursorConditionParameter
         Object[] cursorArgs = buildCursorArgs(cursors);
         if (cursorArgs == null) {
             return new Object[]{1, pageSize};
         }
 
-        // SQL Server使用 ROW_NUMBER() 方式：[游标参数..., 1, pageSize]
+        // SQL ServerUseROW_NUMBER() Modalities Underlines:[CursorParameter..., 1, pageSize]
         Object[] newCursors = new Object[cursorArgs.length + 2];
         System.arraycopy(cursorArgs, 0, newCursors, 0, cursorArgs.length);
-        newCursors[cursorArgs.length] = 1; // BETWEEN 起始
-        newCursors[cursorArgs.length + 1] = pageSize; // BETWEEN 结束
+        newCursors[cursorArgs.length] = 1; // BETWEEN Start
+        newCursors[cursorArgs.length + 1] = pageSize; // BETWEEN End
         return newCursors;
     }
 
@@ -228,7 +228,7 @@ public final class SqlServerConnector extends AbstractDatabaseConnector {
         }
 
         if (t.contains("VARCHAR")) {
-            // 长度 > 8000 → 必须用 MAX
+            // Length > 8000 → It has to be used.MAX
             if (size > 8000) {
                 return t + "(MAX)";
             }
@@ -237,7 +237,7 @@ public final class SqlServerConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * 可选库前缀 {@code [db].[schema].[table]}；仅 schema + 表名亦可。
+     * OptionalLibraryPrefix{@code [db].[schema].[table]}；Onlyschema + Table nameYeah.
      */
     private String qualifyTable(ValidateSyncTask task, String tableName) {
         String schema = StringUtil.isNotBlank(task.getTargetSchema()) ? task.getTargetSchema() : "dbo";
@@ -252,10 +252,10 @@ public final class SqlServerConnector extends AbstractDatabaseConnector {
     public Map<String, String> getTargetCommand(CommandConfig commandConfig) {
         Map<String, String> targetCommand = super.getTargetCommand(commandConfig);
         String tableName = commandConfig.getTable().getName();
-        // 判断表是否包含标识自增列
+        // Table of judgementYesNoInclude identification as added
         DatabaseConnectorInstance db = (DatabaseConnectorInstance) commandConfig.getConnectorInstance();
         List<Integer> result = db.execute(databaseTemplate -> databaseTemplate.queryForList(String.format(QUERY_TABLE_IDENTITY, tableName), Integer.class));
-        // 允许显式插入标识列的值
+        // Allows visible insertion of marking columnsValue
         if (!CollectionUtils.isEmpty(result)) {
             String schema = resolveSchema(commandConfig.getSchema());
             String insert = String.format(SET_TABLE_IDENTITY_ON, schema, tableName) + targetCommand.get(ConnectorConstant.OPERTION_INSERT)
@@ -271,7 +271,7 @@ public final class SqlServerConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * SQL Server 目标 schema；未配置时默认 dbo（与 {@link #getSchema(String, Connection)} 一致）。
+     * SQL Server Objective Combined schema；NotConfigureTime Defaultdbo（and {@link #getSchema(String, Connection)} (d) Unanimously.
      */
     private String resolveSchema(String schema) {
         return StringUtil.isNotBlank(schema) ? schema : "dbo";
@@ -291,7 +291,7 @@ public final class SqlServerConnector extends AbstractDatabaseConnector {
             String fieldName = database.buildWithQuotation(f.getName());
             fs.add(fieldName);
             sfs.add("s." + fieldName);
-            // 处理特殊类型
+            // Deal with specialType
             if (!database.buildCustomValue(vs, f)) {
                 vs.add("?");
             }
@@ -309,7 +309,7 @@ public final class SqlServerConnector extends AbstractDatabaseConnector {
         sql.append(StringUtil.join(fs, StringUtil.COMMA)).append(") ");
         sql.append("ON ");
 
-        // 构建 ON 条件：t.pk = s.pk AND ...
+        // BuildON Condition：t.pk = s.pk AND ...
         StringBuilder onCondition = new StringBuilder();
         for (int i = 0; i < pkFieldNames.size(); i++) {
             if (i > 0) {
@@ -373,18 +373,18 @@ public final class SqlServerConnector extends AbstractDatabaseConnector {
     public boolean buildCustom(List<String> fs, Field field) {
         switch (field.getTypeName()) {
             /**
-             * SRID	    名称	                    用途	                        单位
-             * 0	    未定义/本地坐标系	        SQL Server geometry 默认	    任意单位
-             * 4326	    WGS84	                GPS、全球坐标系	            度（经纬度）
-             * 3857	    Web Mercator	        Google Maps、OpenStreetMap	米
-             * 4490	    CGCS2000	            中国2000坐标系	            度
-             * 4547	    CGCS2000/Gauss-Kruger	中国投影坐标系	            米
-             * 26910	NAD83/UTM zone 10N	    北美坐标系	                米
-             * 32610	WGS84/UTM zone 10N	    全球UTM投影	                米
+             * SRID	    Name	                    Purpose unit
+             * 0	    Undefined/local coordinates YesSQL Server geometry Default Any Unit
+             * 4326	    WGS84	                GPS、Global coordinates (latitude)
+             * 3857	    Web Mercator	        Google Maps、OpenStreetMap	Rice
+             * 4490	    CGCS2000	            China2000Coordinate system
+             * 4547	    CGCS2000/Gauss-Kruger	China Project nomenclature
+             * 26910	NAD83/UTM zone 10N	    North American Coordinate System
+             * 32610	WGS84/UTM zone 10N	    GlobalUTMProjection
              */
             case "geometry":
             case "geography":
-                // 使用 STAsText() 获取 WKT 格式，同时包含 SRID 信息，格式：POINT (...) | 4326
+                // UseSTAsText() AccessWKT Format, and containSRID Info，Mostly in thePOINT (...) | 4326
                 fs.add(String.format("CAST([%s].STAsText() AS NVARCHAR(MAX)) + ' | ' + CAST([%s].STSrid AS NVARCHAR(10)) AS [%s]", field.getName(), field.getName(), field.getName()));
                 return true;
             case "hierarchyid":
@@ -416,7 +416,7 @@ public final class SqlServerConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * SQL Server 批量写入：IDENTITY 表分离 ON/OFF；显式 JDBC 类型避免 getParameterMetaData()。
+     * SQL Server Batch writing:IDENTITY TableminLiYes.ConclusionCommentSexual opinionsON/OFF；VisibleJDBC TypeAvoidgetParameterMetaData()。
      */
     @Override
     protected int[] batchUpdate(DatabaseTemplate databaseTemplate, String executeSql, List<Field> fields, List<Map> data) throws Exception {
@@ -435,7 +435,7 @@ public final class SqlServerConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * 批量参数 JDBC 类型，与占位符顺序一致。
+     * BatchParameter JDBC Type，andThe placeholder is in the same order.
      */
     private int[] batchArgTypes(List<Field> fields) {
         List<Integer> types = new ArrayList<>();

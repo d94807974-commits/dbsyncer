@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * DuckDB 时间戳类型
+ * DuckDB TimePokeType
  *
  * @author wuji
  * @version 1.0.0

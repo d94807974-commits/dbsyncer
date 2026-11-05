@@ -7,9 +7,9 @@ import org.dbsyncer.common.util.JsonUtil;
 import org.dbsyncer.sdk.model.Table;
 
 /**
- * 表信息
+ * TableInfo
  *
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2026-01-08 21:41
  */

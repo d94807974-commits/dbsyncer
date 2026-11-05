@@ -91,7 +91,7 @@ public class PluginServiceImpl implements PluginService {
         FileSuffixEnum fileSuffix = FileSuffixEnum.getFileSuffix(suffix);
         Assert.notNull(fileSuffix, "Illegal file suffix");
         if (FileSuffixEnum.JAR != fileSuffix) {
-            String msg = String.format("不正确的文件扩展名 \"%s\"，只支持 \"%s\" 的文件扩展名。", filename, FileSuffixEnum.JAR.getName());
+            String msg = String.format("Invalid file extension \"%s\", only \"%s\" is supported.", filename, FileSuffixEnum.JAR.getName());
             logService.log(LogType.PluginLog.CHECK_ERROR, msg);
             throw new BizException(msg);
         }

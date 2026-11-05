@@ -13,7 +13,7 @@ import org.dbsyncer.biz.vo.VersionVO;
 public interface AppConfigService {
 
     /**
-     * 获取版本信息
+     * AccessVersionInfo
      *
      * @return
      */

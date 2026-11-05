@@ -15,12 +15,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Doris 日期时间类型。
+ * Doris DateTimeType。
  * <p>
- * DATETIME / DATETIMEV2 / TIMESTAMP 写入前统一转为无时区墙钟字符串，
- * 避免 JDBC {@link Timestamp} 绑参或 Stream Load ISO 带时区串导致 ±8 小时偏移。
+ * DATETIME / DATETIMEV2 / TIMESTAMP Harmonize toNoneTime 239.
+ * AvoidJDBC {@link Timestamp} B Fact-finding orStream Load ISO Time zone string caused±8 hoursOffset.
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-08-06
  */

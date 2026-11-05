@@ -10,7 +10,7 @@ public class PickerTest {
     @Test
     public void testCompareValueWithFilter() {
         Picker picker = new Picker(new TableGroup());
-        // 比较条件：name != A
+        // ComparisonCondition：name != A
         StringFilter filter = new StringFilter("name", FilterEnum.NOT_EQUAL, "A", false);
 
         boolean equal = picker.compareValueWithFilter(filter, "A");

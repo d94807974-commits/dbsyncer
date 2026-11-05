@@ -28,7 +28,7 @@ import org.dbsyncer.sdk.storage.strategy.UserRoleStrategy;
 import org.dbsyncer.sdk.storage.strategy.UserStrategy;
 
 /**
- * 存储策略枚举
+ * Storage Policy Count
  *
  * @author AE86
  * @version 1.0.0
@@ -37,107 +37,107 @@ import org.dbsyncer.sdk.storage.strategy.UserStrategy;
 public enum StorageStrategyEnum {
 
     /**
-     * 配置策略
+     * ConfigurePolicy
      */
     CONFIG(StorageEnum.CONFIG, new ConfigStrategy()),
 
     /**
-     * 用户配置策略
+     * User ConfigurationPolicy
      */
     USER(StorageEnum.USER, new UserStrategy()),
 
     /**
-     * 连接配置策略
+     * ConnectConfigurePolicy
      */
     CONNECTOR(StorageEnum.CONNECTOR, new ConnectorStrategy()),
 
     /**
-     * 表映射关系策略
+     * TableMappingPolicy
      */
     TABLE_GROUP(StorageEnum.TABLE_GROUP, new TableGroupStrategy()),
 
     /**
-     * 任务执行结果(meta)策略
+     * Mandate performance(meta)Policy
      */
     META(StorageEnum.META, new MetaStrategy()),
 
     /**
-     * 任务执行明细策略(统一 同步数据/订正校验/整库迁移 明细)
+     * TasksImplementation DetailsPolicy(HarmonizationSync data/Data validation/Database migration Details)
      */
     TASK_DETAIL(StorageEnum.TASK_DETAIL, new TaskDetailStrategy()),
 
     /**
-     * 日志策略
+     * LogPolicy
      */
     LOG(StorageEnum.LOG, new LogStrategy()),
 
     /**
-     * 任务策略
+     * TasksPolicy
      */
     TASK(StorageEnum.TASK, new TaskStrategy()),
 
     /**
-     * 集群节点
+     * ClusterNodes
      */
     CLUSTER_NODE(StorageEnum.CLUSTER_NODE, new ClusterNodeStrategy()),
 
     /**
-     * 集群任务调度
+     * ClusterTasksMovement control
      */
     CLUSTER_TASK(StorageEnum.CLUSTER_TASK, new ClusterTaskStrategy()),
 
     /**
-     * 任务分片计划
+     * TasksminPlan
      */
     TASK_PLAN(StorageEnum.TASK_PLAN, new TaskPlanStrategy()),
 
     /**
-     * 业务分组
+     * Business group
      */
     GROUP(StorageEnum.GROUP, new GroupStrategy()),
 
     /**
-     * 业务分组关系
+     * Business groupRelations
      */
     GROUP_REL(StorageEnum.GROUP_REL, new GroupRelStrategy()),
 
     /**
-     * 角色
+     * Role
      */
     ROLE(StorageEnum.ROLE, new RoleStrategy()),
 
     /**
-     * 权限点
+     * PermissionsPoints 71
      */
     PERMISSION(StorageEnum.PERMISSION, new PermissionStrategy()),
 
     /**
-     * 角色-权限
+     * Role-Permissions
      */
     ROLE_PERMISSION(StorageEnum.ROLE_PERMISSION, new RolePermissionStrategy()),
 
     /**
-     * 用户-角色
+     * User-Role
      */
     USER_ROLE(StorageEnum.USER_ROLE, new UserRoleStrategy()),
 
     /**
-     * 资源访问控制
+     * ResourceAccess control
      */
     RESOURCE_ACL(StorageEnum.RESOURCE_ACL, new ResourceAclStrategy()),
 
     /**
-     * 告警通知规则
+     * Alert notificationRule
      */
     NOTICE_RULE(StorageEnum.NOTICE_RULE, new NoticeRuleStrategy()),
 
     /**
-     * 告警策略
+     * Police strategy Corrupt
      */
     NOTICE_STRATEGY(StorageEnum.NOTICE_STRATEGY, new NoticeStrategyStorageStrategy()),
 
     /**
-     * 同步任务 Meta 日汇总
+     * Sync task Meta Summary
      */
     META_DAILY(StorageEnum.META_DAILY, new MetaAggStrategy());
 

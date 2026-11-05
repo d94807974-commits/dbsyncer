@@ -47,7 +47,7 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 
 /**
- * 预加载配置模板
+ * PreloadConfigureTemplates
  *
  * @author AE86
  * @version 1.0.0
@@ -105,15 +105,15 @@ public final class PreloadTemplate implements ApplicationListener<ContextRefresh
         // Load Notification Channels
         loadNotificationChannel();
 
-        // 单机/集群共用：半停态 Meta 归 READY，避免一直「停止中」
+        // Single unit/clusterTotalUse: Semi-suspensiveMeta ReturnREADY，Avoid always「Stopping」
         reconcileStoppingMappingMetas();
         clusterService.init();
         if (clusterService.isStandalone()) {
             // Load connectorInstances
             loadConnectorInstance();
-            // 同步任务：按任务级 Meta 恢复 Mapping
+            // Sync task：PressTasksAdministrationMeta RestoreMapping
             launchSyncMappings();
-            //初始化定时检测任务
+            //InitializeScheduledTestTasks
             scheduledScanManager.start();
         }
         // Load notice strategies into decision engine
@@ -130,7 +130,7 @@ public final class PreloadTemplate implements ApplicationListener<ContextRefresh
                 return;
             }
 
-            // 邮件通知
+            // EmailAnnouncements
             if (noticeConfig.getMail().isEnabled()) {
                 MailNoticeService service = new MailNoticeService();
                 service.setUsername(noticeConfig.getMail().getAccount());
@@ -141,7 +141,7 @@ public final class PreloadTemplate implements ApplicationListener<ContextRefresh
                 messageService.removeNotifyService(NoticeChannelEnum.EMAIL);
             }
 
-            // 企业微信通知
+            // Corporate WisdomAnnouncements
             if (noticeConfig.getWechat().isEnabled()) {
                 WeChatNoticeService service = new WeChatNoticeService();
                 messageService.registerNotifyService(NoticeChannelEnum.WE_CHAT, service);
@@ -149,7 +149,7 @@ public final class PreloadTemplate implements ApplicationListener<ContextRefresh
                 messageService.removeNotifyService(NoticeChannelEnum.WE_CHAT);
             }
 
-            // 钉钉通知
+            // Nail.Announcements
             if (noticeConfig.getDingTalk().isEnabled()) {
                 DingTalkNoticeService service = new DingTalkNoticeService();
                 messageService.registerNotifyService(NoticeChannelEnum.DING_TALK, service);
@@ -157,7 +157,7 @@ public final class PreloadTemplate implements ApplicationListener<ContextRefresh
                 messageService.removeNotifyService(NoticeChannelEnum.DING_TALK);
             }
 
-            // HTTP通知
+            // HTTPAnnouncements
             if (noticeConfig.getHttp().isEnabled()) {
                 HttpNoticeService service = new HttpNoticeService();
                 messageService.registerNotifyService(NoticeChannelEnum.HTTP, service);
@@ -170,20 +170,20 @@ public final class PreloadTemplate implements ApplicationListener<ContextRefresh
     }
 
     /**
-     * 从策略表装载告警决策运行态（Registry / 周期 flush）。
+     * From the strategy sheet loads the alarm's decision-making mode.Registry / Cycleflush）。
      */
     private void loadNoticeStrategies() {
         try {
             noticeStrategyRuntimeBridge.reloadFromStore();
         } catch (Exception e) {
-            logger.error("预加载告警策略失败", e);
+            logger.error("Failed to preload alarm strategy", e);
         }
     }
 
     /**
-     * 启动时若无系统配置则写入默认行，避免后续 getSystemConfig() 为空 NPE。
+     * StartTimeNoneSystem settingsWrite default lines to avoid subsequent 40.getSystemConfig() EmptyNPE。
      *
-     * @return 已有或新建的系统配置
+     * @return Existing or NewSystem settings
      */
     private SystemConfig initSystemConfigIfAbsent() {
         SystemConfig systemConfig = systemConfigProfile.getSystemConfig();
@@ -191,7 +191,7 @@ public final class PreloadTemplate implements ApplicationListener<ContextRefresh
             return systemConfig;
         }
         systemConfig = new SystemConfig();
-        systemConfig.setName("系统配置");
+        systemConfig.setName("System settings");
         long now = System.currentTimeMillis();
         systemConfig.setCreateTime(now);
         systemConfig.setUpdateTime(now);
@@ -202,17 +202,17 @@ public final class PreloadTemplate implements ApplicationListener<ContextRefresh
     }
 
     /**
-     * 是否完成预加载配置
+     * YesNoFinishPreloadConfigure
      */
     public boolean isPreloadCompleted() {
         return preloadCompleted;
     }
 
     /**
-     * 配置导入完成后的收尾：重建连接实例，恢复同步驱动；其余运行中任务由续跑。
+     * ConfigureImportFinishEnd of period: reconstructionConnectStressingDriver；OtherRunning TasksBy continuing.
      */
     public void afterConfigImport() {
-        // 集群不预热全部连接器；单机仍全量预热
+        // Clusters don't preheat.AllConnector；Single machine stillFullPreheat
         if (clusterService.isStandalone()) {
             loadConnectorInstance();
         }
@@ -221,8 +221,8 @@ public final class PreloadTemplate implements ApplicationListener<ContextRefresh
     }
 
     /**
-     * 将仍为 STOPPING 的同步任务 Meta 归为 READY（进程重启 / 半停收口兜底）。
-     * <p>单机与集群启动均调用；不启动任务，仅纠正控制面状态。
+     * To remainSTOPPING Yes.Sync task Meta AttributionREADY（Process restarts / Half-stops bottom.
+     * <p>UnitandClusterStartcalling;noStartTasks，Correct control onlyStatus。
      */
     public void reconcileStoppingMappingMetas() {
         mappingProfile.pageScanTasks(ConfigConstant.PAGE_SIZE, mappings -> {
@@ -250,17 +250,17 @@ public final class PreloadTemplate implements ApplicationListener<ContextRefresh
                 try {
                     changeMetaState(meta, CommonTaskStatusEnum.READY);
                 } catch (Exception e) {
-                    logger.error("半停态 Meta 收口失败, taskId={}, name={}, err={}", mapping.getId(), mapping.getName(), e.getMessage(), e);
+                    logger.error("Semi-suspensive Meta shut-down failed,", mapping.getId(), mapping.getName(), e.getMessage(), e);
                 }
             }
         });
     }
 
     /**
-     * 恢复同步驱动(Mapping)：仅续跑 Meta=RUNNING 的任务。
-     * <p>STOPPING 收口见 {@link #reconcileStoppingMappingMetas()}。
-     * <p>先按任务类型 {@code mapping} 分页拉取任务，再批量查任务级 Meta（{@code isTaskDetail=0}），
-     * 避免一次性加载全部 Meta。明细级 Meta 属于校验/迁移结果或表级进度，不参与驱动启停。
+     * Restore SyncDriver(Mapping)：Just keep running.Meta=RUNNING Yes.Tasks。
+     * <p>STOPPING See you later.{@link #reconcileStoppingMappingMetas()}。
+     * <p>Press first.Task Type {@code mapping} minPagePull manipulateTasks，Re-profilingTasksAdministrationMeta（{@code isTaskDetail=0}），
+     * Addressing single loadsAll Meta。DetailsMeta Validation/relocationResultor table progress, not involvedandDriverStop.
      */
     private void launchSyncMappings() {
         mappingProfile.pageScanTasks(ConfigConstant.PAGE_SIZE, mappings -> {
@@ -287,10 +287,10 @@ public final class PreloadTemplate implements ApplicationListener<ContextRefresh
                 }
                 try {
                     reConnect(mapping);
-                    // 自动恢复：CDC 监听启动失败时按配置重试
+                    // Autorecover:CDC ListenStart FailedPressConfigureTry again
                     clusterService.start(mapping, true);
                 } catch (Exception e) {
-                    logger.error("恢复同步驱动失败, taskId={}, taskId={}, err={}", meta.getId(), mapping.getId(), e.getMessage(), e);
+                    logger.error("Restore synchronous drive failed,", meta.getId(), mapping.getId(), e.getMessage(), e);
                 }
             }
         });
@@ -302,7 +302,7 @@ public final class PreloadTemplate implements ApplicationListener<ContextRefresh
     }
 
     public void reConnect(ValidateSyncTask task) {
-        //源作为查询，目标也需要作为查询 生成sql语句
+        //Source as query,Objective CombinedIt also needs to be asked.GeneratesqlStatement
         reConnect(task.getId(), task.getSourceConnectorId(), task.getSourceDatabase(), task.getSourceSchema(),
                 task.getTargetConnectorId(), task.getTargetDatabase(), task.getTargetSchema());
 
@@ -328,7 +328,7 @@ public final class PreloadTemplate implements ApplicationListener<ContextRefresh
                     ConnectorInstance connectorInstance = connectorFactory.connect(connector.getId(), connector.getConfig(), StringUtil.EMPTY, StringUtil.EMPTY);
                     logger.info("Completed connection {} {}", connector.getConfig().getConnectorType(), connectorInstance.getServiceUrl());
                 } catch (Exception e) {
-                    logger.error("连接配置异常", e);
+                    logger.error("Connection configuration anomaly", e);
                     logService.log(LogType.ConnectorLog.FAILED, e.getMessage());
                 }
             }));
@@ -340,7 +340,7 @@ public final class PreloadTemplate implements ApplicationListener<ContextRefresh
             long now = Instant.now().toEpochMilli();
             meta.setState(status.getCode());
             meta.setUpdateTime(now);
-            // 进入运行中时记录本轮启动时间，供耗时（updateTime - startTime）计算
+            // EnterRunningOther OrganiserStartTime，Time-consuming supplyupdateTime - startTime）Most
             if (CommonTaskStatusEnum.RUNNING == status) {
                 meta.setStartTime(now);
             }

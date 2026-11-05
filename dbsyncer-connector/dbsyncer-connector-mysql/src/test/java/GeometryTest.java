@@ -16,7 +16,7 @@ import java.nio.ByteOrder;
 import java.util.Arrays;
 
 /**
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2025-01-04 13:22
  */
@@ -66,13 +66,13 @@ public class GeometryTest {
     }
 
     private void testGeometry(String typeName, byte[] bytes) throws ParseException {
-        // 序列化
+        // Sequenced
         byte[] geometryBytes = ByteBuffer.allocate(bytes.length - 4).order(ByteOrder.LITTLE_ENDIAN).put(bytes, 4, bytes.length - 4).array();
         WKBReader reader = new WKBReader();
         String text = reader.read(geometryBytes).toText();
         logger.info("test {}:{}", typeName, text);
 
-        // 反序列化
+        // Inverse sequence
         Geometry geometry = new WKTReader().read(text);
         byte[] bytesArray = new WKBWriter(2, ByteOrderValues.LITTLE_ENDIAN).write(geometry);
         byte[] array = ByteBuffer.allocate(bytesArray.length + 4).order(ByteOrder.LITTLE_ENDIAN).putInt(geometry.getSRID()).put(bytesArray).array();

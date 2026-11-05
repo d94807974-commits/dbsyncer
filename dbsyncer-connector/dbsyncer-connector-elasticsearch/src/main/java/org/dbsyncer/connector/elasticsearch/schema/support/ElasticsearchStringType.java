@@ -18,10 +18,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * ES 字符串类型
- * 支持: keyword, text, string(deprecated), ip, object, geo_point, geo_shape
+ * ES StringType
+ * Support: keyword, text, string(deprecated), ip, object, geo_point, geo_shape
  *
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2026-01-11 22:21
  */
@@ -31,11 +31,11 @@ public final class ElasticsearchStringType extends StringType {
 
         KEYWORD("keyword"), WILDCARD("wildcard"), TEXT("text"), @Deprecated
         STRING("string"),
-        STRING_UPPERCASE("STRING"), /*大些的string*/
+        STRING_UPPERCASE("STRING"), /*Bigger.string*/
         IP("ip"), IP_RANGE("ip_range"), INTEGER_RANGE("integer_range"), LONG_RANGE("long_range"), DOUBLE_RANGE("double_range"), FLOAT_RANGE("float_range"), DATE_RANGE("date_range"),
-        COMPLETION("completion"), OBJECT("object"), FLATTENED("flattened"), /* 7.3+ 引入的一种特殊数据类型，用于扁平化对象（Flattened Object）存储。它专门用于处理动态的、不可预测结构的对象字段，通过将整个对象扁平化为键值对来避免字段爆炸问题。 */
-        DENSE_VECTOR("dense_vector"), /* 7.0+ 引入的密集向量, 用于存储和搜索高维浮点数向量, 支持现代 AI/ML 应用的向量相似性搜索。 */
-        SHAPE("shape"), RANK_FEATURES("rank_features"), /* 7.8+ 专门用于特征排名 */
+        COMPLETION("completion"), OBJECT("object"), FLATTENED("flattened"), /* 7.3+ Special data introducedType，For flattening GroupsFlattened Object）Storage. It is dedicated to dealing with dynamic, unpredictable structures.Field，By flattening the whole object to a keyValueThat's right.FieldExplosion problem.*/
+        DENSE_VECTOR("dense_vector"), /* 7.0+ Intensive Vector Introduction, For storage andSearchCompetency, Support for modernityAI/ML Application vector similaritySearch。 */
+        SHAPE("shape"), RANK_FEATURES("rank_features"), /* 7.8+ For feature ranking*/
         POINT("point"), GEO_POINT("geo_point"), GEO_SHAPE("geo_shape"), NESTED("nested");
 
         private final String value;
@@ -90,7 +90,7 @@ public final class ElasticsearchStringType extends StringType {
     @Override
     public Object convertValue(Object val, Field field) {
         if (val instanceof String) {
-            // 将类型名转大写并替换空格为下划线，以匹配 TypeEnum
+            // WillTypeCapitaliseReplaceSpace is underlined to matchTypeEnum
             String enumName = field.getTypeName().toUpperCase().replace(" ", "_");
             TypeEnum typeEnum = TypeEnum.valueOf(enumName);
             switch (typeEnum) {

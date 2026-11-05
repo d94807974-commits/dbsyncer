@@ -24,9 +24,9 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * ClickHouse 标准数据类型解析器
+ * ClickHouse Standard ContextTypeParser
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-05-29 23:50
  */

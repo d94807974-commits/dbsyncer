@@ -33,12 +33,12 @@ public abstract class AbstractNoticeService implements NoticeService {
             }
             logger.info("Send message:{}, result:{}", message, result.getBody());
         } catch (HttpHostConnectException e) {
-            throw new IllegalArgumentException("网络连接异常，无法连接");
+            throw new IllegalArgumentException("Network connections are abnormal and unconnected");
         } catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
             if (e.getCause() instanceof HttpHostConnectException) {
-                throw new IllegalArgumentException("网络连接异常，无法连接");
+                throw new IllegalArgumentException("Network connections are abnormal and unconnected");
             }
             throw new RuntimeException(e);
         }

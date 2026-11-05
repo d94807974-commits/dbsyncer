@@ -4,21 +4,21 @@
 package org.dbsyncer.common.model;
 
 /**
- * 密钥版本信息
+ * KeyVersionInfo
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-02-02 00:04
  */
 public class SecretVersion extends ConfigVersion {
 
     /**
-     * 密钥
+     * Key
      */
     private String secret;
 
     /**
-     * 密钥哈希值（SHA-1哈希后的Base64编码）
+     * KeyHash.Value（SHA-1After Hash.Base64Encoding)
      */
     private String hashedSecret;
 

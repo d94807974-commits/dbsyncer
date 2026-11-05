@@ -4,7 +4,7 @@
 package org.dbsyncer.sdk.enums;
 
 /**
- * 告警策略发送频率：0-立即 / 1-周期。
+ * Police strategy CorruptSend frequency:0-Immediately /1-cycle.
  *
  * @author wuji
  * @version 1.0.0
@@ -13,12 +13,12 @@ package org.dbsyncer.sdk.enums;
 public enum NoticeFrequencyEnum {
 
     /**
-     * 立即发送
+     * Send Now
      */
     IMMEDIATE(0),
 
     /**
-     * 周期发送（由 Cron 表达式调度 flush）
+     * Periodically sent (byCron Organisationflush）
      */
     INTERVAL(1);
 
@@ -33,7 +33,7 @@ public enum NoticeFrequencyEnum {
     }
 
     /**
-     * 按编码解析；未知返回 {@code null}。
+     * Parsing by code;UnknownBack {@code null}。
      */
     public static NoticeFrequencyEnum getByCode(int code) {
         for (NoticeFrequencyEnum frequency : values()) {

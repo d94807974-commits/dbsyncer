@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * SQLite连接配置校验器实现
+ * SQLiteConnectConfigureVerifyer Achieved
  *
  * @Author bble
  * @Version 1.0.0
@@ -30,8 +30,8 @@ public final class SQLiteConfigValidator extends AbstractDataBaseConfigValidator
         String driverClassName = params.get("driverClassName");
         int maxActive = NumberUtil.toInt(Objects.toString(params.get("maxActive")), connectorConfig.getMaxActive());
         long keepAlive = NumberUtil.toLong(Objects.toString(params.get("keepAlive")), connectorConfig.getKeepAlive());
-        Assert.isTrue(maxActive >= 1 && maxActive <= 512, "最大连接数只允许输入1-512.");
-        Assert.isTrue(keepAlive >= 10000 && keepAlive <= 120000, "有效期只允许输入10000-120000.");
+        Assert.isTrue(maxActive >= 1 && maxActive <= 512, "Max connections must be between 1 and 512.");
+        Assert.isTrue(keepAlive >= 10000 && keepAlive <= 120000, "TTL must be between 10000 and 120000.");
 
         connectorConfig.setServiceName(serviceName);
         connectorConfig.setProperties(PropertiesUtil.parse(properties));

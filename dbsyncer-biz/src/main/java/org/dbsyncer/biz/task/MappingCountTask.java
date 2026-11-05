@@ -19,9 +19,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 /**
- * 统计同步任务总数任务
+ * Count sync tasksTasks
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2025-06-13 00:00
  */
@@ -57,7 +57,7 @@ public final class MappingCountTask extends AbstractCountTask {
     public void execute() {
         Mapping mapping = mappingProfile.get(mappingId);
         int groupCount = tableGroupProfile.getTableGroupCount(mappingId);
-        logger.info("正在统计:{}, {}张表", mapping.getName(), groupCount);
+        logger.info("Other Organiser", mapping.getName(), groupCount);
         if (groupCount > 0) {
             tableGroupProfile.pageScanTableGroups(mappingId, ConfigConstant.PAGE_SIZE, page -> {
                 if (CollectionUtils.isEmpty(page)) {
@@ -67,7 +67,7 @@ public final class MappingCountTask extends AbstractCountTask {
                     if (tableGroup == null) {
                         continue;
                     }
-                    // 同步任务类型发生切换，提前释放任务
+                    // Sync taskTypeSwitches, early release.Tasks
                     if (shouldStop(mappingId)) {
                         return;
                     }
@@ -75,7 +75,7 @@ public final class MappingCountTask extends AbstractCountTask {
                 }
             });
             Meta meta = tableGroupService.refreshMetaTotal(mapping, metaSnapshot);
-            logger.info("完成统计:{}, {}张表, 总数:{}", mapping.getName(), groupCount, meta.getTotal());
+            logger.info("Completed statistics: }, } sheets, total: {", mapping.getName(), groupCount, meta.getTotal());
         }
     }
 

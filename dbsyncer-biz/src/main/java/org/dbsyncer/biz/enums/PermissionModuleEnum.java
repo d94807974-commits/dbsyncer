@@ -8,7 +8,7 @@ import org.dbsyncer.common.util.StringUtil;
 import java.util.Locale;
 
 /**
- * 功能权限模块（与 {@code dbsyncer_permission.MODULE} 编码一致）。
+ * Functional PermissionsModule（and {@code dbsyncer_permission.MODULE} The code is consistent).
  *
  * @author wuji
  * @version 1.0.0
@@ -17,39 +17,39 @@ import java.util.Locale;
 public enum PermissionModuleEnum {
 
     /**
-     * 用户
+     * User
      */
-    USER("user", "用户"),
+    USER("user", "User"),
 
     /**
-     * 连接器
+     * Connector
      */
-    CONNECTOR("connector", "连接器"),
+    CONNECTOR("connector", "Connector"),
 
     /**
-     * 同步任务
+     * Sync task
      */
-    MAPPING("mapping", "同步任务"),
+    MAPPING("mapping", "Sync task"),
 
     /**
-     * 告警通知
+     * Alert notification
      */
-    NOTICE("notice", "告警通知"),
+    NOTICE("notice", "Alert notification"),
 
     /**
-     * 授权许可
+     * License
      */
-    LICENSE("license", "授权许可"),
+    LICENSE("license", "License"),
 
     /**
-     * 系统配置
+     * System settings
      */
-    SYSTEM("system", "系统配置"),
+    SYSTEM("system", "System settings"),
 
     /**
-     * 资源授权
+     * Resource authorization
      */
-    ACL("acl", "资源");
+    ACL("acl", "Resource");
 
     private final String code;
     private final String name;
@@ -60,7 +60,7 @@ public enum PermissionModuleEnum {
     }
 
     /**
-     * 按编码解析（大小写不敏感）；未知返回 {@code null}。
+     * Coding (case insensitive);UnknownBack {@code null}。
      */
     public static PermissionModuleEnum get(String code) {
         if (StringUtil.isBlank(code)) {
@@ -76,11 +76,11 @@ public enum PermissionModuleEnum {
     }
 
     /**
-     * 解析模块展示名；未知编码原样返回，空则「其他」。
+     * ParsingModule(a) Presentation name;UnknownEncoding OriginalBack，Empty「Other」。
      */
     public static String resolveName(String code) {
         if (StringUtil.isBlank(code)) {
-            return "其他";
+            return "Other";
         }
         PermissionModuleEnum module = get(code);
         return module != null ? module.name : code;

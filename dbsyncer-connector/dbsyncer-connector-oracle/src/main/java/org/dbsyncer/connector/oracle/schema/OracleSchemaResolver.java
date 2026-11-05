@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2024-12-24 23:45
  */
@@ -66,7 +66,7 @@ public class OracleSchemaResolver extends AbstractDatabaseSchemaResolver {
         if (value == null) {
             return null;
         }
-        // MERGE 写入会把 CLOB/TEXT 包成 OracleLobParameter、BLOB 包成 OracleBlobParameter；明细落库只需原文
+        // MERGE Writing will makeCLOB/TEXT Wrap it up.OracleLobParameter、BLOB Wrap it up.OracleBlobParameter；DetailedLibraryOnly original
         if (value instanceof OracleLobParameter) {
             return ByteString.copyFromUtf8(value.toString());
         }

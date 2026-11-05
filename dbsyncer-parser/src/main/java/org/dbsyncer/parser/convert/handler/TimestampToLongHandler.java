@@ -5,7 +5,7 @@ import org.dbsyncer.parser.convert.AbstractHandler;
 import java.sql.Timestamp;
 
 /**
- * Timestamp转Long
+ * Timestamp turns Long
  *
  * @author AE86
  * @version 1.0.0

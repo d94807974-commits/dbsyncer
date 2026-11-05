@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * MySQL连接器实现
+ * MySQLConnectorAchieved
  *
  * @author AE86
  * @version 1.0.0
@@ -170,7 +170,7 @@ public class MySQLConnector extends AbstractDatabaseConnector {
     @Override
     public String getPageSql(PageSql config) {
         StringBuilder sql = new StringBuilder(config.getQuerySql());
-        // 使用基类方法添加ORDER BY（按主键排序，保证分页一致性）
+        // Use of the base category methodAddORDER BY（PressPrimary keySort, promiseminPage)
         appendOrderByPrimaryKeys(sql, config);
         sql.append(DatabaseConstant.MYSQL_PAGE_SQL);
         return sql.toString();
@@ -185,12 +185,12 @@ public class MySQLConnector extends AbstractDatabaseConnector {
 
     @Override
     public String getPageCursorSql(PageSql config) {
-        // 不支持游标查询
+        // Cursor query not supported
         if (!PrimaryKeyUtil.isSupportedCursor(config.getFields())) {
             return StringUtil.EMPTY;
         }
         StringBuilder sql = new StringBuilder(config.getQuerySql());
-        // 使用基类的公共方法构建WHERE条件和ORDER BY
+        // Use of base category publicTotalMethod BuildWHEREConditionandORDER BY
         buildCursorConditionAndOrderBy(sql, config);
         sql.append(DatabaseConstant.MYSQL_PAGE_SQL);
         return sql.toString();
@@ -203,12 +203,12 @@ public class MySQLConnector extends AbstractDatabaseConnector {
         if (null == cursors || cursors.length == 0) {
             return new Object[]{0, pageSize};
         }
-        // 使用基类的公共方法构建游标条件参数
+        // Use of base category publicTotalMethod to Build CursorConditionParameter
         Object[] cursorArgs = buildCursorArgs(cursors);
         if (cursorArgs == null) {
             return new Object[]{0, pageSize};
         }
-        // MySQL需要OFFSET=0和LIMIT=pageSize参数
+        // MySQLYes.OFFSET=0andLIMIT=pageSizeParameter
         Object[] newCursors = new Object[cursorArgs.length + 2];
         System.arraycopy(cursorArgs, 0, newCursors, 0, cursorArgs.length);
         newCursors[cursorArgs.length] = 0; // OFFSET
@@ -224,13 +224,13 @@ public class MySQLConnector extends AbstractDatabaseConnector {
             return StringUtil.EMPTY;
         }
         int loopSize = Math.min(sourceDefinitions.size(), targetColumnNames.size());
-        //拼接数据库和表名 db.table
+        //Collapse DataLibraryandTable name db.table
         String qualifiedTable = qualifyTable(targetInstance, task, targetTableName);
         List<String> clauses = new ArrayList<>(loopSize);
         for (int i = 0; i < loopSize; i++) {
             Field sourceField = sourceDefinitions.get(i);
             String targetColumn = targetColumnNames.get(i);
-            // 非法数据直接跳过
+            // Illegal data skips directly
             if (sourceField == null || StringUtil.isBlank(targetColumn)) {
                 continue;
             }
@@ -276,7 +276,7 @@ public class MySQLConnector extends AbstractDatabaseConnector {
         String fieldNames = StringUtil.join(fs, StringUtil.COMMA);
         String values = StringUtil.join(vs, StringUtil.COMMA);
         String dupNames = StringUtil.join(dfs, StringUtil.COMMA);
-        // 基于主键或唯一索引冲突时更新
+        // Based onPrimary keyOr the only.IndexUpdate on Conflict
         return String.format("%sINSERT INTO %s (%s) VALUES (%s) ON DUPLICATE KEY UPDATE %s;", uniqueCode, table, fieldNames, values, dupNames);
     }
 
@@ -297,7 +297,7 @@ public class MySQLConnector extends AbstractDatabaseConnector {
         String fieldNames = StringUtil.join(fs, StringUtil.COMMA);
         String values = StringUtil.join(vs, StringUtil.COMMA);
 
-        // 冲突时忽略插入，不进行任何操作
+        // Rule number of conflictsActions
         return String.format("%sINSERT IGNORE INTO %s (%s) VALUES (%s)", uniqueCode, table, fieldNames, values);
     }
 
@@ -332,26 +332,26 @@ public class MySQLConnector extends AbstractDatabaseConnector {
 
     @Override
     public String buildAlterCatalog(DatabaseConnectorInstance connectorInstance, Alter alter) {
-        // 目标数据库名
+        // Target databaseFirst Name
         String catalog = connectorInstance.getCatalog();
         catalog = buildWithQuotation(catalog);
-        // 1. 生成基础 SQL
+        // 1. GenerateBasisSQL
         String sql = alter.toString();
 
-        // 如果目标库名不为空且当前 SQL 未包含该库名
+        // IfTarget database nameNot empty and currentSQL Not includedLibraryFirst Name
         if (catalog != null && !sql.contains(catalog + ".")) {
             String tableName = alter.getTable().getName();
 
-            // 正则解释：
-            // (?i) : 忽略大小写
-            // (ALTER\s+TABLE\s+) : 捕获组1，匹配 "ALTER TABLE " 及其后的空格
-            // (?:`[^`]+`\.)? : 非捕获组，匹配可选的 "旧库名." (例如 `test`.)
-            // (?:`)? : 匹配可选的起始反引号
-            // \\Q...\\E : 匹配纯表名
-            // (?:`)? : 匹配可选的结束反引号
+            // It explains:
+            // (?i) : Ignore case
+            // (ALTER\s+TABLE\s+) : accepts group1，Match"ALTER TABLE " Space Projects
+            // (?:`[^`]+`\.)? : Non-capture group, match optional"Old library name." (For example:`test`.)
+            // (?:`)? : Match optional initial inverted signs
+            // \\Q...\\E : Match PureTable name
+            // (?:`)? : Match optional end invertes
             String regex = "(?i)(ALTER\\s+TABLE\\s+)(?:`[^`]+`\\.)?(?:`)?" + java.util.regex.Pattern.quote(tableName) + "(?:`)?";
 
-            // 替换为：捕获组1 + 新库名 + . + 表名
+            // Replaceis: catch group1 + NewLibraryFirst Name+ . + Table name
             String replacement = "$1" + catalog + "." + tableName;
             return sql.replaceFirst(regex, replacement);
         }
@@ -364,7 +364,7 @@ public class MySQLConnector extends AbstractDatabaseConnector {
             return super.formatPhysicalType(sourceDefinition);
         }
         String t = sourceDefinition.getTypeName().trim().toUpperCase(Locale.ROOT);
-        // MODIFY COLUMN 下 ENUM/SET 若无枚举字面量列表则非法，改为 VARCHAR
+        // MODIFY COLUMN DownENUM/SET If adoptNoneNumber of wordsListis illegal.VARCHAR
         if ("ENUM".equals(t) || "SET".equals(t)) {
             int len = sourceDefinition.getColumnSize() > 0 ? sourceDefinition.getColumnSize() : 255;
             return String.format(Locale.ROOT, "VARCHAR(%d)", len);

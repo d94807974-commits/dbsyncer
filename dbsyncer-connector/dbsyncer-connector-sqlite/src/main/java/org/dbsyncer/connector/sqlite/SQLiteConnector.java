@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * SQLite连接器实现
+ * SQLiteConnectorAchieved
  *
  * @Author bble
  * @Version 1.0.0
@@ -98,33 +98,33 @@ public final class SQLiteConnector extends AbstractDatabaseConnector {
 
     @Override
     public String buildCreateDatabaseSql(String databaseName, String schemaName) {
-        throw new SQLiteException("SQLite 暂不支持该功能!");
+        throw new SQLiteException("SQLite does not support this feature yet!");
     }
 
     @Override
     public boolean databaseExists(DatabaseConnectorInstance connectorInstance, String databaseName, String schemaName) {
-        throw new SQLiteException("SQLite 暂不支持该功能!");
+        throw new SQLiteException("SQLite does not support this feature yet!");
     }
 
     @Override
     public String getTargetTableDDL(DatabaseConnectorInstance targetInstance, String tableName, String sourceDDL) {
-        throw new SQLiteException("SQLite 暂不支持该功能!");
+        throw new SQLiteException("SQLite does not support this feature yet!");
     }
 
     @Override
     public String getSourceTableDDL(DatabaseConnectorInstance sourceInstance, String sourceTableName) {
-        throw new SQLiteException("SQLite 暂不支持该功能!");
+        throw new SQLiteException("SQLite does not support this feature yet!");
     }
 
     @Override
     public String buildDropTableSql(DatabaseConnectorInstance targetInstance, String tableName) {
-        throw new SQLiteException("SQLite 暂不支持该功能!");
+        throw new SQLiteException("SQLite does not support this feature yet!");
     }
 
     @Override
     public String getPageSql(PageSql config) {
         StringBuilder sql = new StringBuilder(config.getQuerySql());
-        // 使用基类方法添加ORDER BY（按主键排序，保证分页一致性）
+        // Use of the base category methodAddORDER BY（PressPrimary keySort, promiseminPage)
         appendOrderByPrimaryKeys(sql, config);
         sql.append(DatabaseConstant.SQLITE_PAGE_SQL);
         return sql.toString();
@@ -139,13 +139,13 @@ public final class SQLiteConnector extends AbstractDatabaseConnector {
 
     @Override
     public String getPageCursorSql(PageSql config) {
-        // 不支持游标查询
+        // Cursor query not supported
         if (!PrimaryKeyUtil.isSupportedCursor(config.getFields())) {
             return StringUtil.EMPTY;
         }
 
         StringBuilder sql = new StringBuilder(config.getQuerySql());
-        // 使用基类的公共方法构建WHERE条件和ORDER BY
+        // Use of base category publicTotalMethod BuildWHEREConditionandORDER BY
         buildCursorConditionAndOrderBy(sql, config);
         sql.append(DatabaseConstant.SQLITE_PAGE_SQL);
         return sql.toString();
@@ -158,13 +158,13 @@ public final class SQLiteConnector extends AbstractDatabaseConnector {
         if (null == cursors || cursors.length == 0) {
             return new Object[]{pageSize, 0};
         }
-        // 使用基类的公共方法构建游标条件参数
+        // Use of base category publicTotalMethod to Build CursorConditionParameter
         Object[] cursorArgs = buildCursorArgs(cursors);
         if (cursorArgs == null) {
             return new Object[]{pageSize, 0};
         }
 
-        // SQLite使用 LIMIT ? OFFSET ?，参数顺序为 [游标参数..., pageSize, 0]
+        // SQLiteUseLIMIT ? OFFSET ?，ParameterOrder is[CursorParameter..., pageSize, 0]
         Object[] newCursors = new Object[cursorArgs.length + 2];
         System.arraycopy(cursorArgs, 0, newCursors, 0, cursorArgs.length);
         newCursors[cursorArgs.length] = pageSize; // LIMIT
@@ -174,7 +174,7 @@ public final class SQLiteConnector extends AbstractDatabaseConnector {
 
     @Override
     public String buildModifyColumnsSql(DatabaseConnectorInstance targetInstance, ValidateSyncTask task, String targetTableName, List<Field> sourceDefinitions, List<String> targetColumnNames) {
-        throw new SQLiteException("sqlLite暂时不支持该功能");
+        throw new SQLiteException("SqlLite does not Countries support this function for the time being");
     }
 
     @Override
@@ -184,24 +184,24 @@ public final class SQLiteConnector extends AbstractDatabaseConnector {
 
     @Override
     public String buildInsertSql(SqlBuilderConfig config) {
-        // SQLite 使用 INSERT OR IGNORE 实现 INSERT IGNORE 效果
+        // SQLite UseINSERT OR IGNORE AchievedINSERT IGNORE Effects
         UpsertContext context = buildUpsertContext(config);
 
-        // 构建 INSERT OR IGNORE INTO ... VALUES (...)
+        // BuildINSERT OR IGNORE INTO ... VALUES (...)
         return config.getDatabase().generateUniqueCode() + "INSERT OR IGNORE INTO " + config.getSchema() + config.getDatabase().buildWithQuotation(config.getTableName()) + "("
                 + StringUtil.join(context.fieldNames, StringUtil.COMMA) + ") " + "VALUES (" + StringUtil.join(context.valuePlaceholders, StringUtil.COMMA) + ")";
     }
 
     @Override
     public String buildUpsertSql(DatabaseConnectorInstance connectorInstance, SqlBuilderConfig config) {
-        // SQLite 3.24.0+ 支持 ON CONFLICT DO UPDATE 语法
+        // SQLite 3.24.0+ SupportON CONFLICT DO UPDATE Syntax:
         UpsertContext context = buildUpsertContext(config);
         StringBuilder sql = new StringBuilder(config.getDatabase().generateUniqueCode());
 
-        // 构建 INSERT INTO ... VALUES (...)
+        // BuildINSERT INTO ... VALUES (...)
         buildInsertIntoClause(sql, config, context);
 
-        // 构建 ON CONFLICT (...) DO UPDATE SET
+        // BuildON CONFLICT (...) DO UPDATE SET
         buildOnConflictClause(sql, context);
         sql.append(" DO UPDATE SET ");
         sql.append(StringUtil.join(context.updateSets, StringUtil.COMMA));
@@ -210,7 +210,7 @@ public final class SQLiteConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * 构建 INSERT INTO ... VALUES (...) 子句
+     * BuildINSERT INTO ... VALUES (...) Sub sentences
      */
     private void buildInsertIntoClause(StringBuilder sql, SqlBuilderConfig config, UpsertContext context) {
         sql.append("INSERT INTO ").append(config.getSchema());
@@ -220,7 +220,7 @@ public final class SQLiteConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * 构建 ON CONFLICT (...) 子句
+     * BuildON CONFLICT (...) Sub sentences
      */
     private void buildOnConflictClause(StringBuilder sql, UpsertContext context) {
         sql.append(" ON CONFLICT (");
@@ -229,7 +229,7 @@ public final class SQLiteConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * 构建 UPSERT 上下文（字段、主键等信息）
+     * BuildUPSERT ContextField、Primary keyWait.Info）
      */
     private UpsertContext buildUpsertContext(SqlBuilderConfig config) {
         Database database = config.getDatabase();
@@ -239,10 +239,10 @@ public final class SQLiteConnector extends AbstractDatabaseConnector {
             String fieldName = database.buildWithQuotation(f.getName());
             context.fieldNames.add(fieldName);
 
-            // 构建 VALUES 占位符
+            // BuildVALUES Placeholder
             List<String> fieldVs = new ArrayList<>();
             if (database.buildCustomValue(fieldVs, f)) {
-                // 自定义值表达式（如特殊类型）
+                // CustomValueOrganisationType）
                 context.valuePlaceholders.add(fieldVs.get(0));
             } else {
                 context.valuePlaceholders.add("?");
@@ -260,7 +260,7 @@ public final class SQLiteConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * UPSERT 语句构建上下文
+     * UPSERT ContextWow.
      */
     private static class UpsertContext {
 

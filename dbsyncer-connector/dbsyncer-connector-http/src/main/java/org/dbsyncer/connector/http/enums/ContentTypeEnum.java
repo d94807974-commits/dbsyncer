@@ -4,9 +4,9 @@
 package org.dbsyncer.connector.http.enums;
 
 /**
- * Content-Type类型
+ * Content-TypeType
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  */
 public enum ContentTypeEnum {
@@ -14,12 +14,12 @@ public enum ContentTypeEnum {
     /**
      * JSON
      */
-    JSON("1", "application/json", "JSON格式"),
+    JSON("1", "application/json", "JSON format"),
 
     /**
-     * 表单
+     * Form
      */
-    FORM_URLENCODED("2", "application/x-www-form-urlencoded", "表单格式");
+    FORM_URLENCODED("2", "application/x-www-form-urlencoded", "Form format");
 
     private final String type;
     private final String code;
@@ -32,10 +32,10 @@ public enum ContentTypeEnum {
     }
 
     /**
-     * 根据 value 获取枚举
+     * Based onvalue Get Enumeration
      *
-     * @param type Content-Type 值
-     * @return 枚举对象
+     * @param type Content-Type Value
+     * @return Element Object
      */
     public static ContentTypeEnum fromValue(String type) {
         if (type == null) {

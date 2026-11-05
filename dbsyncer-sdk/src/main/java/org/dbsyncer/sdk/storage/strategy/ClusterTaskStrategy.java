@@ -7,7 +7,7 @@ import org.dbsyncer.sdk.enums.StorageEnum;
 import org.dbsyncer.sdk.storage.Strategy;
 
 /**
- * 集群任务调度：单表存储 {@code dbsyncer_cluster_task}。
+ * ClusterTasksSystems{@code dbsyncer_cluster_task}。
  *
  * @author wuji
  * @version 1.0.0

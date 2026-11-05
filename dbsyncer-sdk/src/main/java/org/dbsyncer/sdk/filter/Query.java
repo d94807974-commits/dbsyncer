@@ -30,14 +30,14 @@ public class Query {
     private StorageEnum type;
 
     /**
-     * 存储分片键。对 {@link StorageEnum#TASK_DETAIL} 为任务 ID（{@code dbsyncer_task_detail_{taskId}}）；
+     * StorageminSnips. Yeah.{@link StorageEnum#TASK_DETAIL} YesTasks ID（{@code dbsyncer_task_detail_{taskId}}）；
      */
     private String taskId;
 
     private BooleanFilter booleanFilter = new BooleanFilter();
 
     /**
-     * 查询应用性能，不用排序查询，只用查询总量即可
+     * Query applications, no sorting, only totals
      */
     private boolean queryTotal;
 
@@ -46,22 +46,22 @@ public class Query {
     private int pageSize = 20;
 
     /**
-     * 修改时间和创建默认降序返回
+     * Updated atand create default drop orderBack
      */
     private SortEnum sort = SortEnum.DESC;
 
     /**
-     * 自定义排序字段列表，非空时优先使用，为空时走默认排序逻辑
+     * CustomSortFieldList，Prefer non-empt Key Sorting Logic
      */
     private final List<OrderBy> orderByList = new ArrayList<>();
 
     /**
-     * SELECT 白名单 查询包含白名单的字段
+     * SELECT The white list.Field
      */
     private Set<String> selectFlied;
 
     /**
-     * 返回值转换器，限Disk使用
+     * BackValueConvertDevice, limitDiskUse
      */
     private Map<String, FieldResolver> fieldResolverMap = new ConcurrentHashMap<>();
 
@@ -82,11 +82,11 @@ public class Query {
     }
 
     /**
-     * 字符串条件过滤(支持 EQUAL/IN/LIKE 等)。
+     * StringConditionFilter(SupportEQUAL/IN/LIKE Wait.)。
      *
-     * @param name       字段名
-     * @param filterEnum 运算符
-     * @param value      过滤值(IN 时为逗号拼接)
+     * @param name       Field name
+     * @param filterEnum Operators
+     * @param value      FilterValue(IN Comma Spelling)
      */
     public void addFilter(String name, FilterEnum filterEnum, String value) {
         booleanFilter.add(new StringFilter(name, filterEnum, value, false));
@@ -161,19 +161,19 @@ public class Query {
     }
 
     /**
-     * 添加自定义排序字段（使用指定排序方向）
+     * AddCustomSortField（Use specified sorting direction)
      *
-     * @param fieldName 字段名（驼峰格式，如 createTime）
-     * @param sort      排序方向
+     * @param fieldName Field name（Camel peak format, likecreateTime）
+     * @param sort      Sort Direction
      */
     public void addOrderBy(String fieldName, SortEnum sort) {
         orderByList.add(new OrderBy(fieldName, sort));
     }
 
     /**
-     * 添加自定义排序字段（使用 Query 全局排序方向）
+     * AddCustomSortField（UseQuery Global sorting direction)
      *
-     * @param fieldName 字段名（驼峰格式，如 createTime）
+     * @param fieldName Field name（Camel peak format, likecreateTime）
      */
     public void addOrderBy(String fieldName) {
         orderByList.add(new OrderBy(fieldName, null));
@@ -184,7 +184,7 @@ public class Query {
     }
 
     /**
-     * 是否对当前查询使用自定义 SELECT 列（白名单或黑名单）。
+     * YesNoUse for the current queryCustom SELECT Listed (white or black).
      */
     public boolean hasSelectField() {
         return !CollectionUtils.isEmpty(selectFlied);
@@ -207,14 +207,14 @@ public class Query {
     }
 
     /**
-     * 排序字段描述，支持每个字段独立指定排序方向
+     * SortFieldDescription, support eachFieldSeparately assign sorting direction
      */
     public static class OrderBy {
 
         private final String fieldName;
 
         /**
-         * 为 null 时跟随 Query 全局排序方向
+         * Yesnull OrganisationQuery Sort Global Directions
          */
         private final SortEnum sort;
 

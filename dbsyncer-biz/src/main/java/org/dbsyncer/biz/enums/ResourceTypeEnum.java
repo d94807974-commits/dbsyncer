@@ -7,7 +7,7 @@ import org.dbsyncer.common.util.StringUtil;
 import org.dbsyncer.sdk.constant.ConfigConstant;
 
 /**
- * ACL / 业务分组可用的资源类型（编码与 {@link ConfigConstant} 一致）。
+ * ACL / Business groupAvailableResource type（Encodedand {@link ConfigConstant} (d) Unanimously.
  *
  * @author wuji
  * @version 1.0.0
@@ -15,34 +15,34 @@ import org.dbsyncer.sdk.constant.ConfigConstant;
 public enum ResourceTypeEnum {
 
     /**
-     * 业务分组（组内叶子继承；不可作为 grantOwner 目标）
+     * Business group（Inheritance of leaves in group; inactiongrantOwner Objective Combined）
      */
-    GROUP(ConfigConstant.GROUP, "业务分组", false),
+    GROUP(ConfigConstant.GROUP, "Business group", false),
 
     /**
-     * 连接器
+     * Connector
      */
-    CONNECTOR(ConfigConstant.CONNECTOR, "连接器", true),
+    CONNECTOR(ConfigConstant.CONNECTOR, "Connector", true),
 
     /**
-     * 同步任务
+     * Sync task
      */
-    MAPPING(ConfigConstant.MAPPING, "同步任务", true),
+    MAPPING(ConfigConstant.MAPPING, "Sync task", true),
 
     /**
-     * 订正校验任务
+     * Revised verification tasks
      */
-    VALIDATE_SYNC(ConfigConstant.VALIDATE_SYNC, "订正校验", true),
+    VALIDATE_SYNC(ConfigConstant.VALIDATE_SYNC, "Data validation", true),
 
     /**
-     * 整库迁移任务
+     * Library Migration Task
      */
-    DATABASE_SYNC(ConfigConstant.DATABASE_SYNC, "整库迁移", true);
+    DATABASE_SYNC(ConfigConstant.DATABASE_SYNC, "Database migration", true);
 
     private final String code;
     private final String name;
     /**
-     * 是否叶子资源（可直授；可作为创建者自动授权目标）
+     * YesNoLeaf.Resource（direct instruction; automatic as creatorAuthorizationObjective Combined）
      */
     private final boolean leaf;
 
@@ -53,7 +53,7 @@ public enum ResourceTypeEnum {
     }
 
     /**
-     * 按编码解析；未知返回 {@code null}。
+     * Parsing by code;UnknownBack {@code null}。
      */
     public static ResourceTypeEnum get(String code) {
         if (StringUtil.isBlank(code)) {
@@ -68,14 +68,14 @@ public enum ResourceTypeEnum {
     }
 
     /**
-     * 是否支持的资源类型编码。
+     * YesNoSupportedResource typecode.
      */
     public static boolean isSupported(String code) {
         return get(code) != null;
     }
 
     /**
-     * 是否叶子资源编码（不含分组）。
+     * YesNoLeaf.ResourceEncoding (excludingGroup）。
      */
     public static boolean isLeaf(String code) {
         ResourceTypeEnum type = get(code);

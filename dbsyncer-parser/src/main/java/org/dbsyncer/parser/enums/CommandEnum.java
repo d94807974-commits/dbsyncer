@@ -4,7 +4,7 @@
 package org.dbsyncer.parser.enums;
 
 /**
- * 枚举命令模式
+ * Element command mode
  *
  * @author AE86
  * @version 1.0.0
@@ -13,17 +13,17 @@ package org.dbsyncer.parser.enums;
 public enum CommandEnum {
 
     /**
-     * 添加
+     * Add
      */
     OPR_ADD,
 
     /**
-     * 修改
+     * Update
      */
     OPR_EDIT;
 
     /**
-     * 判断是否是编辑操作
+     * Judgement ConfirmationYesNoYesEditActions
      */
     public boolean isEdit() {
         return this == OPR_EDIT;

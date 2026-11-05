@@ -61,7 +61,7 @@ public class ConnectionTest {
     public void testBatchUpdateWithTransaction() throws InterruptedException {
         final DatabaseConnectorInstance connectorInstance = new DatabaseConnectorInstance(createMysqlConfig());
 
-        // 模拟并发
+        // Simulate side-off
         final int threadSize = 10;
         final ExecutorService pool = Executors.newFixedThreadPool(threadSize);
         final CyclicBarrier barrier = new CyclicBarrier(threadSize);
@@ -73,7 +73,7 @@ public class ConnectionTest {
             pool.submit(()-> {
                 try {
                     barrier.await();
-                    // 模拟操作
+                    // whichever which is theActions
                     System.out.println(String.format("%s %s:%s", LocalDateTime.now(), Thread.currentThread().getName(), k));
                     Connection connection = null;
                     try {
@@ -88,7 +88,7 @@ public class ConnectionTest {
                         int[] ints = template.batchUpdate(sql, list);
                         int[] ints2 = template.batchUpdate(sql2, list);
                         connection.commit();
-                        System.out.println(String.format("%s %s:执行结果:%s,%s", LocalDateTime.now(), Thread.currentThread().getName(), Arrays.toString(ints), Arrays.toString(ints2)));
+                        System.out.println(String.format("Possibly % Redeployment", LocalDateTime.now(), Thread.currentThread().getName(), Arrays.toString(ints), Arrays.toString(ints2)));
                     } catch (Exception e) {
                         logger.error(e.getMessage());
                         throw new SdkException(e.getMessage(), e.getCause());
@@ -128,7 +128,7 @@ public class ConnectionTest {
                     SimpleConnection connection = databaseTemplate.getSimpleConnection();
                     OracleConnection conn = (OracleConnection) connection.getConnection();
                     Clob clob = conn.createClob();
-                    clob.setString(1, new String("中文888".getBytes(Charset.defaultCharset())));
+                    clob.setString(1, new String("Chinese 888".getBytes(Charset.defaultCharset())));
 
                     ps.setString(1, "hello888");
                     ps.setClob(2, clob);
@@ -150,7 +150,7 @@ public class ConnectionTest {
     public void testConnection() throws InterruptedException {
         final DatabaseConnectorInstance connectorInstance = new DatabaseConnectorInstance(createSqlServerConfig());
 
-        // 模拟并发
+        // Simulate side-off
         final int threadSize = 100;
         final ExecutorService pool = Executors.newFixedThreadPool(threadSize);
         final CyclicBarrier barrier = new CyclicBarrier(threadSize);
@@ -161,7 +161,7 @@ public class ConnectionTest {
                 try {
                     barrier.await();
 
-                    // 模拟操作
+                    // whichever which is theActions
                     System.out.println(String.format("%s %s:%s", LocalDateTime.now(), Thread.currentThread().getName(), k));
 
                     Object execute = connectorInstance.execute(tem->tem.queryForObject("select 1", Integer.class));
@@ -194,7 +194,7 @@ public class ConnectionTest {
     @Test
     public void testQuery() {
         final DatabaseConnectorInstance connectorInstance = new DatabaseConnectorInstance(createMysqlConfig());
-        // 3、执行SQL
+        // 3、ImplementationSQL
         String querySql = "SELECT * from test_schema where id = ?";
         Object[] args = new Object[1];
         args[0] = 9999999;
@@ -211,7 +211,7 @@ public class ConnectionTest {
         final ExecutorService pool = Executors.newFixedThreadPool(threadSize);
         final String sql = "INSERT INTO `vote_records` (`id`, `user_id`, `vote_num`, `group_id`, `status`, `create_time`) VALUES (?, ?, ?, ?, ?, ?)";
 
-        // 模拟1000w条数据
+        // whichever which is the1000wBar Data
         List<Object[]> dataList = new ArrayList<>();
         for (int i = 1; i <= 200001; i++) {
             // 442001, 'dA8LeJLtX9MgQgDe7H1O', 9620, 1, 2, '2022-11-17 16:35:21'
@@ -225,19 +225,19 @@ public class ConnectionTest {
             dataList.add(args);
 
             if (i % 10000 == 0) {
-                System.out.println(i + "-----------------正在处理");
+                System.out.println(i + "-----------------Processing");
                 batchUpdate(connectorInstance, pool, sql, dataList, 1000);
                 dataList.clear();
             }
         }
 
         if (!CollectionUtils.isEmpty(dataList)) {
-            System.out.println("-----------------正在处理剩余数据");
+            System.out.println("-----------------Processing remaining data");
             batchUpdate(connectorInstance, pool, sql, dataList, 1000);
         }
 
         pool.shutdown();
-        logger.info("总共耗时：{}秒", (Instant.now().toEpochMilli() - begin) / 1000);
+        logger.info("Total time: {} seconds", (Instant.now().toEpochMilli() - begin) / 1000);
     }
 
     @Test
@@ -249,7 +249,7 @@ public class ConnectionTest {
         final ExecutorService pool = Executors.newFixedThreadPool(threadSize);
         final String sql = "UPDATE `test`.`vote_records` SET `user_id` = ?, `create_time` = now() WHERE `id` = ?";
 
-        // 模拟100w条数据
+        // whichever which is the100wBar Data
         int k = 10;
         while (k > 0) {
             List<Object[]> dataList = new ArrayList<>();
@@ -261,21 +261,21 @@ public class ConnectionTest {
                 dataList.add(args);
 
                 if (i % 10000 == 0) {
-                    System.out.println(i + "-----------------正在处理");
+                    System.out.println(i + "-----------------Processing");
                     batchUpdate(connectorInstance, pool, sql, dataList, 1000);
                     dataList.clear();
                 }
             }
 
             if (!CollectionUtils.isEmpty(dataList)) {
-                System.out.println("-----------------正在处理剩余数据");
+                System.out.println("-----------------Processing remaining data");
                 batchUpdate(connectorInstance, pool, sql, dataList, 1000);
             }
             k--;
         }
 
         pool.shutdown();
-        logger.info("总共耗时：{}秒", (Instant.now().toEpochMilli() - begin) / 1000);
+        logger.info("Total time: {} seconds", (Instant.now().toEpochMilli() - begin) / 1000);
     }
 
     @Test
@@ -295,19 +295,19 @@ public class ConnectionTest {
             dataList.add(args);
 
             if (i % 10000 == 0) {
-                System.out.println(i + "-----------------正在处理");
+                System.out.println(i + "-----------------Processing");
                 batchUpdate(connectorInstance, pool, sql, dataList, 1000);
                 dataList.clear();
             }
         }
 
         if (!CollectionUtils.isEmpty(dataList)) {
-            System.out.println("-----------------正在处理剩余数据");
+            System.out.println("-----------------Processing remaining data");
             batchUpdate(connectorInstance, pool, sql, dataList, 1000);
         }
 
         pool.shutdown();
-        logger.info("总共耗时：{}秒", (Instant.now().toEpochMilli() - begin) / 1000);
+        logger.info("Total time: {} seconds", (Instant.now().toEpochMilli() - begin) / 1000);
     }
 
     @Test
@@ -323,15 +323,15 @@ public class ConnectionTest {
         final String update = "UPDATE `test`.`vote_records_test` SET `user_id` = ?, `create_time` = now() WHERE `id` = ?";
         final String delete = "DELETE from `test`.`vote_records_test` WHERE `id` = ?";
 
-        // 模拟单表增删改事件
+        // Adds & DeletesEvent
         for (int i = 0; i < threadSize; i++) {
             final int offset = i;
             pool.submit(()-> {
                 try {
-                    logger.info("{}-开始任务", Thread.currentThread().getName());
-                    // 增删改事件密集型
+                    logger.info("Other Organiser", Thread.currentThread().getName());
+                    // Add & DeleteEventIntensive
                     mockData(connectorInstance, num, offset, insert, update, delete);
-                    logger.info("{}-结束任务", Thread.currentThread().getName());
+                    logger.info("Other Organiser", Thread.currentThread().getName());
                 } catch (Exception e) {
                     logger.error(e.getMessage());
                 } finally {
@@ -346,7 +346,7 @@ public class ConnectionTest {
             logger.error(e.getMessage());
         }
         pool.shutdown();
-        logger.info("总数：{}, 耗时：{}秒", (threadSize * num), (Instant.now().toEpochMilli() - begin) / 1000);
+        logger.info("Total: {, time-consuming: { seconds", (threadSize * num), (Instant.now().toEpochMilli() - begin) / 1000);
     }
 
     private void mockData(DatabaseConnectorInstance connectorInstance, int num, int offset, String insert, String update, String delete) {
@@ -383,7 +383,7 @@ public class ConnectionTest {
             insertData.clear();
             updateData.clear();
             deleteData.clear();
-            logger.info("{}, 数据行[{}, {}], 已处理:{}", Thread.currentThread().getName(), start, start + num, i + start);
+            logger.info("{, data line[,}], processed: }", Thread.currentThread().getName(), start, start + num, i + start);
         }
     }
 
@@ -484,7 +484,7 @@ public class ConnectionTest {
             return tables;
         });
 
-        logger.info("\r 表总数{}", tables.size());
+        logger.info("\r Total Table {}", tables.size());
         tables.forEach(t->logger.info("{} {}", t.getName(), t.getType()));
 
         return tables;

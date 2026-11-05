@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * OceanBase Oracle 模式 DATE 类型
+ * OceanBase Oracle ModeDATE Type
  *
  * @author wuji
  * @version 1.0.0

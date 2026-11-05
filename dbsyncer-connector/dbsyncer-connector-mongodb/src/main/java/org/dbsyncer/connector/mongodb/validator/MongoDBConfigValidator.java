@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-06 20:00
  */
@@ -40,7 +40,7 @@ public final class MongoDBConfigValidator implements ConfigValidator<MongoDBConn
         Assert.hasText(host, "Host is empty.");
         Assert.isTrue(port > 0, "Port is invalid.");
         Assert.hasText(database, "Database is empty.");
-        Assert.isTrue(maxPoolSize >= 1 && maxPoolSize <= 512, "最大连接数只允许输入1-512.");
+        Assert.isTrue(maxPoolSize >= 1 && maxPoolSize <= 512, "Max connections must be between 1 and 512.");
 
         connectorConfig.setHost(host);
         connectorConfig.setPort(port);
@@ -61,7 +61,7 @@ public final class MongoDBConfigValidator implements ConfigValidator<MongoDBConn
         Assert.hasText(tableName, "TableName is empty");
         Assert.hasText(columnList, "ColumnList is empty");
         List<Field> fields = JsonUtil.jsonToArray(columnList, Field.class);
-        Assert.notEmpty(fields, "字段不能为空.");
+        Assert.notEmpty(fields, "Field cannot be empty.");
         table.setName(tableName);
         table.setColumn(fields);
         table.setType(connectorService.getExtendedTableType().getCode());

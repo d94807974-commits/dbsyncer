@@ -4,7 +4,7 @@
 package org.dbsyncer.common.model;
 
 /**
- * 机器人告警渠道（企业微信 / 钉钉等）：webhook；发送时的 @ 由通知规则覆盖写入。
+ * The robot alert channel.Corporate Wisdom / Nail.Wait:webhook；From Sending@ ByRule on notificationOverwriteWrite.
  *
  * @author wuji
  * @version 1.0.0
@@ -13,17 +13,17 @@ package org.dbsyncer.common.model;
 public abstract class RobotNoticeChannel extends NoticeChannel {
 
     /**
-     * 机器人 webhook 地址
+     * Robot.webhook Address
      */
     private String webhookUrl;
 
     /**
-     * 是否 @所有人
+     * YesNo @everyone
      */
     private boolean atAll;
 
     /**
-     * @用户手机号，多个用逗号分隔
+     * @UserCell phone number，Multiple commasminBreak
      */
     private String atMobiles;
 

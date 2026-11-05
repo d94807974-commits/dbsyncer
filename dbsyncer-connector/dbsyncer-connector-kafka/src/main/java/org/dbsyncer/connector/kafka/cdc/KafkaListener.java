@@ -33,9 +33,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * Kafka监听器，支持批量拉取多个topic数据
+ * KafkaListener, support lot pull multipletopicData Fact
  *
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2026-01-10 14:58
  */
@@ -65,7 +65,7 @@ public class KafkaListener extends AbstractListener<KafkaConnectorInstance> {
                 String groupId = table.getExtInfo().getProperty("groupId");
                 KafkaConsumer<String, Object> consumer = instance.getConsumer(topic, groupId);
                 consumers.add(new ConsumerInfo(table, consumer));
-                logger.info("Kafka监听器已订阅topic: {}, groupId: {}", topic, groupId);
+                logger.info("Kafka listener subscribes to topic:}, groupId:}", topic, groupId);
             }
 
             worker = new Worker();
@@ -73,10 +73,10 @@ public class KafkaListener extends AbstractListener<KafkaConnectorInstance> {
             worker.setDaemon(false);
             worker.start();
         } catch (Exception e) {
-            logger.error("启动Kafka监听器失败", e);
+            logger.error("Failed to activate Kafka listening device", e);
             errorEvent(e);
             close();
-            throw new RuntimeException("启动Kafka监听器失败", e);
+            throw new RuntimeException("Failed to activate Kafka listening device", e);
         }
     }
 
@@ -84,45 +84,45 @@ public class KafkaListener extends AbstractListener<KafkaConnectorInstance> {
     public void close() {
         if (connected) {
             connected = false;
-            // 1. 先中断 Worker 线程
+            // 1. Break first.Worker Threads
             if (null != worker && !worker.isInterrupted()) {
                 worker.interrupt();
             }
-            // 2. 等待 Worker 线程退出（最多等待5秒）
+            // 2. EconomicsWorker ThreadsQuit (maximum waiting)5seconds）
             if (null != worker) {
                 try {
-                    worker.join(5000); // 等待最多5秒
+                    worker.join(5000); // Waiting most5seconds
                     if (worker.isAlive()) {
-                        logger.warn("Worker线程未在5秒内退出，强制终止");
+                        logger.warn("Worker has not quit in 5 seconds. Force termination.");
                     }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    logger.warn("等待Worker线程退出时被中断", e);
+                    logger.warn("interrupted while waiting for the Worker line to exit", e);
                 }
                 worker = null;
             }
 
-            // 3. 关闭线程池，等待任务完成
+            // 3. CloseThreadsJi, waitTasksFinish
             if (executor != null) {
                 executor.shutdown();
                 try {
-                    // 等待已提交的任务完成，最多等待5秒
+                    // WaitingSubmitYes.TasksFinish，Wait at most5seconds
                     if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
-                        logger.warn("线程池未在5秒内关闭，强制关闭");
+                        logger.warn("Thread pool not closed in 5 seconds. Force closure.");
                         executor.shutdownNow();
-                        // 再等待2秒
+                        // Wait.2seconds
                         if (!executor.awaitTermination(2, TimeUnit.SECONDS)) {
-                            logger.error("线程池无法正常关闭");
+                            logger.error("Thread pool is not properly closed.");
                         }
                     }
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    logger.warn("等待线程池关闭时被中断", e);
+                    logger.warn("Waited for thread pool to close", e);
                     executor.shutdownNow();
                 }
             }
 
-            // 4. 最后关闭所有consumer（此时没有线程在使用它们）
+            // 4. Finally.CloseAllconsumer（Not at this time.ThreadsThey're using them.
             consumers.forEach(ConsumerInfo::close);
             consumers.clear();
         }
@@ -136,21 +136,21 @@ public class KafkaListener extends AbstractListener<KafkaConnectorInstance> {
     }
 
     /**
-     * 恢复offset，在分区分配后进行
-     * 注意：Kafka Consumer 的分区分配是异步的，需要在第一次 poll 后才能获取到分区
+     * Restoreoffset，Yes.minSector EntitiesminAfter Overseas
+     * Note:Kafka Consumer Yes.minSector EntitiesminMatchYesIt's a first step.poll We'll get it later.minSector Entities
      */
     private void seekOffset(KafkaConsumer<String, Object> consumer, String topic) {
         String offsetStr = snapshot.get(OFFSET + topic);
         if (StringUtil.isNotBlank(offsetStr)) {
             long offset = Long.parseLong(offsetStr);
-            // 获取该topic的所有分区
+            // Get thattopicAllminSector Entities
             Set<TopicPartition> partitions = consumer.assignment();
             if (!partitions.isEmpty()) {
-                // 为所有属于该topic的分区设置offset
+                // Expected of alltopicYes.minSector EntitiesSettingsoffset
                 for (TopicPartition partition : partitions) {
                     if (partition.topic().equals(topic)) {
                         consumer.seek(partition, offset);
-                        logger.info("已恢复topic {} 分区 {} 的offset: {}", topic, partition.partition(), offset);
+                        logger.info("Restored topic {} partition offset:}", topic, partition.partition(), offset);
                     }
                 }
             }
@@ -158,7 +158,7 @@ public class KafkaListener extends AbstractListener<KafkaConnectorInstance> {
     }
 
     /**
-     * 将Map转换为List<Object>，按照字段顺序
+     * WillMapConvertYesList<Object>，ByFieldOrder
      */
     private List<Object> mapToRowList(List<Field> columns, Map<String, Object> map) {
         if (map == null || columns == null) {
@@ -169,7 +169,7 @@ public class KafkaListener extends AbstractListener<KafkaConnectorInstance> {
 
     private void trySendEvent(ChangedEvent event) {
         try {
-            // 如果消费事件失败，重试
+            // If you consumeEventFailed，Try again
             while (connected) {
                 try {
                     changeEvent(event);
@@ -188,24 +188,24 @@ public class KafkaListener extends AbstractListener<KafkaConnectorInstance> {
     }
 
     /**
-     * 处理单条消息
+     * Processing single messages
      */
     private void processRecord(ConsumerInfo consumerInfo, ConsumerRecord<String, Object> record) {
         String topic = consumerInfo.table.getName();
         Object value = record.value();
         if (value == null) {
-            logger.warn("收到空消息，topic: {}, offset: {}", topic, record.offset());
+            logger.warn("Got a blank message.", topic, record.offset());
             return;
         }
 
-        // 将value转换为Map
+        // WillvalueConvertYesMap
         Map<String, Object> valueMap;
         if (value instanceof Map) {
             @SuppressWarnings("unchecked")
             Map<String, Object> tempMap = (Map<String, Object>) value;
             valueMap = tempMap;
         } else {
-            logger.warn("消息value类型不是Map，topic: {}, offset: {}, type: {}", topic, record.offset(), value.getClass().getName());
+            logger.warn("Message type is not Map, tabic: }, type: }", topic, record.offset(), value.getClass().getName());
             return;
         }
 
@@ -214,10 +214,10 @@ public class KafkaListener extends AbstractListener<KafkaConnectorInstance> {
         String sourceTableName = StringUtil.isNotBlank(parsedMessage.getTable()) ? parsedMessage.getTable() : topic;
         String event = parsedMessage.getEvent();
 
-        // 转换为行数据
+        // ConvertYesRow data
         List<Object> rowData = mapToRowList(consumerInfo.table.getColumn(), rowMap);
 
-        // 触发事件，使用下一条消息的offset（nextOffset）作为position
+        // TriggerEvent，Use the next messageoffset（nextOffset）Asposition
         trySendEvent(new RowChangedEvent(sourceTableName, event, rowData, topic, record.offset() + 1));
     }
 
@@ -235,10 +235,10 @@ public class KafkaListener extends AbstractListener<KafkaConnectorInstance> {
                     }
                 } catch (Exception e) {
                     if (Thread.currentThread().isInterrupted()) {
-                        logger.info("Kafka监听器Worker线程被中断，正在退出");
+                        logger.info("Kafka listener Worker's circuit was cut off.");
                         break;
                     }
-                    // 非中断异常才记录错误
+                    // Non-interruptedErrorIt's only recorded.Error
                     logger.error(e.getMessage(), e);
                     errorEvent(e);
                     if (connected && !isInterrupted()) {
@@ -246,30 +246,30 @@ public class KafkaListener extends AbstractListener<KafkaConnectorInstance> {
                     }
                 }
             }
-            logger.info("Kafka监听器Worker线程已退出");
+            logger.info("Kafka listener Worker is out.");
         }
 
         private void execute(ConsumerInfo consumerInfo) {
             try {
-                // 第一次 poll 之前，先进行一次 poll 来触发分区分配
-                // 然后在分区分配之后恢复 offset
+                // The first time Prevpoll Session one.poll To trigger.minSector EntitiesminMatch
+                // And then...minSector EntitiesminRestore after matchingoffset
                 if (!consumerInfo.offsetRestored) {
-                    // 使用较短的超时时间来触发分区分配
+                    // Use shorter timeoutTimeTo trigger.minSector EntitiesminMatch
                     consumerInfo.consumer.poll(100);
                     Set<TopicPartition> partitions = consumerInfo.consumer.assignment();
-                    logger.info("Consumer分区分配完成，topic: {}, groupId: {}, 分区数量: {}", consumerInfo.table.getName(), consumerInfo.table.getExtInfo().getProperty("groupId"), partitions.size());
+                    logger.info("Consumer partition distribution complete, topic: }, group Id:}, number of partitions: }", consumerInfo.table.getName(), consumerInfo.table.getExtInfo().getProperty("groupId"), partitions.size());
                     if (!partitions.isEmpty()) {
                         for (TopicPartition partition : partitions) {
                             long position = consumerInfo.consumer.position(partition);
-                            logger.info("已分配分区: {}, 当前offset: {}", partition, position);
+                            logger.info("Partition allocated: }, current offset: }", partition, position);
                         }
                     } else {
-                        logger.warn("Consumer分区分配为空，topic: {}, 可能topic不存在或consumer group有问题", consumerInfo.table.getName());
+                        logger.warn("Consumer division is empty, topic: }, probably topic does not exist or consumer group is in trouble", consumerInfo.table.getName());
                     }
-                    // 现在分区已经分配，可以恢复 offset
+                    // Now.minZone FCCC/KP/CMP/2008/INF.1minIt informs you.offset
                     seekOffset(consumerInfo.consumer, consumerInfo.table.getName());
                     consumerInfo.offsetRestored = true;
-                    logger.info("Offset恢复完成，topic: {}", consumerInfo.table.getName());
+                    logger.info("Offset resume complete, topic: }", consumerInfo.table.getName());
                 }
 
                 long processedCount = 0;
@@ -282,18 +282,18 @@ public class KafkaListener extends AbstractListener<KafkaConnectorInstance> {
                         processRecord(consumerInfo, record);
                         processedCount++;
                     }
-                    // 手动提交offset（如果启用了手动提交）
+                    // ManualSubmitoffset（IfEnableManually.Submit）
                     if (processedCount > 0) {
                         consumerInfo.consumer.commitSync();
                     }
                 }
             } catch (Exception e) {
                 if (Thread.currentThread().isInterrupted()) {
-                    logger.info("Consumer线程已停止");
+                    logger.info("Consumer has stopped.");
                     return;
                 }
-                // 非中断异常才记录错误
-                logger.error("处理topic {} 的消息时出错", consumerInfo.table.getName(), e);
+                // Non-interruptedErrorIt's only recorded.Error
+                logger.error("Error processing topic{ messages", consumerInfo.table.getName(), e);
                 errorEvent(e);
             }
         }
@@ -304,8 +304,8 @@ public class KafkaListener extends AbstractListener<KafkaConnectorInstance> {
 
         Table table;
         KafkaConsumer<String, Object> consumer;
-        private final Object closeLock = new Object(); // 用于同步关闭操作
-        private volatile boolean offsetRestored = false; // 标记是否已恢复offset
+        private final Object closeLock = new Object(); // For SyncCloseActions
+        private volatile boolean offsetRestored = false; // Tag           YesNoRestoredoffset
 
         public ConsumerInfo(Table table, KafkaConsumer<String, Object> consumer) {
             this.table = table;
@@ -313,16 +313,16 @@ public class KafkaListener extends AbstractListener<KafkaConnectorInstance> {
         }
 
         void close() {
-            // 使用同步锁确保线程安全关闭
+            // Use sync lock to ensureThreadsClear.Close
             synchronized (closeLock) {
                 if (consumer != null) {
                     try {
-                        // 先唤醒consumer（如果它在poll中阻塞）
+                        // Wake up first.consumer（♪ If it was ♪pollI'm in a jam.
                         consumer.wakeup();
-                        // 然后关闭
+                        // And...Close
                         consumer.close();
                     } catch (Exception e) {
-                        // 忽略关闭时的异常
+                        // IgnoreCloseTime.Error
                     }
                 }
             }

@@ -8,15 +8,15 @@ package org.dbsyncer.biz.vo;
 public class VersionVO {
 
     /**
-     * 应用名称
+     * ApplyName
      */
     private final String appName;
     /**
-     * 版权详细
+     * CopyrightDetails
      */
     private final String appCopyRight;
     /**
-     * 水印
+     * Watermark
      */
     private String watermark;
 

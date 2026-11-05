@@ -31,8 +31,8 @@ import java.util.concurrent.Executor;
 public class LogServiceImpl implements LogService {
 
     /**
-     * 与 {@link org.dbsyncer.parser.model.SystemConfig} 默认 maxStorageErrorLength 对齐；
-     * 系统配置尚未入库时兜底，避免异步写日志 NPE。
+     * and {@link org.dbsyncer.parser.model.SystemConfig} DefaultmaxStorageErrorLength Alignment;
+     * System settingsNot yet enteredLibraryKeep your head down. Keep your foot down.Log NPE。
      */
     private static final int DEFAULT_MAX_STORAGE_ERROR_LENGTH = 8192;
 

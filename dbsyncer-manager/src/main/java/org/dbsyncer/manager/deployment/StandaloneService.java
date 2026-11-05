@@ -11,7 +11,7 @@ import org.dbsyncer.sdk.spi.ClusterService;
 import javax.annotation.Resource;
 
 /**
- * 单机控制面：本机即执行者，调度方法空操作。
+ * Single control surface: this is the operator and the method of movement is emptyActions。
  *
  * @author wuji
  * @version 1.0.0

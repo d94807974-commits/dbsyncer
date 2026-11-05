@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 游标分页结果（cursor 为字符串标识，兼容数字偏移游标）
+ * CursorminPageResult（cursor A string identification, compatible numerical offset cursor)
  *
  * @author wuji
  * @version 1.0.0
@@ -19,7 +19,7 @@ public class CursorPageQuery<T> {
 
     private long total;
     /**
-     * 游标（可存数字偏移或业务游标串）
+     * Cur 180aise (digital offsetable or business tour string)
      */
     private String cursor;
     private int pageSize;
@@ -30,12 +30,12 @@ public class CursorPageQuery<T> {
     }
 
     /**
-     * 填充分页字段并计算 hasMore（参数由调用方保证有效，不做默认值兜底）
+     * FillminPageFieldAnd calculatehasMore（ParameterIt's guaranteed by the caller.Default valueUnderground
      *
-     * @param data     当前页数据
-     * @param total    总条数
-     * @param cursor   游标
-     * @param pageSize 每页条数
+     * @param data     CurrentPageData Fact
+     * @param total    Total number of articles
+     * @param cursor   Cursor
+     * @param pageSize EveryPageNumber of bars
      */
     protected void fill(List<T> data, long total, String cursor, int pageSize) {
         this.data = data;

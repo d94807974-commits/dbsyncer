@@ -74,7 +74,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 整库迁移业务实现
+ * Database migrationOperational achievements
  *
  * @author wuji
  * @version 1.0.0
@@ -124,7 +124,7 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
     @Override
     public DatabaseSyncTaskVO get(String id) {
         DatabaseSyncTask task = databaseSyncProfile.get(id);
-        Assert.notNull(task, "任务不存在");
+        Assert.notNull(task, "Task does not exist");
         return convertTask2Vo(task);
     }
 
@@ -132,12 +132,12 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
     public String add(Map<String, String> params) {
         String name = params.get("name");
         if (StringUtil.isBlank(name)) {
-            throw new BizException("任务名称不能为空");
+            throw new BizException("Other Organiser");
         }
         List<DatabaseMappingVO> mappings = parseDatabaseMappings(params.get("databaseMappingsJson"));
         checkDatabaseMapping(mappings);
         if (CollectionUtils.isEmpty(mappings)) {
-            throw new BizException("请至少添加一组库映射");
+            throw new BizException("Please add at least one library map");
         }
         normalizeAndSortMappings(mappings);
         validateMappingConnectors(mappings);
@@ -146,7 +146,7 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
         DatabaseSyncTask task = new DatabaseSyncTask();
         fillTaskOnAdd(task, params);
         task.setDatabaseMappings(toPersistMappings(mappings));
-        // 任务需先落库（含任务级 Meta）才能按 taskId 建连与写 table_group；失败则整单回滚
+        // TasksWe need to drop first.Library（HamTasksAdministrationMeta）To presstaskId CompanyandWritetable_group；FailedAnd roll back in one piece.
         String taskId = databaseSyncProfile.add(task);
         try {
             tableGroupProfile.addTableGroupBatch(buildTableGroups(taskId, mappings));
@@ -154,36 +154,36 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
             try {
                 databaseSyncProfile.delete(taskId);
             } catch (Exception cleanupEx) {
-                logger.error("整库迁移任务创建失败后回滚删除失败: id={}", taskId, cleanupEx);
+                logger.error("Library Migration TaskCreateFailedBackRoll backDelete failed: id={}", taskId, cleanupEx);
             }
             throw new BizException(e.getMessage(), e);
         }
-        // 预建明细分表并对齐明细行，详情页 JOIN 查询不依赖任务是否已写出数据
+        // Preset DetailsminThis post is part of our special coverage Syria Protests 2011.DetailsPage JOIN Query does not dependTasksYesNoSynchronising folder
         databaseSyncProfile.syncTaskTableMetaDetails(taskId);
         resourceAclService.grantOwner(params.get(UserConfigService.CURRENT_USER_NAME),
                 ConfigConstant.DATABASE_SYNC, taskId);
-        logger.info("整库迁移任务已保存: id={}, name={}, mappingCount={}", taskId, name, mappings.size());
+        logger.info("Library Migration TaskSaved: id={}, name={}, mappingCount={}", taskId, name, mappings.size());
         return taskId;
     }
 
     @Override
     public String edit(Map<String, String> params) {
         String id = params.get("id");
-        Assert.hasText(id, "任务 ID 不能为空");
+        Assert.hasText(id, "Tasks ID Can't be empty.");
         DatabaseSyncTask task = databaseSyncProfile.get(id);
-        Assert.notNull(task, "任务不存在");
+        Assert.notNull(task, "Task does not exist");
         assertRunning(task.getId());
         List<DatabaseMappingVO> mappings = parseDatabaseMappings(params.get("databaseMappingsJson"));
         checkDatabaseMapping(mappings);
         if (CollectionUtils.isEmpty(mappings)) {
-            throw new BizException("请至少添加一组库映射");
+            throw new BizException("Please add at least one library map");
         }
         normalizeAndSortMappings(mappings);
         validateMappingConnectors(mappings);
         validateTableMappings(mappings);
         fillTaskOnEdit(task, params);
         task.setDatabaseMappings(toPersistMappings(mappings));
-        // 先物化新映射（连库读元数据），失败则不碰旧 table_group
+        // New mapping of precursorLibraryThis post is part of our special coverage Syria Protests 2011.FailedI'm not old.table_group
         List<TableGroup> newGroups = buildTableGroups(id, mappings);
         List<TableGroup> oldGroups = new ArrayList<>();
         tableGroupProfile.pageScanTableGroups(id, ConfigConstant.PAGE_SIZE, oldGroups::addAll);
@@ -194,11 +194,11 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
             restoreTableGroups(id, oldGroups);
             throw new BizException(e.getMessage(), e);
         }
-        // 映射落库成功后再清运行结果与任务级 Meta，避免写失败留下半残任务
+        // MapdownLibrarySuccessThen clear and run.ResultandTasksAdministrationMeta，Avoid writingFailedI'll leave you with half a body.Tasks
         databaseSyncProfile.clearRunData(id);
         taskMetaProfile.resetMeta(id);
         String editedId = databaseSyncProfile.update(task);
-        // 编辑会清空运行明细，按当前表映射与开启类型重新对齐
+        // EditYes.ClearRun the details and map the current scaleandOnTypeRematch
         databaseSyncProfile.syncTaskTableMetaDetails(editedId);
         return editedId;
     }
@@ -208,11 +208,11 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
             if (StringUtil.equals(mapping.getSourceConnectorId(), mapping.getTargetConnectorId())) {
                 boolean selectedDB = StringUtil.isNotBlank(mapping.getSourceDatabase()) && StringUtil.isNotBlank(mapping.getTargetDatabase());
                 if (selectedDB && StringUtil.equals(mapping.getSourceDatabase(), mapping.getTargetDatabase())) {
-                    throw new BizException("同源同库不允许同步，请更换目标连接或数据库！");
+                    throw new BizException("SameSourceSameLibraryOh, no.verifieSync，Please replace the target connection or database.！");
                 }
                 boolean selectedSchema = StringUtil.isNotBlank(mapping.getSourceSchema()) && StringUtil.isNotBlank(mapping.getTargetSchema());
                 if (!selectedDB && selectedSchema && StringUtil.equals(mapping.getSourceSchema(), mapping.getTargetSchema())) {
-                    throw new BizException("同源同schema不允许同步，请更换目标连接或schema！");
+                    throw new BizException("SameSourceSameschemaOh, no.verifieSync，Please replace the target connection orschema！");
                 }
 
             }
@@ -221,42 +221,42 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
 
     @Override
     public String delete(String id) {
-        Assert.hasText(id, "任务 ID 不能为空");
+        Assert.hasText(id, "Tasks ID Can't be empty.");
         assertRunning(id);
         databaseSyncProfile.delete(id);
         groupService.bind(null, ConfigConstant.DATABASE_SYNC, id);
         resourceAclService.revokeAllForResource(ConfigConstant.DATABASE_SYNC, id);
-        return "删除成功";
+        return "Deleted successfully";
     }
 
     @Override
     public String start(String id) {
-        Assert.hasText(id, "任务 ID 不能为空");
+        Assert.hasText(id, "Tasks ID Can't be empty.");
         DatabaseSyncTask task = databaseSyncProfile.get(id);
-        Assert.notNull(task, "任务不存在");
+        Assert.notNull(task, "Task does not exist");
         if (CollectionUtils.isEmpty(task.getDatabaseMappings())) {
-            throw new BizException("任务未配置库映射，无法启动");
+            throw new BizException("TasksNotConfigureLibraryMap，NoneFrenchStart");
         }
         if (tableGroupProfile.getTableGroupCount(id) <= 0) {
-            throw new BizException("任务未配置库表映射，无法启动");
+            throw new BizException("TasksNotConfigureLibraryMap，NoneFrenchStart");
         }
         Meta meta = taskMetaProfile.getMeta(id);
         if (meta != null && CommonTaskStatusEnum.isDone(meta.getState())) {
-            //重置任务meta 和表级别meta
+            //ResetTasksmeta and Table Levelmeta
             taskMetaProfile.resetMeta(id);
             taskProfile.resetTableDetailMetas(id);
-            //重置明细分表
+            //ResetDetailsminTable
             databaseSyncProfile.syncTaskTableMetaDetails(id);
         }
         clusterService.start(task, false);
-        return "启动成功";
+        return "Started successfully";
     }
 
     @Override
     public String stop(String id) {
-        Assert.hasText(id, "任务 ID 不能为空");
+        Assert.hasText(id, "Tasks ID Can't be empty.");
         ConfigModel task = databaseSyncProfile.get(id);
-        Assert.notNull(task, "任务不存在");
+        Assert.notNull(task, "Task does not exist");
         Meta taskMeta = taskMetaProfile.getMeta(id);
         if (taskMeta != null && CommonTaskStatusEnum.isRunning(taskMeta.getState())) {
             taskMeta.setState(CommonTaskStatusEnum.STOPPING.getCode());
@@ -264,7 +264,7 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
             taskMetaProfile.updateMeta(taskMeta);
         }
         clusterService.stop(id, CommonTaskTypeEnum.DATABASE_SYNC);
-        return "停止成功";
+        return "Stopped successfully";
     }
 
     @Override
@@ -325,7 +325,7 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
     @Override
     public Paging searchResult(Map<String, String> params) {
         String taskId = params.get("taskId");
-        Assert.hasText(taskId, "任务ID不能为空");
+        Assert.hasText(taskId, "TasksIDCan't be empty.");
         int pageNum = NumberUtil.toInt(params.get("pageNum"), 1);
         int pageSize = NumberUtil.toInt(params.get("pageSize"), 10);
         String detailType = StringUtil.trimToEmpty(params.get("detailType"));
@@ -346,21 +346,21 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
         int offset = Math.max(0, NumberUtil.toInt(params.get("offset"), 0));
         int limit = NumberUtil.toInt(params.get("limit"), 0);
         if (limit <= 0) {
-            throw new BizException("limit 必须大于 0");
+            throw new BizException("limit I have to.Greater than 0");
         }
         if (StringUtil.isBlank(connectorId)) {
-            throw new BizException("连接器不能为空");
+            throw new BizException("Connector cannot be empty");
         }
         Connector connector = connectorProfile.getConnector(connectorId);
         if (connector == null) {
-            throw new BizException("连接器不存在");
+            throw new BizException("Connector does not exist");
         }
         DefaultConnectorServiceContext context = ConnectorServiceContextUtil.buildConnectorServiceContext(
                 "database-sync-preview",
                 connectorId, database, schema,
                 connectorId, database, schema,
                 true);
-        // 按所选库/schema 建临时连接查表（PostgreSQL 等无法靠 setCatalog 切库，须重建 JDBC URL）
+        // By SelectedLibrary/schema ConstructionConnectChecklist ConceptualPostgreSQL Wait.NoneHoly shit.setCatalog Cut.Library，It has to be rebuilt.JDBC URL）
         String previewInstanceId = ConnectorInstanceUtil.buildConnectorInstanceId(
                 "database-sync-preview", connectorId, database, schema, ConnectorInstanceUtil.SOURCE_SUFFIX);
         try {
@@ -376,7 +376,7 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
                         .filter(t -> t.getName() != null && t.getName().toUpperCase().contains(key))
                         .collect(Collectors.toList());
             }
-            // 追加表映射时排除已添加源表，避免分页偏移在排除后错位并触发前端连续空翻页
+            // Exclude when adding table mapAddSource table，AvoidminPageOff Reinforce error after exclusion and trigger a continuous front-end skyrocketPage
             Set<String> excludeTables = parseExcludeTables(params.get("excludeTablesJson"));
             if (!CollectionUtils.isEmpty(excludeTables)) {
                 tables = tables.stream()
@@ -408,7 +408,7 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
     }
 
     /**
-     * 入参 VO 转 task.JSON 持久化库映射（仅库维）。
+     * ParticipationVO Turntask.JSON EnduringLibraryMap (only)LibraryV.
      */
     private List<DatabaseMapping> toPersistMappings(List<DatabaseMappingVO> mappings) {
         if (CollectionUtils.isEmpty(mappings)) {
@@ -441,7 +441,7 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
     }
 
     /**
-     * 按序号从小到大排序，并规范为连续序号 1..n，便于任务执行与恢复。
+     * PressNo.Sorting from childhood to age and regulating continuityNo. 1..n，Easy.TasksImplementationandRestore.
      */
     private void normalizeAndSortMappings(List<DatabaseMappingVO> mappings) {
         if (CollectionUtils.isEmpty(mappings)) {
@@ -488,7 +488,7 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
     private void fillTaskOnEdit(DatabaseSyncTask task, Map<String, String> params) {
         String name = params.get("name");
         if (StringUtil.isBlank(name)) {
-            throw new BizException("任务名称不能为空");
+            throw new BizException("Other Organiser");
         }
         task.setName(name);
         task.setUpdateTime(Instant.now().toEpochMilli());
@@ -503,14 +503,14 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
     }
 
     /**
-     * 编辑失败时恢复旧 table_group，避免任务无表映射。
-     * 运行历史分表在映射写成功后才清理，此处仍可保留旧明细。
+     * EditFailedTimebacktable_group，AvoidTasksNoneMap.
+     * Run HistoryminThe table is mapping.SuccessThis is to be Wider.
      */
     private void restoreTableGroups(String taskId, List<TableGroup> oldGroups) {
         try {
             tableGroupProfile.removeTableGroupsByTaskId(taskId);
         } catch (Exception cleanupEx) {
-            logger.error("编辑失败回滚：清理残留 table_group 失败: taskId={}", taskId, cleanupEx);
+            logger.error("EditFailedRoll back：Clear the residue. table_group Failed: taskId={}", taskId, cleanupEx);
         }
         if (CollectionUtils.isEmpty(oldGroups)) {
             return;
@@ -518,7 +518,7 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
         try {
             tableGroupProfile.addTableGroupBatch(oldGroups);
         } catch (Exception restoreEx) {
-            logger.error("编辑失败回滚：恢复旧 table_group 失败: taskId={}", taskId, restoreEx);
+            logger.error("EditFailedRoll back：RestoreAppeal table_group Failed: taskId={}", taskId, restoreEx);
         }
     }
 
@@ -526,16 +526,16 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
         for (int i = 0; i < mappings.size(); i++) {
             DatabaseMapping mapping = mappings.get(i);
             if (StringUtil.isBlank(mapping.getSourceConnectorId())) {
-                throw new BizException("库映射 " + (i + 1) + " 缺少源端连接器");
+                throw new BizException("LibraryMap " + (i + 1) + " MissingSourceConnector");
             }
             if (StringUtil.isBlank(mapping.getTargetConnectorId())) {
-                throw new BizException("库映射 " + (i + 1) + " 缺少目标端连接器");
+                throw new BizException("LibraryMap " + (i + 1) + " MissingObjective CombinedEndConnector");
             }
         }
     }
 
     /**
-     * 表映射目标表名不能为空（add/edit 对称校验）
+     * TableMapTarget Table NameCan not open messageadd/edit Symmetrical verification)
      */
     private void validateTableMappings(List<DatabaseMappingVO> mappings) {
         if (CollectionUtils.isEmpty(mappings)) {
@@ -552,7 +552,7 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
                 }
                 if (StringUtil.isBlank(row.getTargetTable())) {
                     String source = StringUtil.isNotBlank(row.getSourceTable()) ? row.getSourceTable() : "";
-                    throw new BizException(String.format("库映射 %d：源表「%s」的目标表名不能为空", i + 1, source));
+                    throw new BizException(String.format("LibraryMap %d：Source table「%s」The target list name cannot be empty", i + 1, source));
                 }
             }
         }
@@ -571,14 +571,14 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
         Connector target = first == null ? null : connectorProfile.getConnector(first.getTargetConnectorId());
         DatabaseSyncTaskVO vo = new DatabaseSyncTaskVO(source, target);
         BeanUtils.copyProperties(task, vo);
-        // 覆盖 BeanUtils 写入的仅库维映射，挂上 table_group 表映射供编辑页
+        // Overwrite BeanUtils Write OnlyLibraryWide map, hang up.table_group Map statementEditPage
         vo.setMappingViews(mappingViews);
         vo.setMappingCount(CollectionUtils.isEmpty(mappingViews) ? 0 : mappingViews.size());
         return vo;
     }
 
     /**
-     * 汇总各表明细快照与行级样本（同序），供列表按表等权计算进度。
+     * Summarize each showing a fine snapshot.andLine Changes (in the same order)ListProgress is calculated by weighting the table.
      */
     private TableProgressBundle collectTableProgressBundle(String taskId) {
         TableProgressBundle bundle = new TableProgressBundle();
@@ -622,7 +622,7 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
     }
 
     /**
-     * 将 table_group 按库键挂到库映射 VO 的 tableMappings（编辑页回显）。
+     * Willtable_group PressLibraryHang toLibrary Map VO Yes.tableMappings（EditPageRetrospect.
      */
     private List<DatabaseMappingVO> buildDatabaseMappingVo(List<DatabaseMapping> mappings, List<TableGroup> tableGroups) {
         if (CollectionUtils.isEmpty(mappings)) {
@@ -660,7 +660,7 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
     }
 
     /**
-     * 按库映射物化 table_group（连源端读表元数据），不落库。
+     * PressLibraryMappingtable_group（CompanySourceRead Table Metadata)Library。
      */
     private List<TableGroup> buildTableGroups(String taskId, List<DatabaseMappingVO> mappings) {
         if (StringUtil.isBlank(taskId) || CollectionUtils.isEmpty(mappings)) {
@@ -675,9 +675,9 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
                 continue;
             }
             Connector sourceConnector = connectorProfile.getConnector(mapping.getSourceConnectorId());
-            Assert.notNull(sourceConnector, "源连接器不存在");
-            Assert.notNull(sourceConnector.getConfig(), "源连接器配置不存在");
-            // 与 ParserComponentImpl#getMetaInfo 的实例ID保持一致（mappingId + connectorId + suffix）
+            Assert.notNull(sourceConnector, "Source connector does not exist");
+            Assert.notNull(sourceConnector.getConfig(), "Source Connection Configuration does not exist");
+            // and ParserComponentImpl#getMetaInfo ExamplesIDConsistencymappingId + connectorId + suffix）
             connectorFactory.connect(
                     ConnectorInstanceUtil.buildConnectorInstanceId(taskId, mapping.getSourceConnectorId(), ConnectorInstanceUtil.SOURCE_SUFFIX),
                     sourceConnector.getConfig(),
@@ -691,7 +691,7 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
             for (TableMapping tableMapping : tableMappings) {
                 Table sourceTable = sourceMetaMap.get(tableMapping.getSourceTable());
                 if (sourceTable == null) {
-                    throw new BizException(String.format("源表 [%s] 不存在或无法读取元数据", tableMapping.getSourceTable()));
+                    throw new BizException(String.format("Source table [%s] Existing orNoneFrenchReadMetadata", tableMapping.getSourceTable()));
                 }
                 sortIndex++;
                 TableGroup group = new TableGroup();

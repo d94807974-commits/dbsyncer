@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 用戶配置服務
+ * UserConfigureService
  *
  * @author AE86
  * @version 1.0.0
@@ -20,65 +20,65 @@ import java.util.Map;
 public interface UserConfigService {
 
     /**
-     * 获取登录用户属性KEY
+     * AccessLoginUserPropertiesKEY
      */
     String CURRENT_USER_NAME = "currentUserName";
 
     /**
-     * 新增用戶(仅管理员可以新增用户)
+     * InsertUser(Only administrators canInsertUser)
      *
      * @param params
      */
     String add(Map<String, String> params);
 
     /**
-     * 修改用戶(管理员可以修改所有用户，普通用户只能修改自己)
+     * UpdateUser(The administrator can.UpdateAllUser，NormalUserOnlyUpdateFor yourself.)
      *
      * @param params
      */
     String edit(Map<String, String> params);
 
     /**
-     * 删除用戶(仅管理员可以删除普通用户)
+     * DeleteUser(Only administrators canDeleteNormalUser)
      *
      * @param params
      */
     String remove(Map<String, String> params);
 
     /**
-     * 获取登录用户密码
+     * AccessLoginUserPassword
      *
-     * @param currentUserName 登录用户
+     * @param currentUserName LoginUser
      * @return
      */
     UserInfo getUserInfo(String currentUserName);
 
     /**
-     * 获取登录用户信息VO(管理员可以查看所有用户，普通用户只能查看自己)
+     * AccessLoginUserInfoVO(The administrator can.ViewAllUser，NormalUserOnlyViewFor yourself.)
      *
-     * @param currentUserName 登录用户
-     * @param username        查询的用户
+     * @param currentUserName LoginUser
+     * @param username        QueryUser
      * @return
      */
     UserInfoVO getUserInfoVo(String currentUserName, String username);
 
     /**
-     * 获取所有用户信息VO(系统管理员可以查看所有用户，其他用户只能查看自己)
+     * Get AllUserInfoVO(SystemThe administrator can.ViewAllUser，OtherUserOnlyViewFor yourself.)
      *
-     * @param currentUserName 登录用户
+     * @param currentUserName LoginUser
      * @return
      */
     List<UserInfoVO> getUserInfoAll(String currentUserName);
 
     /**
-     * 获取用户配置
+     * AccessUser Configuration
      *
      * @return
      */
     UserConfig getUserConfig();
 
     /**
-     * 获取默认用户(admin)
+     * 71. Get DefaultUser(admin)
      *
      * @return
      */

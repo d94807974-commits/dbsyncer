@@ -152,13 +152,13 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
         Mapping model = mappingChecker.checkAddConfigModel(params);
 
         String id = mappingProfile.add(model);
-        // 加载驱动表（写入持久化 Mapping，需重新取出后再匹配）
+        // LoadDriverTableEnduring Mapping，We need to retake it and then match it.
         refreshMappingTables(id);
         Mapping mapping = mappingProfile.get(id);
         resourceAclService.grantOwner(params.get(UserConfigService.CURRENT_USER_NAME),
                 ConfigConstant.MAPPING, id);
 
-        // 匹配相似表 / 自定义表映射（异步落库后统一 MappingCountTask）
+        // Match similar tables / Custom tableMapLibraryReunify afterwardsMappingCountTask）
         if (StringUtil.isNotBlank(params.get("autoMatchTable"))) {
             submitMappingMatchTableTask(mapping, null);
             return id;
@@ -168,7 +168,7 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
             submitMappingMatchTableTask(mapping, tableGroups);
             return id;
         }
-        // 无表映射时仍提交统计（total=0）
+        // NoneShow still on mapSubmitStatisticstotal=0）
         submitMappingCountTask(mapping, null);
         return id;
     }
@@ -180,7 +180,7 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
 
         String json = JsonUtil.objToJson(mapping);
         Mapping newMapping = JsonUtil.jsonToObj(json, Mapping.class);
-        newMapping.setName(mapping.getName() + "(复制)");
+        newMapping.setName(mapping.getName() + "(Copy)");
         newMapping.setId(String.valueOf(snowflakeIdWorker.nextId()));
         newMapping.setUpdateTime(Instant.now().toEpochMilli());
         mappingChecker.addMeta(newMapping);
@@ -188,7 +188,7 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
         mappingProfile.add(newMapping);
         preloadTemplate.reConnect(newMapping);
 
-        // 复制映射表关系
+        // CopyMap Table Relationships
         tableGroupProfile.pageScanTableGroups(mapping.getId(), ConfigConstant.PAGE_SIZE, groupList -> {
             if (CollectionUtils.isEmpty(groupList)) {
                 return;
@@ -216,10 +216,10 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
         synchronized (LOCK) {
             assertRunning(mapping.getId());
             Mapping model = mappingChecker.checkEditConfigModel(params);
-            // 校验通过后再清空运行结果，避免校验失败时不可逆抹掉历史明细
+            // After validation.ClearRunResult，Avoid verificationFailedIt's time to erase history.
             mappingProfile.clearRunData(id);
             mappingProfile.update(model);
-            // 异步查源库 COUNT 并汇总 Meta.total
+            // Step check.Source database COUNT and summaryMeta.total
             submitMappingCountTask(mapping, metaSnapshot);
         }
         return id;
@@ -231,29 +231,29 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
         String taskId = mapping.getId();
         synchronized (LOCK) {
             assertRunning(taskId);
-            // 条件删除 table_group + 明细 Meta，并物理 DROP 明细分表（不重建空表）
+            // ConditionDelete table_group + DetailsMeta，And physics.DROP DetailsminTable (no empty tables recreated)
             mappingProfile.dropTaskDetailTable(id);
             tableGroupProfile.removeTableGroupsByTaskId(taskId);
 
-            // 删除任务级 meta
+            // DeleteTasksAdministrationmeta
             taskMetaProfile.removeMeta(taskId);
 
-            // 删除同步表映射关系
+            // DeleteSyncMap relation
             tableGroupContext.clear(taskId);
 
-            // 释放连接池
+            // ReleaseConnectJi.
             String sourceInstanceId = ConnectorInstanceUtil.buildConnectorInstanceId(mapping.getId(), mapping.getSourceConnectorId(), ConnectorInstanceUtil.SOURCE_SUFFIX);
             String targetInstanceId = ConnectorInstanceUtil.buildConnectorInstanceId(mapping.getId(), mapping.getTargetConnectorId(), ConnectorInstanceUtil.TARGET_SUFFIX);
             connectorFactory.disconnect(sourceInstanceId);
             connectorFactory.disconnect(targetInstanceId);
 
-            // 删除同步任务
+            // DeleteSync task
             mappingProfile.delete(id);
             groupService.bind(null, ConfigConstant.MAPPING, id);
             resourceAclService.revokeAllForResource(ConfigConstant.MAPPING, id);
             noticeRuleProfile.removeByScopeId(ConfigConstant.MAPPING, id);
         }
-        return "同步任务删除成功";
+        return "Unemployment";
     }
 
     @Override
@@ -276,7 +276,7 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
         vo.setConnectorConfig(config);
         vo.setExtendedType(connectorService.getExtendedTableType().getCode());
 
-        // 只返回自定义表类型
+        // OnlyBackCustom tableType
         if (!CollectionUtils.isEmpty(tables)) {
             List<Table> mainTables = new ArrayList<>();
             List<TableVO> customTables = new ArrayList<>();
@@ -297,7 +297,7 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
             vo.setCustomTables(customTables.stream().sorted(Comparator.comparing(Table::getName)).collect(Collectors.toList()));
             vo.setMainTables(mainTables.stream().sorted(Comparator.comparing(Table::getName)).collect(Collectors.toList()));
         }
-        // 元信息
+        // MetaInfo
         vo.setMeta(taskMetaProfile.getMeta(mapping.getId()));
         return vo;
     }
@@ -340,7 +340,7 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
             try {
                 rows.add(convertMapping2ListVo(mapping, taskMetaMap.get(mapping.getId())));
             } catch (Exception e) {
-                logger.error("转换同步任务列表行失败, 已跳过. mappingId:{}, name:{}, taskId:{}, error:{}",
+                logger.error("Failed to convert sync tasklist line, Skipped.",
                         mapping.getId(), mapping.getName(), mapping.getId(), e.getMessage());
             }
         }
@@ -354,7 +354,7 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
         if (StringUtil.isBlank(mappingId)) {
             mappingId = params.get("id");
         }
-        Assert.hasText(mappingId, "同步任务ID不能为空.");
+        Assert.hasText(mappingId, "Synchronising task ID cannot be empty.");
         assertMappingExist(mappingId);
 
         int pageNum = NumberUtil.toInt(params.get("pageNum"), 1);
@@ -366,15 +366,15 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
     @Override
     public String start(String id) {
         Mapping mapping = assertMappingExist(id);
-        //校验映射关系是否存在
+        //Verify INTRODUCTIONMappingYesNoExistence
         assertTableGroupExist(id);
         final String taskId = mapping.getId();
         synchronized (LOCK) {
             assertRunning(taskId);
-            Assert.isTrue(!dispatchTaskService.isRunning(taskId), "同步任务表映射正在匹配或统计中，请稍候再启动");
-            // 如果已经完成了，重置状态
+            Assert.isTrue(!dispatchTaskService.isRunning(taskId), "Synchronization of task map is matching or counting, please start later");
+            // If it's...FinishThere.ResetStatus
             clearMetaIfFinished(mapping);
-            // 标记运行中
+            // Tag           Running
             preloadTemplate.changeMetaState(taskId, CommonTaskStatusEnum.RUNNING);
 
             try {
@@ -386,7 +386,7 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
             }
 
         }
-        return "同步任务启动成功";
+        return "Synchronize job startup successful";
     }
 
     @Override
@@ -394,20 +394,20 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
         Mapping mapping = assertMappingExist(id);
         synchronized (LOCK) {
             if (!isRunning(mapping.getId())) {
-                throw new BizException("同步任务已停止.");
+                throw new BizException("Synchronising tasks stopped.");
             }
             preloadTemplate.changeMetaState(mapping.getId(), CommonTaskStatusEnum.STOPPING);
             clusterService.stop(mapping.getId(), CommonTaskTypeEnum.MAPPING);
-            // 发送关闭通知消息
+            // SendCloseOrganisation
             MappingStopContent content = new MappingStopContent();
-            content.setTitle("手动停止同步任务");
+            content.setTitle("Stop Sync Task Manually");
             content.setName(mapping.getName());
             content.setModel(ModelEnum.getModelEnum(mapping.getModel()));
             content.setResourceType(ConfigConstant.MAPPING);
             content.setResourceId(mapping.getId());
             sendNotifyMessage(content);
         }
-        return "同步任务停止成功";
+        return "Synchronising tasks stopped successful";
     }
 
     @Override
@@ -417,27 +417,27 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
         mapping.setSourceTable(updateConnectorTables(mapping, ConnectorInstanceUtil.SOURCE_SUFFIX));
         mapping.setTargetTable(updateConnectorTables(mapping, ConnectorInstanceUtil.TARGET_SUFFIX));
         mappingProfile.update(mapping);
-        return "刷新同步任务表成功";
+        return "Synchronising %s: successful";
     }
 
     @Override
     public Paging<Table> searchTables(Map<String, String> params) {
-        // 1. 参数获取
+        // 1. ParameterAccess
         String id = params.get(ConfigConstant.CONFIG_MODEL_ID);
         String type = params.get(ConfigConstant.CONFIG_MODEL_TYPE);
         String searchKey = params.get("searchKey");
         String tableNames = params.get("tableNames");
         int pageNum = NumberUtil.toInt(params.get("pageNum"), 1);
         int pageSize = Math.max(10, Math.min(200, NumberUtil.toInt(params.get("pageSize"), 50)));
-        //是否过滤
+        //YesNoFilter
         boolean excludeMapped = NumberUtil.toInt(params.get("exclude"), 0) != 1;
 
-        // 2. 获取基础数据
+        // 2. Access to basic data
         Mapping mapping = assertMappingExist(id);
         boolean isSource = !"target".equals(type);
         List<Table> tables = getMappingTables(mapping, isSource);
 
-        // 3. 已映射表名集合（需要排除的）
+        // 3. MapdTable namePool (to be excluded)
         Set<String> mappedTableNames;
         if (excludeMapped) {
             mappedTableNames = new HashSet<>();
@@ -459,7 +459,7 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
             mappedTableNames = Collections.emptySet();
         }
 
-        // 4. 精准匹配（按源表名批量精确查询目标表）
+        // 4. Accurate Match (Pression)Source Table NameBatch exact queriesTarget table）
         Set<String> exactNames = new HashSet<>();
         if (StringUtil.isNotBlank(tableNames)) {
             String[] nameArray = StringUtil.split(tableNames, "\\|");
@@ -471,7 +471,7 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
             }
         }
 
-        // 4. 流式过滤 + 搜索 + 排序
+        // 4. Fluid Filter+ Search + Sort
         String key = StringUtil.isBlank(searchKey) ? StringUtil.EMPTY : searchKey.trim().toUpperCase();
         List<Table> filtered = tables.stream()
                 .filter(Objects::nonNull)
@@ -482,7 +482,7 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
                 .sorted(Comparator.comparing(Table::getName))
                 .collect(Collectors.toList());
 
-        // 5. 内存分页
+        // 5. MemoryminPage
         Paging<Table> paging = new Paging<>(pageNum, pageSize);
         paging.setTotal(filtered.size());
 
@@ -534,7 +534,7 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
     }
 
     /**
-     * 提交统计同比任务总数任务
+     * SubmitStatistical comparisonTasksTotalTasks
      */
     private void submitMappingCountTask(Mapping mapping, String metaSnapshot) {
         if (ModelEnum.isFull(mapping.getModel())) {
@@ -543,15 +543,15 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
             task.setMetaSnapshot(metaSnapshot);
             dispatchTaskService.execute(task);
         } else {
-            // 只复位 Meta
+            // Restore onlyMeta
             tableGroupService.resetMeta(mapping, metaSnapshot);
         }
     }
 
     /**
-     * 提交异步表映射任务（相似表或自定义 tableGroups；结束后继续 MappingCountTask）。
+     * SubmitStep 251Tasks（Similar table orCustom tableGroups；Continue after completionMappingCountTask）。
      *
-     * @param tableGroups 自定义映射文本；null/空表示按同名表自动匹配
+     * @param tableGroups CustomMap text;null/Empty Representation Automatically Matches with Same Name Table
      */
     private void submitMappingMatchTableTask(Mapping mapping, String tableGroups) {
         MappingMatchTableTask task = (MappingMatchTableTask) mappingMatchTableTask.clone();
@@ -564,7 +564,7 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
         boolean isSource = StringUtil.equals(ConnectorInstanceUtil.SOURCE_SUFFIX, suffix);
         DefaultConnectorServiceContext context = ConnectorServiceContextUtil.buildConnectorServiceContext(mapping, isSource);
 
-        // 合并自定义表
+        // MergeCustom table
         List<Table> customTables = new ArrayList<>();
         List<Table> tables = getMappingTables(mapping, isSource);
         tables.forEach(t -> {
@@ -583,7 +583,7 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
                 context.getCatalog(), context.getSchema());
         tables = connectorFactory.getTables(connectorInstance, context);
         tables.addAll(customTables);
-        // 按升序展示表
+        // Ups 55/2
         Collections.sort(tables, Comparator.comparing(Table::getName));
         return tables;
     }
@@ -603,14 +603,14 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
         Connector t = connectorProfile.getConnector(mapping.getTargetConnectorId());
         MappingVO vo = new MappingVO(s, t, metaVo);
         BeanUtils.copyProperties(mapping, vo);
-        // 全量表列表体积大，下拉/搜索走 searchTables 分页；VO 不回传
+        // FullTableListBig, pull/SearchCome on.searchTables minPage；VO No returns
         vo.setSourceTable(null);
         vo.setTargetTable(null);
         return vo;
     }
 
     /**
-     * 列表行：只组装展示所需字段。
+     * ListLine: Only for assembly displayField。
      */
     private MappingListVO convertMapping2ListVo(Mapping mapping, Meta meta) {
         Assert.notNull(mapping, "Mapping can not be null.");
@@ -655,7 +655,7 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
     }
 
     /**
-     * 列表阶段展示所需 snapshot 键；其余位点信息不回传。
+     * ListPhase presentation requiredsnapshot keys;the remaining bitsInfoNo return.
      */
     private Map<String, String> slimListSnapshot(Map<String, String> snapshot) {
         if (CollectionUtils.isEmpty(snapshot)) {
@@ -678,33 +678,33 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
     }
 
     /**
-     * 获取同步任务任务级 Meta
+     * AccessSync taskTasksAdministrationMeta
      */
     private Meta resolveMappingMeta(Mapping mapping) {
         Meta meta = taskMetaProfile.getMeta(mapping.getId());
         if (meta != null) {
             return meta;
         }
-        logger.warn("同步任务 Meta 缺失，尝试重建. mappingId:{}, name:{}, taskId:{}", mapping.getId(), mapping.getName(), mapping.getId());
+        logger.warn("Synchronization Accounting Task Meta Missing, Trying to Recreate. MappingId:}, name:}, taskId:}", mapping.getId(), mapping.getName(), mapping.getId());
         mappingChecker.addMeta(mapping);
         mappingProfile.update(mapping);
         return taskMetaProfile.getMeta(mapping.getId());
     }
 
     /**
-     * 检查是否存在同步任务
+     * InspectionYesNoExistenceSync task
      */
     private Mapping assertMappingExist(String mappingId) {
         Mapping mapping = mappingProfile.get(mappingId);
-        Assert.notNull(mapping, "同步任务不存在.");
+        Assert.notNull(mapping, "Sync task does not exist.");
         return mapping;
     }
 
     /**
-     * 检查映射关系
+     * InspectionMapping
      */
     private void assertTableGroupExist(String mappingId) {
-        Assert.isTrue(tableGroupProfile.getTableGroupCount(mappingId) > 0, "映射关系不能为空");
+        Assert.isTrue(tableGroupProfile.getTableGroupCount(mappingId) > 0, "Mapping cannot be empty");
     }
 
     private void clearMetaIfFinished(Mapping mapping) {
@@ -716,7 +716,7 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
         Assert.notNull(meta, "Mapping meta can not be null.");
         long total = meta.getTotal().get();
         long processed = meta.getSuccess().get() + meta.getFail().get();
-        // 完成任务则重置状态，便于再次全量（要求 total>0，避免 0==0 误判）
+        // FinishTasksthenResetStatus，Easy again.Full（Requesttotal>0，Avoid0==0 Miscalculation)
         if (!CommonTaskStatusEnum.isRunning(meta.getState()) && total > 0 && processed >= total) {
             taskMetaProfile.resetMeta(taskId);
             taskProfile.deleteRunData(taskId);
@@ -736,37 +736,37 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
         ConfigValidator configValidator = connectorService.getConfigValidator();
         Assert.notNull(configValidator, "ConfigValidator can not be null.");
         Table newTable = configValidator.modifyExtendedTable(connectorService, params);
-        Assert.notNull(newTable, "解析自定义表异常");
+        Assert.notNull(newTable, "Parsing custom table anomalies");
 
         context.addTablePattern(newTable);
         List<MetaInfo> metaInfos = connectorService.getMetaInfo(connectorInstance, context);
-        Assert.notEmpty(metaInfos, "执行SQL异常");
-        Assert.notEmpty(metaInfos.get(0).getColumn(), "获取字段信息异常");
+        Assert.notEmpty(metaInfos, "SQL execution anomaly");
+        Assert.notEmpty(metaInfos.get(0).getColumn(), "Can not open message");
 
         List<Table> tables = getMappingTables(mapping, isSource);
-        // 首次添加
+        // First EquallyAdd
         if (CollectionUtils.isEmpty(tables)) {
             tables.add(newTable);
             return;
         }
 
-        // 新增操作
+        // CreateActions
         Set<String> exist = tables.stream().map(Table::getName).collect(Collectors.toSet());
         String newTableName = newTable.getName();
         if (StringUtil.equals("add", operator)) {
             if (exist.contains(newTableName)) {
-                throw new BizException(String.format("%s或自定义表名重复，请更换", isSource ? "数据源" : "目标源"));
+                throw new BizException(String.format("%s or custom table names repeat, please replace", isSource ? "Source" : "Target"));
             }
             tables.add(newTable);
-            // 按升序展示表
+            // Ups 55/2
             Collections.sort(tables, Comparator.comparing(Table::getName));
             return;
         }
 
-        // 修改操作，更改表名
+        // EditActions，ChangeTable name
         if (!StringUtil.equals(customTable, newTableName)) {
             if (exist.contains(newTableName)) {
-                throw new BizException(String.format("%s或自定义表名重复，请更换", isSource ? "数据源" : "目标源"));
+                throw new BizException(String.format("%s or custom table names repeat, please replace", isSource ? "Source" : "Target"));
             }
         }
         for (Table t : tables) {
@@ -778,7 +778,7 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
             }
         }
 
-        // 按升序展示表
+        // Ups 55/2
         Collections.sort(tables, Comparator.comparing(Table::getName));
     }
 
@@ -791,7 +791,7 @@ public class MappingServiceImpl extends BaseServiceImpl implements MappingServic
     private void removeCustomTable(Mapping mapping, Map<String, String> params) {
         String type = params.get(ConfigConstant.CONFIG_MODEL_TYPE);
         String tableName = params.get("customTable");
-        Assert.hasText(tableName, "无自定义表.");
+        Assert.hasText(tableName, "No custom table.");
         List<Table> tables = StringUtil.equals("source", type) ? mapping.getSourceTable() : mapping.getTargetTable();
         if (!CollectionUtils.isEmpty(tables)) {
             Iterator<Table> iterator = tables.iterator();

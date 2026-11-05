@@ -4,7 +4,7 @@ import org.dbsyncer.common.util.StringUtil;
 import org.dbsyncer.parser.convert.AbstractHandler;
 
 /**
- * 去掉首字符
+ * Operationally remove the first character
  *
  * @author AE86
  * @version 1.0.0

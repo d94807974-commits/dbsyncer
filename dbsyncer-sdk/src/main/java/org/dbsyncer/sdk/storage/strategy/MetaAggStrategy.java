@@ -7,7 +7,7 @@ import org.dbsyncer.sdk.enums.StorageEnum;
 import org.dbsyncer.sdk.storage.Strategy;
 
 /**
- * 同步任务 Meta 日汇总：单表存储
+ * Sync task Meta Day summary: table storage
  *
  * @author wuji
  * @version 1.0.0

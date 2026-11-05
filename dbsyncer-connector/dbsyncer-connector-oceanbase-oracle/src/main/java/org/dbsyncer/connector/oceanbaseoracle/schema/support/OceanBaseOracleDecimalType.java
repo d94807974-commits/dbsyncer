@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * OceanBase Oracle 模式精确数值类型
+ * OceanBase Oracle Mode AccuracyValue Type
  *
  * @author wuji
  * @version 1.0.0

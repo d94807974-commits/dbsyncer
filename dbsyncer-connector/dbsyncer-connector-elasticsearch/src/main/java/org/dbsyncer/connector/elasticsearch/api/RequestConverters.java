@@ -88,7 +88,7 @@ import java.util.Map;
 import java.util.StringJoiner;
 
 /**
- * ES请求（同时兼容6-7版本API）
+ * ESRequest (also compatible)6-7VersionAPI）
  *
  * @Author AE86
  * @Version 1.0.0
@@ -171,7 +171,7 @@ final class RequestConverters {
                     if (Strings.hasLength(action.index())) {
                         metadata.field("_index", action.index());
                     }
-                    // 8.x 版本已弃用
+                    // 8.x VersionDisabled
                     if (EasyVersion.V_8_0_0.after(version) && Strings.hasLength(action.type())) {
                         metadata.field("_type", action.type());
                     }
@@ -417,7 +417,7 @@ final class RequestConverters {
         params.withPreference(searchRequest.preference());
         params.withIndicesOptions(searchRequest.indicesOptions(), version);
         params.withSearchType(searchRequest.searchType().name().toLowerCase(Locale.ROOT));
-        // 7.x 版本以上支持该参数
+        // 7.x VersionThe above supports theParameter
         if (EasyVersion.V_7_0_0.onOrBefore(version)) {
             params.putParam("ccs_minimize_roundtrips", Boolean.toString(searchRequest.isCcsMinimizeRoundtrips()));
         }
@@ -1007,7 +1007,7 @@ final class RequestConverters {
                     expandWildcards = joiner.toString();
                 }
                 putParam("expand_wildcards", expandWildcards);
-                // 8.x 版本已弃用
+                // 8.x VersionDisabled
                 if (EasyVersion.V_8_0_0.after(version)) {
                     putParam("ignore_throttled", Boolean.toString(indicesOptions.ignoreThrottled()));
                 }

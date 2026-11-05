@@ -50,7 +50,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 /**
- * 文件连接器实现
+ * DocumentationConnectorAchieved
  *
  * @Author AE86
  * @Version 1.0.0
@@ -128,7 +128,7 @@ public final class FileConnector extends AbstractConnector implements ConnectorS
 
     @Override
     public long getCount(FileConnectorInstance connectorInstance, MetaContext metaContext) {
-        // TODO 待优化，读table扩展信息
+        // TODO To be optimized, readtableExtensionInfo
         Map<String, String> command = metaContext.getCommand();
         AtomicLong count = new AtomicLong();
         FileReader reader = null;

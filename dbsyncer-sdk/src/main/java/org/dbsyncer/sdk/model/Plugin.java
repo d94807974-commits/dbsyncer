@@ -7,19 +7,19 @@ package org.dbsyncer.sdk.model;
  */
 public class Plugin {
 
-    // 插件名称
+    // PluginName
     private String name;
 
-    // 插件实现
+    // PluginAchieved
     private String className;
 
-    // 版本号
+    // VersionNo. No.
     private String version;
 
-    // Jar名称
+    // JarName
     private String fileName;
 
-    // 是否系统预置
+    // YesNoSystem preset
     private boolean unmodifiable;
 
     public Plugin() {

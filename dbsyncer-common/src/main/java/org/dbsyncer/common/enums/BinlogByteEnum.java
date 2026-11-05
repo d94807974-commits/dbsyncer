@@ -4,10 +4,10 @@
 package org.dbsyncer.common.enums;
 
 /**
- * 支持的序列化/反序列化字节码类型
+ * Supported serialization/reverse sequence bytesType
  *
  * <pre>
- * 类型     长度     大小      最小值     最大值
+ * Type     Length     Size MinimumValue     MaxValue
  * byte     1Byte    8-bit     -128       +127
  * short    2Byte    16-bit    -2^15      +2^15-1
  * int      4Byte    32-bit    -2^31      +2^31-1

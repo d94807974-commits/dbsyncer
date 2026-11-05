@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 支持的条件和运算符类型
+ * SupportedConditionand DataType
  *
  * @author AE86
  * @version 1.0.0

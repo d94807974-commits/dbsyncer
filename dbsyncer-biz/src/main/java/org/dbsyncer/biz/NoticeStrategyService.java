@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 告警策略业务。
+ * Police strategy CorruptOperations.
  *
  * @author wuji
  * @version 1.0.0
@@ -17,23 +17,23 @@ import java.util.Map;
 public interface NoticeStrategyService {
 
     /**
-     * 全部策略（DTO，供页面与运行时转换）。
+     * AllPolicyDTO，ForPageNoodles.andRun-timeConvert）。
      */
     List<NoticeStrategyDef> listAll();
 
     /**
-     * 新增或更新一条策略，立即生效。
+     * InsertOr update a strategy, effective immediately.
      *
-     * @param params id（空则新增）、name、frequency、cron、enabled、noticeTypes（逗号分隔）
-     * @return 策略 ID
+     * @param params id（EmptyInsert）、name、frequency、cron、enabled、noticeTypes（Commaminamend
+     * @return PolicyID
      */
     String save(Map<String, String> params);
 
     /**
-     * 按 ID 删除策略，立即生效。
+     * PressID DeleteStrategy, effective immediately.
      *
-     * @param params 须含 id
-     * @return 已删除的策略 ID
+     * @param params must containid
+     * @return DeletedOther OrganiserID
      */
     String remove(Map<String, String> params);
 }

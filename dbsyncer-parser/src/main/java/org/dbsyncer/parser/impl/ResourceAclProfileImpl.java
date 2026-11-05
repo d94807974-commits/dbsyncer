@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * {@link ResourceAclProfile} 实现。
+ * {@link ResourceAclProfile} Achieved.
  *
  * @author wuji
  * @version 1.0.0

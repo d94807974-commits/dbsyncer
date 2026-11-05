@@ -6,7 +6,7 @@ package org.dbsyncer.biz;
 import org.dbsyncer.biz.model.WebSsoTicket;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-09-12 14:43
  */

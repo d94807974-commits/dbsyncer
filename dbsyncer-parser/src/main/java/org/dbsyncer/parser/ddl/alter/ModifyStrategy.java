@@ -13,7 +13,7 @@ import net.sf.jsqlparser.statement.alter.AlterExpression;
 import net.sf.jsqlparser.statement.alter.AlterExpression;
 
 /**
- * 字段属性变更
+ * FieldProperties Change
  * <code>
  * ALTER TABLE `test`.`test_user`
  * MODIFY COLUMN `name` varchar(203) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL AFTER `id`,

@@ -22,7 +22,7 @@ public class PostgreSQLConfigValidator extends AbstractDataBaseConfigValidator {
     public void modify(AbstractDatabaseConnector connectorService, DatabaseConfig connectorConfig, Map<String, String> params) {
         super.modify(connectorService, connectorConfig, params);
 
-        // 表单 checkbox：有键表示提交；复制展平可能带 "true"/"false"。缺键则保留 super 已还原的 extInfo
+        // Formcheckbox：KeysSubmit；CopyIt's possible."true"/"false"。Save the missing keysuper RevertedextInfo
         if (params.containsKey(PostgreSQLConfigConstant.DROP_SLOT_ON_CLOSE)) {
             String raw = params.get(PostgreSQLConfigConstant.DROP_SLOT_ON_CLOSE);
             boolean on = StringUtil.isNotBlank(raw)
@@ -32,7 +32,7 @@ public class PostgreSQLConfigValidator extends AbstractDataBaseConfigValidator {
         } else if (!connectorConfig.getExtInfo().containsKey(PostgreSQLConfigConstant.DROP_SLOT_ON_CLOSE)) {
             connectorConfig.getExtInfo().put(PostgreSQLConfigConstant.DROP_SLOT_ON_CLOSE, "true");
         }
-        // params 缺省时（如复制）保留已从 extInfo JSON 还原的值，避免 Hashtable 拒 null
+        // params (ifCopy）Other OrganiserextInfo JSON RevertValue，AvoidHashtable Rejectnull
         String pluginName = params.get(PostgreSQLConfigConstant.PLUGIN_NAME);
         if (StringUtil.isBlank(pluginName)) {
             pluginName = connectorConfig.getExtInfo().getProperty(PostgreSQLConfigConstant.PLUGIN_NAME);

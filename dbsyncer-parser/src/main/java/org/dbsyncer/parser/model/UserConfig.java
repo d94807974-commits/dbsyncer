@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * 用户配置
+ * User Configuration
  *
  * @author AE86
  * @version 1.0.0

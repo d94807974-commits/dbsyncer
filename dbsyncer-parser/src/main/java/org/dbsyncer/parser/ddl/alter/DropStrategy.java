@@ -13,7 +13,7 @@ import net.sf.jsqlparser.statement.alter.AlterExpression;
 import net.sf.jsqlparser.statement.alter.AlterExpression;
 
 /**
- * 解析drop
+ * Parsingdrop
  * <code>
  *     ALTER TABLE `test`.`test_user`
  * DROP COLUMN `aaa`,

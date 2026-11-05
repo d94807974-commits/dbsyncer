@@ -30,9 +30,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * ClickHouse 批量写入 / 覆盖写入 / 修改 / 删除 验证
+ * ClickHouse Batch writing/OverwriteWrite / LikewiseEdit / Delete Authentication
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-07-13 00:51
  */
@@ -87,7 +87,7 @@ public class ClickhouseTest {
         Assert.assertEquals(Long.valueOf(DATA_SIZE), countRows());
         Assert.assertEquals("insert_1", queryNameById(1L));
         Assert.assertEquals("insert_" + DATA_SIZE, queryNameById(DATA_SIZE));
-        logger.info("批量写入成功, success={}, count={}, cost={}ms",
+        logger.info("Batch writing succeeded, access=}, count=}, cost=ms",
                 result.getSuccessData().size(), countRows(), System.currentTimeMillis() - start);
     }
 
@@ -107,13 +107,13 @@ public class ClickhouseTest {
                 overwriteResult.getFailData().isEmpty());
         Assert.assertEquals(DATA_SIZE, overwriteResult.getSuccessData().size());
 
-        // MergeTree 同主键不应产生重复行
+        // MergeTree SamePrimary keyNo duplicate rows should Four
         Assert.assertEquals(Long.valueOf(DATA_SIZE), countRows());
         Assert.assertEquals("new_1", queryNameById(1L));
         Assert.assertEquals(Integer.valueOf(101), queryAgeById(1L));
         Assert.assertEquals("new_" + DATA_SIZE, queryNameById(DATA_SIZE));
         Assert.assertEquals(Integer.valueOf(DATA_SIZE + 100), queryAgeById(DATA_SIZE));
-        logger.info("覆盖写入成功, count={}, cost={}ms", countRows(), System.currentTimeMillis() - start);
+        logger.info("Overwrite writing succeeded, count={}, cost=ms", countRows(), System.currentTimeMillis() - start);
     }
 
     @Test
@@ -136,7 +136,7 @@ public class ClickhouseTest {
         Assert.assertEquals("after_" + DATA_SIZE, queryNameById(DATA_SIZE));
         Assert.assertEquals(Integer.valueOf(88), queryAgeById(DATA_SIZE / 2));
         Assert.assertEquals("updated", queryRemarkById(DATA_SIZE / 2));
-        logger.info("批量修改成功, success={}, cost={}ms",
+        logger.info("Batch modification successful, access=}, cost=}ms",
                 updateResult.getSuccessData().size(), System.currentTimeMillis() - start);
     }
 
@@ -155,7 +155,7 @@ public class ClickhouseTest {
         Assert.assertEquals(Long.valueOf(0), countRows());
         Assert.assertNull(queryNameById(1L));
         Assert.assertNull(queryNameById(DATA_SIZE));
-        logger.info("批量删除成功, remain={}, cost={}ms", countRows(), System.currentTimeMillis() - start);
+        logger.info("Batch deleted successfully, remain=}, cost=ms", countRows(), System.currentTimeMillis() - start);
     }
 
     private Result write(String event, List<Map> rows, boolean forceUpdate) {
@@ -188,16 +188,16 @@ public class ClickhouseTest {
             template.execute(ddl);
             return null;
         });
-        logger.info("创建测试表完成: {}.{}", DATABASE, TABLE_NAME);
+        logger.info("Create test sheet complete: {.{", DATABASE, TABLE_NAME);
     }
 
     private void truncateTable() {
-        // 清理历史卡住的 mutation，避免影响本次删除/覆盖写入
+        // Cleaning up history.mutation，Avoid affecting this one.Delete/OverwriteWriting
         connectorInstance.execute(template -> {
             try {
                 template.execute("KILL MUTATION WHERE database = '" + DATABASE + "' AND table = '" + TABLE_NAME + "'");
             } catch (Exception ignore) {
-                // 无待清理 mutation 时忽略
+                // NonePendingmutation Ignore
             }
             template.execute("TRUNCATE TABLE IF EXISTS `" + DATABASE + "`.`" + TABLE_NAME + "`");
             return null;
@@ -261,7 +261,7 @@ public class ClickhouseTest {
         row.put("name", name);
         row.put("age", age);
         row.put("remark", remark);
-        // ClickHouse JDBC 对 UPDATE mutation 会内联参数，Timestamp 无引号会触发语法错误，统一用字符串
+        // ClickHouse JDBC Yeah.UPDATE mutation I'll be in touch.Parameter，Timestamp NoneQuotes trigger syntax.Error，Unified string
         row.put("update_time", LocalDateTime.now().format(DATE_TIME_FORMATTER));
         return row;
     }
@@ -277,7 +277,7 @@ public class ClickhouseTest {
         config.setMaxActive(64);
         config.setKeepAlive(60000);
         config.setDriverClassName("com.clickhouse.jdbc.ClickHouseDriver");
-        // mutations_sync=1：保证 UPDATE/DELETE 变更同步可见，便于断言
+        // mutations_sync=1：Promise.UPDATE/DELETE Change synchronisation is visible, easy to assert.
         config.setProperties(PropertiesUtil.parse(
                 "socket_timeout=300000&compress=0&connect_timeout=30000&mutations_sync=1"));
         return config;

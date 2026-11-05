@@ -15,9 +15,9 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * TiDB 标准数据类型解析器
+ * TiDB Standard ContextTypeParser
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-07 00:10
  */

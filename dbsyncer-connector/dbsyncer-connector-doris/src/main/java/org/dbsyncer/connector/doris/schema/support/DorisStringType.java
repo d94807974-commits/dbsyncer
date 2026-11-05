@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-06 23:50
  */
@@ -41,7 +41,7 @@ public final class DorisStringType extends StringType {
             return (String) val;
         }
         if (val instanceof byte[]) {
-            // MySQL BLOB 映射到 Doris STRING/VARCHAR 时按 Latin1 保真，便于与源 byte[] 语义比较
+            // MySQL BLOB Map toDoris STRING/VARCHAR PressLatin1 It's real easy.andSourcebyte[] Semantic Comparison
             return new String((byte[]) val, StandardCharsets.ISO_8859_1);
         }
         return JsonUtil.objToJsonSafe(val);

@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-07 01:00
  */
@@ -33,12 +33,12 @@ public class RocketMQConfigValidator implements ConfigValidator<RocketMQConnecto
         String consumerProperties = params.get(RocketMQUtil.CONSUMER_PROPERTIES);
         if (producerProperties == null && consumerProperties == null) {
             String extInfo = params.get("extInfo");
-            Assert.hasText(extInfo, "扩展参数不能为空");
+            Assert.hasText(extInfo, "Extension parameters cannot be empty");
             Properties props = JsonUtil.jsonToObj(extInfo, Properties.class);
             connectorConfig.getExtInfo().putAll(props != null ? props : new Properties());
         } else {
-            Assert.hasText(producerProperties, "生产者参数不能为空");
-            Assert.hasText(consumerProperties, "消费者参数不能为空");
+            Assert.hasText(producerProperties, "Producer parameters cannot be empty");
+            Assert.hasText(consumerProperties, "Consumer parameters cannot be empty");
             connectorConfig.getExtInfo().put(RocketMQUtil.PRODUCER_PROPERTIES, producerProperties);
             connectorConfig.getExtInfo().put(RocketMQUtil.CONSUMER_PROPERTIES, consumerProperties);
         }
@@ -59,7 +59,7 @@ public class RocketMQConfigValidator implements ConfigValidator<RocketMQConnecto
         Assert.hasText(tableName, "TableName is empty");
         Assert.hasText(columnList, "ColumnList is empty");
         List<Field> fields = JsonUtil.jsonToArray(columnList, Field.class);
-        Assert.notEmpty(fields, "字段不能为空.");
+        Assert.notEmpty(fields, "Field cannot be empty.");
         table.setName(tableName);
         table.setColumn(fields);
         table.setType(connectorService.getExtendedTableType().getCode());

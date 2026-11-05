@@ -22,7 +22,7 @@ public class TableGroupQuartzCommand {
 
     private final List<String> primaryKeys;
 
-    // http连接器场景使用
+    // httpConnectorSite Use
     private List<String> cursorKeys;
 
     public TableGroupQuartzCommand(Table table, List<Field> fields, Table targetTable, Map<String, String> command, Plugin plugin, String pluginExtInfo) {

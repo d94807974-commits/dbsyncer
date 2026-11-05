@@ -39,9 +39,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * MongoDB Change Stream 实时增量监听器
+ * MongoDB Change Stream Real timeIncrementalListener
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-06 20:30
  */
@@ -56,7 +56,7 @@ public final class MongoDBChangeStreamListener extends AbstractListener<MongoCon
     @Override
     public void start() {
         if (CollectionUtils.isEmpty(filterTable)) {
-            throw new MongoDBException("Change Stream 监听集合不能为空");
+            throw new MongoDBException("Change Stram's listening collection cannot be empty.");
         }
         MongoConnectorInstance instance = getConnectorInstance();
         String databaseName = resolveDatabaseName();
@@ -64,16 +64,16 @@ public final class MongoDBChangeStreamListener extends AbstractListener<MongoCon
             for (String collectionName : filterTable) {
                 Table table = findSourceTable(collectionName);
                 if (table == null) {
-                    logger.warn("未找到集合 {} 的表映射，跳过 Change Stream 订阅", collectionName);
+                    logger.warn("No display map of the collection {} found, skip Change Stram subscription", collectionName);
                     continue;
                 }
                 CollectionWatcher watcher = new CollectionWatcher(databaseName, collectionName, table);
                 watcher.open(instance.getConnection(), snapshot);
                 watchers.add(watcher);
-                logger.info("MongoDB Change Stream 已订阅库 {} 集合 {}", databaseName, collectionName);
+                logger.info("MongoDB Changestream Subscription Library", databaseName, collectionName);
             }
             if (watchers.isEmpty()) {
-                throw new MongoDBException("没有可订阅的 MongoDB 集合");
+                throw new MongoDBException("No Subscription Demand for MongoDB");
             }
             connected = true;
             worker = new Worker();
@@ -81,10 +81,10 @@ public final class MongoDBChangeStreamListener extends AbstractListener<MongoCon
             worker.setDaemon(false);
             worker.start();
         } catch (Exception e) {
-            logger.error("启动 MongoDB Change Stream 监听器失败", e);
+            logger.error("Failed to start MongoDB Monitor", e);
             errorEvent(e);
             close();
-            throw new MongoDBException("启动 MongoDB Change Stream 监听器失败: " + e.getMessage(), e);
+            throw new MongoDBException("Could not close temporary folder: %s " + e.getMessage(), e);
         }
     }
 
@@ -130,7 +130,7 @@ public final class MongoDBChangeStreamListener extends AbstractListener<MongoCon
                     snapshot.put(key, resumeToken);
                 }
             } catch (Exception e) {
-                logger.error("捕获 MongoDB 集合 {} resume token 失败: {}", collectionName, e.getMessage(), e);
+                logger.error("Failed to capture MongoDB collection", collectionName, e.getMessage(), e);
             }
         }
         if (!captured.isEmpty()) {
@@ -153,7 +153,7 @@ public final class MongoDBChangeStreamListener extends AbstractListener<MongoCon
             BsonDocument resumeToken = cursor.getResumeToken();
             return resumeToken == null ? null : resumeToken.toJson();
         } catch (MongoCommandException e) {
-            throw new MongoDBException("Change Stream 需要 MongoDB 副本集或分片集群: " + e.getMessage(), e);
+            throw new MongoDBException("Change Stream needs a MongoDB copy set or grouping: " + e.getMessage(), e);
         }
     }
 
@@ -176,7 +176,7 @@ public final class MongoDBChangeStreamListener extends AbstractListener<MongoCon
         if (connectorConfig instanceof MongoDBConfig) {
             return ((MongoDBConfig) connectorConfig).getDatabase();
         }
-        throw new MongoDBException("MongoDB 数据库名不能为空");
+        throw new MongoDBException("MongoDB database name cannot be empty");
     }
 
     private String resumeKey(String collectionName) {
@@ -270,7 +270,7 @@ public final class MongoDBChangeStreamListener extends AbstractListener<MongoCon
                     sleepInMills(1000L);
                 }
             }
-            logger.info("MongoDB Change Stream Worker 线程已退出");
+            logger.info("MongoDB Changestream Worker quit");
         }
 
         private boolean pollChange(CollectionWatcher watcher) {
@@ -312,7 +312,7 @@ public final class MongoDBChangeStreamListener extends AbstractListener<MongoCon
                 }
                 cursor = iterable.cursor();
             } catch (MongoCommandException e) {
-                throw new MongoDBException("Change Stream 需要 MongoDB 副本集或分片集群: " + e.getMessage(), e);
+                throw new MongoDBException("Change Stream needs a MongoDB copy set or grouping: " + e.getMessage(), e);
             }
         }
 

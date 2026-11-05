@@ -4,34 +4,34 @@
 package org.dbsyncer.connector.http.model;
 
 /**
- * HTTP 响应对象
+ * HTTP Response Object
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-02-10 00:01
  */
 public final class HttpResponse {
 
     /**
-     * 响应状态码
+     * ResponseStatusCode
      */
     private int statusCode;
 
     /**
-     * 响应内容
+     * Response content
      */
     private String body;
 
     /**
-     * 是否成功
+     * YesNoSuccess
      */
     private boolean success;
 
     /**
-     * 构造函数
+     * ConstructFunctions
      *
-     * @param statusCode 状态码
-     * @param body       响应体
+     * @param statusCode StatusCode
+     * @param body       Response
      */
     public HttpResponse(int statusCode, String body) {
         this.statusCode = statusCode;
@@ -40,54 +40,54 @@ public final class HttpResponse {
     }
 
     /**
-     * 获取状态码
+     * AccessStatusCode
      *
-     * @return 状态码
+     * @return StatusCode
      */
     public int getStatusCode() {
         return statusCode;
     }
 
     /**
-     * 设置状态码
+     * SettingsStatusCode
      *
-     * @param statusCode 状态码
+     * @param statusCode StatusCode
      */
     public void setStatusCode(int statusCode) {
         this.statusCode = statusCode;
     }
 
     /**
-     * 获取响应体
+     * Get Response
      *
-     * @return 响应体
+     * @return Response
      */
     public String getBody() {
         return body;
     }
 
     /**
-     * 设置响应体
+     * SettingsResponse
      *
-     * @param body 响应体
+     * @param body Response
      */
     public void setBody(String body) {
         this.body = body;
     }
 
     /**
-     * 是否成功
+     * YesNoSuccess
      *
-     * @return 是否成功
+     * @return YesNoSuccess
      */
     public boolean isSuccess() {
         return success;
     }
 
     /**
-     * 设置是否成功
+     * SettingsYesNoSuccess
      *
-     * @param success 是否成功
+     * @param success YesNoSuccess
      */
     public void setSuccess(boolean success) {
         this.success = success;

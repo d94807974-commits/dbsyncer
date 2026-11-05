@@ -14,7 +14,7 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.core.MainResponse;
 
 /**
- * ES连接器实例
+ * ESConnectorExamples
  *
  * @Author AE86
  * @Version 1.0.0
@@ -32,7 +32,7 @@ public final class ESConnectorInstance implements ConnectorInstance<ESConfig, Ea
             MainResponse info = client.info(RequestOptions.DEFAULT);
             client.setVersion(Version.fromString(info.getVersion().getNumber()));
         } catch (Exception e) {
-            throw new ElasticsearchException(String.format("获取ES版本信息异常 %s, %s", config.getUrl(), e.getMessage()));
+            throw new ElasticsearchException(String.format("Can not get message: %s %s", config.getUrl(), e.getMessage()));
         }
     }
 

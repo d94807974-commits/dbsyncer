@@ -4,7 +4,7 @@
 package org.dbsyncer.biz.vo;
 
 /**
- * 同步任务列表：连接器类型（保持前端 {@code config.connectorType} 路径）。
+ * Sync taskList：ConnectorType（Keep Frontend{@code config.connectorType} Path.
  *
  * @author wuji
  * @version 1.0.0

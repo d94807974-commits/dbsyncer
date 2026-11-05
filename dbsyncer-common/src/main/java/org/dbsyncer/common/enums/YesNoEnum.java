@@ -4,7 +4,7 @@
 package org.dbsyncer.common.enums;
 
 /**
- * 是/否（整型落库：1-是；0-否）。
+ * Yes/No（Integer DownLibrary：1-Yes；0-No）。
  *
  * @author wuji
  * @version 1.0.0
@@ -13,14 +13,14 @@ package org.dbsyncer.common.enums;
 public enum YesNoEnum {
 
     /**
-     * 否
+     * No
      */
-    NO(0, "否"),
+    NO(0, "No"),
 
     /**
-     * 是
+     * Yes
      */
-    YES(1, "是");
+    YES(1, "Yes");
 
     private final int code;
     private final String message;
@@ -39,10 +39,10 @@ public enum YesNoEnum {
     }
 
     /**
-     * 布尔 → 枚举。
+     * Boolean→ Enumerate.
      *
-     * @param value 布尔值
-     * @return 是/否
+     * @param value BooleanValue
+     * @return Yes/No
      */
     public static YesNoEnum of(boolean value) {
         return value ? YES : NO;

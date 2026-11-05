@@ -15,7 +15,7 @@ import java.util.concurrent.Executor;
 
 /**
  * <pre>
- *     实现全量和增量同步任务，以及连接器读写，插件转换，表元信息，心跳检测
+ *     AchievedFullandIncrementalSync task，andConnectorRead and write,PluginConvert，TableMetaInfo，Heart rate.Test
  * </pre>
  *
  * @author AE86
@@ -25,27 +25,27 @@ import java.util.concurrent.Executor;
 public interface ParserComponent {
 
     /**
-     * 获取表元信息
+     * Get TableMetaInfo
      */
     List<MetaInfo> getMetaInfo(DefaultConnectorServiceContext context);
 
     /**
-     * 获取映射关系执行命令
+     * AccessMappingExecute Command
      */
     Map<String, String> getCommand(Mapping mapping, TableGroup tableGroup);
 
     /**
-     * 订正校验任务：按源/目标连接器生成表组执行命令
+     * Revised verification tasks：By source/Target ConnectionDeviceGenerateEndosulfan
      */
     Map<String, String> getCommand(ValidateSyncTask task, TableGroup tableGroup);
 
     /**
-     * 全量同步
+     * Full sync
      */
     void execute(Task task, Mapping mapping, TableGroup tableGroup, Executor executor);
 
     /**
-     * 批执行
+     * Batch execution
      */
     Result writeBatch(PluginContext pluginContext, Executor executor);
 }

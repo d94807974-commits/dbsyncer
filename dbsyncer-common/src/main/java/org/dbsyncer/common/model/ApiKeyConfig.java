@@ -7,19 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * API密钥配置（客户端凭证配置）
+ * API KeyConfigure（Client voucherConfigure）
  * <p>
- * 支持多版本密钥管理，用于平滑轮换。
- * 客户端使用此密钥进行身份认证，获取JWT Token。
+ * SupportINTERVersionKey Recommends: Key Management, for smooth rotation.
+ * Client uses this key to authenticate, accessJWT Token。
  * </p>
  *
- * @author 穿云
+ * @author The clouds.
  * @version 2.0.0
  */
 public class ApiKeyConfig {
 
     /**
-     * API密钥可以有多个版本，支持平滑轮换
+     * API KeyThere could be more.Version，Support smooth rotation
      */
     private final List<SecretVersion> secrets = new ArrayList<>();
 

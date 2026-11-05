@@ -8,17 +8,17 @@ package org.dbsyncer.parser.flush;
 public interface BufferResponse {
 
     /**
-     * 获取批处理数
+     * Acquisition of batches
      */
     int getTaskSize();
 
     /**
-     * 获取后缀名称
+     * Fetch SuffixName
      */
     String getSuffixName();
 
     /**
-     * 清除批处理数据
+     * ClearBatch processing data
      */
     void clearDataList();
 }

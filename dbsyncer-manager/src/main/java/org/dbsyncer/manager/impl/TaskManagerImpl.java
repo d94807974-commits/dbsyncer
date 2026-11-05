@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 本机任务执行器：按同步方式路由到对应 Puller。
+ * Here.TasksExecutor: Synchronize route to correspondingPuller。
  *
  * @author wuji
  * @version 1.0.0
@@ -69,7 +69,7 @@ public final class TaskManagerImpl implements TaskManager, ApplicationListener<C
 
     private Mapping requireMapping(String taskId) {
         Mapping mapping = mappingProfile.get(taskId);
-        Assert.notNull(mapping, String.format("同步任务不存在: %s", taskId));
+        Assert.notNull(mapping, String.format("Synchronising tasks do not exist: %s", taskId));
         return mapping;
     }
 
@@ -81,7 +81,7 @@ public final class TaskManagerImpl implements TaskManager, ApplicationListener<C
     @Override
     public void onApplicationEvent(ClosedEvent event) {
         changeMetaState(event.getTaskId(), CommonTaskStatusEnum.READY);
-        // 集群：排空/收口后再回收本机连接（用户停止、自然结束、失败）
+        // Cluster: Empty/receiverConnect（UserStop、The natural end 1/Failed）
         releaseMappingConnectors(event.getTaskId());
     }
 
@@ -92,7 +92,7 @@ public final class TaskManagerImpl implements TaskManager, ApplicationListener<C
             long now = Instant.now().toEpochMilli();
             meta.setState(code);
             meta.setUpdateTime(now);
-            // 进入运行中时记录本轮启动时间，供耗时（updateTime - startTime）计算
+            // EnterRunningOther OrganiserStartTime，Time-consuming supplyupdateTime - startTime）Most
             if (CommonTaskStatusEnum.RUNNING == status) {
                 meta.setStartTime(now);
             }
@@ -101,7 +101,7 @@ public final class TaskManagerImpl implements TaskManager, ApplicationListener<C
     }
 
     /**
-     * 任务关闭后释放本机源/目标连接（与 PreloadTemplate.reConnect 同一套 instanceId）。
+     * TasksCloseThen release the source/Target Connection（and PreloadTemplate.reConnect Same thing.instanceId）。
      *
      * @param taskId
      */

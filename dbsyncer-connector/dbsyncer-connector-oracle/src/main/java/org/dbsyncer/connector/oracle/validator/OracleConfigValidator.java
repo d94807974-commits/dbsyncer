@@ -6,7 +6,7 @@ package org.dbsyncer.connector.oracle.validator;
 import org.dbsyncer.sdk.connector.AbstractDataBaseConfigValidator;
 
 /**
- * Oracle连接配置校验器实现
+ * OracleConnectConfigureVerifyer Achieved
  *
  * @Author AE86
  * @Version 1.0.0

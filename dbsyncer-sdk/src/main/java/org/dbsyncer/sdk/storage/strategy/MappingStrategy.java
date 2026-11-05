@@ -7,7 +7,7 @@ import org.dbsyncer.sdk.enums.StorageEnum;
 import org.dbsyncer.sdk.storage.Strategy;
 
 /**
- * 历史 mapping 策略：已并入 {@link StorageEnum#TASK}，保留类名兼容调用方。
+ * Historymapping Strategy: incorporated{@link StorageEnum#TASK}，ReservationsClass NameCompatible caller.
  *
  * @Author AE86
  * @Version 1.0.0

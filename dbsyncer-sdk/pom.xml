@@ -10,7 +10,7 @@
     <artifactId>dbsyncer-sdk</artifactId>
 
     <dependencies>
-        <!-- Common 公共层 -->
+        <!-- Common Public Level -->
         <dependency>
             <groupId>org.ghi</groupId>
             <artifactId>dbsyncer-common</artifactId>

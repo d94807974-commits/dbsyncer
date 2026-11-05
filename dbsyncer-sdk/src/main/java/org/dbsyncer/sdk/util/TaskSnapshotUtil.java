@@ -16,9 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 运行快照与 Meta.SNAPSHOT 互转（权威在 {@code dbsyncer_meta}，不维护 Task 内存树）。
- * <p>任务级（IS_TASK_DETAIL=0）：整库迁移库映射 status 摘要（{@link ConfigConstant#META_SNAPSHOT_DATABASE}）；
- * 明细 Meta（TASK_ID=table_group.id）：单表续跑快照（{@link ConfigConstant#META_SNAPSHOT_TABLE_ONE}）。</p>
+ * Run Snapshotand Meta.SNAPSHOT Translating.{@code dbsyncer_meta}，Not maintainedTask MemoryTree.
+ * <p>TasksLevelIS_TASK_DETAIL=0）：Database migrationLibrary Map status Summary{@link ConfigConstant#META_SNAPSHOT_DATABASE}）；
+ * DetailsMeta（TASK_ID=table_group.id）：Quit running the picture.{@link ConfigConstant#META_SNAPSHOT_TABLE_ONE}）。</p>
  *
  * @author wuji
  * @version 1.0.0
@@ -30,7 +30,7 @@ public final class TaskSnapshotUtil {
     }
 
     /**
-     * 任务级：写入/更新单个库映射 status。
+     * TasksLevel: individual written/updatedLibrary Map status。
      */
     public static Map<String, String> putMappingStatus(Map<String, String> metaSnapshot, int mappingIndex, int status) {
         Map<String, String> target = ensureMap(metaSnapshot);
@@ -43,7 +43,7 @@ public final class TaskSnapshotUtil {
     }
 
     /**
-     * 任务级：读取单个库映射 status（无则 null）。
+     * TasksLevel: Read individualLibrary Map status（Nonethennull）。
      */
     public static Integer getMappingStatus(Map<String, String> metaSnapshot, int mappingIndex) {
         Map<String, Map<String, Object>> summary = readMappingStatusMap(metaSnapshot);
@@ -63,14 +63,14 @@ public final class TaskSnapshotUtil {
     }
 
     /**
-     * 任务级：库映射是否已完成。
+     * TasksLevel:LibraryTable GroupYesNoCompleted。
      */
     public static boolean isMappingDone(Map<String, String> metaSnapshot, int mappingIndex) {
         return CommonTaskStatusEnum.isDone(getMappingStatus(metaSnapshot, mappingIndex));
     }
 
     /**
-     * 任务级：清空库映射 status 摘要。
+     * TasksLevel:ClearLibrary Map status Summary.
      */
     public static Map<String, String> clearMappingStatusSummary(Map<String, String> metaSnapshot) {
         Map<String, String> target = ensureMap(metaSnapshot);
@@ -79,9 +79,9 @@ public final class TaskSnapshotUtil {
     }
 
     /**
-     * 进度明细：写入单表快照到结果 Meta.SNAPSHOT。
+     * Progress details: Scene of writing toResult Meta.SNAPSHOT。
      *
-     * @param mappingIndex 整库迁移时传入库映射 index；校验传 null
+     * @param mappingIndex Database migrationOrganisationLibrary Map index；Validationnull
      */
     public static Map<String, String> writeTableSnapshot(Map<String, String> metaSnapshot,
                                                          CommonTaskSnapshot tableSnapshot,
@@ -102,7 +102,7 @@ public final class TaskSnapshotUtil {
     }
 
     /**
-     * 进度明细：读取单表快照。
+     * Detailed progress: Read table snapshots.
      */
     public static CommonTaskSnapshot readTableSnapshot(Map<String, String> metaSnapshot) {
         if (metaSnapshot == null) {
@@ -120,7 +120,7 @@ public final class TaskSnapshotUtil {
     }
 
     /**
-     * 进度明细：读取库映射 index（无则 null）。
+     * Progress detail: readLibrary Map index（Nonethennull）。
      */
     public static Integer readMappingIndex(Map<String, String> metaSnapshot) {
         if (metaSnapshot == null) {
@@ -138,7 +138,7 @@ public final class TaskSnapshotUtil {
     }
 
     /**
-     * 解析任务级库映射 status 摘要为 index → status。
+     * ParsingTasksLevelLibrary Map status Summary asindex → status。
      */
     public static Map<Integer, Integer> readMappingStatusCodes(Map<String, String> metaSnapshot) {
         Map<Integer, Integer> result = new HashMap<>();

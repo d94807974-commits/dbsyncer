@@ -5,7 +5,7 @@ import org.dbsyncer.sdk.model.Plugin;
 public class PluginVO extends Plugin {
 
     /**
-     * 正在使用插件的驱动名称，多个","拼接
+     * In usePluginYes.MappingName，Multiple","Collapse
      */
     private String mappingName;
 

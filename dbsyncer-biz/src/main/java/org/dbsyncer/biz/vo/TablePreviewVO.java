@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 整库迁移预览表列表 VO（游标分页 + 表类型统计）
+ * Database migrationPreview TableList VO（CursorminPage + TableTypeStatistics)
  *
  * @author wuji
  * @version 1.0.0
@@ -19,18 +19,18 @@ import java.util.Map;
 public final class TablePreviewVO extends CursorPageQuery<Table> {
 
     /**
-     * 各表类型数量统计，如 TABLE/VIEW
+     * TablesTypeQuantity statistics, e.g.TABLE/VIEW
      */
     private Map<String, Integer> typeCounts;
 
     /**
-     * 构建预览表游标分页 VO
+     * Build Preview Table CursorminPage VO
      *
-     * @param data     当前页表数据
-     * @param total    总条数
-     * @param cursor   游标（滚动分页标识）
-     * @param pageSize 每页条数
-     * @return 预览表 VO
+     * @param data     CurrentPageTable data
+     * @param total    Total number of articles
+     * @param cursor   Cursor（RollminPageIdentification)
+     * @param pageSize EveryPageNumber of bars
+     * @return Preview TableVO
      */
     public static TablePreviewVO of(List<Table> data, long total, String cursor, int pageSize) {
         TablePreviewVO vo = new TablePreviewVO();

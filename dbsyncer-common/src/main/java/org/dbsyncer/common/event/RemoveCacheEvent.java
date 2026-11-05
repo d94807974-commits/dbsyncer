@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ApplicationContextEvent;
 
 /**
- * 删除配置缓存事件
+ * DeleteConfigureCacheEvent
  *
  * @version 1.0.0
  * @author AE86

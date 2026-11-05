@@ -10,12 +10,12 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * 任务执行结果(dbsyncer_meta)。
- * <p>主键 {@code id} 为雪花，与业务实体 ID 解耦。
- * <p>关联键 {@code taskId}：任务级（{@code isTaskDetail=0}）为任务/Mapping ID；
- * 表级（{@code isTaskDetail=1}）为 {@code table_group.id}。
+ * Mandate performance(dbsyncer_meta)。
+ * <p>Primary key {@code id} To snowflake,andOperational entitiesID Untie.
+ * <p>Association Keys{@code taskId}：TasksLevel{@code isTaskDetail=0}）YesTasks/Mapping ID；
+ * Table level{@code isTaskDetail=1}）Yes{@code table_group.id}。
  *
- * <p>明细分表 {@code dbsyncer_task_detail_{taskId}} 分片使用任务级 Meta 的 taskId，不是 Meta 主键。
+ * <p>DetailsminTable{@code dbsyncer_task_detail_{taskId}} minSnippet UseTasksAdministrationMeta Yes.taskId，Oh, no.Yes Meta Primary key。
  *
  * @author AE86
  * @version 1.0.0
@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class Meta extends ConfigModel {
 
     /**
-     * 关联 ID：任务级为任务/Mapping ID；表级为 table_group.id
+     * AssociationID：TasksLevelTasks/Mapping ID；The scale istable_group.id
      */
     private String taskId;
 
@@ -34,7 +34,7 @@ public class Meta extends ConfigModel {
     private int state;
 
     /**
-     * 是否任务明细：0-任务级 1-明细级
+     * YesNoTasksDetails:0-TasksAdministration1-Details
      */
     private int isTaskDetail;
 
@@ -53,14 +53,14 @@ public class Meta extends ConfigModel {
     }
 
     /**
-     * 重置meta状态，不还原总数
+     * ResetmetaStatus，No return.Total
      */
     public void reset() {
         init();
     }
 
     /**
-     * 还原状态
+     * RevertStatus
      */
     public void clear() {
         init();

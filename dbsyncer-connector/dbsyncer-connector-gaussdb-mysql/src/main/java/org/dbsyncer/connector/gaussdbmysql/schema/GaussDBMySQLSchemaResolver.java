@@ -6,7 +6,7 @@ package org.dbsyncer.connector.gaussdbmysql.schema;
 import org.dbsyncer.connector.mysql.schema.MySQLSchemaResolver;
 
 /**
- * GaussDB MySQL 兼容标准数据类型解析器
+ * GaussDB MySQL Standard compatible dataTypeParser
  *
  * @author wuji
  * @version 1.0.0

@@ -27,7 +27,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
- * 全量+增量同步：先捕获位点 → 全量 → 从位点启动增量
+ * Full + incrementalSync: Catch subscribed→ Full → From BitStartIncremental
  *
  * @author wuji
  * @version 1.0.0
@@ -86,7 +86,7 @@ public final class FullIncrementPuller extends AbstractPuller implements FullInc
     }
 
     /**
-     * 批处理全量前准备：可恢复则跳过，否则捕获增量位点。
+     * BatchFullPrepare: recover and skip.NoCaptureIncrementalbits.
      */
     @Override
     public void prepareFullPhase(String taskId) {
@@ -96,7 +96,7 @@ public final class FullIncrementPuller extends AbstractPuller implements FullInc
     }
 
     /**
-     * 批处理全量完成后标记增量阶段并启动增量。
+     * BatchFullFinishPostmarkIncrementalPhase andStartIncremental。
      */
     @Override
     public void switchToIncrement(String taskId) {
@@ -105,7 +105,7 @@ public final class FullIncrementPuller extends AbstractPuller implements FullInc
             return;
         }
         markFullIncrementPhase(mapping.getId(), ModelEnum.INCREMENT.getCode());
-        logger.info("开始增量同步： {}", mapping.getName());
+        logger.info("Start incremental sync: }", mapping.getName());
         incrementPuller.start(mapping, false);
     }
 
@@ -117,7 +117,7 @@ public final class FullIncrementPuller extends AbstractPuller implements FullInc
                 return;
             }
             prepareFullPhase(mapping, meta);
-            logger.info("开始全量同步：{}", mapping.getName());
+            logger.info("Start FullSync: }", mapping.getName());
             fullPuller.runSync(mapping, false);
             if (!isRunning(taskId)) {
                 return;
@@ -125,7 +125,7 @@ public final class FullIncrementPuller extends AbstractPuller implements FullInc
             markFullIncrementPhase(taskId, ModelEnum.INCREMENT.getCode());
             incrementPuller.start(mapping, autoRecovery);
         } catch (Exception e) {
-            logger.error("全量+增量同步失败：{}, {}", taskId, e.getMessage(), e);
+            logger.error("Full + incremental sync failed: },}", taskId, e.getMessage(), e);
             logService.log(LogType.SystemLog.ERROR, e.getMessage());
             incrementPuller.close(taskId);
             publishClosedEvent(taskId);
@@ -138,7 +138,7 @@ public final class FullIncrementPuller extends AbstractPuller implements FullInc
         if (shouldResumeFullPhase(meta)) {
             return;
         }
-        //重新开始，获取增量位点信息
+        //Start over, get in.IncrementalBitsInfo
         incrementPuller.captureAndSaveOffset(mapping);
     }
 
@@ -154,11 +154,11 @@ public final class FullIncrementPuller extends AbstractPuller implements FullInc
     }
 
     /**
-     * 全量阶段未完成时，从 snapshot 断点恢复，避免重置进度后 success 重复累加
+     * FullNot in placeFinish, fromsnapshot Breakpoints restored, avoid.ResetAfterShit.success Repeat cumulative
      */
     private boolean shouldResumeFullPhase(Meta meta) {
         String phase = getFullIncrementPhase(meta);
-        //如果是空直接表示全量增量都没有跑
+        //IfYesEmpty InterregionalFullIncrementalHe didn't run.
         if (StringUtil.isBlank(phase)) {
             return false;
         }
@@ -173,13 +173,13 @@ public final class FullIncrementPuller extends AbstractPuller implements FullInc
     }
 
     /**
-     * 标记状态
+     * Tag           Status
      */
     private void markFullIncrementPhase(String taskId, String phase) {
         Meta meta = taskMetaProfile.getMeta(taskId);
         meta.getSnapshot().put(ParserEnum.FULL_INCREMENT_PHASE.getCode(), phase);
 
-        //清除全量标记
+        //ClearFullTag           
         meta.getSnapshot().remove(ParserEnum.PAGE_INDEX.getCode());
         meta.getSnapshot().remove(ParserEnum.CURSOR.getCode());
         meta.getSnapshot().remove(ParserEnum.TABLE_GROUP_INDEX.getCode());

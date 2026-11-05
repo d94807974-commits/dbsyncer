@@ -17,7 +17,7 @@ import javax.annotation.Resource;
 import java.util.Map;
 
 /**
- * 单机全量页级落库：刷 Meta/明细并可选发布进度事件。
+ * UnitFullPageLevelLibrary：Brush.Meta/Details and options for release progressEvent。
  *
  * @author wuji
  * @version 1.0.0

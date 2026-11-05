@@ -41,7 +41,7 @@ public class PgOutputMessageDecoder extends AbstractMessageDecoder {
     private static final LocalDateTime PG_EPOCH = LocalDateTime.of(2000, 1, 1, 0, 0, 0);
 
     /**
-     * 普通表与分区主表；子分区 OID 归一到根主表名，便于按主表映射过滤增量事件。
+     * General TableandminSector EntitiesMain Table；SonminSectorOID Into the root.Table name，Easy to pressMain TableMap FilterIncremental events。
      */
     private static final String GET_TABLE_SCHEMA = "SELECT t.oid, COALESCE(root.relname, t.relname) AS tableName "
             + "FROM pg_class t "
@@ -133,7 +133,7 @@ public class PgOutputMessageDecoder extends AbstractMessageDecoder {
 
         logger.info("Creating new publication '{}' for plugin '{}'", pubName, getOutputPlugin());
         try {
-            // PG13+：变更事件按分区主表上报，与按主表配置的映射一致
+            // PG13+：ChangeEventPressminSector EntitiesMain TableReport,andPressMain TableConfigureMaps Same
             String createPublication = String.format(
                     "CREATE PUBLICATION %s FOR ALL TABLES WITH (publish_via_partition_root = true)", pubName);
             logger.info("Creating Publication with statement '{}'", createPublication);
@@ -157,7 +157,7 @@ public class PgOutputMessageDecoder extends AbstractMessageDecoder {
     }
 
     /**
-     * 已有 publication 尽量开启按主表上报；失败时依赖 OID 子→父归一仍可对齐映射。
+     * Existingpublication Try.OnPressMain TableReporting;FailedOrganisationOID Son→Fatherhood can still be mapped together.
      */
     private void ensurePublishViaPartitionRoot(String pubName) {
         try {
@@ -182,7 +182,7 @@ public class PgOutputMessageDecoder extends AbstractMessageDecoder {
         if (CollectionUtils.isEmpty(schemas)) {
             return;
         }
-        // 同一逻辑表名（含分区主表）只拉取一次列元数据，避免子分区 OID 重复打 JDBC
+        // Same logic.Table name（HamminSector EntitiesMain Table）Only take one column metadata to avoid a childminSectorOID Repeat.JDBC
         Map<String, List<Field>> columnsByTable = new HashMap<>();
         for (Map map : schemas) {
             Long oid = (Long) map.get("oid");
@@ -205,7 +205,7 @@ public class PgOutputMessageDecoder extends AbstractMessageDecoder {
         final int relationId = buffer.getInt();
         final TableId tableId = tables.get(relationId);
         if (null != tableId) {
-            // UPDATE 场景下可能包含旧值(O)和新值(N)，需要合并处理
+            // UPDATE The scene may contain old ones.Value(O)and newValue(N)，Needs to be combined
             if (type == MessageTypeEnum.UPDATE) {
                 return parseUpdateData(tableId, buffer);
             }
@@ -227,12 +227,12 @@ public class PgOutputMessageDecoder extends AbstractMessageDecoder {
     }
     
     /**
-     * 解析 UPDATE 数据，处理新旧值合并
-     * PostgreSQL pgoutput 在 REPLICA IDENTITY FULL 模式下会发送:
-     * 1. "O" - 旧值元组 (可选)
-     * 2. "N" - 新值元组
+     * ParsingUPDATE Data FourthlyValueMerge
+     * PostgreSQL pgoutput Yes.REPLICA IDENTITY FULL Send in mode:
+     * 1. "O" - AppealValueDivision(Optional)
+     * 2. "N" - NewValueDivision
      * 
-     * 新值中可能包含 TOASTED ("u") 字段，表示该字段未变更，需要从旧值中获取
+     * NewValuemay containTOASTED ("u") Field，OrganisationFieldUnchanged, required from oldValueOther Organiser
      */
     private RowChangedEvent parseUpdateData(TableId tableId, ByteBuffer buffer) {
         List<Object> oldData = null;
@@ -240,12 +240,12 @@ public class PgOutputMessageDecoder extends AbstractMessageDecoder {
         
         String firstTupleType = new String(new byte[]{buffer.get()}, 0, 1);
         
-        // 如果第一个是旧值 "O"，先读取旧值
+        // If the firstYesAppealValue "O"，Read old firstValue
         if ("O".equals(firstTupleType)) {
             oldData = new ArrayList<>();
             readTupleData(tableId, buffer, oldData);
             
-            // 继续读取新值标识符
+            // Continue reading newValuePresidency
             if (buffer.hasRemaining()) {
                 String secondTupleType = new String(new byte[]{buffer.get()}, 0, 1);
                 if ("N".equals(secondTupleType)) {
@@ -254,23 +254,23 @@ public class PgOutputMessageDecoder extends AbstractMessageDecoder {
                 }
             }
         } else if ("N".equals(firstTupleType)) {
-            // 直接读取新值（没有旧值的情况）
+            // Read directly newValue（No old ones.Valueof the Convention)
             newData = new ArrayList<>();
             readTupleData(tableId, buffer, newData);
         } else {
-            // 这里原则上不会进入，但不排除日志格式变更，故严谨起见增加日志输出，便于外部感知
+            // In principle, it's not an entry, but it's not an exception.LogChanged format, so I'm just trying to increase it.LogOutput to facilitate external perception
             logger.error("UPDATE: unexpected tuple type '{}', expected 'O' or 'N'", firstTupleType);
             return null;
         }
         
-        // 合并新旧值：如果新值中有 TOASTED 字段，使用旧值填充
+        // Merge old and newValue：If it's newValueYes.TOASTED Field，Use oldValueFill
         List<Object> mergedData = mergeUpdateData(oldData, newData);
         return new RowChangedEvent(tableId.tableName, MessageTypeEnum.UPDATE.name(), mergedData, null, null);
     }
     
     /**
-     * 合并 UPDATE 的新旧值
-     * 如果新值中某些字段是 TOASTED（未变更），则使用旧值中的对应字段
+     * MergeUPDATE Old and newValue
+     * If it's newValuesomeFieldYes TOASTED（No change)ValueCorrespondingField
      */
     private List<Object> mergeUpdateData(List<Object> oldData, List<Object> newData) {
         if (newData == null) {
@@ -281,12 +281,12 @@ public class PgOutputMessageDecoder extends AbstractMessageDecoder {
             return newData;
         }
         
-        // 合并数据：新值中的 TOASTED 字段用旧值替换
+        // Merged data: newValueMediumTOASTED FieldOldValueReplace
         List<Object> merged = new ArrayList<>(newData.size());
         for (int i = 0; i < newData.size(); i++) {
             Object newValue = newData.get(i);
             if ("TOASTED".equals(newValue) && i < oldData.size()) {
-                // 使用旧值填充 TOASTED 字段
+                // Use oldValueFillTOASTED Field
                 merged.add(oldData.get(i));
             } else {
                 merged.add(newValue);
@@ -339,7 +339,7 @@ public class PgOutputMessageDecoder extends AbstractMessageDecoder {
         List<MetaInfo> metaInfos = connectorService.getMetaInfo(connectorInstance, context);
         MetaInfo metaInfo = CollectionUtils.isEmpty(metaInfos) ? null : metaInfos.get(0);
         Assert.isTrue(metaInfo != null, String.format("The table '%s' is not exist in schema '%s'.", tableName, schema));
-        // 添加详细日志，方便诊断问题
+        // AddDetailsLog，Facilitating diagnosis of problems
         if (CollectionUtils.isEmpty(metaInfo.getColumn())) {
             logger.error("Table '{}.{}' has no columns. This may be caused by unsupported column types. ", schema, tableName);
             throw new IllegalArgumentException(

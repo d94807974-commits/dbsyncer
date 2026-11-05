@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.Properties;
 
 /**
- * 关系型数据库连接配置校验器
+ * Relationship DataLibraryConnectConfigureVerifyer
  *
  * @Author AE86
  * @Version 1.0.0
@@ -44,8 +44,8 @@ public abstract class AbstractDataBaseConfigValidator implements ConfigValidator
         Assert.hasText(password, "Password is empty.");
         Assert.hasText(username, "Username is empty.");
         Assert.hasText(password, "Password is empty.");
-        Assert.isTrue(maxActive >= 1 && maxActive <= 512, "最大连接数只允许输入1-512.");
-        Assert.isTrue(keepAlive >= 10000 && keepAlive <= 120000, "有效期只允许输入10000-120000.");
+        Assert.isTrue(maxActive >= 1 && maxActive <= 512, "Max connections must be between 1 and 512.");
+        Assert.isTrue(keepAlive >= 10000 && keepAlive <= 120000, "TTL must be between 10000 and 120000.");
 
         connectorConfig.setHost(host);
         connectorConfig.setPort(port);

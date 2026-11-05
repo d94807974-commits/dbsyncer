@@ -12,7 +12,7 @@ import org.dbsyncer.sdk.connector.database.AbstractDatabaseConnector;
 import java.util.Map;
 
 /**
- * GaussDB 配置校验
+ * GaussDB ConfigureVerify INTRODUCTION
  *
  * @author wuji
  * @version 1.0.0

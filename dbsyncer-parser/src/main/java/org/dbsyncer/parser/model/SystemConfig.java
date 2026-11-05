@@ -12,7 +12,7 @@ import org.dbsyncer.sdk.constant.ConfigConstant;
 import org.dbsyncer.sdk.model.NoticeConfig;
 
 /**
- * 系统配置
+ * System settings
  *
  * @author AE86
  * @version 1.0.0
@@ -25,117 +25,117 @@ public class SystemConfig extends ConfigModel implements Cloneable {
     }
 
     /**
-     * 同步数据过期时间（天）
+     * Sync dataExpiration time（days）
      */
     private int expireDataDays = 30;
 
     /**
-     * 系统日志过期时间（天）
+     * System LogExpiration time（days）
      */
     private int expireLogDays = 30;
 
     /**
-     * 日志文件过期时间（天）
+     * LogDocumentationExpiration time（days）
      */
     private int expireFileLogDays = 15;
 
     /**
-     * 登录失败锁定时长（分钟）
+     * Login failedLockScheduledLongminutes）
      */
     private int loginLockMinutes = 15;
 
     /**
-     * 是否记录同步成功数据（false-关闭; true-开启）
+     * YesNoRecord synchronised successful data（false-Close; true-On）
      */
     private boolean enableStorageWriteSuccess;
 
     /**
-     * 是否记录同步失败数据（false-关闭; true-开启）
+     * YesNoRecording Synchronising Failed Data（false-Close; true-On）
      */
     private boolean enableStorageWriteFail = true;
 
     /**
-     * 记录同步失败日志最大长度
+     * RecordsSync failedLogMaxLength
      */
     private int maxStorageErrorLength = 8192;
 
     /**
-     * 是否记录全量数据（false-关闭; true-开启）
+     * YesNoRecord full volume data（false-Close; true-On）
      */
     private boolean enableStorageWriteFull;
 
     /**
-     * 是否启用水印
+     * YesNoEnableWatermark
      */
     private boolean enableWatermark;
 
     /**
-     * 水印内容
+     * Watermark Content Income
      */
     private String watermark;
 
     /**
-     * 表执行器上限数
+     * TableExecut MOUUpper CWC
      */
     private int maxBufferActuatorSize = 50;
 
     /**
-     * 是否打印trace信息（false-关闭; true-开启）
+     * YesNoCan not open message（false-Close; true-On）
      */
     private boolean enablePrintTraceInfo;
 
     /**
-     * 是否开放API
+     * YesNoOpenAPI
      */
     private boolean enableOpenAPI;
 
     /**
-     * RSA配置
+     * RSAConfigure
      */
     private RsaConfig rsaConfig;
 
     /**
-     * JWT密钥配置
+     * JWTKeyConfigure
      */
     private JwtSecretConfig jwtSecretConfig;
 
     /**
-     * API密钥配置（客户端凭证）
+     * API KeyConfigure（Client voucher)
      */
     private ApiKeyConfig apiKeyConfig;
 
     /**
-     * IP白名单配置
+     * IP whitelistConfigure
      */
     private IpWhitelistConfig ipWhitelistConfig;
 
     /**
-     * 通知配置
+     * AnnouncementsConfigure
      */
     private NoticeConfig noticeConfig;
 
     /**
-     * 并发表数
+     * ?
      */
     private int maxTableCount = 10;
 
     /**
-     * 并发分片数
+     * ParallelminNumber of pieces
      */
     private int maxPlanCount = 10;
 
     /**
-     * 分片总数（与任务 readNum×threadNum 相除得到每波预切片数）
+     * Total number of segments（andTasks readNum×threadNum The number of slices per wave divided)
      */
     private int shardTotal = 1_000_000;
 
     /**
-     * 分片运行超时（毫秒）
+     * min(b) Run the piece over time (c)ms）
      */
     private long shardTimeoutMs = 300_000L;
 
     /**
-     * 集群节点间内部接口共享密钥，生产集群各节点必须配置相同值，防止未鉴权启停任务。
+     * Internal interfaces between cluster nodes shared with key and production cluster nodes must be configured with the same values to prevent undiscovered start-ups。
      */
     private String clusterSecret = "9r+KZ1FNjSpob+shIVXPeuP+u6m2d9z/7RgeY/1vzp0=";
 

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
- * 通用执行器配置
+ * General actuatorConfigure
  *
  * @author AE86
  * @version 1.0.0
@@ -19,17 +19,17 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 public class GeneralBufferConfig extends BufferActuatorConfig {
 
     /**
-     * 工作线程数
+     * WorkThreads
      */
     private int threadCoreSize = Runtime.getRuntime().availableProcessors() * 2;
 
     /**
-     * 最大工作线程数
+     * Max.Threads
      */
     private int maxThreadSize = threadCoreSize * 2;;
 
     /**
-     * 工作线任务队列
+     * WorklineTasksLine
      */
     private int threadQueueCapacity = 1000;
 

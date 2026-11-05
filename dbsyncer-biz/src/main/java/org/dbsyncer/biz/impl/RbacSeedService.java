@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * RBAC 种子：幂等灌入菜单权限点。超管按 username=admin 识别，不预置角色。
+ * RBAC Seeds: Filling Menu with ThreadsPermissionsPoint. Superbar pressusername=admin Identification, no presetRole。
  *
  * @author wuji
  * @version 1.0.0
@@ -43,7 +43,7 @@ public class RbacSeedService implements ApplicationListener<ContextRefreshedEven
         try {
             seed();
         } catch (Exception e) {
-            logger.error("RBAC 种子初始化失败", e);
+            logger.error("Initialization of the RBAC torrent failed", e);
         }
     }
 
@@ -52,7 +52,7 @@ public class RbacSeedService implements ApplicationListener<ContextRefreshedEven
         for (PermissionDef def : defs) {
             ensurePermission(def);
         }
-        logger.info("RBAC 种子完成：permissions={}", defs.size());
+        logger.info("RBAC Feed Completion: missions=}", defs.size());
     }
 
     private Permission ensurePermission(PermissionDef def) {
@@ -74,21 +74,21 @@ public class RbacSeedService implements ApplicationListener<ContextRefreshedEven
 
     private static List<PermissionDef> permissionDefs() {
         return Arrays.asList(
-                new PermissionDef("user:view", "查看用户", PermissionModuleEnum.USER),
-                new PermissionDef("user:edit", "编辑用户", PermissionModuleEnum.USER),
-                new PermissionDef("connector:view", "查看连接器", PermissionModuleEnum.CONNECTOR),
-                new PermissionDef("connector:edit", "编辑连接器", PermissionModuleEnum.CONNECTOR),
-                new PermissionDef("mapping:view", "查看同步任务", PermissionModuleEnum.MAPPING),
-                new PermissionDef("mapping:edit", "编辑同步任务", PermissionModuleEnum.MAPPING),
-                new PermissionDef("mapping:operate", "启停同步任务", PermissionModuleEnum.MAPPING),
-                new PermissionDef("notice:view", "查看告警配置", PermissionModuleEnum.NOTICE),
-                new PermissionDef("notice:edit", "编辑告警配置", PermissionModuleEnum.NOTICE),
-                new PermissionDef("license:view", "查看授权", PermissionModuleEnum.LICENSE),
-                new PermissionDef("license:edit", "管理授权", PermissionModuleEnum.LICENSE),
-                new PermissionDef("system:view", "查看系统配置", PermissionModuleEnum.SYSTEM),
-                new PermissionDef("system:edit", "编辑系统配置", PermissionModuleEnum.SYSTEM),
-                new PermissionDef("acl:view", "查看资源授权", PermissionModuleEnum.ACL),
-                new PermissionDef("acl:edit", "编辑资源授权", PermissionModuleEnum.ACL)
+                new PermissionDef("user:view", "View Users", PermissionModuleEnum.USER),
+                new PermissionDef("user:edit", "Edit User", PermissionModuleEnum.USER),
+                new PermissionDef("connector:view", "View Connector", PermissionModuleEnum.CONNECTOR),
+                new PermissionDef("connector:edit", "Edit Connector", PermissionModuleEnum.CONNECTOR),
+                new PermissionDef("mapping:view", "View Sync Tasks", PermissionModuleEnum.MAPPING),
+                new PermissionDef("mapping:edit", "Edit Sync Tasks", PermissionModuleEnum.MAPPING),
+                new PermissionDef("mapping:operate", "Synchronising folder", PermissionModuleEnum.MAPPING),
+                new PermissionDef("notice:view", "View alarm configuration", PermissionModuleEnum.NOTICE),
+                new PermissionDef("notice:edit", "Edit alarm configuration", PermissionModuleEnum.NOTICE),
+                new PermissionDef("license:view", "View Conflicts", PermissionModuleEnum.LICENSE),
+                new PermissionDef("license:edit", "Management delegation of authority", PermissionModuleEnum.LICENSE),
+                new PermissionDef("system:view", "Extensive System Configuration", PermissionModuleEnum.SYSTEM),
+                new PermissionDef("system:edit", "Edit System Configuration", PermissionModuleEnum.SYSTEM),
+                new PermissionDef("acl:view", "View Resource Authorizations", PermissionModuleEnum.ACL),
+                new PermissionDef("acl:edit", "Edit Resource Authorization", PermissionModuleEnum.ACL)
         );
     }
 

@@ -7,9 +7,9 @@ import org.dbsyncer.connector.mongodb.util.MongoUtil;
 import org.dbsyncer.sdk.model.ConnectorConfig;
 
 /**
- * MongoDB 连接配置
+ * MongoDB ConnectConfigure
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-06 20:00
  */
@@ -26,7 +26,7 @@ public class MongoDBConfig extends ConnectorConfig {
     private String database;
 
     /**
-     * 认证库，默认 admin
+     * Authentication Library，Defaultadmin
      */
     private String authDatabase = "admin";
 

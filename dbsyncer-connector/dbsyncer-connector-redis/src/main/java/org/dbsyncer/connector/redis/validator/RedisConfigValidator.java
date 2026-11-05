@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Redis连接配置校验器
+ * RedisConnectConfigureVerifyer
  */
 @Component
 public class RedisConfigValidator implements ConfigValidator<RedisConnector, RedisConfig> {
@@ -56,7 +56,7 @@ public class RedisConfigValidator implements ConfigValidator<RedisConnector, Red
         Assert.hasText(tableName, "TableName is empty");
         Assert.hasText(columnList, "ColumnList is empty");
         List<Field> fields = JsonUtil.jsonToArray(columnList, Field.class);
-        Assert.notEmpty(fields, "字段不能为空.");
+        Assert.notEmpty(fields, "Field cannot be empty.");
         table.setName(tableName);
         table.setColumn(fields);
         table.setType(connectorService.getExtendedTableType().getCode());

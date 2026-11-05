@@ -28,17 +28,17 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Java语言提供了八种基本类型，六种数字类型（四个整数型，两个浮点型），一种字符类型，一种布尔型。
+ * JavaLanguage provides eight basics.Type，Six figures/82Type（Four integers, two floats), one characterType，A Improver.
  * <p>
  * <ol>
- * <li>整数：包括int,short,byte,long</li>
- * <li>浮点型：float,double</li>
- * <li>字符：char</li>
- * <li>布尔：boolean</li>
+ * <li>Integer number: includesint,short,byte,long</li>
+ * <li>Floating point type:float,double</li>
+ * <li>Character:char</li>
+ * <li>Boole:boolean</li>
  * </ol>
  *
  * <pre>
- * 类型     长度     大小      最小值     最大值
+ * Type     Length     Size MinimumValue     MaxValue
  * byte     1Byte    8-bit     -128       +127
  * short    2Byte    16-bit    -2^15      +2^15-1
  * int      4Byte    32-bit    -2^31      +2^31-1
@@ -49,7 +49,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * boolean  8Byte    64-bit
  * </pre>
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2024-11-26 20:50
  */
@@ -105,10 +105,10 @@ public abstract class AbstractSchemaResolver implements SchemaResolver {
         }
         DataTypeEnum fieldType = getFieldType(field);
         switch (fieldType) {
-            // 字符串
+            // String
             case STRING:
                 return value.asString();
-            // 时间：仅当为 8 字节时按 LONG 解析，否则按字符串（如 date_range 的 JSON、日期格式串）
+            // Time：Just as8 Press byteLONG I'm sorry.Noby string (e. g.date_range Yes.JSON、Date format string)
             case TIMESTAMP:
                 return isStoredAsLong(v) ? value.asTimestamp() : value.asString();
             case TIME:
@@ -116,7 +116,7 @@ public abstract class AbstractSchemaResolver implements SchemaResolver {
             case DATE:
                 return isStoredAsLong(v) ? value.asDate() : value.asString();
 
-            // 数字：仅当字节长度与类型匹配时按二进制解析，否则按字符串（如 *_range 的 JSON）
+            // Number: Bytes onlyLengthandTypeWhen matching, solve it by binary.Noby string (e. g.*_range Yes.JSON）
             case INT:
                 if (isStoredAsFixed(v, BinlogByteEnum.INTEGER.getByteLength())) {
                     return value.asInteger();
@@ -150,11 +150,11 @@ public abstract class AbstractSchemaResolver implements SchemaResolver {
                 return isStoredAsFixed(v, BinlogByteEnum.DOUBLE.getByteLength()) ? value.asDouble() : value.asString();
             case DECIMAL:
                 return value.asBigDecimal();
-            // 布尔
+            // Boolean
             case BOOLEAN:
                 return value.asBoolean();
 
-            // 字节
+            // Bytes
             case BYTES:
                 return value.asByteArray();
             default:
@@ -192,30 +192,30 @@ public abstract class AbstractSchemaResolver implements SchemaResolver {
     }
 
     private ByteString serialize(Object value) {
-        // 自定义数据类型
+        // CustomData FactType
         if (value instanceof CustomData) {
             CustomData cd = (CustomData) value;
             return ByteString.copyFromUtf8(cd.toString());
         }
-        // Map、List 及其实现（LinkedHashMap、TreeMap、ArrayList 等）统一按 JSON 存储，避免落 default 不序列化
+        // Map、List and its realizationLinkedHashMap、TreeMap、ArrayList Unanimously pressJSON Store, avoid landingdefault Unsequenced
         if (value instanceof Map || value instanceof List) {
             return ByteString.copyFromUtf8(JsonUtil.objToJsonSafe(value));
         }
 
         String type = value.getClass().getName();
         switch (type) {
-            // 字节
+            // Bytes
             case "[B":
                 return ByteString.copyFrom((byte[]) value);
             case "java.lang.Byte":
                 return ByteString.copyFromUtf8(String.valueOf(value));
-            // 字符串
+            // String
             case "java.lang.String":
                 return ByteString.copyFromUtf8((String) value);
             case "java.util.UUID":
                 UUID uuid = (UUID) value;
                 return ByteString.copyFromUtf8(uuid.toString());
-            // 时间
+            // Time
             case "java.sql.Timestamp":
                 return allocateByteBufferToByteString(BinlogByteEnum.LONG, buffer -> {
                     Timestamp timestamp = (Timestamp) value;
@@ -236,7 +236,7 @@ public abstract class AbstractSchemaResolver implements SchemaResolver {
                     Time time = (Time) value;
                     buffer.putLong(time.getTime());
                 });
-            // 数字
+            // Numbers
             case "java.lang.Integer":
                 return allocateByteBufferToByteString(BinlogByteEnum.INTEGER, buffer -> buffer.putInt((Integer) value));
             case "java.math.BigInteger":
@@ -256,7 +256,7 @@ public abstract class AbstractSchemaResolver implements SchemaResolver {
             case "java.util.BitSet":
                 BitSet bitSet = (BitSet) value;
                 return ByteString.copyFrom(bitSet.toByteArray());
-            // 布尔(1为true;0为false)
+            // Boolean(1Yestrue;0Yesfalse)
             case "java.lang.Boolean":
                 return allocateByteBufferToByteString(BinlogByteEnum.SHORT, buffer -> {
                     Boolean b = (Boolean) value;
@@ -278,8 +278,8 @@ public abstract class AbstractSchemaResolver implements SchemaResolver {
     }
 
     /**
-     * 判断 ByteString 是否按定长二进制存储。若为 JSON 串等（如 date_range、*_range 的 Map），
-     * 应按 asString 反序列化，否则按 LONG/INT 等会误读前 N 字节导致日期或数字乱码。
+     * DecisionByteString YesNoStores on a fixed long binary. IfJSON Threads etc. (e.g.)date_range、*_range Yes.Map），
+     * ByasString Inverse sequence,NoPressLONG/INT Before you miss.N Bytes cause date or number incoherence.
      */
     protected boolean isStoredAsFixed(ByteString v, int expectedBytes) {
         return v != null && v.size() == expectedBytes;

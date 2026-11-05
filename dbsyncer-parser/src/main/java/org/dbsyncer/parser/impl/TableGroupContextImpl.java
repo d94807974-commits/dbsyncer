@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2025-01-16 23:34
  */
@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class TableGroupContextImpl implements TableGroupContext {
 
     /**
-     * 驱动表映射关系
+     * MappingMap relation
      */
     private final Map<String, InnerMapping> tableGroupMap = new ConcurrentHashMap<>();
 
@@ -43,7 +43,7 @@ public final class TableGroupContextImpl implements TableGroupContext {
     @Override
     public void update(Mapping mapping, List<TableGroup> tableGroups) {
         tableGroupMap.computeIfPresent(mapping.getId(), (k, innerMap) -> {
-            // 先清空表映射关系，再更新表映射关系
+            // FirstClearMap relation，UpdateMap relation
             tableGroups.stream().findFirst().ifPresent(tableGroup -> innerMap.remove(tableGroup.getSourceTable().getName()));
             tableGroups.forEach(tableGroup -> {
                 String sourceTableName = tableGroup.getSourceTable().getName();

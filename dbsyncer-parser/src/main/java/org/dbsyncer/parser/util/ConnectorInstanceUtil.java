@@ -4,19 +4,19 @@
 package org.dbsyncer.parser.util;
 
 /**
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2025-12-01 22:56
  */
 public abstract class ConnectorInstanceUtil {
 
     /**
-     * 数据源连接实例后缀
+     * Data FactSourceConnectExample Postfix
      */
     public static final String SOURCE_SUFFIX = "S";
 
     /**
-     * 目标源连接实例后缀
+     * TargetConnectExample Postfix
      */
     public static final String TARGET_SUFFIX = "T";
 

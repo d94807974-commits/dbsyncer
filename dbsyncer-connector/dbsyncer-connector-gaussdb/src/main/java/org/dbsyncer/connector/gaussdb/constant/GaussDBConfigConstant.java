@@ -4,7 +4,7 @@
 package org.dbsyncer.connector.gaussdb.constant;
 
 /**
- * GaussDB 连接配置常量
+ * GaussDB ConnectConfigureConstant
  *
  * @author wuji
  * @version 1.0.0

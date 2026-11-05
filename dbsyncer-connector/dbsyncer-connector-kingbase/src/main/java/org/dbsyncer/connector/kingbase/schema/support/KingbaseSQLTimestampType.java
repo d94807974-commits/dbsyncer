@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2025-06-25 23:26
  */
@@ -23,15 +23,15 @@ public final class KingbaseSQLTimestampType extends TimestampType {
     private enum TypeEnum {
 
         /**
-         * 标准时间戳
+         * StandardTimePoke
          */
         TIMESTAMP("timestamp"),
         /**
-         * 带时区时间戳
+         * Time zoneTimePoke
          */
         TIMESTAMP_TZ("timestamptz"),
         /**
-         * MySQL 兼容模式常见类型名
+         * MySQL Works mode is commonTypeFirst Name
          */
         DATETIME("datetime");
 

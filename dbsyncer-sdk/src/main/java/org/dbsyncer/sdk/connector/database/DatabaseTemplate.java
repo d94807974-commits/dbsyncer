@@ -943,12 +943,12 @@ public class DatabaseTemplate implements JdbcOperations {
                     }
 
                     int[] executeBatch = ps.executeBatch();
-                    // Oracle批量执行的结果, 不管成功或失败都是[-2, -2, ..]. 这里进行反射，获取真实的行数，如果影响行数不符合预期，统一返回[0, 0, ..]
+                    // OracleBatch implementedResult, Whatever.SuccessorFailedBothYes[-2, -2, ..]. Respond here to capture the true number of lines, and if the number of influence lines does not match expectations, harmonizeBack[0, 0, ..]
                     if (connection.isOracleDriver()) {
                         // oracle.jdbc.driver.OraclePreparedStatementWrapper.preparedStatement(T4CPreparedStatement<OraclePreparedStatement<OracleStatement.rowsProcessed)
                         Object preparedStatement = invoke(ps, 0, "preparedStatement");
                         Number rowsProcessed = (Number) invoke(preparedStatement, 2, "rowsProcessed");
-                        // 不符合预期值（实际处理的行数少于提交的行数）
+                        // Not in line with expectationsValue（Fewer lines actually processedSubmitLines)
                         if (batchSize != rowsProcessed.intValue()) {
                             Arrays.fill(executeBatch, 0);
                             return executeBatch;

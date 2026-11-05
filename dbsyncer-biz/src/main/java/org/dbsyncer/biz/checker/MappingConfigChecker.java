@@ -12,7 +12,7 @@ import java.util.Map;
 public interface MappingConfigChecker {
 
     /**
-     * 修改配置
+     * UpdateConfigure
      *
      * @param mapping
      * @param params

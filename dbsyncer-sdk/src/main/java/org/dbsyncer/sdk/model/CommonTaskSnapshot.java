@@ -9,8 +9,8 @@ import org.dbsyncer.sdk.enums.DatabaseSyncDetailTypeEnum;
 import java.io.Serializable;
 
 /**
- * 通用任务表级快照：step 在迁移场景为 {@link DatabaseSyncDetailTypeEnum}，
- * 在校验场景为 {@link org.dbsyncer.sdk.enums.ValidateSyncStepEnum}。
+ * UniversalTasksTable snapshot:step In the migration scene{@link DatabaseSyncDetailTypeEnum}，
+ * UNITED NATIONSPeople commented:RightsServiceHighLevelCommissioner the view of the school{@link org.dbsyncer.sdk.enums.ValidateSyncStepEnum}。
  *
  * @author wuji
  * @version 1.0.0
@@ -21,17 +21,17 @@ public class CommonTaskSnapshot implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 当前阶段编码
+     * Current Phase Encoding
      */
     private String step;
 
     /**
-     * 当前阶段状态，见 {@link CommonTaskStatusEnum}
+     * Current stageStatus，See{@link CommonTaskStatusEnum}
      */
     private int status;
 
     /**
-     * 数据迁移分页游标
+     * Data FactMigrationminPageCursor
      */
     private String cursor;
 

@@ -13,7 +13,7 @@ import redis.clients.jedis.JedisPoolConfig;
 import java.util.Properties;
 
 /**
- * Redis连接器工具类
+ * RedisConnectorTool class
  */
 public abstract class RedisUtil {
 

@@ -6,7 +6,7 @@ package org.dbsyncer.biz.vo;
 import java.math.BigDecimal;
 
 /**
- * 集群节点运行指标（本机采集或 HTTP 拉取）。
+ * ClusterNodesOperational indicators (in-house collection orHTTP Pull.
  *
  * @author wuji
  * @version 1.0.0
@@ -30,7 +30,7 @@ public class ClusterNodeMetricVO {
     private BigDecimal diskTotal;
     private double tps;
     /**
-     * 近 1 分钟每秒吞吐序列，供集群页聚合图表。
+     * Near1 minutesEverysecondsS 5.5%Sequences for clustersPageConvergence charts.
      */
     private HistoryStackVO tpsSeries;
     private long queueUp;

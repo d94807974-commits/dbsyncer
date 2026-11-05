@@ -18,9 +18,9 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * StarRocks 标准数据类型解析器
+ * StarRocks Standard ContextTypeParser
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-07 03:00
  */

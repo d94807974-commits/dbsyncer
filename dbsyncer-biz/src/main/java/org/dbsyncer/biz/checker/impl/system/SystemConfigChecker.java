@@ -44,9 +44,9 @@ public class SystemConfigChecker extends AbstractChecker {
     @Override
     public SystemConfig checkAddConfigModel(Map<String, String> params) {
         SystemConfig systemConfig = new SystemConfig();
-        systemConfig.setName("系统配置");
+        systemConfig.setName("System settings");
 
-        // 修改基本配置
+        // UpdateBasicConfigure
         this.modifyConfigModel(systemConfig, params);
 
         systemConfigProfile.saveSystemConfig(systemConfig);
@@ -67,7 +67,7 @@ public class SystemConfigChecker extends AbstractChecker {
         newParams.put("enableOpenAPI", StringUtil.isNotBlank(params.get("enableOpenAPI")));
         String watermark = params.get("watermark");
         if (StringUtil.isNotBlank(watermark)) {
-            Assert.isTrue(watermark.length() <= 64, "允许水印内容最多输入64个字.");
+            Assert.isTrue(watermark.length() <= 64, "Allow watermarks to enter up to 64 words.");
         }
         params.put("watermark", watermark);
 
@@ -75,15 +75,15 @@ public class SystemConfigChecker extends AbstractChecker {
         SystemConfig newConfig = systemConfig.clone();
         BeanUtil.mapToBean(newParams, newConfig);
         Assert.isTrue(newConfig.getLoginLockMinutes() >= 1 && newConfig.getLoginLockMinutes() <= 1440,
-                "登录锁定时长支持的范围[1-1440]分钟");
-        // 修改 API 密钥配置
+                "Login lock-in support range [1-1440] minutes");
+        // Update API KeyConfigure
         saveApiKeyConfig(newConfig, params);
-        // 修改RSA配置
+        // UpdateRSAConfigure
         saveRsaConfig(newConfig, params);
-        // 修改 IP 白名单配置
+        // Update IP White list.Configure
         saveIpWhitelistConfig(newConfig, params);
 
-        // 修改基本配置
+        // UpdateBasicConfigure
         this.modifyConfigModel(newConfig, params);
         return newConfig;
     }
@@ -93,7 +93,7 @@ public class SystemConfigChecker extends AbstractChecker {
             return;
         }
         String apiSecret = params.get("apiSecret");
-        Assert.hasText(apiSecret, "API密钥不能为空");
+        Assert.hasText(apiSecret, "API key cannot be empty");
         ApiKeyConfig apiKeyConfig = apiKeyManager.addCredential(systemConfig.getApiKeyConfig(), apiSecret);
         systemConfig.setApiKeyConfig(apiKeyConfig);
     }
@@ -120,11 +120,11 @@ public class SystemConfigChecker extends AbstractChecker {
         String publicKey = params.get("rsaPublicKey");
         String privateKey = params.get("rsaPrivateKey");
         String rsaKeyLength = params.get("rsaKeyLength");
-        Assert.hasText(publicKey, "RSA公钥不能为空");
-        Assert.hasText(privateKey, "RSA私钥不能为空");
-        Assert.hasText(rsaKeyLength, "密钥长度不能为空");
+        Assert.hasText(publicKey, "RSA public key cannot be empty");
+        Assert.hasText(privateKey, "RSA private key cannot be empty");
+        Assert.hasText(rsaKeyLength, "Key length cannot be empty");
         int keyLength = NumberUtil.toInt(rsaKeyLength);
-        Assert.isTrue(keyLength >= 1024 && keyLength <= 8192, "密钥长度支持的范围[1024-8192]");
+        Assert.isTrue(keyLength >= 1024 && keyLength <= 8192, "Scope of key length support [1024-8192]");
         RsaConfig rsaConfig = rsaManager.addCredential(systemConfig.getRsaConfig(), publicKey, privateKey, keyLength);
         systemConfig.setRsaConfig(rsaConfig);
     }

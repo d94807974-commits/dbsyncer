@@ -15,9 +15,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 达梦字符类型（含 MySQL 同构迁移遗留的 TEXT/JSON 别名）
+ * Dream characterType（HamMySQL It's from the same displacement.TEXT/JSON Alias)
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-07 02:00
  */
@@ -74,12 +74,12 @@ public final class DamengStringType extends StringType {
 
     @Override
     protected Object convert(Object val, Field field) {
-        // 已是绑参对象：写库可直接用；序列化前再拆成字符串更稳
+        // AlreadyYesSubject to binding: WriteLibraryDirectly available; before sequencing unbundled strings
         if (val instanceof OracleLobParameter) {
             return val;
         }
         Object converted = super.convert(val, field);
-        // MERGE 大字段需以 CLOB 绑定，配合 CAST(? AS CLOB)
+        // MERGE LargeFieldRequiredCLOB Tie it up.CAST(? AS CLOB)
         if (converted instanceof String && TypeEnum.isLob(field.getTypeName())) {
             return new OracleLobParameter((String) converted, field);
         }

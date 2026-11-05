@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * {@link MetaAggProfile} 实现。
+ * {@link MetaAggProfile} Achieved.
  *
  * @author wuji
  * @version 1.0.0

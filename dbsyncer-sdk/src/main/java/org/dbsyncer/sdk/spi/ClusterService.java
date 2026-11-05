@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 集群服务：节点管理与任务级调度。
+ * Cluster services:NodesManagementandTasksClass dispatch.
  *
  * @author wuji
  * @version 1.0.0
@@ -52,10 +52,10 @@ public interface ClusterService {
     }
 
     /**
-     * 停止任务。
+     * StopTasks。
      *
-     * @param taskId   任务 ID
-     * @param taskType 任务类型
+     * @param taskId   Tasks ID
+     * @param taskType Task Type
      */
     default void stop(String taskId, CommonTaskTypeEnum taskType) {
     }
@@ -68,59 +68,59 @@ public interface ClusterService {
     }
 
     /**
-     * 将本机插件文件同步到其他节点。
+     * Put the machine on.PluginDocumentationSync toOtherNodes。
      *
-     * @param fileName 插件文件名
+     * @param fileName PluginFilename
      */
     default void publishPlugin(String fileName) {
     }
 
     /**
-     * 通知其他节点删除指定插件文件。
+     * AnnouncementsOtherNodesDeleteAssignPluginDocumentation。
      *
-     * @param fileName 插件文件名
+     * @param fileName PluginFilename
      */
     default void removePlugin(String fileName) {
     }
 
     /**
-     * 本机插件目录中的 JAR 清单。
+     * Here.PluginIn DirectoryJAR List.
      *
-     * @return 文件名、大小与摘要
+     * @return Filename、/5/andSummary
      */
     default List<PluginFile> listPluginFiles() {
         return Collections.emptyList();
     }
 
     /**
-     * 读取本机插件文件。
+     * Read HomePluginDocumentation。
      *
-     * @param fileName 文件名
-     * @return 文件字节；不存在时返回 null
+     * @param fileName Filename
+     * @return Documentationbytes;when they do not existBack null
      */
     default byte[] readPluginFile(String fileName) {
         return null;
     }
 
     /**
-     * 接收其他节点推送的插件文件并加载。
+     * ReceivedOtherNodesIt's a gift.PluginDocumentationAnd load.
      *
-     * @param fileName 文件名
-     * @param content  文件字节
-     * @param relay    为 true 时接收节点继续分发给其他节点
+     * @param fileName Filename
+     * @param content  DocumentationBytes
+     * @param relay    Yestrue OrganisationNodesGo on.minSendOtherNodes
      */
     default void acceptPluginFile(String fileName, byte[] content, boolean relay) {
-        throw new UnsupportedOperationException("当前部署不接收插件文件");
+        throw new UnsupportedOperationException("No plugin file received for current deployment");
     }
 
     /**
-     * 接收其他节点的插件删除通知。
+     * ReceivedOtherNodesYes.PluginDeleteAnnouncements.
      *
-     * @param fileName 文件名
-     * @param relay    为 true 时接收节点继续通知其他节点
+     * @param fileName Filename
+     * @param relay    Yestrue OrganisationNodesKeep calling.OtherNodes
      */
     default void acceptPluginRemove(String fileName, boolean relay) {
-        throw new UnsupportedOperationException("当前部署不接收插件删除");
+        throw new UnsupportedOperationException("Do not accept plugins for current deployment");
     }
 
     default long forceExpireGracePeriod() {

@@ -8,7 +8,7 @@ import org.dbsyncer.common.util.StringUtil;
 import java.util.Arrays;
 
 /**
- * SQL Server LSN（日志序列号）位置的逻辑表示, LSN不可用时为NULL。
+ * SQL Server LSN（LogSerial number), LSNIf not availableNULL。
  *
  * @Author AE86
  * @Version 1.0.0

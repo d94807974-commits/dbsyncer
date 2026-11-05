@@ -32,13 +32,13 @@ public class SqlBuilderUpdate extends AbstractSqlBuilder {
         for (Field f : config.getFields()) {
             String fieldName = database.buildWithQuotation(f.getName());
 
-            // 处理特殊类型的值表达式
+            // Deal with specialTypeYes.ValueExpression
             List<String> vs = new ArrayList<>();
             if (database.buildCustomValue(vs, f)) {
-                // 使用自定义值表达式
+                // UseCustomValueExpression
                 fs.add(fieldName + "=" + vs.get(0));
             } else {
-                // 使用默认的 ? 占位符
+                // Use Default? Placeholder
                 fs.add(fieldName + "=?");
             }
         }

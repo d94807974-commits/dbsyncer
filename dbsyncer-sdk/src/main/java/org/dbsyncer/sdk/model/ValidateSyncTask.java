@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 订正校验任务配置（仅持久化配置到 {@code dbsyncer_task.JSON}）。
- * <p>表映射存 {@code dbsyncer_table_group}；运行进度与本轮完成态在 {@code dbsyncer_meta}。</p>
+ * Revised verification tasksConfigure（OnlyEnduringConfigurePresent.{@code dbsyncer_task.JSON}）。
+ * <p>Map Storage{@code dbsyncer_table_group}；Run progressandCurrent roundFinishThe state{@code dbsyncer_meta}。</p>
  * @author wuji
  */
 public class ValidateSyncTask extends ConfigModel {
@@ -21,98 +21,98 @@ public class ValidateSyncTask extends ConfigModel {
         super.setType(ConfigConstant.VALIDATE_SYNC);
     }
 
-    // 数据源连接器ID
+    // SourceConnectorID
     private String sourceConnectorId;
 
-    // 数据源库名称
+    // SourceLibraryName
     private String sourceDatabase;
 
-    // 数据源库构架名
+    // SourceLibraryFrame Name
     private String sourceSchema;
 
-    // 数据源库表列表
+    // SourceLibraryTableList
     private List<Table> sourceTable;
 
-    // 目标源连接器ID
+    // TargetConnectorID
     private String targetConnectorId;
 
-    // 目标源库名称
+    // TargetLibraryName
     private String targetDatabase;
 
-    // 目标源库构架名
+    // TargetLibraryFrame Name
     private String targetSchema;
 
-    // 目标源库表列表
+    // TargetLibraryTableList
     private List<Table> targetTable;
 
-    // 数据源字段(公共字段)
+    // Source fields(MaleTotalField)
     private List<Field> sourceColumn;
 
-    // 过滤条件
+    // Filter Conditions
     private List<Filter> filter = new ArrayList<>();
 
     /**
-     * 触发方式
+     * Trigger Method
      */
     private String trigger = CommonTaskTriggerEnum.ONCE.getCode();
 
     /**
-     * 定时表达式, 格式: [秒] [分] [小时] [日] [月] [周]
+     * ScheduledExpression, Format: [seconds] [min] [hours] [Day] [Intern] [Week]
      */
     private String cron = "*/30 * * * * ?";
 
     /**
-     * 校验不一致后是否同步目标库
+     * After verification of inconsistenciesYesNoSyncTarget database
      */
     private boolean enableSync = false;
 
     /**
-     * 是否反向校验
+     * YesNoReverse check
      */
     private boolean enableReverseScan = false;
 
     /**
-     * 任务执行时是否自动删除目标库中源表不存在的多余行
+     * TasksOn implementationYesNoAutoDeleteTarget databaseMediumSource tableNon-existent redundant lines
      */
     private boolean enableReverseSync = false;
 
     /**
-     * 表结构校验
+     * TableStructureVerify INTRODUCTION
      */
     private boolean enableSchema;
 
     /**
-     * 校验范围（行数据）
+     * Verification scope（Row data）
      */
     private boolean enableRowData = true;
 
     /**
-     * 校验范围（索引）
+     * Verification scope（Index）
      */
     private boolean enableIndex = false;
 
     /**
-     * 校验范围（触发器）
+     * Verification scope（Trigger）
      */
     private boolean enableTrigger = false;
 
     /**
-     * 校验范围（函数）
+     * Verification scope（Functions）
      */
     private boolean enableFunction = false;
 
     /**
-     * 批量读取条数（与同步任务 Mapping 含义一致）
+     * Batch readNumber of bar(s)andSync task Mapping In the same sense)
      */
     private int readNum = 10000;
 
     /**
-     * 单次写入条数
+     * Single writeNumber of bars
      */
     private int batchNum = 1000;
 
     /**
-     * 执行线程数
+     * ImplementationThreads
      */
     private int threadNum = 10;
 

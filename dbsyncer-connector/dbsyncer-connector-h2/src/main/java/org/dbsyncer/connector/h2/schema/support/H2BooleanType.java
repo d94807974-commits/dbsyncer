@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * H2 布尔类型
+ * H2 BooleanType
  */
 public final class H2BooleanType extends BooleanType {
 

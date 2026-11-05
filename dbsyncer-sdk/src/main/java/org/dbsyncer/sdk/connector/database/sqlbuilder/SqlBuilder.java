@@ -6,7 +6,7 @@ package org.dbsyncer.sdk.connector.database.sqlbuilder;
 import org.dbsyncer.sdk.config.SqlBuilderConfig;
 
 /**
- * SQL生成器
+ * SQLGenerateDevice
  *
  * @author AE86
  * @version 1.0.0
@@ -15,14 +15,14 @@ import org.dbsyncer.sdk.config.SqlBuilderConfig;
 public interface SqlBuilder {
 
     /**
-     * 生成SQL
+     * GenerateSQL
      * @param config
      * @return
      */
     String buildSql(SqlBuilderConfig config);
 
     /**
-     * 生成查询SQL
+     * GenerateQuestionSQL
      * @param config
      * @return
      */

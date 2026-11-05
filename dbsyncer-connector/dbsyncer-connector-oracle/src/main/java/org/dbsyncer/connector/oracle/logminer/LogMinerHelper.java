@@ -75,7 +75,7 @@ public class LogMinerHelper {
                 if (rs.next()) {
                     sequences.add(new BigInteger(rs.getString(1)));
                 }
-                // 如果是RAC则会返回多个SEQUENCE
+                // IfYesRACThen I will.BackMultipleSEQUENCE
                 return sequences;
             }
         }
@@ -97,7 +97,7 @@ public class LogMinerHelper {
 
     public static String logMinerViewQuery(String schema, String logMinerUser) {
         StringBuilder query = new StringBuilder();
-        // 显式列：V$LOGMNR_CONTENTS 的 SQL_REDO/SQL_UNDO 均为 LONG，SELECT * 时 JDBC 不能可靠读取两列
+        // Visible column:V$LOGMNR_CONTENTS Yes.SQL_REDO/SQL_UNDO Both.LONG，SELECT * TimeJDBC Can't read two columns reliably
         query.append("SELECT SCN, SQL_REDO, OPERATION_CODE, TIMESTAMP, XID, CSF, TABLE_NAME, SEG_OWNER ");
         query.append("FROM V$LOGMNR_CONTENTS ");
         query.append("WHERE ");
@@ -126,7 +126,7 @@ public class LogMinerHelper {
 
         query.append("SELECT MIN(SCN) AS NEXT_VALID_SCN ");
         query.append("FROM V$LOGMNR_CONTENTS ");
-        query.append("WHERE SCN >= ? AND operation IS NOT NULL");  // 这里就是参数占位符，需要传入上一个SCN
+        query.append("WHERE SCN >= ? AND operation IS NOT NULL");  // Right here.YesParameterPlaceholder to upload toSCN
 
         return query.toString();
     }
@@ -136,7 +136,7 @@ public class LogMinerHelper {
 
         query.append("SELECT COUNT(SCN) AS BACKLOG_COUNT ");
         query.append("FROM V$LOGMNR_CONTENTS ");
-        query.append("WHERE SCN >= ? AND SCN<= ? AND operation IS NOT NULL");  // 这里就是参数占位符，需要传入上一个SCN
+        query.append("WHERE SCN >= ? AND SCN<= ? AND operation IS NOT NULL");  // Right here.YesParameterPlaceholder to upload toSCN
 
         return query.toString();
     }
@@ -155,8 +155,8 @@ public class LogMinerHelper {
     }
 
     /**
-     * 只负责把覆盖 [startScn, endScn) 的日志文件加入 LogMiner。
-     * 注意：这里不会调用 START_LOGMNR，避免在 redo 切换场景下频繁重启会话导致 alert.log 暴涨。
+     * It's just about puttingOverwrite [startScn, endScn) Yes.LogDocumentationAddLogMiner。
+     * Note Double: This is not called.START_LOGMNR，Avoid inredo Toggle frequent resumption of sessions in the scenealert.log The boom.
      */
     public static void addLogFiles(Connection connection, long startScn, long endScn) throws SQLException {
         try (PreparedStatement addFilesStmt = connection.prepareCall(LOG_MINER_SQL_ADD_LOG_FILES)) {
@@ -167,7 +167,7 @@ public class LogMinerHelper {
     }
 
     /**
-     * 启动 LogMiner 会话（假设日志文件已经 add 完成）。
+     * Start LogMiner Session (Assuming)LogDocumentationAlreadyadd Finish）。
      */
     public static void startLogMinerSession(Connection connection) throws SQLException {
         executeCallableStatement(connection, LOG_MINER_SQL_START_LOG_MINER);
@@ -188,7 +188,7 @@ public class LogMinerHelper {
         try (Statement statement = connection.createStatement()) {
             try (ResultSet rs = statement.executeQuery(LOG_MINER_SQL_IS_CDB)) {
                 rs.next();
-                // cdb模式 需要切换到根容器
+                // cdbBoth modes need to switch to the root container.
                 if (rs.getString(1).equalsIgnoreCase("YES")) {
                     try (PreparedStatement ps = connection.prepareStatement(LOG_MINER_SQL_ALTER_SESSION_CONTAINER)) {
                         try {
@@ -227,7 +227,7 @@ public class LogMinerHelper {
         if (roles.contains("DBA")) {
             return;
         }
-        // SELECT_CATALOG_ROLE 允许用户访问数据字典视图（如 DBA_, V$, ALL_* 等），用于查询数据库的元数据
+        // SELECT_CATALOG_ROLE verifieUserAccess data dictionary view (e. g.DBA_, V$, ALL_* ) for data searchLibraryOther Organiser
         if (!roles.contains(LOG_MINER_SELECT_CATALOG_ROLE_ROLE)) {
             throw new IllegalArgumentException(String.format("No permission, please execute sql authorization：GRANT %s TO USERNAME;", LOG_MINER_SELECT_CATALOG_ROLE_ROLE));
         }

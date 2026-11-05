@@ -217,7 +217,7 @@ public abstract class AbstractMessageDecoder implements MessageDecoder {
             case "txid_snapshot":
                 // catch-all for unknown (extension module/custom) types
             default:
-                // 数组类型（JDBC TYPE_NAME 以 _ 前缀表示，与 PostgreSQLStringType 数组枚举一致）
+                // ArrayType（JDBC TYPE_NAME By Endosulfan.and PostgreSQLStringType Align arrays)
                 if (PostgreSQLSchemaResolver.isArrayType(typeName)) {
                     return value.asString();
                 }

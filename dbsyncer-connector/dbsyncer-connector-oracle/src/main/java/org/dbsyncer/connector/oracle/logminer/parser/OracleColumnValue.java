@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Oracle 字段值解析
+ * Oracle FieldValueParsing
  *
  * @Author AE86
  * @Version 1.0.0
@@ -212,15 +212,15 @@ public class OracleColumnValue extends AbstractColumnValue<Expression> {
         int i = 0;
         while (i < dataStr.length()) {
             if (dataStr.charAt(i) == '\\') {
-                // 读取接下来四个字符作为十六进制数
+                // Read the next fourCharacterAs Hexadecimal
                 String unicodeDigits = dataStr.substring(i + 1, i + 5);
-                // 将十六进制数转换为整数（Unicode码点）
+                // HexadecimalConvertIntegerUnicodeCode points)
                 int unicodeValue = Integer.parseInt(unicodeDigits, 16);
-                // 转换为字符并追加到结果
+                // ConvertAdd to CharacterResult
                 result.append((char) unicodeValue);
-                i += 5; // 跳过已经处理的部分（1个 \ 和 4个十六进制数字）
+                i += 5; // Skip processed sectionsmin（1individual\ and4Hexadecimal)
             } else {
-                // 如果不是 \ 开头的部分，直接追加原始字符
+                // If not,Yes \ First partmin，Add original characters directly
                 result.append(dataStr.charAt(i));
                 i++;
             }

@@ -46,9 +46,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * RocketMQ 连接器实现
+ * RocketMQ ConnectorAchieved
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-07 01:00
  */
@@ -136,7 +136,7 @@ public class RocketMQConnector extends AbstractConnector implements ConnectorSer
 
     @Override
     public Result reader(RocketMQConnectorInstance connectorInstance, ReaderContext context) {
-        throw new RocketMQException("RocketMQ暂不支持全量读取");
+        throw new RocketMQException("RocketMQ does not support full reading");
     }
 
     @Override
@@ -166,7 +166,7 @@ public class RocketMQConnector extends AbstractConnector implements ConnectorSer
                     Message rocketMessage = new Message(topic, tags, key, body);
                     SendResult sendResult = producer.send(rocketMessage);
                     if (sendResult == null) {
-                        throw new RocketMQException("RocketMQ 发送结果为空");
+                        throw new RocketMQException("RocketMQ sent as empty");
                     }
                     result.getSuccessData().add(row);
                 } catch (Exception e) {

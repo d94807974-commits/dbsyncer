@@ -8,33 +8,33 @@ import org.dbsyncer.common.util.StringUtil;
 import java.io.Serializable;
 
 /**
- * 请求响应对象
+ * Other Organiser
  *
  * @author AE86
  * @version 1.0.0
- * @date 2017年3月30日 下午2:26:19
+ * @date 2017Year3Intern30p.m.2:26:19
  */
 public class RestResult<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 是否成功
+     * YesNoSuccess
      */
     private boolean success;
 
     /**
-     * 数据
+     * Data Fact
      */
     private T data;
 
     /**
-     * 消息
+     * Message
      */
     private String message;
 
     /**
-     * 状态码
+     * StatusCode
      */
     private int status;
 

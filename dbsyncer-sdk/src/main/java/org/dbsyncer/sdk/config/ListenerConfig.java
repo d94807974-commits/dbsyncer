@@ -10,53 +10,53 @@ import org.dbsyncer.sdk.enums.ListenerTypeEnum;
 public class ListenerConfig {
 
     /**
-     * 监听器类型
+     * ListenerType
      * {@link ListenerTypeEnum}
      */
     private String listenerType;
 
     /**
-     * 定时表达式, 格式: [秒] [分] [小时] [日] [月] [周]
+     * ScheduledExpression, Format: [seconds] [min] [hours] [Day] [Intern] [Week]
      */
     private String cron = "*/30 * * * * ?";
 
     /**
-     * 事件字段
+     * EventField
      */
     private String eventFieldName = "";
 
     /**
-     * 修改事件, 例如当eventFieldName值等于U 或 update时，判定该条数据为修改操作
+     * UpdateEvent, Like when?eventFieldNameValueequalsU orupdateat which time the article data were determined to beUpdateActions
      */
     private String update = "U";
 
     /**
-     * 插入事件
+     * InsertEvent
      */
     private String insert = "I";
 
     /**
-     * 删除事件
+     * DeleteEvent
      */
     private String delete = "D";
 
     /**
-     * 禁用修改事件
+     * DisableUpdateEvent
      */
     private boolean enableUpdate = true;
 
     /**
-     * 禁用插入事件
+     * DisableInsertEvent
      */
     private boolean enableInsert = true;
 
     /**
-     * 禁用删除事件
+     * DisableDeleteEvent
      */
     private boolean enableDelete = true;
 
     /**
-     * 禁用ddl事件
+     * DisableddlEvent
      */
     private boolean enableDDL;
 

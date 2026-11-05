@@ -9,7 +9,7 @@ import org.dbsyncer.sdk.model.NoticeStrategy;
 import java.util.List;
 
 /**
- * 消息通知决策引擎：按策略匹配、限流、合并后投递。
+ * Message Notification Decision Engine: Matching by strategy, restricted flow, merged and delivered.
  *
  * @author wuji
  * @version 1.0.0
@@ -18,17 +18,17 @@ import java.util.List;
 public interface NoticeDecisionEngine {
 
     /**
-     * 接收业务事件并按策略路由。
+     * Receiving operationsEventAnd by strategic route.
      *
-     * @param noticeContent 通知内容
+     * @param noticeContent Contents of notice
      */
     void dispatch(NoticeContent noticeContent);
 
     /**
-     * 用给定策略列表重建运行态（Registry / 周期调度）。
-     * <p>策略数据由调用方从存储装载，引擎不依赖配置 Profile，避免启动期循环依赖。
+     * Use given policyListRebuild Operating State(s)Registry / Management.
+     * <p>Policy data loaded from storage by caller, engine not dependentConfigure Profile，AvoidStartPeriod cycle MISC.
      *
-     * @param strategies 运行时策略；空列表表示清空
+     * @param strategies running time policies; emptyListOrganisationClear
      */
     void reload(List<NoticeStrategy> strategies);
 }

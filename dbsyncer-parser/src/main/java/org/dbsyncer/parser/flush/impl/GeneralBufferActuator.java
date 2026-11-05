@@ -63,7 +63,7 @@ import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 
 /**
- * 通用执行器（单线程消费，多线程批量写，按序执行）
+ * General actuator（SingleThreadsConsumption, muchThreadsBulk, sequenced)
  *
  * @author AE86
  * @version 1.0.0
@@ -152,8 +152,8 @@ public class GeneralBufferActuator extends AbstractBufferActuator<WriterRequest,
 
     @Override
     protected boolean skipPartition(WriterRequest nextRequest, WriterResponse response) {
-        // 并发场景，同一条数据可能连续触发Insert > Delete > Insert，批处理任务中出现不同事件时，跳过分区处理
-        // 跳过表结构修改事件（保证表结构修改原子性）
+        // The same data could trigger consecutively.Insert > Delete > Insert，BatchTasksThere' Schedule InitiativesEventTime, SkipminArea processing
+        // Skip ActionsTable schemaUpdateEvent（Promise.Table schemaUpdateAtomic)
         return !StringUtil.equals(nextRequest.getEvent(), response.getEvent()) || ChangedEventTypeEnum.isDDL(response.getTypeEnum());
     }
 
@@ -163,7 +163,7 @@ public class GeneralBufferActuator extends AbstractBufferActuator<WriterRequest,
         if (meta == null) {
             return;
         }
-        // 打印trace信息
+        // Can not open message
         printTraceInfo(response);
         final Mapping mapping = mappingProfile.get(meta.getTaskId());
         List<TableGroupPicker> pickers = tableGroupContext.getTableGroupPickers(meta.getTaskId(), response.getTableName());
@@ -195,9 +195,9 @@ public class GeneralBufferActuator extends AbstractBufferActuator<WriterRequest,
     }
 
     /**
-     * 发布增量位点刷新事件。
+     * ReleaseIncrementalBitsRefreshEvent。
      *
-     * @param changedOffset 位点
+     * @param changedOffset Bits
      */
     protected void publishOffsetRefresh(ChangedOffset changedOffset) {
         if (changedOffset != null) {
@@ -207,12 +207,12 @@ public class GeneralBufferActuator extends AbstractBufferActuator<WriterRequest,
 
     @Override
     protected void offerFailed(BlockingQueue<WriterRequest> queue, WriterRequest request) {
-        throw new QueueOverflowException("缓存队列已满");
+        throw new QueueOverflowException("Cache queue is calculateable");
     }
 
     @Override
     protected void meter(TimeRegistry timeRegistry, long count) {
-        // 统计执行器同步效率TPS
+        // /280Sync efficiency of statistical implementersTPS
         timeRegistry.meter(TimeRegistry.GENERAL_BUFFER_ACTUATOR_TPS).add(count);
     }
 
@@ -222,7 +222,7 @@ public class GeneralBufferActuator extends AbstractBufferActuator<WriterRequest,
     }
 
     private void distributeTableGroup(WriterResponse response, Mapping mapping, TableGroupPicker tableGroupPicker, List<Field> sourceFields, boolean enableFilter) {
-        // 1、映射字段
+        // 1、Table GroupField
         ConnectorConfig sourceConfig = getConnectorConfig(mapping.getSourceConnectorId());
         ConnectorService sourceConnector = connectorFactory.getConnectorService(sourceConfig.getConnectorType());
         List<Map> sourceDataList = new ArrayList<>();
@@ -232,11 +232,11 @@ public class GeneralBufferActuator extends AbstractBufferActuator<WriterRequest,
             return;
         }
 
-        // 2、参数转换
+        // 2、ParameterConvert
         TableGroup tableGroup = tableGroupPicker.getTableGroup();
         ConvertUtil.convert(tableGroup.getConvert(), targetDataList);
 
-        // 3、插件转换
+        // 3、PluginConvert
         final IncrementPluginContext context = new IncrementPluginContext();
         String sourceInstanceId = ConnectorInstanceUtil.buildConnectorInstanceId(mapping.getId(), mapping.getSourceConnectorId(), ConnectorInstanceUtil.SOURCE_SUFFIX);
         String targetInstanceId = ConnectorInstanceUtil.buildConnectorInstanceId(mapping.getId(), mapping.getTargetConnectorId(), ConnectorInstanceUtil.TARGET_SUFFIX);
@@ -258,10 +258,10 @@ public class GeneralBufferActuator extends AbstractBufferActuator<WriterRequest,
         setRsaConfig(context);
         pluginFactory.process(context, ProcessEnum.CONVERT);
 
-        // 4、批量执行同步
+        // 4、Batch execution sync
         Result result = parserComponent.writeBatch(context, getExecutor());
 
-        // 5、持久化同步结果
+        // 5、EnduringSyncResult
         result.setTableGroupId(tableGroup.getId());
         result.setTargetTableGroupName(context.getTargetTable().getName());
         result.setTaskId(mapping.getId());
@@ -270,7 +270,7 @@ public class GeneralBufferActuator extends AbstractBufferActuator<WriterRequest,
         ConnectorService targetConnectorService = connectorFactory.getConnectorService(targetConfig);
         flushStrategy.flushIncrementData(result, targetConnectorService.getSchemaResolver(), tableGroupPicker.getTargetFieldMap());
 
-        // 6、执行后置处理
+        // 6、Execute Post Processing
         pluginFactory.process(context, ProcessEnum.AFTER);
     }
 
@@ -283,7 +283,7 @@ public class GeneralBufferActuator extends AbstractBufferActuator<WriterRequest,
     }
 
     /**
-     * 解析DDL
+     * ParsingDDL
      */
     private void parseDDl(WriterResponse response, Mapping mapping, TableGroup tableGroup) {
         try {
@@ -295,10 +295,10 @@ public class GeneralBufferActuator extends AbstractBufferActuator<WriterRequest,
             ConnectorInstance tConnectorInstance = connectorFactory.connect(instanceId);
             ConnectorService connectorService = connectorFactory.getConnectorService(tConnType);
             DDLConfig targetDDLConfig = ddlParser.parse(tConnectorInstance, connectorService, tableGroup, response.getSql());
-            // 1.生成目标表执行SQL(暂支持同源)
+            // 1.GenerateTarget tableImplementationSQL(Organisation)
             if (mapping.getListener().isEnableDDL() && StringUtil.equals(sConnType, tConnType)) {
                 Result result = connectorFactory.writerDDL(tConnectorInstance, targetDDLConfig);
-                // 2.持久化增量事件数据
+                // 2.EnduringIncremental eventsData Fact
                 result.setTableGroupId(tableGroup.getId());
                 result.setTargetTableGroupName(tableGroup.getTargetTable().getName());
                 result.setTaskId(mapping.getId());
@@ -306,20 +306,20 @@ public class GeneralBufferActuator extends AbstractBufferActuator<WriterRequest,
                 flushStrategy.flushIncrementData(result, connectorService.getSchemaResolver(), null);
             }
 
-            // 3.更新表属性字段
+            // 3.Update Table PropertiesField
             updateTableColumn(mapping, ConnectorInstanceUtil.SOURCE_SUFFIX, tableGroup.getSourceTable());
             updateTableColumn(mapping, ConnectorInstanceUtil.TARGET_SUFFIX, tableGroup.getTargetTable());
 
-            // 4.更新表字段映射关系
+            // 4.EmpowermentFieldMapping
             ddlParser.refreshFiledMappings(tableGroup, targetDDLConfig);
 
-            // 5.更新执行命令
+            // 5.Update Enforcement Command
             tableGroup.setCommand(parserComponent.getCommand(mapping, tableGroup));
 
-            // 6.持久化存储 & 更新缓存配置
+            // 6.EnduringStorage& Update CacheConfigure
             tableGroupProfile.editTableGroup(tableGroup);
 
-            // 7.发布更新事件
+            // 7.This is a matter of information.Event
             if (shouldPublishOffsetRefresh()) {
                 publishOffsetRefresh(response.getChangedOffset());
             }
@@ -335,12 +335,12 @@ public class GeneralBufferActuator extends AbstractBufferActuator<WriterRequest,
 
         List<MetaInfo> metaInfos = parserComponent.getMetaInfo(context);
         MetaInfo metaInfo = CollectionUtils.isEmpty(metaInfos) ? null : metaInfos.get(0);
-        Assert.notNull(metaInfo, "无法获取连接器表信息:" + table.getName());
+        Assert.notNull(metaInfo, "Could not close temporary folder: %s" + table.getName());
         table.setColumn(metaInfo.getColumn());
     }
 
     /**
-     * 获取连接器配置
+     * AccessConnectorConfigure
      */
     private ConnectorConfig getConnectorConfig(String connectorId) {
         Assert.hasText(connectorId, "Connector id can not be empty.");

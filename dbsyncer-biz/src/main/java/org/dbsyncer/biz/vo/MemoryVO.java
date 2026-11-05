@@ -6,7 +6,7 @@ package org.dbsyncer.biz.vo;
 import java.math.BigDecimal;
 
 /**
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2025-12-20 21:17
  */
@@ -16,7 +16,7 @@ public final class MemoryVO extends HistoryStackVO {
     private BigDecimal jvmTotal;
     private BigDecimal sysUsed;
     private BigDecimal sysTotal;
-    // 总使用百分比
+    // Total usageminThat's right.
     private BigDecimal totalPercent;
 
     public BigDecimal getJvmUsed() {

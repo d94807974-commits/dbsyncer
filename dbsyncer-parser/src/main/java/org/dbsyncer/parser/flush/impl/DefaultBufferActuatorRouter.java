@@ -28,7 +28,7 @@ public class DefaultBufferActuatorRouter extends AbstractBufferActuatorRouter {
     private TableGroupBufferActuatorService tableGroupBufferActuatorService;
 
     /**
-     * 执行路由列表
+     * Execute RouteList
      */
     private final Map<String, Map<String, TableGroupBufferActuator>> router = new ConcurrentHashMap<>();
 

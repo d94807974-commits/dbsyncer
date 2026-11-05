@@ -7,8 +7,8 @@ import org.dbsyncer.common.model.ConfigModel;
 import org.dbsyncer.sdk.constant.ConfigConstant;
 
 /**
- * 业务分组关系。父类 {@link #getType()} 固定为 {@link ConfigConstant#GROUP_REL}（存储路由）；
- * 资源类型见 {@link #resourceType}。
+ * Business groupRelationship. Parent{@link #getType()} Fixed to{@link ConfigConstant#GROUP_REL}（Storage route;
+ * Resource typeSee{@link #resourceType}。
  *
  * @author wuji
  * @version 1.0.0
@@ -17,17 +17,17 @@ import org.dbsyncer.sdk.constant.ConfigConstant;
 public class GroupRel extends ConfigModel {
 
     /**
-     * 分组 ID
+     * Group ID
      */
     private String groupId;
 
     /**
-     * 资源类型：connector / mapping / validateSync / databaseSync
+     * Resource type：connector / mapping / validateSync / databaseSync
      */
     private String resourceType;
 
     /**
-     * 资源 ID（连接或任务 ID）
+     * Resource ID（ConnectorTasks ID）
      */
     private String resourceId;
 

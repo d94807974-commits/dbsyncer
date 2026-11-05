@@ -11,9 +11,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
- * 调度任务执行器配置
+ * Movement controlTasksExecut MOUConfigure
  *
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2025-06-22 23:20
  */
@@ -22,17 +22,17 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 public class DispatchTaskConfig {
 
     /**
-     * 工作线程数
+     * WorkThreads
      */
     private int threadCoreSize = Runtime.getRuntime().availableProcessors() * 2;
 
     /**
-     * 最大工作线程数
+     * Max.Threads
      */
     private int maxThreadSize = 16;
 
     /**
-     * 工作线任务队列
+     * WorklineTasksLine
      */
     private int threadQueueCapacity = 64;
 

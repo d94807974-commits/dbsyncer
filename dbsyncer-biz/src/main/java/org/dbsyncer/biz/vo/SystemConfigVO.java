@@ -11,7 +11,7 @@ import java.util.List;
 public class SystemConfigVO extends SystemConfig {
 
     /**
-     * IP 白名单列表转为换行分隔的字符串，供前端 textarea 展示
+     * IP White list.ListChange to Line BreakminSplit strings for frontendtextarea Presentation
      */
     public String getIpWhitelistText() {
         if (getIpWhitelistConfig() == null || getIpWhitelistConfig().getWhitelist() == null) {
@@ -22,7 +22,7 @@ public class SystemConfigVO extends SystemConfig {
     }
 
     /**
-     * 获取最新的API 密钥
+     * GetPoliceAPI Key
      */
     public RsaVersion getCurrentRsa() {
         if (getRsaConfig() != null) {
@@ -35,7 +35,7 @@ public class SystemConfigVO extends SystemConfig {
     }
 
     /**
-     * 获取最新的API 密钥
+     * GetPoliceAPI Key
      */
     public String getCurrentSecret() {
         if (getApiKeyConfig() != null) {

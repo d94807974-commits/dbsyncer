@@ -7,9 +7,9 @@ import org.dbsyncer.connector.http.util.HttpUtil;
 import org.dbsyncer.sdk.model.ConnectorConfig;
 
 /**
- * Http连接配置
+ * HttpConnectConfigure
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-02-02 00:01
  */

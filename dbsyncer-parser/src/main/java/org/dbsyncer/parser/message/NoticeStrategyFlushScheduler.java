@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 周期策略 Cron 调度：到点 flush 缓冲队列并逐条发送。
+ * Periodic policyCron Schedule: to pointflush Buffer queue and send article by article.
  *
  * @author wuji
  * @version 1.0.0
@@ -34,7 +34,7 @@ public class NoticeStrategyFlushScheduler {
     private final Set<String> registeredIds = new HashSet<>();
 
     /**
-     * 按策略列表重建周期任务。
+     * By PolicyListReconstruction cycleTasks。
      */
     public synchronized void reload(List<NoticeStrategy> strategies) {
         for (String id : registeredIds) {

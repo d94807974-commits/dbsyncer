@@ -12,9 +12,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 达梦字节/位类型
+ * Dream byte/bitType
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-07-18
  */
@@ -53,7 +53,7 @@ public final class DamengByteType extends ByteType {
 
     @Override
     protected Object convert(Object val, Field field) {
-        // 基类 Boolean→byte[] 会导致达梦 TINYINT/BIT 报「无法转换的数据类型」
+        // Base CategoryBoolean→byte[] It'll Initiate Dreams.TINYINT/BIT Report「NoneFrenchConvertDataType」
         if (val instanceof Byte) {
             return val;
         }

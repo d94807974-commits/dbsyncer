@@ -19,17 +19,17 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * 任务执行明细分表(dbsyncer_task_detail)工具。
- * <p>校验/迁移结果展示字段来自连表：table_group(关联列) + meta(指标) + task_detail(载荷)。
+ * TasksImplementation DetailsminTable(dbsyncer_task_detail)Tools.
+ * <p>Validation/removalResultPresentationFieldFrom company table:table_group(Associated Columns) + meta(Indicators) + task_detail(Load)。
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-07-17 18:00
  */
 public abstract class TaskDetailUtil {
 
     /**
-     * MySQL BLOB 上限（与 dbsyncer_task_detail.DATA 一致），写入前必须截取以免 Data truncation。
+     * MySQL BLOB Upper limitand dbsyncer_task_detail.DATA They must be intercepted before writing.Data truncation。
      */
     public static final int MAX_DATA_BYTES = 65535;
 
@@ -37,11 +37,11 @@ public abstract class TaskDetailUtil {
     }
 
     /**
-     * 结构化内容序列化为 DATA blob 字节
-     * <p>超过 {@link #MAX_DATA_BYTES} 时优先截断 {@code content} 字段，尽量保持 JSON 可解析。
+     * Structure content sequence toDATA blob Bytes
+     * <p>Over{@link #MAX_DATA_BYTES} Break first{@code content} Field，Keep it as far as you can.JSON Can be parsed.
      *
-     * @param content 结构化字段
-     * @return blob 字节，内容为空时返回 null
+     * @param content StructureField
+     * @return blob bytes, content is emptyBack null
      */
     public static byte[] serializeContent(Map<String, Object> content) {
         if (content == null || content.isEmpty()) {
@@ -51,7 +51,7 @@ public abstract class TaskDetailUtil {
         if (bytes.length <= MAX_DATA_BYTES) {
             return bytes;
         }
-        // 优先截断载荷字段，保证入库且尽量可反序列化
+        // Prefer CutloadField，Guaranteed entryLibraryAnd try to reverse the sequence.
         Map<String, Object> copy = new HashMap<>(content);
         Object raw = copy.get(ConfigConstant.TASK_CONTENT);
         if (raw instanceof String && StringUtil.isNotBlank((String) raw)) {
@@ -64,7 +64,7 @@ public abstract class TaskDetailUtil {
                 return bytes;
             }
         }
-        // 兜底：按字节硬截断（可能破坏 JSON，反序列化失败时返回空 Map）
+        // Bottom: Hard-cut by bytes (possible damage)JSON，Inverse sequenceFailedTimeBackEmptyMap）
         return truncateBytes(bytes, MAX_DATA_BYTES);
     }
 
@@ -73,7 +73,7 @@ public abstract class TaskDetailUtil {
     }
 
     /**
-     * 按 UTF-8 字节上限截断字符串，保证落在完整字符边界上。
+     * PressUTF-8 byte upper limit cut a string, ensuring that it falls on the full character boundary.
      */
     private static String truncateUtf8(String value, int maxBytes) {
         if (value == null || maxBytes <= 0) {
@@ -84,7 +84,7 @@ public abstract class TaskDetailUtil {
             return value;
         }
         int end = maxBytes;
-        // 若切断点落在多字节字符中间，回退到该字符起始之前
+        // If the cut point falls in the middle of a multi-byte character, back to the beginning of the character
         while (end > 0 && (bytes[end] & 0xC0) == 0x80) {
             end--;
         }
@@ -105,10 +105,10 @@ public abstract class TaskDetailUtil {
     }
 
     /**
-     * 将 DATA blob 反序列化为结构化内容 Map
+     * WillDATA blob Inverse to structured contentMap
      *
-     * @param dataBlob 明细 DATA 列值(byte[] 或 String)
-     * @return 结构化字段，异常或为空时返回空 Map
+     * @param dataBlob DetailsDATA ColumnsValue(byte[] orString)
+     * @return StructureField，ErrorOr is it empty?BackEmptyMap
      */
     public static Map<String, Object> deserializeContent(Object dataBlob) {
         String json = null;
@@ -132,11 +132,11 @@ public abstract class TaskDetailUtil {
     }
 
     /**
-     * 装配明细行时把 DATA blob 的结构化字段合并回行 Map。
-     * <p>{@code isSuccess} 为成败（同步事件 0/1）；生命周期展示用 {@code status}/{@code state}。
+     * When you've got a line on it.DATA blob StructureFieldMerge Back LinesMap。
+     * <p>{@code isSuccess} For success or failure (Sync)Event 0/1）；Life cycle demonstration{@code status}/{@code state}。
      *
-     * @param row 明细行(键为 labelName)
-     * @return 合并后的行 Map
+     * @param row Line(Key withlabelName)
+     * @return Merged LinesMap
      */
     public static Map<String, Object> mergeDetailRow(Map<String, Object> row) {
         if (row == null) {
@@ -146,7 +146,7 @@ public abstract class TaskDetailUtil {
         if (!content.isEmpty()) {
             content.forEach(row::putIfAbsent);
         }
-        // TARGET_TABLE(targetTable) 映射为前端 VO 所需 targetTableName
+        // TARGET_TABLE(targetTable) Map to FrontendVO RequirementstargetTableName
         if (!row.containsKey(ConfigConstant.DATA_TARGET_TABLE_NAME) && row.containsKey(ConfigConstant.DETAIL_TARGET_TABLE)) {
             row.put(ConfigConstant.DATA_TARGET_TABLE_NAME, row.get(ConfigConstant.DETAIL_TARGET_TABLE));
         }
@@ -154,12 +154,12 @@ public abstract class TaskDetailUtil {
     }
 
     /**
-     * 装配校验/迁移结果行：table_group 关联列 + meta 指标 + detail 载荷。
+     * Combination/relocationResultLines:table_group Associated Columns+ meta Indicators+ detail Load.
      *
-     * @param detailRow     task_detail 行
-     * @param tableGroupRow table_group 展示字段(可空)
-     * @param metaRow       meta 展示字段(可空)
-     * @return 合并后的展示行
+     * @param detailRow     task_detail Okay.
+     * @param tableGroupRow table_group PresentationField(Empty)
+     * @param metaRow       meta PresentationField(Empty)
+     * @return Combined Presentation Lines
      */
     public static Map<String, Object> assembleJoinedRow(Map<String, Object> detailRow,
                                                         Map<String, Object> tableGroupRow,
@@ -187,7 +187,7 @@ public abstract class TaskDetailUtil {
             putIfPresent(row, ConfigConstant.DATABASE_SYNC_DETAIL_FAIL_TOTAL, metaRow.get(ConfigConstant.META_FAIL));
             putIfPresent(row, ConfigConstant.META_TOTAL, metaRow.get(ConfigConstant.META_TOTAL));
             putIfPresent(row, ConfigConstant.META_STATE, metaRow.get(ConfigConstant.META_STATE));
-            // 状态优先用 meta.state；前端兼容 status
+            // StatusPrioritymeta.state；Frontend Compatibilitystatus
             if (metaRow.get(ConfigConstant.META_STATE) != null) {
                 row.put(ConfigConstant.TASK_STATUS, metaRow.get(ConfigConstant.META_STATE));
             }
@@ -206,7 +206,7 @@ public abstract class TaskDetailUtil {
     }
 
     /**
-     * 将 Meta 模型转为展示字段 Map
+     * WillMeta Model to ShowField Map
      */
     public static Map<String, Object> toMetaDisplayMap(Object total, Object success, Object fail,
                                                        Object diff, Object fixed, Object state) {
@@ -221,14 +221,14 @@ public abstract class TaskDetailUtil {
     }
 
     /**
-     * 明细分表查询后的统一后处理：合并 DATA blob → 应用过滤 → 排序 → 分页。
+     * DetailsminUniform post-processing after table query: consolidationDATA blob → Apply Filter→ Sort 2000/01→ minPage。
      *
-     * @param rows       原始行集合(每行为 Map)
-     * @param filter     过滤条件(可空)
-     * @param comparator 排序器(可空)
-     * @param pageNum    页码(从 1 开始)
-     * @param pageSize   每页条数
-     * @return 分页结果
+     * @param rows       Original Line Gathering(Every Main BehaviourMap)
+     * @param filter     Filter Conditions(Empty)
+     * @param comparator Sorter(Empty)
+     * @param pageNum    PageCode(From1 Start)
+     * @param pageSize   EveryPageNumber of bars
+     * @return minPageResult
      */
     public static Paging pageDetails(Collection<?> rows, Predicate<Map<String, Object>> filter,
                                      Comparator<Map<String, Object>> comparator, int pageNum, int pageSize) {
@@ -248,11 +248,11 @@ public abstract class TaskDetailUtil {
     }
 
     /**
-     * 合并 DATA blob 并按条件过滤后统计条数
+     * MergeDATA blob and press undertookConditionStatistics after filtering
      *
-     * @param rows   原始行集合
-     * @param filter 过滤条件(可空)
-     * @return 命中条数
+     * @param rows   Original Line Gathering
+     * @param filter Filter Conditions(Empty)
+     * @return Superior
      */
     public static long countDetails(Collection<?> rows, Predicate<Map<String, Object>> filter) {
         return mergeAll(rows, filter).size();

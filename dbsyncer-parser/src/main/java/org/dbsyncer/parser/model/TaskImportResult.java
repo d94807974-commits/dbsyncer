@@ -28,7 +28,7 @@ public final class TaskImportResult {
     }
 
     /**
-     * 已落库的企业任务（校验/迁移），需由调用方刷新 TaskService 内存缓存。
+     * DroppedLibraryEnterprisesTasks（s Verification/transfer) , to be called byRefresh TaskService MemoryCache.
      */
     public List<ConfigModel> getEnterpriseTasks() {
         return enterpriseTasks;

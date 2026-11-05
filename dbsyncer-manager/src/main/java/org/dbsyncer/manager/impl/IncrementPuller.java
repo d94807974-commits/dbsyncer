@@ -65,7 +65,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * 增量同步
+ * Incremental sync
  *
  * @author AE86
  * @version 1.0.0
@@ -128,18 +128,18 @@ public final class IncrementPuller extends AbstractPuller implements Application
     public void start(Mapping mapping, boolean autoRecovery) {
         final String mappingId = mapping.getId();
         Connector connector = connectorProfile.getConnector(mapping.getSourceConnectorId());
-        Assert.notNull(connector, "连接器不能为空.");
+        Assert.notNull(connector, "Connector cannot be empty.");
         Connector targetConnector = connectorProfile.getConnector(mapping.getTargetConnectorId());
-        Assert.notNull(targetConnector, "目标连接器不能为空.");
-        Assert.isTrue(tableGroupProfile.getTableGroupCount(mappingId) > 0, "表映射关系不能为空，请先添加源表到目标表关系.");
+        Assert.notNull(targetConnector, "Target connector cannot be empty.");
+        Assert.isTrue(tableGroupProfile.getTableGroupCount(mappingId) > 0, "The map relationship cannot be empty. Add the source table to the target table relationship.");
         List<TableGroup> list = loadSortedTableGroups(mappingId);
         Meta meta = taskMetaProfile.getMeta(mappingId);
-        Assert.notNull(meta, "Meta不能为空.");
+        Assert.notNull(meta, "Meta can't be empty.");
 
         Thread worker = new Thread(() -> {
             try {
                 Listener listener = map.computeIfAbsent(mappingId, k -> {
-                    logger.info("开始增量同步：{}, {}", mappingId, mapping.getName());
+                    logger.info("Start Incremental Sync: }, }", mappingId, mapping.getName());
                     long now = Instant.now().toEpochMilli();
                     meta.setStartTime(now);
                     meta.setUpdateTime(now);
@@ -151,8 +151,8 @@ public final class IncrementPuller extends AbstractPuller implements Application
             } catch (Exception e) {
                 close(mappingId);
                 publishClosedEvent(mappingId);
-                logService.log(LogType.TableGroupLog.INCREMENT_FAILED, String.format("启动驱动失败：[%s], %s", mapping.getName(), e.getMessage()));
-                logger.error("运行异常，结束增量同步：{}", mappingId, e);
+                logService.log(LogType.TableGroupLog.INCREMENT_FAILED, String.format("Launch Case failed: [%s], %s", mapping.getName(), e.getMessage()));
+                logger.error("Run an anomaly, close incremental sync: }", mappingId, e);
             }
         });
         worker.setName("increment-worker-" + mapping.getId());
@@ -161,8 +161,8 @@ public final class IncrementPuller extends AbstractPuller implements Application
     }
 
     /**
-     * 启动监听。自动恢复（服务重启）时，为避免数据库晚于本服务启动导致 CDC 监听连接失败，
-     * 按 {@link IncrementRecoveryConfig} 配置的次数与间隔重试；手动启动仅尝试一次。
+     * Start listening。Automatically restore (service restart) to avoid dataLibraryAfter serviceStartResultCDC ListenConnection failed，
+     * Press{@link IncrementRecoveryConfig} ConfigureNumberandIntervalTry again；ManualStartJust try once.
      */
     private void startListener(Mapping mapping, String taskId, Listener listener, boolean autoRecovery) throws Exception {
         int maxAttempts = autoRecovery ? incrementRecoveryConfig.getRetryTimes() : 1;
@@ -170,18 +170,18 @@ public final class IncrementPuller extends AbstractPuller implements Application
             try {
                 listener.start();
                 if (i > 1) {
-                    logger.info("增量同步重试启动成功，任务名称:{}, 第{}次", mapping.getName(), i);
+                    logger.info("Accurate synchronous retry successful, task name: {, {}", mapping.getName(), i);
                 }
                 return;
             } catch (Exception e) {
-                // 最后一次仍失败，或等待期间任务已关闭，则不再重试
+                // Last time.Failed，or while waitingTasksDisabled，Not anymore.Try again
                 if (i >= maxAttempts) {
                     throw e;
                 }
-                logger.error("增量同步启动失败，任务名称:{} {}ms后重试", mapping.getName(), incrementRecoveryConfig.getRetryInterval(), e);
+                logger.error("Failed to start the incremental sync, task name: }ms", mapping.getName(), incrementRecoveryConfig.getRetryInterval(), e);
                 TimeUnit.MILLISECONDS.sleep(incrementRecoveryConfig.getRetryInterval());
                 if (!map.containsKey(taskId)) {
-                    logger.info("增量同步任务已关闭，终止重试：{}, {}", taskId, mapping.getName());
+                    logger.info("The incremental sync task is closed and the retry is terminated: }, {", taskId, mapping.getName());
                     return;
                 }
             }
@@ -189,19 +189,19 @@ public final class IncrementPuller extends AbstractPuller implements Application
     }
 
     /**
-     * 捕获并保存当前增量位点，同时重置全量进度（全量+增量模式使用）
+     * CaptureSaveCurrentIncrementalbits, at the same timeResetFullProgressFull + incrementalMode Publications)
      *
-     * @param mapping 驱动
+     * @param mapping Driver
      */
     public void captureAndSaveOffset(Mapping mapping) {
         Connector connector = connectorProfile.getConnector(mapping.getSourceConnectorId());
-        Assert.notNull(connector, "连接器不能为空.");
+        Assert.notNull(connector, "Connector cannot be empty.");
         Connector targetConnector = connectorProfile.getConnector(mapping.getTargetConnectorId());
-        Assert.notNull(targetConnector, "目标连接器不能为空.");
-        Assert.isTrue(tableGroupProfile.getTableGroupCount(mapping.getId()) > 0, "表映射关系不能为空，请先添加源表到目标表关系.");
+        Assert.notNull(targetConnector, "Target connector cannot be empty.");
+        Assert.isTrue(tableGroupProfile.getTableGroupCount(mapping.getId()) > 0, "The map relationship cannot be empty. Add the source table to the target table relationship.");
         List<TableGroup> list = loadSortedTableGroups(mapping.getId());
         Meta meta = taskMetaProfile.getMeta(mapping.getId());
-        Assert.notNull(meta, "Meta不能为空.");
+        Assert.notNull(meta, "Meta can't be empty.");
         Listener listener = buildListener(mapping, connector, targetConnector, list, meta);
         Map<String, String> snapshot = meta.getSnapshot();
         snapshot.putAll(listener.captureSnapshot());
@@ -214,7 +214,7 @@ public final class IncrementPuller extends AbstractPuller implements Application
         meta.getSuccess().set(0);
         meta.getFail().set(0);
         taskMetaProfile.updateMeta(meta);
-        logger.info("全量+增量模式已保存增量位点：{}, {}", mapping.getName(), snapshot);
+        logger.info("Full Needles + Incremental Mode Saved Incremental Bits: {, {", mapping.getName(), snapshot);
     }
 
     @Override
@@ -228,7 +228,7 @@ public final class IncrementPuller extends AbstractPuller implements Application
             if (shouldPublishClosedAfterStop(taskId)) {
                 publishClosedEvent(taskId);
             }
-            logger.info("关闭成功:{}", taskId);
+            logger.info("Close success: }", taskId);
             return null;
         });
     }
@@ -239,10 +239,10 @@ public final class IncrementPuller extends AbstractPuller implements Application
     }
 
     /**
-     * 用户停止后 Meta 为 STOPPING，需 ClosedEvent 收口；本机围栏停止不发。
+     * UserStopBackMeta YesSTOPPING，YesClosedEvent Shut-down; on-site fenceStopNo. No.
      *
      * @param taskId
-     * @return true 应发布 ClosedEvent
+     * @return true Should be publishedClosedEvent
      */
     private boolean shouldPublishClosedAfterStop(String taskId) {
         if (StringUtil.isBlank(taskId)) {
@@ -262,7 +262,7 @@ public final class IncrementPuller extends AbstractPuller implements Application
 
     @Override
     public void run() {
-        // 定时同步增量信息
+        // ScheduledSyncIncrementalInfo
         map.values().forEach(Listener::flushEvent);
     }
 
@@ -279,14 +279,14 @@ public final class IncrementPuller extends AbstractPuller implements Application
         consumer.build(meta.getTaskId(), list, mapping.getChannelSize());
         listener.register(consumer);
 
-        // 默认定时抽取
+        // DefaultScheduledExtract
         if (ListenerTypeEnum.isTiming(listenerType) && listener instanceof AbstractQuartzListener) {
             AbstractQuartzListener quartzListener = (AbstractQuartzListener) listener;
             List<TableGroupQuartzCommand> quartzCommands = list.stream().map(t -> {
                 final TableGroup group = PickerUtil.mergeTableGroupConfig(mapping, t);
                 final Picker picker = new Picker(group);
                 List<Field> fields = picker.getSourceFields();
-                Assert.notEmpty(fields, "表字段映射关系不能为空：" + group.getSourceTable().getName() + " > " + group.getTargetTable().getName());
+                Assert.notEmpty(fields, "Table field map cannot be empty:" + group.getSourceTable().getName() + " > " + group.getTargetTable().getName());
                 return new TableGroupQuartzCommand(t.getSourceTable(), fields, t.getTargetTable(), t.getCommand(), group.getPlugin(), group.getPluginExtInfo());
             }).collect(Collectors.toList());
             quartzListener.setMappingName(mapping.getName());
@@ -357,7 +357,7 @@ public final class IncrementPuller extends AbstractPuller implements Application
     }
 
     /**
-     * 按页拉取表映射（sortIndex 降序），供监听器注册使用。
+     * PressPageDraw Table MapsortIndex ) for registration of listening devices.
      */
     private List<TableGroup> loadSortedTableGroups(String mappingId) {
         List<TableGroup> list = new ArrayList<>();

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * 订正校验任务
+ * Revised verification tasks
  *
  * @author wuji
  * @version 1.0.0
@@ -18,40 +18,40 @@ import java.util.function.Consumer;
 public interface ValidateSyncProfile {
 
     /**
-     * 按 id 查询 Mapping 任务配置。
+     * Pressid QuestionMapping TasksConfigure。
      */
     ValidateSyncTask get(String id);
 
     /**
-     * 新增任务配置。
+     * InsertTasksConfigure。
      */
     String add(ValidateSyncTask task);
 
     /**
-     * 修改任务配置。
+     * UpdateTasksConfigure。
      */
     String update(ValidateSyncTask tasks);
 
     /**
-     * 删除任务配置
+     * DeleteTasksConfigure
      */
     void delete(String id);
 
     /**
-     * 按模型类型分页查询任务，可选按名称模糊搜索。
+     * Press ModelTypeminPageQuestionTasks，Optional PressNameBlurSearch。
      *
-     * @param searchKey 可选；非空时对 {@code name} 做 LIKE
-     * @param ids 可选；按 ID IN 过滤。
+     * @param searchKey optional; non-empty time pair{@code name} Do it.LIKE
+     * @param ids optional 38.ID IN Filter.
      */
     Paging<ValidateSyncTask> query(int pageNum, int pageSize, String searchKey, List<String> ids);
 
     /**
-     * 按模型类型分页回调遍历全部任务。
+     * Press ModelTypeminPageAll over the clock.AllTasks。
      */
     void pageScanTasks(int pageSize, Consumer<List<ValidateSyncTask>> pageConsumer);
 
     /**
-     * 保存/编辑时重建明细分表骨架行（先清空再按当前表映射写入）。
+     * Save/EditTime to recreate detailminCobra line (first)ClearAnd write on the current table.
      */
     void syncTaskTableMetaDetails(String taskId);
 

@@ -11,46 +11,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 驱动自定义表信息
+ * MappingCustom tableInfo
  *
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2026-01-04 21:41
  */
 public class MappingCustomTableVO {
 
     /**
-     * 驱动ID
+     * MappingID
      */
     private String id;
 
     /**
-     * 驱动名称
+     * MappingName
      */
     private String name;
 
     /**
-     * 元信息
+     * MetaInfo
      */
     private Meta meta;
 
     /**
-     * 连接配置
+     * ConnectConfigure
      */
     private ConnectorConfig connectorConfig;
 
     /**
-     * 可扩展类型 {@link org.dbsyncer.sdk.enums.TableTypeEnum}
+     * ExpandableType {@link org.dbsyncer.sdk.enums.TableTypeEnum}
      */
     private String extendedType;
 
     /**
-     * 主表列表
+     * Main TableList
      */
     private List<Table> mainTables;
 
     /**
-     * 自定义表列表
+     * Custom tableList
      */
     private List<TableVO> customTables = new ArrayList<>();
 
