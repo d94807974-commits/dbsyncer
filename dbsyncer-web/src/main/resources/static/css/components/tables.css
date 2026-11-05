@@ -1,5 +1,5 @@
 /**
- * DBSyncer 表格组件样式
+ * DBSyncer Table Component Styles
  */
 table {
   border-collapse: collapse;
@@ -8,7 +8,7 @@ table {
   font-size: var(--font-size-sm);
 }
 
-/* 表格拖拽样式 */
+/* Table Drag Style*/
 tr[draggable="true"] {
   cursor: move;
   transition: all 0.3s ease;
@@ -48,7 +48,7 @@ tr[draggable="true"]:hover {
   max-width: 260px;
 }
 
-/* 表格单元格中包含 select 或 dbSelect 组件时，允许下拉框显示 */
+/* containsselect ordbSelect Allows drop-down frames to display components*/
 .table td:has(select),
 .table td:has(.dbsyncer-select) {
   overflow: visible;
@@ -56,7 +56,7 @@ tr[draggable="true"]:hover {
   z-index: 1;
 }
 
-/* 兼容不支持 :has() 的浏览器 */
+/* Compatible Support:has() Browser for*/
 .table td select,
 .table td .dbsyncer-select {
   position: relative;
@@ -75,7 +75,7 @@ tr[draggable="true"]:hover {
   border-bottom: none;
 }
 
-/* 表格操作图标按钮 */
+/* Table 134.ActionsIcon button*/
 .table-action-btn {
   display: inline-flex;
   align-items: center;
@@ -103,7 +103,7 @@ tr[draggable="true"]:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* 查看详情按钮 */
+/* View detailsbutton*/
 .table-action-btn.view {
   color: var(--primary-color);
   background-color: rgba(22, 93, 255, 0.08);
@@ -126,7 +126,7 @@ tr[draggable="true"]:hover {
   box-shadow: 0 2px 8px rgba(22, 93, 255, 0.2);
 }
 
-/* 暂停/启动按钮 */
+/* Pause/Startbutton*/
 .table-action-btn.pause {
   color: var(--warning-color);
   background-color: rgba(250, 140, 22, 0.08);
@@ -149,7 +149,7 @@ tr[draggable="true"]:hover {
   box-shadow: 0 2px 8px rgba(82, 196, 26, 0.2);
 }
 
-/* 删除按钮 */
+/* Deletebutton*/
 .table-action-btn.delete {
   color: var(--error-color);
   background-color: rgba(245, 34, 45, 0.08);
@@ -161,7 +161,7 @@ tr[draggable="true"]:hover {
   box-shadow: 0 2px 8px rgba(245, 34, 45, 0.2);
 }
 
-/* 分页组件 */
+/* minPagePersons*/
 .pagination {
   padding: var(--spacing-lg);
   border-top: 1px solid var(--border-secondary);
@@ -229,7 +229,7 @@ tr[draggable="true"]:hover {
   box-shadow: none;
 }
 
-/* 首页/末页、上一页/下一页导航按钮 */
+/* Home/Last page、Previous/NextNavigation button*/
 .pagination-btn-nav {
   flex-shrink: 0;
 }
@@ -292,7 +292,7 @@ span.pagination-page-btn {
   pointer-events: none;
 }
 
-/* 分页栏容器 */
+/* minPageColumn container*/
 .pagination-bar {
   display: flex;
   align-items: center;
@@ -302,7 +302,7 @@ span.pagination-page-btn {
   margin-left: var(--spacing-sm);
 }
 
-/* 表格滚动区（工作区详情等） */
+/* Table scroll area (working area)DetailsWait.*/
 .table-scroll-panel {
   flex: 1;
   overflow-y: auto;
@@ -320,7 +320,7 @@ span.pagination-page-btn {
   z-index: 1;
 }
 
-/* 表格列宽 */
+/* Table column width*/
 .table th.width50px {
   width: 50px;
 }
@@ -337,7 +337,7 @@ span.pagination-page-btn {
 .table th.width40p { width: 40%; }
 .table th.width60p { width: 60%; }
 
-/* 单元格换行（长文本、差异详情等） */
+/* Line Break Cells (Long Text,Details of variancesWait.*/
 .table.table-wrap-cells {
   table-layout: fixed;
   width: 100%;
@@ -357,7 +357,7 @@ span.pagination-page-btn {
   vertical-align: top;
 }
 
-/* 表格局部嵌套容器 */
+/* Table Local Embedded Packaging*/
 .table-inset {
   border: 1px solid var(--border-secondary);
   border-radius: 6px;
@@ -370,7 +370,7 @@ span.pagination-page-btn {
   table-layout: fixed;
 }
 
-/* 单元格内滚动区域 */
+/* Scroll range within cells*/
 .table-cell-scroll {
   max-height: 240px;
   overflow-y: auto;

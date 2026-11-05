@@ -1,101 +1,101 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<!-- 左侧边栏 -->
+<!-- LeftIt's the other way.Sidebar -->
 <aside id="appSidebar" th:fragment="nav" class="app-sidebar border-r border-gray-200 flex-shrink-0 md:flex flex-col">
-    <!-- 品牌标识 -->
+    <!-- Branding -->
     <div class="sidebar-brand flex items-center px-3 mt-3">
         <img class="sidebar-logo" draggable="false" th:src="@{'/img/logo.png'}" alt="DBSyncer">
         <span class="sidebar-brand-text text-xl font-bold text-dark ml-2">DBSyncer</span>
     </div>
 
-    <!-- 导航菜单 -->
+    <!-- NavigationMenu -->
     <nav class="sidebar-nav flex-1 p-2 overflow-y-auto">
         <div class="space-y-1 mb-6">
-            <div class="sidebar-item active" url="/index" title="仪表盘">
+            <div class="sidebar-item active" url="/index" title="Dashboard">
                 <i class="fa fa-tachometer w-5 text-center"></i>
-                <span>仪表盘</span>
+                <span>Dashboard</span>
             </div>
-            <div class="sidebar-item" url="/connector/list" data-permission="connector:view" title="连接管理">
+            <div class="sidebar-item" url="/connector/list" data-permission="connector:view" title="Connections">
                 <i class="fa fa-database w-5 text-center"></i>
-                <span>连接管理</span>
+                <span>Connections</span>
             </div>
 
             <div class="sidebar-group" data-group="task">
-                <div class="sidebar-group-title" title="任务管理">
+                <div class="sidebar-group-title" title="Task management">
                     <i class="fa fa-tasks w-5 text-center"></i>
-                    <span>任务管理</span>
+                    <span>Task management</span>
                     <i class="fa fa-angle-down sidebar-group-arrow"></i>
                 </div>
                 <div class="sidebar-group-children">
                     <div class="sidebar-group-drawer">
-                        <div class="sidebar-group-flyout-title">任务管理</div>
+                        <div class="sidebar-group-flyout-title">Task management</div>
                         <div class="sidebar-item sidebar-item-sub" url="/mapping/list" data-permission="mapping:view">
-                            <span>数据同步</span>
+                            <span>Data sync</span>
                         </div>
                         <div class="sidebar-item sidebar-item-sub" url="/database-sync/list" data-permission="mapping:view">
-                            <span>整库迁移</span>
+                            <span>Database migration</span>
                         </div>
                         <div class="sidebar-item sidebar-item-sub" url="/validate-sync/list" data-permission="mapping:view">
-                            <span>订正校验</span>
+                            <span>Data validation</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="sidebar-item" url="/monitor" title="性能监控">
+            <div class="sidebar-item" url="/monitor" title="Performance monitor">
                 <i class="fa fa-line-chart w-5 text-center"></i>
-                <span>性能监控</span>
+                <span>Performance monitor</span>
             </div>
-            <div class="sidebar-item" url="/cluster/list" data-permission="system:view" title="集群管理">
+            <div class="sidebar-item" url="/cluster/list" data-permission="system:view" title="Cluster management">
                 <i class="fa fa-sitemap w-5 text-center"></i>
-                <span>集群管理</span>
+                <span>Cluster management</span>
             </div>
 
             <div class="sidebar-group" data-group="system">
-                <div class="sidebar-group-title" title="系统管理">
+                <div class="sidebar-group-title" title="System management">
                     <i class="fa fa-cogs w-5 text-center"></i>
-                    <span>系统管理</span>
+                    <span>System management</span>
                     <i class="fa fa-angle-down sidebar-group-arrow"></i>
                 </div>
                 <div class="sidebar-group-children">
                     <div class="sidebar-group-drawer">
-                        <div class="sidebar-group-flyout-title">系统管理</div>
+                        <div class="sidebar-group-flyout-title">System management</div>
                         <div class="sidebar-item sidebar-item-sub" url="/plugin" data-permission="system:view">
-                            <span>插件管理</span>
+                            <span>Plugin management</span>
                         </div>
                         <div class="sidebar-item sidebar-item-sub" url="/system" data-permission="system:view">
-                            <span>系统配置</span>
+                            <span>System settings</span>
                         </div>
                         <div class="sidebar-item sidebar-item-sub" url="/user" data-permission="user:view">
-                            <span>用户管理</span>
+                            <span>User Management</span>
                         </div>
                         <div class="sidebar-item sidebar-item-sub" url="/role" data-permission="user:view">
-                            <span>角色管理</span>
+                            <span>Role management</span>
                         </div>
                         <div class="sidebar-item sidebar-item-sub" url="/acl" data-permission="acl:view">
-                            <span>资源授权</span>
+                            <span>Resource authorization</span>
                         </div>
                         <div class="sidebar-item sidebar-item-sub" url="/notice" data-permission="notice:view">
-                            <span>告警通知</span>
+                            <span>Alert notification</span>
                         </div>
                         <div class="sidebar-item sidebar-item-sub" url="/config" data-permission="system:view">
-                            <span>配置管理</span>
+                            <span>Configuration Management</span>
                         </div>
                         <div class="sidebar-group sidebar-group-nested" data-group="log">
-                            <div class="sidebar-group-title" title="日志管理">
-                                <span>日志管理</span>
+                            <div class="sidebar-group-title" title="Log management">
+                                <span>Log management</span>
                                 <i class="fa fa-angle-down sidebar-group-arrow"></i>
                             </div>
                             <div class="sidebar-group-children">
                                 <div class="sidebar-group-drawer">
-                                    <div class="sidebar-group-flyout-title">日志管理</div>
+                                    <div class="sidebar-group-flyout-title">Log management</div>
                                     <div class="sidebar-item sidebar-item-sub sidebar-item-sub2" url="/log/login" data-permission="system:view">
-                                        <span>登录日志</span>
+                                        <span>Login logs</span>
                                     </div>
                                     <div class="sidebar-item sidebar-item-sub sidebar-item-sub2" url="/log/oper" data-permission="system:view">
-                                        <span>操作日志</span>
+                                        <span>Operation logs</span>
                                     </div>
                                 </div>
                             </div>
@@ -104,14 +104,14 @@
                 </div>
             </div>
 
-            <div class="sidebar-item" url="/license" data-permission="license:view" title="授权许可">
+            <div class="sidebar-item" url="/license" data-permission="license:view" title="License">
                 <i class="fa fa-key w-5 text-center"></i>
-                <span>授权许可</span>
+                <span>License</span>
             </div>
         </div>
     </nav>
 
-    <!-- 版权信息 -->
+    <!-- CopyrightInfo -->
     <div class="sidebar-footer p-4 border-t border-gray-200">
         <div class="flex items-center text-sm">
             <div>

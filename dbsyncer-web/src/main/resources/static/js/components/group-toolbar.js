@@ -1,7 +1,7 @@
 /**
- * 业务分组工具栏：列表筛选 / 新建·编辑·删除分组；关联资源在分组弹窗维护。
- * 约定：列表筛 groupId 空=全部；资源与分组多对多。
- * 顶栏布局见《分组设计》§7.2。
+ * Business groupToolbar:ListFilter / NewEdit·Delete group；AssociationResourceYes.GroupBlast window maintenance.
+ * Have agreed:ListScreeninggroupId Empty=All；ResourceandGroupMore to more.
+ * See the top-bar layout.GroupDesign§7.2。
  */
 (function (window, $) {
     'use strict';
@@ -23,7 +23,7 @@
     }
 
     /**
-     * 读取已缓存的分组筛选（供列表首屏查询与工具栏恢复共用）。
+     * Read CacheGroupScreening (forListFirstscreen queryandRestore ToolbarTotalUse it.
      */
     function peekStoredGroupId(resourceType) {
         if (!resourceType) {
@@ -32,7 +32,7 @@
         try {
             return localStorage.getItem(groupFilterStorageKey(resourceType)) || '';
         } catch (e) {
-            console.warn('[GroupToolbar] 读取分组筛选缓存失败', e);
+            console.warn('[GroupToolbar] Reading group filter cache failed', e);
             return '';
         }
     }
@@ -44,14 +44,14 @@
         try {
             localStorage.setItem(groupFilterStorageKey(resourceType), groupId || '');
         } catch (e) {
-            console.warn('[GroupToolbar] 保存分组筛选缓存失败', e);
+            console.warn('[GroupToolbar] Save group filter cache failed', e);
         }
     }
 
     function loadGroups(callback) {
         doPoster('/group/list', {}, function (response) {
             if (!response || !response.success) {
-                bootGrowl((response && response.message) || '加载分组失败', 'danger');
+                bootGrowl((response && response.message) || 'Failed to load group', 'danger');
                 callback([]);
                 return;
             }
@@ -61,10 +61,10 @@
     }
 
     /**
-     * 列表筛选选项：全部 + 真实分组（不含「未分组」）。
+     * ListFilter options:All + RealGroup（does not contain「NotGroup」）。
      */
     function buildFilterData(groups) {
-        var data = [{label: '全部', value: ''}];
+        var data = [{label: 'All', value: ''}];
         (groups || []).forEach(function (g) {
             if (!g || !g.id) {
                 return;
@@ -97,7 +97,7 @@
     }
 
     /**
-     * 初始化或刷新单选 dbSelect，并静默选中指定值（含空串「全部」）。
+     * InitializeorRefreshSingledbSelect，Quietly select the designationValue（Empty String「All」）。
      */
     function applySelectData($select, api, data, selected, onSelect) {
         if (!api) {
@@ -122,7 +122,7 @@
     }
 
     /**
-     * 关联资源多选：远程分页；groupId 空=全部资源，便于勾选挂组。
+     * AssociationResourceMultiple selection: remoteminPage；groupId Empty=AllResource，Easy to tick the Theirs.
      */
     function buildResourceMultiSelectOptions(searchUrl, groupIdParam, preselected) {
         var initialData = preselected || [];
@@ -187,7 +187,7 @@
             resourceIds: resourceIds.join(',')
         }, function (response) {
             if (!response || !response.success) {
-                bootGrowl((response && response.message) || '关联资源失败', 'danger');
+                bootGrowl((response && response.message) || 'Associated resources failed', 'danger');
                 if (typeof done === 'function') {
                     done(false);
                 }
@@ -199,7 +199,7 @@
         });
     }
 
-    /** 从指定分组移出（不影响其它组） */
+    /** From SpecifyGroupOwn (without prejudice to other groups)*/
     function unbindBatch(groupId, resourceType, resourceIds, done) {
         if (!groupId || !resourceIds || !resourceIds.length) {
             if (typeof done === 'function') {
@@ -213,7 +213,7 @@
             resourceIds: resourceIds.join(',')
         }, function (response) {
             if (!response || !response.success) {
-                bootGrowl((response && response.message) || '移出资源失败', 'danger');
+                bootGrowl((response && response.message) || 'Failed to remove resources', 'danger');
                 if (typeof done === 'function') {
                     done(false);
                 }
@@ -226,7 +226,7 @@
     }
 
     /**
-     * 加载某组全部关联资源（作编辑弹窗预勾选）。
+     * Load a groupAllAssociationResource（Do it.EditBlast windows pre-check.
      */
     function loadGroupResources(searchUrl, groupId, callback) {
         if (!groupId || !searchUrl) {
@@ -280,12 +280,12 @@
     }
 
     /**
-     * 列表顶栏分组区。
+     * ListTopbarGroupDistrict.
      * @param {Object} options
-     *   - containerSelector 筛选/编辑/删除挂载容器（搜索框右侧）
-     *   - createButtonHostSelector 「分组」按钮挂载点（资源「添加」左侧）
+     *   - containerSelector Filters/Edit/DeleteMount container (Searchto the right of the frame)
+     *   - createButtonHostSelector 「Group」Button Mount PointResource「Add」Left)
      *   - resourceType / searchUrl / onChange
-     *   - addPageUrl / addButtonSelector 可选
+     *   - addPageUrl / addButtonSelector Optional
      */
     function initListToolbar(options) {
         options = options || {};
@@ -299,7 +299,7 @@
         var searchUrl = options.searchUrl || '';
         var editPermission = options.editPermission
             || (resourceType === 'connector' ? 'connector:edit' : 'mapping:edit');
-        // 从缓存恢复，避免编辑/删除整页重载后筛选回到「全部」
+        // Recovery from Cache, AvoidEdit/DeleteFullPageFilter Back after Reload「All」
         var currentGroupId = peekStoredGroupId(resourceType);
         var listTotal = 0;
         var hasGroups = false;
@@ -307,14 +307,14 @@
         var selectApi = null;
         var silentChange = false;
 
-        // 列表容器已带 flex/gap；筛选区用 min-w-200，下拉随容器宽度
+        // ListThe container is loaded.flex/gap；Filter Areamin-w-200，Draw down with container width
         $container.html(
             '<div class="group-filter-wrap hidden flex-shrink-0 w-320">' +
             '<select class="form-control group-filter-select"></select>' +
             '</div>' +
-            '<button type="button" class="btn btn-outline group-edit-btn hidden flex-shrink-0" title="编辑分组"' +
+            '<button type= "button" class=btnbtn-outline group-edit-btnhiddenlex-shrink-0"' +
             ' data-permission="' + editPermission + '"><i class="fa fa-edit"></i></button>' +
-            '<button type="button" class="btn btn-outline group-remove-btn hidden flex-shrink-0" title="删除分组"' +
+            '<button type= "button" class=btn btn-outline group-remove-btnhedden' +
             ' data-permission="' + editPermission + '"><i class="fa fa-trash"></i></button>'
         );
         var $filterWrap = $container.find('.group-filter-wrap');
@@ -322,13 +322,13 @@
         var $editBtn = $container.find('.group-edit-btn');
         var $removeBtn = $container.find('.group-remove-btn');
 
-        // 「分组」按钮挂在资源「添加」旁
+        // 「Group」Button Hangs onResource「Add」Side
         var $createHost = options.createButtonHostSelector ? $(options.createButtonHostSelector) : $();
         var $addBtn;
         if ($createHost.length) {
             $createHost.html(
-                '<button type="button" class="btn btn-outline group-add-btn hidden flex-shrink-0" title="新建分组"' +
-                ' data-permission="' + editPermission + '">分组</button>'
+                '<button type= "button" class=btnbtn-outline group-add-btnhedden' +
+                ' data-permission="' + editPermission + '"\'"Group</button>'
             );
             $addBtn = $createHost.find('.group-add-btn');
         } else {
@@ -343,8 +343,8 @@
         }
 
         /**
-         * 切换显隐。按钮同时有 .btn（display:inline-flex）与 .hidden（display:none）时，
-         * 后加载的 buttons.css 会盖住 .hidden，需用内联 display 保证「全部」时编辑/删除真正隐藏。
+         * Toggle invisible. Buttons are also available..btn（display:inline-flex）and .hidden（display:none）I don't know.
+         * Loaded afterbuttons.css It'll cover..hidden，Inline requireddisplay Promise.「All」TimeEdit/DeleteReally hide.
          */
         function setBtnVisible($btn, visible) {
             if (!$btn || !$btn.length) {
@@ -357,17 +357,17 @@
         function syncVisibility() {
             var canEdit = canManageGroups();
             var showFilter = hasGroups;
-            // 「全部」value 为空，不可编辑/删除；无编辑权也不展示
+            // 「All」value It's empty.Edit/Delete；NoneEditNo right to show.
             var showEditRemove = canEdit && hasGroups && isRealGroupId(currentGroupId);
             var showAdd = canEdit && listTotal > 0;
             $filterWrap.toggleClass('hidden', !showFilter);
             setBtnVisible($editBtn, showEditRemove);
             setBtnVisible($removeBtn, showEditRemove);
             setBtnVisible($addBtn, showAdd);
-            // 中间筛选区：无下拉且无编辑删除时隐藏
+            // Intermediate screening area:NoneTake him down.NoneEditDeleteHide
             $container.toggleClass('hidden', !showFilter && !showEditRemove);
             if ($createHost.length) {
-                // 无编辑权时保持隐藏，避免盖掉 data-permission 的隐藏结果
+                // NoneEditKeep the power hidden and avoid covering it up.data-permission HideResult
                 $createHost.toggleClass('hidden', !showAdd);
             }
         }
@@ -398,13 +398,13 @@
                 currentGroupId = selected;
                 saveStoredGroupId(resourceType, currentGroupId);
                 filterData = buildFilterData(groups);
-                // 先显隐再初始化 dbSelect，避免父级 display:none 时宽度为 0
+                // Let's go in and get started.dbSelect，Avoid Parentdisplay:none Time width is0
                 syncVisibility();
                 if (hasGroups) {
                     silentChange = true;
                     selectApi = applySelectData($select, selectApi, filterData, selected, onFilterSelect);
                     silentChange = false;
-                    // 再同步一次：确保「全部」时编辑/删除仍隐藏
+                    // Synchronization: Ensure「All」TimeEdit/DeleteHide still
                     syncVisibility();
                 } else {
                     destroySelectApi(selectApi);
@@ -419,37 +419,37 @@
 
         function openCreateDialog() {
             if (!canManageGroups()) {
-                bootGrowl('无权限', 'danger');
+                bootGrowl('No permission', 'danger');
                 return;
             }
             if (!searchUrl || !resourceType) {
-                bootGrowl('未配置资源类型，无法新建分组', 'danger');
+                bootGrowl('No resource type configured, could not create a new group', 'danger');
                 return;
             }
             var resourceApi = null;
             var dialog = showConfirm({
-                title: '新建分组',
+                title: 'New group',
                 size: 'xlarge',
                 position: 'center',
                 body: '<div class="group-dialog-body">' +
-                    '<div class="form-item"><label class="form-label">名称<strong class="text-primary">*</strong></label>' +
-                    '<div class="form-control-area"><input type="text" class="form-control group-name-input" maxlength="50" placeholder="请输入分组名称"/></div></div>' +
-                    '<div class="form-item mt-4"><label class="form-label">关联资源</label>' +
+                    '<div class="form-item"><label class="form-label">Name<strong class="text-primary">*</strong></label>' +
+                    '<div class="form-control-area"><input type="text" class="form-control group-name-input" maxlength="50" placeholder="Please enter the group name"/></div></div>' +
+                    '<div class="form-item mt-4"><label class="form-label">Associated resources</label>' +
                     '<select class="form-control group-resource-select"></select></div>' +
                     '</div>',
-                confirmText: '确定',
-                cancelText: '取消',
+                confirmText: 'OK',
+                cancelText: 'Cancel',
                 closeOnConfirm: false,
                 onConfirm: function () {
                     var name = ($('.group-name-input').val() || '').trim();
                     if (!name) {
-                        bootGrowl('分组名称不能为空', 'warning');
+                        bootGrowl('Group name cannot be empty', 'warning');
                         return;
                     }
                     var selectedIds = resourceApi && resourceApi.getValues ? resourceApi.getValues().slice() : [];
                     doPoster('/group/add', {name: name, type: resourceType}, function (response) {
                         if (!response.success) {
-                            bootGrowl(response.message || '新建失败', 'danger');
+                            bootGrowl(response.message || 'New Failed', 'danger');
                             return;
                         }
                         var newId = response.data || '';
@@ -459,7 +459,7 @@
                             }
                             destroySelectApi(resourceApi);
                             dialog.close();
-                            bootGrowl('新建成功', 'success');
+                            bootGrowl('New Success', 'success');
                             currentGroupId = newId;
                             refreshSelect(newId);
                             notifyChange();
@@ -480,7 +480,7 @@
 
         function openEditDialog() {
             if (!canManageGroups()) {
-                bootGrowl('无权限', 'danger');
+                bootGrowl('No permission', 'danger');
                 return;
             }
             if (!isRealGroupId(currentGroupId) || !searchUrl || !resourceType) {
@@ -494,30 +494,30 @@
                 });
                 var resourceApi = null;
                 var dialog = showConfirm({
-                    title: '编辑分组',
+                    title: 'Edit Group',
                     size: 'xlarge',
                     position: 'center',
                     body: '<div class="group-dialog-body">' +
-                        '<div class="form-item"><label class="form-label">名称<strong class="text-primary">*</strong></label>' +
+                        '<div class="form-item"><label class="form-label">Name<strong class="text-primary">*</strong></label>' +
                         '<div class="form-control-area"><input type="text" class="form-control group-name-input" maxlength="50" value="' +
                         escapeHtml(groupName) + '"/></div></div>' +
-                        '<div class="form-item mt-4"><label class="form-label">关联资源</label>' +
+                        '<div class="form-item mt-4"><label class="form-label">Associated resources</label>' +
                         '<select class="form-control group-resource-select"></select></div>' +
                         '</div>',
-                    confirmText: '保存',
-                    cancelText: '取消',
+                    confirmText: 'Save',
+                    cancelText: 'Cancel',
                     closeOnConfirm: false,
                     onConfirm: function () {
                         var name = ($('.group-name-input').val() || '').trim();
                         if (!name) {
-                            bootGrowl('分组名称不能为空', 'warning');
+                            bootGrowl('Group name cannot be empty', 'warning');
                             return;
                         }
                         var finalIds = resourceApi && resourceApi.getValues ? resourceApi.getValues().slice() : [];
                         var diff = diffIds(initialIds, finalIds);
                         doPoster('/group/edit', {id: groupId, name: name, type: resourceType}, function (editRes) {
                             if (!editRes.success) {
-                                bootGrowl(editRes.message || '保存失败', 'danger');
+                                bootGrowl(editRes.message || 'Save failed', 'danger');
                                 return;
                             }
                             bindBatch(groupId, resourceType, diff.toAdd, function (addOk) {
@@ -530,7 +530,7 @@
                                     }
                                     destroySelectApi(resourceApi);
                                     dialog.close();
-                                    bootGrowl('保存成功', 'success');
+                                    bootGrowl('Saved successfully', 'success');
                                     refreshSelect(groupId);
                                     notifyChange();
                                 });
@@ -543,7 +543,7 @@
                 });
                 setTimeout(function () {
                     $('.group-name-input').focus();
-                    // 下拉浏览全部资源；已选标签展示组内资源，可叉掉移出
+                    // Dropdown BrowseAllResource；Selected Tab Presentation GroupResource，But forklifts out
                     resourceApi = $('.group-resource-select').dbSelect(
                         buildResourceMultiSelectOptions(searchUrl, '', preselected)
                     );
@@ -556,7 +556,7 @@
 
         $removeBtn.on('click', function () {
             if (!canManageGroups()) {
-                bootGrowl('无权限', 'danger');
+                bootGrowl('No permission', 'danger');
                 return;
             }
             if (!isRealGroupId(currentGroupId)) {
@@ -570,19 +570,19 @@
                     count = data.count != null ? data.count : 0;
                 }
                 showConfirm({
-                    title: '确定要删除分组「' + escapeHtml(groupName) + '」？',
-                    message: '该分组下共 ' + count + ' 个资源，删除后仅解除本组成属关系（资源本身及其它组归属保留）。',
+                    title: 'Confirm to delete grouping' + escapeHtml(groupName) + '」？',
+                    message: 'The group\'s down. ' + count + ' One resource, deleted and only removed from this composition (retention of the resource itself and other groups).',
                     icon: 'warning',
                     size: 'large',
                     confirmType: 'danger',
-                    confirmText: '删除',
+                    confirmText: 'Delete',
                     onConfirm: function () {
                         doPoster('/group/remove', {id: currentGroupId, type: resourceType}, function (response) {
                             if (!response.success) {
-                                bootGrowl(response.message || '删除失败', 'danger');
+                                bootGrowl(response.message || 'Delete failed', 'danger');
                                 return;
                             }
-                            bootGrowl('删除成功', 'success');
+                            bootGrowl('Deleted successfully', 'success');
                             currentGroupId = '';
                             refreshSelect('');
                             notifyChange();
@@ -608,7 +608,7 @@
             },
             getSearchParams: function (extra) {
                 var params = $.extend({}, extra || {});
-                // 必须显式带上 groupId（含空串），否则 PaginationManager 会合并保留上次的 groupId
+                // It has to be visible.groupId（This post is part of our special coverage Syria Protests 2011.NothenPaginationManager We'll keep the last one together.groupId
                 params.groupId = currentGroupId || '';
                 return params;
             },

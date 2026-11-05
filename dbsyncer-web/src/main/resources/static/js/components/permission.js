@@ -1,6 +1,6 @@
 /**
- * 前端功能权限：配合 data-permission 属性与 DBSPermission.has()。
- * 权限码与后端种子一致，如 connector:edit、mapping:operate。
+ * FrontendFunctional Permissions：Comp 1-3.data-permission Propertiesand DBSPermission.has()。
+ * PermissionsCodeandBackend seeds are consistent, e.g.connector:edit、mapping:operate。
  */
 (function (window, $) {
     'use strict';
@@ -44,7 +44,7 @@
         },
 
         /**
-         * 是否拥有权限（admin 视为全有）。
+         * YesNoPossessionPermissions（admin Consider it all there is.
          * @param {string} code
          */
         has: function (code) {
@@ -58,7 +58,7 @@
         },
 
         /**
-         * 多个权限码任一满足即可（逗号分隔）。
+         * MultiplePermissionsCode SupportminBreak.
          * @param {string} codes
          */
         hasAny: function (codes) {
@@ -76,7 +76,7 @@
         },
 
         /**
-         * 按 data-permission 显隐；无权限加 hidden。
+         * Pressdata-permission Visibility;No permissionAddhidden。
          * @param {string|HTMLElement|jQuery} [root]
          */
         apply: function (root) {

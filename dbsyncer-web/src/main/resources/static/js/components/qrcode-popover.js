@@ -1,10 +1,10 @@
 /**
- * 初始化二维码悬浮提示
- * @param {Object} options - 配置选项
- * @param {string} options.url - 二维码链接地址
- * @param {string} options.selector - 目标元素选择器（多个用逗号分隔）
- * @param {number} options.size - 二维码大小，默认 150
- * @param {string} options.position - 位置，默认 'bottom'（bottom/top/left/right）
+ * Initialize 2D suspendedNotice
+ * @param {Object} options - ConfigureOptions
+ * @param {string} options.url - TwoD link address
+ * @param {string} options.selector - Objective CombinedElement Selector (multiple commas)minamend
+ * @param {number} options.size - 2D size, default150
+ * @param {string} options.position - Position, Default'bottom'（bottom/top/left/right）
  */
 (function(window) {
     'use strict';
@@ -22,7 +22,7 @@
             return;
         }
 
-        // 创建隐藏的二维码容器
+        // Seems to create hidden 2-D containers
         let qrcodeContainer = document.getElementById('qrcode-temp-container');
         if (!qrcodeContainer) {
             qrcodeContainer = document.createElement('div');
@@ -31,8 +31,8 @@
             document.body.appendChild(qrcodeContainer);
         }
 
-        // 生成二维码
-        qrcodeContainer.innerHTML = ''; // 清空
+        // GenerateTwo-dimensional code.
+        qrcodeContainer.innerHTML = ''; // Clear
         if (typeof QRCode !== 'undefined') {
             new QRCode(qrcodeContainer, {
                 text: config.url,
@@ -47,7 +47,7 @@
             return;
         }
 
-        // 等待二维码生成
+        // Wait for 2D.Generate
         setTimeout(function() {
             const qrcodeImg = qrcodeContainer.querySelector('img');
             if (!qrcodeImg) {
@@ -57,18 +57,18 @@
 
             const qrcodeDataUrl = qrcodeImg.src;
 
-            // 为所有匹配的元素添加悬浮效果
+            // For all matching elementsAddSuspended effects
             const elements = document.querySelectorAll(config.selector);
             elements.forEach(function(element) {
-                // 创建悬浮提示
+                // Create SuspendedNotice
                 const popover = document.createElement('div');
                 popover.className = 'qrcode-popover';
                 popover.innerHTML = `
                     <div class="qrcode-arrow"></div>
                     <div class="qrcode-inner">
-                        <img src="${qrcodeDataUrl}" alt="微信扫码" />
+                        <img src="${qrcodeDataUrl}" alt="WeChat scan" />
                         <div class="qrcode-text text-center text-success">
-                            <i class="fa fa-wechat"></i> 微信扫码联系
+                            <i class="fa fa-wechat"></i> WeChat scanContact
                         </div>
                     </div>
                 `;
@@ -77,7 +77,7 @@
                 let showTimer = null;
                 let hideTimer = null;
 
-                // 显示二维码
+                // Show 2D code
                 function showQRCode() {
                     clearTimeout(hideTimer);
                     showTimer = setTimeout(function() {
@@ -110,18 +110,18 @@
                         popover.style.top = top + window.scrollY + 'px';
                         popover.style.left = left + window.scrollX + 'px';
                         popover.classList.add('show');
-                    }, 300); // 延迟 300ms 显示
+                    }, 300); // Delay300ms Show
                 }
 
-                // 隐藏二维码
+                // Hide 2D Code
                 function hideQRCode() {
                     clearTimeout(showTimer);
                     hideTimer = setTimeout(function() {
                         popover.classList.remove('show');
-                    }, 200); // 延迟 200ms 隐藏
+                    }, 200); // Delay200ms Hide
                 }
 
-                // 绑定事件
+                // TieEvent
                 element.addEventListener('mouseenter', showQRCode);
                 element.addEventListener('mouseleave', hideQRCode);
                 popover.addEventListener('mouseenter', function() {
@@ -132,7 +132,7 @@
         }, 500);
     }
     
-    // 导出到全局
+    // ExportTo Global Text
     window.initQRCodePopover = initQRCodePopover;
     
 })(window);

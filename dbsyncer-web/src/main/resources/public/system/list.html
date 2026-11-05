@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <div class="form-container">
     <div class="card-header">
-        <h3 class="card-title text-center">系统配置</h3>
+        <h3 class="card-title text-center">System settings</h3>
     </div>
     <div class="card-body">
         <form id="config-form-edit">
-            <!-- 管理员操作区域 -->
+            <!-- AdministratorActionsRegional-->
             <div class="form-actions mb-4">
                 <button id="updateSystemBtn" type="button" class="btn btn-primary" data-permission="system:edit">
-                    <span class="fa fa-save"></span> 保存
+                    <span class="fa fa-save"></span> Save
                 </button>
             </div>
             <div class="grid grid-cols-2">
                 <div class="form-item">
-                    <label class="form-label">记录同步成功数据</label>
+                    <label class="form-label">Record synchronised successful data</label>
                     <div class="form-control-area">
                         <label class="form-switch">
                             <input name="enableStorageWriteSuccess" th:checked="${config?.enableStorageWriteSuccess}"
@@ -30,8 +30,8 @@
                     </div>
                 </div>
                 <div class="form-item">
-                    <label class="form-label">记录全量数据<i class="fa fa-question-circle"
-                                                             title="不推荐在生产环境下开启，可在源库数据量较少时使用，一般用于测试"></i></label>
+                    <label class="form-label">Record full volume data<i class="fa fa-question-circle"
+                                                             title="Not recommended to open in a production environment, which can be used when the amount of the database is small and generally for testing"></i></label>
                     <div class="form-control-area">
                         <label class="form-switch">
                             <input name="enableStorageWriteFull" th:checked="${config?.enableStorageWriteFull}"
@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 <div class="form-item">
-                    <label class="form-label">记录同步失败数据</label>
+                    <label class="form-label">Recording Synchronising Failed Data</label>
                     <div class="form-control-area">
                         <label class="form-switch">
                             <input name="enableStorageWriteFail" th:checked="${config?.enableStorageWriteFail}"
@@ -59,28 +59,28 @@
                     </div>
                 </div>
                 <div class="form-item">
-                    <label class="form-label">记录失败日志长度<strong class="text-primary">*</strong></label>
+                    <label class="form-label">Record failed log length<strong class="text-primary">*</strong></label>
                     <div class="form-control-area">
                         <input type="number" class="form-control" min="1024" max="8192" required
                                name="maxStorageErrorLength" th:value="${config?.maxStorageErrorLength}"/>
                     </div>
                 </div>
                 <div th:if="${editionInfo != null and editionInfo.edition ne 'community'}" class="form-item">
-                    <label class="form-label">集群鉴权密钥<i class="fa fa-question-circle"
-                                                             title="集群节点间内部接口共享密钥，生产集群各节点必须配置相同值，防止未鉴权启停任务"></i></label>
+                    <label class="form-label">Cluster Access Key<i class="fa fa-question-circle"
+                                                             title="Internal interfaces between cluster nodes shared with key and production cluster nodes must be configured with the same values to prevent undiscovered start-ups"></i></label>
                     <div class="form-control-area flex">
                         <input type="text" class="form-control" name="clusterSecret"
                                th:value="${config?.clusterSecret}"/>
                         <div class="form-actions ml-2">
                             <button type="button" class="btn btn-outline" id="generateClusterSecret">
-                                <span class="fa fa-refresh"></span> 生成
+                                <span class="fa fa-refresh"></span> Generate
                             </button>
                         </div>
                     </div>
                 </div>
                 <div class="form-item">
-                    <label class="form-label">增量表执行器数<i class="fa fa-question-circle"
-                                                               title="每新增一张同步任务表的映射关系，就会单独新开一个表执行器处理，超过此限制后，则使用通用执行器"></i><strong
+                    <label class="form-label">Promotion<i class="fa fa-question-circle"
+                                                               title="For each additional map of a synchronized tasksheet, a separate table implementer is used, and after this limit is exceeded, a universal implementer is used."></i><strong
                             class="text-primary">*</strong></label>
                     <div class="form-control-area">
                         <input type="number" class="form-control" min="1" max="200" required
@@ -88,8 +88,8 @@
                     </div>
                 </div>
                 <div th:if="${editionInfo != null and editionInfo.edition ne 'community'}" class="form-item">
-                    <label class="form-label">全量表并发数<i class="fa fa-question-circle"
-                                                             title="全量任务(全量同步，订正校验，整库迁移)，并发处理表的数量"></i><strong
+                    <label class="form-label">Full and multiple.<i class="fa fa-question-circle"
+                                                             title="Full assignment (full synchronisation, revised verification, inventory migration) and number of processing forms issued"></i><strong
                             class="text-primary">*</strong></label>
                     <div class="form-control-area">
                         <input type="number" class="form-control" min="1" max="64" required
@@ -97,8 +97,8 @@
                     </div>
                 </div>
                 <div th:if="${editionInfo != null and editionInfo.edition ne 'community'}" class="form-item">
-                    <label class="form-label">全量分片并发数<i class="fa fa-question-circle"
-                                                           title="同步任务(全量同步，订正校验，整库迁移)，并发处理分片数量"></i><strong
+                    <label class="form-label">Full split and multiple.<i class="fa fa-question-circle"
+                                                           title="Synchronization of tasks (full synchronization, revision of verification, inventory migration) and processing of fractions"></i><strong
                             class="text-primary">*</strong></label>
                     <div class="form-control-area">
                         <input type="number" class="form-control" min="1" max="64" required
@@ -106,8 +106,8 @@
                     </div>
                 </div>
                 <div th:if="${editionInfo != null and editionInfo.edition ne 'community'}" class="form-item">
-                    <label class="form-label">分片总数<i class="fa fa-question-circle"
-                                                         title="与任务单次读取数×线程数相除得到每波预切片数；本波全部完成后再切下一波"></i><strong
+                    <label class="form-label">Total number of segments<i class="fa fa-question-circle"
+                                                         title="Splits the number of pre-slices per wave from the number of single-readable x-lines of the task; cut the next after this wave has been fully completed Wave"></i><strong
                             class="text-primary">*</strong></label>
                     <div class="form-control-area">
                         <input type="number" class="form-control" min="1" max="10000000" required
@@ -115,8 +115,8 @@
                     </div>
                 </div>
                 <div th:if="${editionInfo != null and editionInfo.edition ne 'community'}" class="form-item">
-                    <label class="form-label">分片超时(毫秒)<i class="fa fa-question-circle"
-                                                               title="运行中分片超过该时间未刷新则视为超时"></i><strong
+                    <label class="form-label">Period timeout (ms)<i class="fa fa-question-circle"
+                                                               title="Run-time fractions beyond that time are considered timeout without refreshing"></i><strong
                             class="text-primary">*</strong></label>
                     <div class="form-control-area">
                         <input type="number" class="form-control" min="60000" max="3600000" required
@@ -124,29 +124,29 @@
                     </div>
                 </div>
                 <div class="form-item">
-                    <label class="form-label">同步数据过期时间(天)<strong class="text-primary">*</strong></label>
+                    <label class="form-label">10. Synchronization of data expiration time (days)<strong class="text-primary">*</strong></label>
                     <div class="form-control-area">
                         <input type="number" class="form-control" min="1" max="180" required name="expireDataDays"
                                th:value="${config?.expireDataDays}"/>
                     </div>
                 </div>
                 <div class="form-item">
-                    <label class="form-label">系统日志过期时间(天)<strong class="text-primary">*</strong></label>
+                    <label class="form-label">System log expiration time (days)<strong class="text-primary">*</strong></label>
                     <div class="form-control-area">
                         <input type="number" class="form-control" min="1" max="180" required name="expireLogDays"
                                th:value="${config?.expireLogDays}"/>
                     </div>
                 </div>
                 <div class="form-item">
-                    <label class="form-label">日志文件过期时间(天)<strong class="text-primary">*</strong></label>
+                    <label class="form-label">Log file expiry time (days)<strong class="text-primary">*</strong></label>
                     <div class="form-control-area">
                         <input type="number" class="form-control" min="1" max="180" required name="expireFileLogDays"
                                th:value="${config?.expireFileLogDays}"/>
                     </div>
                 </div>
                 <div class="form-item">
-                    <label class="form-label">登录锁定时长(分钟)<i class="fa fa-question-circle"
-                                                                  title="连续登录失败达到上限后锁定账号的时长"></i><strong
+                    <label class="form-label">Login locking time (minutes)<i class="fa fa-question-circle"
+                                                                  title="When successive login failed to reach the ceiling and lock the account number Long"></i><strong
                             class="text-primary">*</strong></label>
                     <div class="form-control-area">
                         <input type="number" class="form-control" min="1" max="1440" required name="loginLockMinutes"
@@ -156,7 +156,7 @@
             </div>
             <div class="grid mt-5 grid-cols-2">
                 <div class="form-item">
-                    <label class="form-label">水印<i class="fa fa-question-circle" title="刷新页面生效"></i></label>
+                    <label class="form-label">Watermark<i class="fa fa-question-circle" title="Synchronising folder"></i></label>
                     <div class="form-control-area">
                         <label class="form-switch">
                             <input id="enableWatermark" name="enableWatermark" th:checked="${config?.enableWatermark}"
@@ -170,17 +170,17 @@
                     </div>
                 </div>
                 <div class="form-item">
-                    <label class="form-label watermark hidden">水印内容</label>
+                    <label class="form-label watermark hidden">Watermark Content Income</label>
                     <div class="form-control-area watermark hidden">
                         <input type="text" class="form-control" maxlength="64" name="watermark"
-                               placeholder="请输入水印(最多64个字)." th:value="${config?.watermark}"/>
+                               placeholder="Please enter a watermark (up to 64 words)." th:value="${config?.watermark}"/>
                     </div>
                 </div>
             </div>
             <div class="grid mt-5 grid-cols-2">
                 <div class="form-item">
-                    <label class="form-label">打印trace信息<i class="fa fa-question-circle"
-                                                              title="仅用于排查问题，生产环境建议关闭"></i></label>
+                    <label class="form-label">Can not open message<i class="fa fa-question-circle"
+                                                              title="Question only, production environment recommended closed"></i></label>
                     <div class="form-control-area">
                         <label class="form-switch">
                             <input name="enablePrintTraceInfo" th:checked="${config?.enablePrintTraceInfo}"
@@ -195,11 +195,11 @@
                 </div>
             </div>
 
-            <!-- 开放API配置 -->
+            <!-- OpenAPIConfig -->
             <div class="grid mt-5 grid-cols-1 lg:grid-cols-3">
                 <div class="form-item lg:col-span-2">
-                    <label class="form-label">开放api<i class="fa fa-question-circle"
-                                                        title="外部业务系统可凭此配置生成token，直接调用DBSyncer的管理接口，也可以同步数据。"></i></label>
+                    <label class="form-label">Open api<i class="fa fa-question-circle"
+                                                        title="This configuration allows external operating systems to generate token, directly to the DBSyncer management interface, and synchronize data."></i></label>
                     <div class="form-control-area">
                         <label class="form-switch">
                             <input name="enableOpenAPI" th:checked="${config?.enableOpenAPI}" type="checkbox"/>
@@ -212,17 +212,17 @@
                     </div>
                 </div>
                 <div class="form-item lg:col-span-2">
-                    <label class="form-label open-api hidden">API密钥<i class="fa fa-question-circle"
-                                                                        title="用于生成token访问OpenAPI，生成后请妥善保管"></i></label>
+                    <label class="form-label open-api hidden">API Key<i class="fa fa-question-circle"
+                                                                        title="Used to generate token access to OpenAPI, if generated, please keep it safe"></i></label>
                     <div class="form-control-area flex">
                         <input type="text" class="form-control open-api hidden" name="apiSecret"
                                th:value="${config?.currentSecret}"/>
                         <div class="form-actions ml-2">
                             <button type="button" class="open-api hidden btn btn-outline" id="copyApiSecretBtn">
-                                <i class="fa fa-copy"></i> 复制
+                                <i class="fa fa-copy"></i> Copy
                             </button>
                             <button type="button" class="open-api hidden btn btn-outline" id="generateApiSecret">
-                                <span class="fa fa-refresh"></span> 生成
+                                <span class="fa fa-refresh"></span> Generate
                             </button>
                         </div>
                     </div>
@@ -231,14 +231,14 @@
 
             <div class="grid mt-5 grid-cols-1 lg:grid-cols-3">
                 <div class="form-item lg:col-span-2">
-                    <label class="form-label open-api hidden">RSA长度<i class="fa fa-question-circle"
-                                                                        title="允许输入的范围[1024,2048,4096,8192]"></i></label>
+                    <label class="form-label open-api hidden">RSA Length<i class="fa fa-question-circle"
+                                                                        title="allowed input ranges [1024,2048,4096,8192]"></i></label>
                     <div class="form-control-area flex">
                         <input type="number" class="form-control open-api hidden" name="rsaKeyLength" min="1024"
-                               max="8192" placeholder="允许输入的范围[1024-8192]"
+                               max="8192" placeholder="Permission to enter ranges [1024-8192]"
                                th:value="${config?.currentRsa?.keyLength}?: 2048"/>
                         <button id="generateRSA" type="button" class="open-api hidden btn btn-outline ml-2">
-                            <span class="fa fa-refresh"></span> 生成
+                            <span class="fa fa-refresh"></span> Generate
                         </button>
                     </div>
                 </div>
@@ -246,31 +246,31 @@
 
             <div class="grid mt-5 open-api hidden">
                 <div class="form-item">
-                    <label class="form-label">RSA公钥</label>
+                    <label class="form-label">RSA Public Key</label>
                     <div class="form-control-area">
                         <textarea name="rsaPublicKey" class="form-control" disabled maxlength="8192" rows="5">[[${config?.currentRsa?.publicKey}]]</textarea>
                         <button type="button" class="btn btn-outline mt-1" id="copyPublicKeyBtn">
-                            <i class="fa fa-copy"></i> 复制
+                            <i class="fa fa-copy"></i> Copy
                         </button>
                     </div>
                 </div>
 
                 <div class="form-item">
-                    <label class="form-label">RSA私钥</label>
+                    <label class="form-label">RSA private key</label>
                     <div class="form-control-area">
                         <textarea name="rsaPrivateKey" class="form-control" disabled maxlength="8192" rows="10">[[${config?.currentRsa?.privateKey}]]</textarea>
                         <button type="button" class="btn btn-outline mt-1" id="copyPrivateKeyBtn">
-                            <i class="fa fa-copy"></i> 复制
+                            <i class="fa fa-copy"></i> Copy
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- IP白名单 -->
+            <!-- IP whitelist -->
             <div class="grid grid-cols-2 mt-5 open-api hidden">
                 <div class="form-item">
-                    <label class="form-label">IP白名单<i class="fa fa-question-circle"
-                                                         title="开启后仅白名单内IP可访问OpenAPI"></i></label>
+                    <label class="form-label">IP whitelist<i class="fa fa-question-circle"
+                                                         title="OpenAPI"></i></label>
                     <div class="form-control-area">
                         <label class="form-switch">
                             <input name="ipWhitelistEnabled" th:checked="${config?.ipWhitelistConfig?.enabled}"
@@ -284,8 +284,8 @@
                     </div>
                 </div>
                 <div class="form-item ip-whitelist-detail">
-                    <label class="form-label">允许本地访问<i class="fa fa-question-circle"
-                                                             title="127.0.0.1、localhost等"></i></label>
+                    <label class="form-label">Allow Local Access<i class="fa fa-question-circle"
+                                                             title="127.0.0.1, localhost, etc."></i></label>
                     <div class="form-control-area">
                         <label class="form-switch">
                             <input name="ipWhitelistAllowLocalhost"
@@ -300,10 +300,10 @@
                     </div>
                 </div>
                 <div class="form-item ip-whitelist-detail">
-                    <label class="form-label">IP白名单</label>
+                    <label class="form-label">IP whitelist</label>
                     <div class="form-control-area">
                         <textarea name="ipWhitelist" class="form-control" rows="5"
-                                  placeholder="每行一个，支持：单个IP、CIDR(192.168.1.0/24)、范围(192.168.1.1-192.168.1.100)">[[${config?.ipWhitelistText}]]</textarea>
+                                  placeholder="One per line, support: individual IP, CIDR (192.168.1.0/24), scope (192.168.1.1-192.168.1.100)">[[${config?.ipWhitelistText}]]</textarea>
                     </div>
                 </div>
             </div>
@@ -341,20 +341,20 @@
         let switchApi = initSwitch($('#enableWatermark'), toggleWatermark);
         toggleWatermark(switchApi.isChecked());
 
-        //保存
+        //Save
         $("#updateSystemBtn").click(function () {
             const $form = $("#config-form-edit");
             if (validateForm($form)) {
-                // 允许修改参数
+                // verifieEditParameter
                 rsaPublicKey.prop('disabled', false);
                 rsaPrivateKey.prop('disabled', false);
                 const submitBtn = $(this);
                 const originalText = submitBtn.html();
-                submitBtn.html('<i class="fa fa-spinner fa-spin"></i> 保存中...').prop('disabled', true);
+                submitBtn.html('<i class="fa fa-spinner fa-spin"></i> Saving...').prop('disabled', true);
                 doPoster('/system/edit', $form.serializeJson(), function (response) {
                     submitBtn.html(originalText).prop('disabled', false);
                     if (response.success === true) {
-                        bootGrowl("修改成功!", "success");
+                        bootGrowl("Change successful!", "success");
                         doLoader("/system");
                     } else {
                         bootGrowl(response.message, "danger");
@@ -366,47 +366,47 @@
         generateRSABtn.click(function () {
             const btn = $(this);
             const originalText = btn.html();
-            btn.html('<i class="fa fa-spinner fa-spin"></i> 生成中...').prop('disabled', true);
+            btn.html('<i class="fa fa-spinner fa-spin"></i> Generating...').prop('disabled', true);
             doPoster('/system/generateRSA', {'keyLength': rsaKeyLength.val()}, function (response) {
                 btn.html(originalText).prop('disabled', false);
                 if (response.success === true) {
                     rsaPublicKey.text(response.data.publicKey);
                     rsaPrivateKey.text(response.data.privateKey);
-                    bootGrowl("生成RSA成功!", "success");
+                    bootGrowl("Generate RSA successfully!", "success");
                 } else {
                     bootGrowl(response.message, "danger");
                 }
             });
         });
 
-        // 生成 API 密钥（OpenAPI 登录凭证）
+        // Generate API KeyOpenAPI Login)
         generateApiSecretBtn.click(function () {
             const btn = $(this);
             const originalText = btn.html();
-            btn.html('<i class="fa fa-spinner fa-spin"></i> 生成中...').prop('disabled', true);
+            btn.html('<i class="fa fa-spinner fa-spin"></i> Generating...').prop('disabled', true);
             doPoster('/system/generateApiSecret', {}, function (response) {
                 btn.html(originalText).prop('disabled', false);
                 if (response.success === true && response.data) {
                     const secret = response.data;
                     apiSecret.val(secret);
-                    bootGrowl("生成API密钥成功!", "success");
+                    bootGrowl("Generate API keys successfully!", "success");
                 } else {
                     bootGrowl(response.message || "danger");
                 }
             });
         });
 
-        // 生成 集群鉴权密钥
+        // Generate Cluster Access Key
         generateClusterSecretBtn.click(function () {
             const btn = $(this);
             const originalText = btn.html();
-            btn.html('<i class="fa fa-spinner fa-spin"></i> 生成中...').prop('disabled', true);
+            btn.html('<i class="fa fa-spinner fa-spin"></i> Generating...').prop('disabled', true);
             doPoster('/system/generateApiSecret', {}, function (response) {
                 btn.html(originalText).prop('disabled', false);
                 if (response.success === true && response.data) {
                     const secret = response.data;
                     clusterSecret.val(secret);
-                    bootGrowl("生成集群鉴权密钥成功!", "success");
+                    bootGrowl("Generate cluster key successful!", "success");
                 } else {
                     bootGrowl(response.message || "danger");
                 }
@@ -414,28 +414,28 @@
         });
 
         function bindCopyBtn(btn, element, content) {
-            // 先移除旧的事件绑定，避免重复绑定
+            // Remove the old one first.EventTie it up.
             btn.off('click');
             btn.on('click', function () {
                 const text = element.val();
                 if (isBlank(text)) {
-                    bootGrowl(content + "为空，无法复制", "warning");
+                    bootGrowl(content + "Other Organiser", "warning");
                     return;
                 }
                 copyToClipboard(text, {
                     button: $(this),
-                    successMessage: "复制" + content + "成功！",
-                    originalText: "复制",
+                    successMessage: "Copy" + content + "Success!",
+                    originalText: "Copy",
                     originalIcon: "fa-copy"
                 });
             });
         }
 
-        // 绑定复制按钮事件
+        // TieCopybuttonEvent
         function bindCopyButtons() {
-            bindCopyBtn(copyApiSecretBtn, apiSecret, "API密钥");
-            bindCopyBtn(copyPublicKeyBtn, rsaPublicKey, "RSA公钥");
-            bindCopyBtn(copyPrivateKeyBtn, rsaPrivateKey, "RSA私钥");
+            bindCopyBtn(copyApiSecretBtn, apiSecret, "API Key");
+            bindCopyBtn(copyPublicKeyBtn, rsaPublicKey, "RSA Public Key");
+            bindCopyBtn(copyPrivateKeyBtn, rsaPrivateKey, "RSA private key");
         }
 
         const ipWhitelistDetail = $(".ip-whitelist-detail");
@@ -456,7 +456,7 @@
             if (checked) {
                 openApiItems.show();
                 toggleIpWhitelistDetail(ipWhitelistSwitch.isChecked());
-                // 显示区域后，延迟绑定事件，确保 DOM 元素已渲染
+                // Delay binding after displaying areaEvent，EnsureDOM Element Rendered
                 setTimeout(function () {
                     bindCopyButtons();
                 }, 100);
@@ -474,14 +474,14 @@
         let enableOpenAPI = initSwitch($("input[name='enableOpenAPI']"), toggleOpenApiItem);
         const enableOpenAPIChecked = enableOpenAPI.isChecked();
         toggleOpenApiItem(enableOpenAPIChecked);
-        // 如果初始状态就是显示 RSA 配置，也需要绑定事件
+        // If at firstStatusJust...YesShowRSA Config，It needs to be tied.Event
         if (enableOpenAPIChecked) {
             setTimeout(function () {
                 bindCopyButtons();
             }, 100);
         }
 
-        // 初始根据 IP白名单 开关显示/隐藏「允许本地访问」和「IP白名单」输入框
+        // OffNotes.IP whitelist Switch Show / Hide「Allow Local Access」and「IP whitelist」Input Box
         toggleIpWhitelistDetail(ipWhitelistSwitch.isChecked());
     })
 </script>

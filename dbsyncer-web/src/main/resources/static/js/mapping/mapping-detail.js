@@ -1,5 +1,5 @@
 /**
- * 同步任务结果详情页（表映射汇总）
+ * Sync taskResultDetailsPage（Map summary)
  */
 (function (window) {
     'use strict';
@@ -80,14 +80,14 @@
                     + '<td>' + (row.successTotal != null ? row.successTotal : 0) + '</td>'
                     + '<td>' + formatFailTotal(row.failTotal) + '</td>'
                     + '<td>' + formatDate(row.updateTime || '') + '</td>'
-                    + '<td><button type="button" class="table-action-btn view" title="查看详情"'
+                    + '<td>== sync, corrected by elderman == @elder man'
                     + ' onclick="openMappingEvents(\'' + tableGroupId.replace(/'/g, '') + '\')">'
                     + '<i class="fa fa-eye"></i></button></td>'
                     + '</tr>';
             },
             emptyHtml: '<td colspan="7" class="text-center"><i class="fa fa-exchange empty-icon"></i>'
-                + '<p class="empty-text">暂无同步结果</p>'
-                + '<p class="empty-description">任务执行后将在此展示各表映射汇总</p></td>'
+                + '<p class="empty-text">Other Organiser</p>'
+                + '<p class="empty-description">This is where you will display the maps.</p></td>'
         });
     }
 

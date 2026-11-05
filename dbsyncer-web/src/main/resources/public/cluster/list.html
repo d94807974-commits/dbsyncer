@@ -1,48 +1,48 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<!-- 社区版提示 -->
+<!-- CommunityTip -->
 <div th:if="${editionInfo.edition eq 'community'}" class="text-center">
     <h3 class="text-xl text-center text-gray-500">[[${editionInfo.editionName}]]</h3>
 
-    <!-- 集群功能介绍 -->
+    <!-- ClusterUNDAF functionIntroduction -->
     <div class="bg-info/10 border border-info rounded-lg p-4 mb-6 text-left">
         <h4 class="text-lg font-semibold text-info mb-2">
-            <i class="fa fa-sitemap"></i> 什么是集群？
+            <i class="fa fa-sitemap"></i> What's a cluster?
         </h4>
         <p class="text-sm text-secondary mb-3">
-            简单说：将多台 DBSyncer 节点组成一套<strong>高可用同步服务</strong>。单台节点故障，其余节点自动接管任务；数据同步压力变大时，多节点共同分担负载，实现更快、更稳的同步能力。
+            In short: form a cluster of multiple DBSyncer nodes<strong>High Available Sync Service</strong>I don't know. Single nodes fail and the remaining nodes automatically take over tasks; when the pressure for data synchronization increases, multiple nodes are shared and achieve faster and more stable synchronization capabilities.
         </p>
-        <p class="text-sm text-secondary mb-2 font-medium text-info">四大核心优势：</p>
+        <p class="text-sm text-secondary mb-2 font-medium text-info">Four core strengths:</p>
         <ul class="text-sm text-secondary mb-3 pl-4">
-            <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>高性能</strong>：大任务自动拆分，多机并行同步，速度成倍提升
+            <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>High Performance</strong>: Large task automatic split, multi-gaps synchronized, speed multiplied
             </li>
-            <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>高稳定</strong>：任务智能分配、异常自动恢复，已做完的不重跑，过程少折腾
+            <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>High stability</strong>: smart task assignment, abnormal automatic recovery, done without rerun, less process
             </li>
-            <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>高可用（HA）</strong>：某台机器挂了，其他机器立刻接手，保障同步业务不停、数据不断档
+            <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>High Available (HA)</strong>: one machine is dead, the other machines take over immediately, and the synchronized business is guaranteed, and the data is kept on file
             </li>
-            <li><i class="fa fa-angle-right text-info"></i> <strong>动态扩容</strong>：业务量涨了直接加机器，能力跟着长，不用停服重启、无需额外配置
+            <li><i class="fa fa-angle-right text-info"></i> <strong>Dynamic expansion</strong>: Business volume increases directly with machine, capacity increases, recommencing without suspension, no additional configuration
             </li>
         </ul>
         <p class="text-sm text-secondary">
-            适用场景：对同步连续性有要求、大规模数据同步场景。例如多业务库同步至数仓、TB 级数据迁移、增量同步吞吐 1w+ TPS
-            的业务。
+            Application scenario: Requires simultaneous continuity, large-scale data synchronization. For example, multi-business library sync to silo, TB-level data migration, Incremental simultaneous swallowing 1w+TPS
+Business.
         </p>
     </div>
 
     <p class="text-secondary mb-6">
-        该功能仅在专业版开放，请下载
+        This feature is only available in Professional edition. Please download
         <a href="https://gitee.com/ghi/dbsyncer/releases"
            class="text-primary hover-underline font-medium"
-           title="下载专业版 dbsyncer-enterprise-x.x.x-bin.zip"
+           title="Download Professional edition dbsyncer-enterprise-x.x.x-bin.zip"
            target="_blank">
-            <i class="fa fa-download"></i> 专业版
+            <i class="fa fa-download"></i> Professional
         </a>
     </p>
 </div>
 
-<!-- 近 1 分钟指标（集群聚合） -->
+<!-- Near1 minutesOrganizational (indicators)ClusterAggregation） -->
 <div th:if="${editionInfo.edition ne 'community' and clusterEnabled}" class="grid grid-cols-3 mb-5">
     <div class="card">
         <div class="card-header">
@@ -54,7 +54,7 @@
     </div>
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title text-center">堆积</h3>
+            <h3 class="card-title text-center">Backlog</h3>
         </div>
         <div class="card-body">
             <canvas id="clusterQueueChart" height="160"></canvas>
@@ -62,7 +62,7 @@
     </div>
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title text-center">分片任务</h3>
+            <h3 class="card-title text-center">Shard task</h3>
         </div>
         <div class="card-body">
             <canvas id="clusterWorkItemChart" height="160"></canvas>
@@ -71,24 +71,24 @@
 </div>
 
 
-<!-- 集群管理 -->
+<!-- Cluster management -->
 <div th:if="${editionInfo.edition ne 'community'}" class="form-container">
     <div class="card-body">
         <div class="mb-4 text-sm text-secondary" th:unless="${clusterEnabled}">
-            当前为单机模式。开启集群请配置 dbsyncer.cluster.enabled=true，使用 MySQL 存储，并确认集群功能已授权。
+            Current is single mode. Enable cluster configuration with dbsyncer.cluster.enabled=true, using MySQL storage and confirming that cluster functionality is authorized.
         </div>
 
         <table th:if="${clusterEnabled}" class="table">
             <thead>
             <tr>
-                <th>节点</th>
-                <th>状态</th>
-                <th>时间</th>
-                <th>任务</th>
-                <th>吞吐</th>
-                <th>资源</th>
-                <th>插件数</th>
-                <th>操作</th>
+                <th>Nodes</th>
+                <th>Status</th>
+                <th>Time</th>
+                <th>Task</th>
+                <th>S 5.5%</th>
+                <th>Resource</th>
+                <th>Number of plugins</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody id="clusterTableBody"></tbody>

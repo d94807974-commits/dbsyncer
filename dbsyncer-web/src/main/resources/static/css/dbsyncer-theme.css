@@ -1,19 +1,19 @@
 /**
- * DBSyncer 主题样式 - 重构版
- * 模块化、可维护、低重复度
+ * DBSyncer Theme Style - Reset Version
+ * ModuleBe sustainable, maintainable, low repetition
  */
 
-/* ========== 导入设计系统 ========== */
+/* ========== ImportDesign system========== */
 @import url('./theme/variables.css');
 @import url('./theme/colors.css');
 @import url('./theme/utilities.css');
 
-/* ========== 导入布局组件 ========== */
+/* ========== ImportLayout Component========== */
 @import url('./layout/header.css');
 @import url('./layout/sidebar.css');
 @import url('./layout/main.css');
 
-/* ========== 导入UI组件 ========== */
+/* ========== ImportUIPersons========== */
 @import url('./components/cards.css');
 @import url('./components/buttons.css');
 @import url('./components/tables.css');
@@ -27,7 +27,7 @@
 @import url('./components/checkbox.css');
 @import url('./components/picker.css');
 
-/* 解决 Chrome "Slow network detected" */
+/* SolveChrome "Slow network detected" */
 @font-face {
     font-family: 'FontAwesome';
     src: url('../plugins/fonts/fontawesome-webfont.eot?v=4.7.0');
@@ -38,24 +38,24 @@
     url('../plugins/fonts/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular') format('svg');
     font-weight: normal;
     font-style: normal;
-    font-display: swap;/* 立即使用备用字体，字体加载完成后再替换 */
+    font-display: swap;/* Use backup fonts immediately, font loadingFinishLater Systematically.Replace */
 }
 
 /**
- * font-display 说明:
- * - auto: 浏览器默认行为（通常是 block，3秒白屏）
- * - block: 短暂阻塞（最多3秒），然后使用备用字体
- * - swap: 立即使用备用字体，字体加载完成后替换（推荐）
- * - fallback: 极短暂阻塞（约100ms），如果字体3秒内未加载完成则放弃
- * - optional: 类似fallback，但浏览器可根据网络情况决定是否使用自定义字体
+ * font-display Description:
+ * - auto: Browser default behaviour (usually)Yes block，3secondsWhite Screen)
+ * - block: Short blockage (maximum)3seconds），Then use the backup font.
+ * - swap: Use backup fonts immediately, font loadingFinishBackReplace（Common services)
+ * - fallback: Very short blockage.100ms），If Font3secondsUnmountedFinishThen give up.
+ * - optional: Similarfallback，But the browser can be determined by the network.YesNoUseCustomFonts
  */
 .fa::before {
-    display: inline-block; /* 防止图标闪烁 */
+    display: inline-block; /* Prevent icon flashing*/
     min-width: 1em;
     text-align: center;
 }
 
-/* 关键图标预渲染优化（常用图标） */
+/* Key icon preview optimization (common icons)*/
 .fa-spinner::before,
 .fa-refresh::before,
 .fa-save::before,
@@ -74,7 +74,7 @@
     will-change: auto;
 }
 
-/* ========== 全局基础样式 ========== */
+/* ========== Global Foundation Style========== */
 * {
     box-sizing: border-box;
 }
@@ -83,7 +83,7 @@ html {
     font-size: 16px;
     line-height: 1.5;
     height: 100%;
-    overflow: hidden; /* 防止整个页面滚动 */
+    overflow: hidden; /* Prevent wholePageScroll face*/
 }
 
 body {
@@ -97,10 +97,10 @@ body {
     background-color: var(--bg-secondary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow: hidden; /* 防止整个页面滚动 */
+    overflow: hidden; /* Prevent wholePageScroll face*/
 }
 
-/* 标题样式 */
+/* Title Styles*/
 h1, .h1 {
     font-size: var(--font-size-xxxl);
     font-weight: 600;
@@ -143,13 +143,13 @@ h6, .h6 {
     margin-bottom: var(--spacing-sm);
 }
 
-/* 段落和文本 */
+/* Paragraph and text*/
 p {
     margin-bottom: var(--spacing-md);
     color: var(--text-secondary);
 }
 
-/* ========== 链接样式 ========== */
+/* ========== Link Styles========== */
 a {
     color: var(--primary-color);
     text-decoration: none;
@@ -165,7 +165,7 @@ a:focus {
     text-decoration: underline;
 }
 
-/* ========== 表单元素基础样式 ========== */
+/* ========== Table Modular Base Styles========== */
 input, textarea, select, button {
     font-family: inherit;
     line-height: inherit;
@@ -175,7 +175,7 @@ textarea {
     resize: none;
 }
 
-/* readonly 属性样式 */
+/* readonly Properties Styles*/
 input[readonly],
 textarea[readonly],
 select[readonly] {
@@ -185,7 +185,7 @@ select[readonly] {
     opacity: 0.8;
 }
 
-/* ========== 滚动条样式 ========== */
+/* ========== Scrollbar Styles========== */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -205,7 +205,7 @@ select[readonly] {
     background: var(--text-tertiary);
 }
 
-/* ========== 动画效果 ========== */
+/* ========== Animation Effects========== */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -264,7 +264,7 @@ select[readonly] {
     }
 }
 
-/* 动画类 */
+/* Animation type*/
 .animate-fadeIn {
     animation: fadeIn 0.3s ease-in;
 }
@@ -289,7 +289,7 @@ select[readonly] {
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* 标签输入组件 */
+/* Tab Input Component*/
 .tagsinput {
     display: flex;
     flex-wrap: wrap;
@@ -369,7 +369,7 @@ select[readonly] {
     border-bottom-color: var(--primary-color);
 }
 
-/* 二维码悬浮提示 */
+/* It's two-dimensional.Tip */
 .qrcode-popover {
     position: absolute;
     z-index: 1000;
@@ -392,7 +392,7 @@ select[readonly] {
     display: block;
 }
 
-/* 二维码箭头 */
+/* 2D coded arrow*/
 .qrcode-popover::after {
     content: '';
     position: absolute;
@@ -457,7 +457,7 @@ select[readonly] {
     box-shadow: var(--shadow-md);
 }
 
-/* 按钮组 */
+/* Button Group*/
 .btn-group-sm {
     display: inline-flex;
 }
@@ -471,7 +471,7 @@ select[readonly] {
     font-size: 13px;
 }
 
-/* ========== 代码块样式（浅色背景） ========== */
+/* ========== Block Style (Slight background)========== */
 .code-block-wrapper {
     position: relative;
     margin: var(--spacing-md) 0;
@@ -506,7 +506,7 @@ select[readonly] {
     overflow-x: auto;
 }
 
-/* 操作日志详情：请求/返回参数（浅灰底 + 可滚动） */
+/* Operation logsDetails：Request/BackParameter（Light Grey Bottom+ Scrollable)*/
 .code-block.log-json-block {
     max-height: 320px;
     overflow: auto;
@@ -520,7 +520,7 @@ select[readonly] {
     word-break: break-word;
 }
 
-/* 代码块复制按钮 */
+/* Code BlockCopybutton*/
 .code-copy-btn {
     position: absolute;
     top: var(--spacing-sm);
@@ -557,7 +557,7 @@ select[readonly] {
     color: #fff;
 }
 
-/* 加载状态 */
+/* LoadStatus */
 .loading {
     display: flex;
     align-items: center;
@@ -591,7 +591,7 @@ select[readonly] {
     color: var(--text-tertiary);
 }
 
-/* 基础徽章 */
+/* Base badge*/
 .badge {
     display: inline-flex;
     align-items: center;
@@ -602,7 +602,7 @@ select[readonly] {
     line-height: 1.4;
 }
 
-/* 语义颜色 */
+/* Semantic Colours*/
 .badge-primary {
     background-color: rgba(24, 144, 255, 0.12);
     color: var(--primary-color);
@@ -628,8 +628,8 @@ select[readonly] {
     color: var(--info-color);
 }
 
-/* 空白块，用于占位页面 */
-/* 空白块，用于占位页面 */
+/* Blank block for placeholderPageNoodles.*/
+/* Blank block for placeholderPageNoodles.*/
 .blank-block-min {
     height: 50px;
     width: 100%

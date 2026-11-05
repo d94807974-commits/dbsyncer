@@ -1,54 +1,54 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<!-- 社区版提示 -->
+<!-- CommunityTip -->
 <div th:if="${editionInfo.edition eq 'community'}" class="text-center">
     <h3 class="text-xl text-center text-gray-500">[[${editionInfo.editionName}]]</h3>
 
-    <!-- 订正校验功能介绍 -->
+    <!-- Data validationUNDAF functionIntroduction -->
     <div class="bg-info/10 border border-info rounded-lg p-4 mb-6 text-left">
         <h4 class="text-lg font-semibold text-info mb-2">
-            <i class="fa fa-check-circle"></i> 什么是订正校验？
+            <i class="fa fa-check-circle"></i> What's a revised check? Issues.
         </h4>
         <p class="text-sm text-secondary mb-3">
-            订正校验是用于验证<strong>源数据库</strong>与<strong>目标数据库</strong>之间数据一致性的功能。在数据同步或迁移场景中，由于网络抖动、程序异常等原因，可能导致部分数据丢失或不一致。订正校验可以：
+            Revised verification is for validation<strong>Source Number</strong>and<strong>Target database</strong>The function of data consistency between them. In the context of data synchronization or migration, some data may be lost or inconsistent due to network shaking, procedural anomalies, etc. Revised verifications can:
         </p>
         <ul class="text-sm text-secondary mb-3 pl-4">
-            <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>自动检测</strong>：发现两边数据不一致的记录
+            <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>Autodetect</strong>: records of discrepancies in data found on both sides
             </li>
-            <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>差异分析</strong>：统计差异数量，定位问题数据
+            <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>Analysis of variances</strong>: Number of statistical discrepancies, location problem data
             </li>
-            <li><i class="fa fa-angle-right text-info"></i> <strong>修复支持</strong>：提供修复能力，确保数据最终一致</li>
+            <li><i class="fa fa-angle-right text-info"></i> <strong>Rehabilitation support</strong>: provide repair capacity to ensure that data are eventually consistent</li>
         </ul>
         <p class="text-sm text-secondary">
-            适用于：数据同步验证、迁移一致性检查、实时数据质量监控等场景。
+            Applies to scenarios such as data simultaneous validation, migration consistency checks, real-time data quality monitoring, etc.
         </p>
     </div>
 
     <p class="text-secondary mb-6">
-        该功能仅在专业版开放，请下载
+        This feature is only available in Professional edition. Please download
         <a href="https://gitee.com/ghi/dbsyncer/releases"
            class="text-primary hover-underline font-medium"
-           title="下载专业版 dbsyncer-enterprise-x.x.x-bin.zip"
+           title="Download Professional edition dbsyncer-enterprise-x.x.x-bin.zip"
            target="_blank">
-            <i class="fa fa-download"></i> 专业版
+            <i class="fa fa-download"></i> Professional
         </a>
     </p>
 </div>
 
-<!-- 查询订正校验列表 -->
+<!-- QueryData validationList -->
 <div th:if="${editionInfo.edition ne 'community'}" class="form-container">
     <div class="card-header">
-        <h3 class="card-title text-center">订正校验</h3>
+        <h3 class="card-title text-center">Data validation</h3>
     </div>
     <div class="card-body">
         <div class="flex items-center justify-between gap-2">
             <div class="flex items-center gap-2 flex-1 min-w-0">
                 <div id="validate-sync-search" class="search-wrapper w-320 max-w-full flex-shrink-0">
                     <i class="fa fa-search search-icon"></i>
-                    <input class="search-input" type="text" maxlength="32" placeholder="搜索名称">
-                    <span class="search-clear" title="清除">
+                    <input class="search-input" type="text" maxlength="32" placeholder="Search by name">
+                    <span class="search-clear" title="Clear">
                         <i class="fa fa-times"></i>
                     </span>
                 </div>
@@ -57,7 +57,7 @@
             <div class="flex items-center gap-2 flex-shrink-0">
                 <span id="validateSyncGroupCreateHost" data-permission="mapping:edit"></span>
                 <button id="validateSyncAddBtn" class="btn btn-primary" type="button" data-permission="mapping:edit">
-                    <i class="fa fa-plus"></i> 添加
+                    <i class="fa fa-plus"></i> Add
                 </button>
             </div>
         </div>
@@ -66,13 +66,13 @@
             <thead>
             <tr>
                 <th></th>
-                <th>任务名称</th>
-                <th>校验方案</th>
-                <th>触发方式</th>
-                <th>结果</th>
-                <th>状态</th>
-                <th>最后执行</th>
-                <th>操作</th>
+                <th>Task name</th>
+                <th>Verify Scheme</th>
+                <th>Trigger Method</th>
+                <th>Result</th>
+                <th>Status</th>
+                <th>Final implementation</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody id="validate-sync-table"></tbody>

@@ -1,8 +1,8 @@
 /**
- * DBSyncer Select 组件样式
+ * DBSyncer Select Component Style
  */
 
-/* Select 容器 */
+/* Select Plans*/
 .dbsyncer-select {
   position: relative;
   display: inline-block;
@@ -10,7 +10,7 @@
   font-size: var(--font-size-sm);
 }
 
-/* 迷你宽度：约 1/4 宽，用于与输入框并排时的下拉（如 GET/POST） */
+/* Mini width: about1/4 wide, forandEnter the lower drop-down ForestGET/POST） */
 .dbsyncer-select-mini {
   width: 25%;
   min-width: 80px;
@@ -24,7 +24,7 @@
   flex: 0 0 auto;
 }
 
-/* mini 样式下的下拉菜单：确保下拉菜单有足够宽度，不受父元素宽度限制 */
+/* mini Drop-down menu under style: Ensure that the drop-down menu is wide enough, not limited by the width of the parent element*/
 .dbsyncer-select-mini .dbsyncer-select-dropdown,
 .dbsyncer-select-md .dbsyncer-select-dropdown {
   left: 0;
@@ -34,7 +34,7 @@
   max-width: 300px;
 }
 
-/* 面板内全宽下拉：长连接器名称可完整展示 */
+/* Full pull in panel: LongAnalysisFull displayable*/
 .dbsyncer-select-panel .dbsyncer-select {
   display: block;
   width: 100%;
@@ -55,7 +55,7 @@
   text-overflow: unset;
 }
 
-/* 触发按钮 */
+/* Trigger button*/
 .dbsyncer-select-trigger {
   display: flex;
   align-items: center;
@@ -91,7 +91,7 @@
   opacity: 0.6;
 }
 
-/* 触发按钮内容 */
+/* Trigger button content*/
 .dbsyncer-select-trigger-content {
   flex: 1;
   display: flex;
@@ -121,7 +121,7 @@
   margin: 2px;
 }
 
-/* 标签 */
+/* Label*/
 .dbsyncer-select-tag {
   display: inline-flex;
   align-items: center;
@@ -149,14 +149,14 @@
   opacity: 1;
 }
 
-/* 计数提示 */
+/* CountTip */
 .dbsyncer-select-count {
   font-size: var(--font-size-xs);
   color: var(--text-secondary);
   white-space: nowrap;
 }
 
-/* 下拉箭头 */
+/* Draw Arrows Down*/
 .dbsyncer-select-arrow {
   flex-shrink: 0;
   display: flex;
@@ -173,7 +173,7 @@
   transform: rotate(180deg);
 }
 
-/* 下拉菜单 */
+/* Down Additional Menu*/
 .dbsyncer-select-dropdown {
   position: absolute;
   top: calc(100% + 4px);
@@ -191,7 +191,7 @@
   animation: dropdown-show 0.2s ease;
 }
 
-/* 向上展开的下拉菜单 */
+/* Opend Down Menu Up*/
 .dbsyncer-select-dropdown-up {
   top: auto;
   bottom: calc(100% + 4px);
@@ -202,7 +202,7 @@
   display: none !important;
 }
 
-/* 搜索框 */
+/* SearchBox*/
 .dbsyncer-select-search-wrapper {
   padding: var(--spacing-sm);
   border-bottom: 1px solid var(--border-primary);
@@ -262,7 +262,7 @@
   display: flex;
 }
 
-/* 操作按钮 */
+/* Actionsbutton*/
 .dbsyncer-select-actions {
   padding: var(--spacing-sm);
   border-bottom: 1px solid var(--border-primary);
@@ -276,7 +276,7 @@
   background-color: var(--bg-primary);
 }
 
-/* 隐藏空的操作按钮容器（单选时） */
+/* Hide emptyActionsButton Container (in single selection)*/
 .dbsyncer-select-actions:empty {
   display: none !important;
   padding: 0;
@@ -314,7 +314,7 @@
   background-color: rgba(24, 144, 255, 0.1);
 }
 
-/* 选项 */
+/* Options*/
 .dbsyncer-select-options {
   flex: 1;
   overflow-y: auto;
@@ -408,7 +408,7 @@
   text-overflow: ellipsis;
 }
 
-/* 空状态 */
+/* EmptyStatus */
 .dbsyncer-select-empty {
   padding: var(--spacing-lg);
   text-align: center;
@@ -416,7 +416,7 @@
   font-size: var(--font-size-sm);
 }
 
-/* 动画 */
+/* Animation*/
 @keyframes dropdown-show {
   from {
     opacity: 0;
@@ -450,7 +450,7 @@
   }
 }
 
-/* 响应式 */
+/* Response*/
 @media (max-width: 768px) {
   .dbsyncer-select-dropdown {
     max-height: 250px;

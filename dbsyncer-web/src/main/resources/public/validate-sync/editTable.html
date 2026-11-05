@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <div th:fragment="content">
-    <!-- 添加映射表区域 -->
+    <!-- AddTable GroupTableRegional-->
     <div class="grid grid-cols-9 items-center mt-4">
-        <!-- 数据源表选择器 -->
+        <!-- Source tableSelector -->
         <div class="lg:col-span-4 form-item">
-            <label class="form-label">数据源表</label>
+            <label class="form-label">Source table</label>
             <select id="source_table_select" class="form-control"></select>
         </div>
 
@@ -15,35 +15,35 @@
             <i class="fa fa-angle-double-right fa-2x"></i>
         </div>
 
-        <!-- 目标源表选择器 -->
+        <!-- Target tableSelector -->
         <div class="lg:col-span-4 form-item">
-            <label class="form-label">目标源表</label>
+            <label class="form-label">Target table</label>
             <select id="target_table_select" class="form-control"></select>
         </div>
     </div>
 
-    <!-- 标记主键区域 -->
+    <!-- Mark primary keyRegional-->
     <div class="grid grid-cols-9 items-center mt-4">
-        <!-- 数据源主键 -->
+        <!-- SourcePrimary key -->
         <div class="lg:col-span-4 form-item">
-            <label class="form-label">标记主键<i class="fa fa-question-circle" title="数据源表/视图没有主键，自定义一个或多个主键"></i></label>
+            <label class="form-label">Mark primary key<i class="fa fa-question-circle" title="Source table/view has no primary key; define one or more"></i></label>
             <div class="form-control-area">
-                <input id="sourceTablePK" class="form-control" type="text" data-role="tagsinput" placeholder="请输入主键"/>
+                <input id="sourceTablePK" class="form-control" type="text" data-role="tagsinput" placeholder="Please enter primary key"/>
             </div>
         </div>
 
         <div class="text-info items-center text-center"></div>
 
-        <!-- 目标源主键 -->
+        <!-- TargetPrimary key -->
         <div class="lg:col-span-4 form-item">
-            <label class="form-label">标记主键<i class="fa fa-question-circle" title="目标源表/视图没有主键，自定义一个或多个主键"></i></label>
+            <label class="form-label">Mark primary key<i class="fa fa-question-circle" title="Target table/view has no primary key; define one or more"></i></label>
             <div class="form-control-area">
-                <input id="targetTablePK" class="form-control" type="text" data-role="tagsinput" placeholder="请输入主键"/>
+                <input id="targetTablePK" class="form-control" type="text" data-role="tagsinput" placeholder="Please enter primary key"/>
             </div>
         </div>
     </div>
 
-    <!-- 操作按钮区域 -->
+    <!-- ActionsButton Area-->
     <div class="flex items-center justify-between mt-4">
         <div class="form-actions">
             <div id="searchTableGroup"></div>
@@ -51,27 +51,27 @@
 
         <div class="form-actions">
             <button id="tableGroupAddBtn" type="button" class="btn btn-info">
-                <i class="fa fa-plus"></i> 添加
+                <i class="fa fa-plus"></i> Add
             </button>
             <button id="tableGroupDelBtn" type="button" class="btn btn-outline" disabled="disabled">
-                <i class="fa fa-trash"></i> 删除
+                <i class="fa fa-trash"></i> Delete
             </button>
-            <button id="refreshTableBtn" type="button" class="btn btn-outline" th:title="刷新数据源和目标源表" onclick="bindTableRefresh()">
-                <span class="fa fa-refresh"></span>刷新表
+            <button id="refreshTableBtn" type="button" class="btn btn-outline" th:title="Refresh source and target tables" onclick="bindTableRefresh()">
+                <span class="fa fa-refresh"></span>Refresh tables
             </button>
         </div>
     </div>
 
-    <!-- 表映射列表 -->
+    <!-- MapList -->
     <table class="table search-table-group-list hidden">
         <thead>
         <tr>
             <th></th>
             <th>
-                数据源表
+                Source table
             </th>
             <th>
-                目标源表
+                Target table
             </th>
             <th onclick="event.stopPropagation();">
                 <input type="checkbox" class="tableGroupCheckboxAll" value="all" onclick="event.stopPropagation();" />
@@ -83,24 +83,24 @@
     <input id="sortedTableGroupIds" name="sortedTableGroupIds" type="hidden" />
 
 <script th:inline="javascript">
-    // 映射关系列表分页（供添加/删除后局部刷新）
+    // MappingListminPage（ForAdd/DeleteBack LocalRefresh）
     var tableGroupPagination = null;
 
-    /** 仅刷新映射关系列表，不重载整页（保留未保存的名称等表单改动） */
+    /** OnlyRefreshMappingList，Do Not ReloadPage（Reservations not madeSaveYes.Name(for change of form)*/
     function refreshTableGroupList() {
         if (!tableGroupPagination) {
             return;
         }
-        // 列表重载后 DOM 顺序以服务端为准，清空未提交的拖拽排序，避免保存时带上过期顺序
+        // ListReloadDOM In order of service,ClearNotSubmit, avoidSaveOther Organiser
         $("#sortedTableGroupIds").val('');
         const taskId = $("#taskId").val();
         tableGroupPagination.doSearch({'id': taskId}, 1);
     }
 
     /**
-     * 将后端分页结果转换成 dbSelect 可识别的数据结构。
+     * Turn BackendminPageResultConvertDone.dbSelect VisibleData Structure。
      *
-     * @param paging 后端分页对象
+     * @param paging BackendminPageObject
      * @returns {Array<{label: string, value: string, disabled: boolean, data: {type: string}}>}
      */
     function convertPagingToSelectData(paging) {
@@ -132,12 +132,12 @@
             exclude: 1
         }, function(res) {
             if (res.success !== true) {
-                bootGrowl(res.message || "加载目标表失败", "danger");
+                bootGrowl(res.message || "Failed to load target list", "danger");
                 return;
             }
             const paging = res.data || {};
             const targetData = convertPagingToSelectData(paging);
-            // 合并并按 value 去重，避免每次触发都重复追加
+            // Merge and Pressvalue Weight it up and avoid repeating it every time we trigger it.
             const mergedMap = {};
             (targetTableSelect.getData() || []).forEach(function(item) {
                 if (item && item.value) {
@@ -174,12 +174,12 @@
     }
 
     /**
-     * 远程绑定表下拉选择器（关键字搜索 + 滚动分页）。
+     * Draw Selector for Remote Bind TablesKeywordSearch + RollminPage）。
      *
-     * @param selector 下拉元素
+     * @param selector Dropping Element
      * @param type source|target
-     * @param onChange 选中变更回调
-     * @param excludeMode 是否展示已映射表（exclude=1）
+     * @param onChange Organisation
+     * @param excludeMode YesNoShow Mapexclude=1）
      * @returns {*}
      */
     function bindTableSelect(selector, type, onChange, excludeMode) {
@@ -209,7 +209,7 @@
                             data: converted
                         });
                     } else {
-                        bootGrowl(res.message || "加载表列表失败", "danger");
+                        bootGrowl(res.message || "Failed to load table list", "danger");
                         if (onError) {
                             onError();
                         }
@@ -221,14 +221,14 @@
                     onChange(data);
                 }
             },
-            defaultValue: [],// 默认选中
-            customButtons: [ // 最多2个自定义按钮
+            defaultValue: [],// Default Selection
+            customButtons: [ // Most2individualCustombutton
                 {
-                    text: '取消过滤',
+                    text: 'Cancel Filter',
                     callback: function(values) {
                         currentExclude = 1;
                         selectApi.reloadRemote('');
-                        bootGrowl("取消过滤成功!", "success");
+                        bootGrowl("Coverage cancelled!", "success");
                     }
                 }
             ]
@@ -236,35 +236,35 @@
         return selectApi;
     }
 
-    // 绑定刷新下拉表事件（仅刷新库表缓存，下拉远程搜索会拿到最新表，无需整页重载）
+    // TieRefreshDraw the watch.Event（OnlyRefreshLibraryWatch cache, drop-down remoteSearchWe'll get an update.NoneRequiredPageReload)
     function bindTableRefresh() {
         let id = $("#taskId").val();
         doPoster("/validate-sync/refreshTables", {'id': id}, function (data) {
             if (data.success === true) {
-                bootGrowl("刷新表成功!", "success");
+                bootGrowl("Refresh the watch!", "success");
             } else {
                 bootGrowl(data.message, "danger");
             }
         });
     }
 
-    // 绑定添加表映射关系事件
+    // TieAddMap relationEvent
     function bindTableGroupAdd(sourceSelector, targetSelector){
         $("#tableGroupAddBtn").unbind("click").bind('click', function (e) {
             let sTables = sourceSelector.getValues();
             let sLen = sTables.length;
             if (sLen < 1) {
-                bootGrowl("请选择数据源表", "danger");
+                bootGrowl("Select the data source table", "danger");
                 return;
             }
             let tTables = targetSelector.getValues();
             let tLen = tTables.length;
             if (tLen < 1) {
-                bootGrowl("请选择目标源表", "danger");
+                bootGrowl("Select the target source table", "danger");
                 return;
             }
             if (sLen !== tLen) {
-                bootGrowl("表映射关系数量不一致，请检查源表和目标表关系", "danger");
+                bootGrowl("The number of map relationships is not consistent, please check the source and target table relationships", "danger");
                 return;
             }
             let m = {};
@@ -279,11 +279,11 @@
             m.targetTablePK = $("#targetTablePK").val();
             const $btn = $(this);
             const originalText = $btn.html();
-            $btn.html('<i class="fa fa-spinner fa-spin"></i> 添加中...').prop('disabled', true);
+            $btn.html('<i class="fa fa-spinner fa-spin"></i>Add Appraisal...').prop('disabled', true);
             doPoster("/validate-sync/addTableGroup", m, function (data) {
                 $btn.html(originalText).prop('disabled', false);
                 if (data.success === true) {
-                    bootGrowl("新增映射关系成功!", "success");
+                    bootGrowl("Add Map Relationship Success!", "success");
                     if (sourceSelector && typeof sourceSelector.setValues === 'function') {
                         sourceSelector.setValues([], true);
                     }
@@ -298,7 +298,7 @@
         });
     }
 
-    // 绑定删除表关系点击事件
+    // TieDeleteTable ClickEvent
     function bindTableGroupRemove() {
         $("#tableGroupDelBtn").unbind("click").click(function () {
             const ids = [];
@@ -311,14 +311,14 @@
                 const taskId = $("#taskId").val();
                 const $btn = $(this);
                 const originalText = $btn.html();
-                $btn.html('<i class="fa fa-spinner fa-spin"></i> 删除中...').prop('disabled', true);
+                $btn.html('<i class="fa fa-spinner fa-spin"></i> Deleting...').prop('disabled', true);
                 doPoster("/validate-sync/removeTableGroup", {
                     "taskId": taskId,
                     "ids": ids.join(",")
                 }, function (response) {
                     $btn.html(originalText).prop('disabled', false);
                     if (response.success === true) {
-                        bootGrowl("删除映射关系成功!", "success");
+                        bootGrowl("Remove map relationship succeeded!", "success");
                         refreshTableGroupList();
                     } else {
                         bootGrowl(response.message, "danger");
@@ -328,18 +328,18 @@
         });
     }
 
-    // 绑定复选框多选或单选事件
+    // Multicheck or single-check binding check boxesEvent
     function bindTableGroupCheckbox() {
         const $checkboxAll = $('.tableGroupCheckboxAll');
         const $delBtn = $('#tableGroupDelBtn');
         let isUpdatingSelectAll = false;
 
-        // 动态获取所有单个复选框（每次调用时重新查找）
+        // Dynamically retrieve all single check boxes (research each call)
         function getCheckboxes() {
             return $('.tableGroupCheckbox');
         }
 
-        // 更新全选复选框状态
+        // UpdateSelect AllCheckboxStatus
         function updateSelectAllState() {
             if (isUpdatingSelectAll) return;
             isUpdatingSelectAll = true;
@@ -357,23 +357,23 @@
             }, 0);
         }
 
-        // 更新删除按钮状态
+        // UpdateDeletebuttonStatus
         function updateDeleteButtonState() {
             const $checkboxes = getCheckboxes();
             $delBtn.prop('disabled', $checkboxes.filter(':checked').length === 0);
         }
 
-        // 先移除旧的事件绑定（如果存在）
+        // Remove the old one first.EventTie (if any)
         $checkboxAll.off('change');
         getCheckboxes().off('change');
 
-        // 初始化全选复选框（如果还没有初始化）
+        // InitializeSelect AllCheckbox (if not initialized)
         if (!$checkboxAll.data('checkboxGroupInitialized')) {
             $checkboxAll.checkboxGroup({
                 theme: 'danger',
                 size: 'md',
                 onChange: function(values) {
-                    // 全选/取消全选时，同步所有单个复选框
+                    // Select All/CancelSelect All, sync all single check boxes
                     const isChecked = values.length > 0;
                     getCheckboxes().each(function() {
                         const api = $(this).data('checkboxGroup');
@@ -386,7 +386,7 @@
             });
         }
 
-        // 初始化所有单个复选框
+        // Initialize all single check boxes
         getCheckboxes().each(function() {
             const $checkbox = $(this);
             if (!$checkbox.data('checkboxGroupInitialized')) {
@@ -402,43 +402,43 @@
         });
     }
 
-    // 绑定表关系点击事件
+    // Other OrganiserEvent
     function bindMappingTableGroupListClick() {
         const $tableGroupList = $("#tableGroupList");
 
-        // 检查元素是否存在
+        // Check ElementYesNoExistence
         if (!$tableGroupList.length) {
             return;
         }
 
         $tableGroupList.unbind("click");
         $tableGroupList.find("tr").bind('click', function (e) {
-            // 如果点击的是复选框或其父元素的td，不执行跳转
+            // If you clickYesCheck box or parent elementtd，Do not execute jump
             if ($(e.target).is('input[type="checkbox"]') || $(e.target).closest('td').find('input[type="checkbox"]').length > 0) {
                 return;
             }
             doLoader('/validate-sync/page/editTableGroup?id=' + $(this).attr("id"));
         });
 
-        // 使用原生 HTML5 拖拽 API 替代 tableDnD
+        // Use originalHTML5 DragAPI AlternativetableDnD
         const $rows = $tableGroupList.find("tr");
         $rows.each(function() {
             const $row = $(this);
             $row.attr('draggable', 'true');
 
-            // 拖拽开始
+            // Start Drag
             $row.on('dragstart', function(e) {
                 e.originalEvent.dataTransfer.effectAllowed = 'move';
                 e.originalEvent.dataTransfer.setData('text/html', this.innerHTML);
                 $(this).addClass('dragging');
             });
 
-            // 拖拽结束
+            // Drag End
             $row.on('dragend', function(e) {
                 $(this).removeClass('dragging');
                 $rows.removeClass('drag-over');
 
-                // 更新排序数据
+                // Update Sorting Data
                 var newData = [];
                 $tableGroupList.find("tr").each(function () {
                     newData.push($(this).attr('id'));
@@ -446,7 +446,7 @@
                 $("#sortedTableGroupIds").val(newData.join('|'));
             });
 
-            // 拖拽经过
+            // Drag through.
             $row.on('dragover', function(e) {
                 if (e.preventDefault) {
                     e.preventDefault();
@@ -456,12 +456,12 @@
                 return false;
             });
 
-            // 拖拽离开
+            // Drag away.
             $row.on('dragleave', function(e) {
                 $(this).removeClass('drag-over');
             });
 
-            // 放置
+            // Placement
             $row.on('drop', function(e) {
                 if (e.stopPropagation) {
                     e.stopPropagation();
@@ -469,7 +469,7 @@
 
                 var $dragging = $tableGroupList.find('.dragging');
                 if ($dragging.length && $dragging[0] !== this) {
-                    // 判断插入位置
+                    // Judge placement
                     var draggingIndex = $dragging.index();
                     var targetIndex = $(this).index();
 
@@ -487,23 +487,23 @@
 
     $(document).ready(function() {
         const excludeMode = new URLSearchParams(window.location.search).get('exclude');
-        // 绑定下拉选择事件自动匹配相似表事件：源表勾选后精准同步目标表同名项
+        // Tie down the pull selectionEventAuto-match IllicitTableEvent：Source tableSyndication after checkoutTarget tableSame name
         let targetTableSelect = bindTableSelect($('#target_table_select'), 'target', null, excludeMode);
         let sourceTableSelect = bindTableSelect($('#source_table_select'), 'source', function() {
             syncTargetSelectionBySource(sourceTableSelect.getValues(), targetTableSelect);
         }, excludeMode);
-        // 绑定多值输入框事件
+        // Tie a lot.ValueInput BoxEvent
         initMultipleInputTags();
-        // 绑定添加表映射关系事件
+        // TieAddMap relationEvent
         bindTableGroupAdd(sourceTableSelect, targetTableSelect);
-        // 渲染搜索输入框（仅首次有数据时创建一次）并同步列表显隐
+        // RenderSearchEnter box (create only once when data are available) and syncListVisibility
         let searchInited = false;
         function syncTableGroupListUi(pagination, taskId) {
             if (pagination.total > 0 && !searchInited) {
                 $("#searchTableGroup").html(`<div class="search-wrapper">
                     <i class="fa fa-search search-icon"></i>
-                    <input class="search-input" type="text" maxlength="32" placeholder="搜索表名称">
-                    <span class="search-clear" title="清除">
+                    <input class="search-input" type="text" maxlength="32" placeholder="Search table name">
+                    <span class="search-clear" title="Clear">
                         <i class="fa fa-times"></i>
                     </span>
                 </div>`);
@@ -521,7 +521,7 @@
             $('.tableGroupCheckboxAll').prop('checked', false);
         }
 
-        // 初始化分页管理器
+        // InitializeminPageManager
         let taskId = $("#taskId").val();
         tableGroupPagination = new PaginationManager({
             requestUrl: '/validate-sync/searchTableGroup',
@@ -529,7 +529,7 @@
             tableBodySelector: '#tableGroupList',
             pageSize: 5,
             renderRow: function(t, index) {
-                return `<tr id="${t.id}" title='点击编辑 | 拖动排序'>
+                return `<tr id="${t.id}" title='Click to edit | Drag to reorder'>
                     <td>${index}</td>
                     <td>${t.sourceTable.name}</td>
                     <td>${t.targetTable.name}</td>
@@ -538,14 +538,14 @@
                     </td>
                 </tr>`;
             },
-            emptyHtml:'<td colspan="4" class="text-center"><p class="empty-text">暂无映射关系</p></td>',
+            emptyHtml:'<td colspan="4" class="text-center"><p class="empty-text">No Map Relationship</p></td>',
             refreshCompleted: function() {
                 syncTableGroupListUi(tableGroupPagination, taskId);
-                // 绑定表关系点击事件
+                // Other OrganiserEvent
                 bindMappingTableGroupListClick();
-                // 绑定删除表映射关系事件
+                // TieDeleteMap relationEvent
                 bindTableGroupRemove();
-                // 绑定复选框多选或单选事件
+                // Multicheck or single-check binding check boxesEvent
                 bindTableGroupCheckbox();
             }
         });

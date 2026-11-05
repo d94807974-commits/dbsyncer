@@ -1,9 +1,9 @@
 /**
- * Checkbox Group Component - 美化的方形复选框组件
- * 保持传统方形 checkbox 外观，但更精致优雅
- * 使用方式：为包含 checkbox 的容器添加 .checkbox-group 类，然后调用 $('.checkbox-group').checkboxGroup()
+ * Checkbox Group Component - Beautiful.Square checkbox component
+ * Keep the traditional square.checkbox Appearance, but more elegant.
+ * Usage: for inclusioncheckbox The container.Add .checkbox-group class, then call$('.checkbox-group').checkboxGroup()
  */
-/* 复选框组容器 */
+/* Checkbox container*/
 .checkbox-group {
     display: flex;
     flex-wrap: wrap;
@@ -11,7 +11,7 @@
     align-items: center;
 }
 
-/* 只针对表格的复选框生效 */
+/* Only check box for tables*/
 table .checkbox-group {
     display: inline-flex !important;
     gap: 0 !important;
@@ -42,7 +42,7 @@ table .checkbox-group-item::before {
     opacity: 1 !important;
 }
 
-/* 单个选项容器 */
+/* Single option container*/
 .checkbox-group-item {
     position: relative;
     display: inline-flex;
@@ -52,7 +52,7 @@ table .checkbox-group-item::before {
     transition: all 0.2s ease;
 }
 
-/* 隐藏原生 checkbox */
+/* Hide Nativecheckbox */
 .checkbox-group-item input[type="checkbox"],
 .checkbox-group input[type="checkbox"] {
     position: absolute !important;
@@ -66,7 +66,7 @@ table .checkbox-group-item::before {
     visibility: hidden !important;
 }
 
-/* 自定义方形外框 */
+/* CustomSquare Outline*/
 .checkbox-group-item::before {
     content: '';
     position: relative;
@@ -82,11 +82,11 @@ table .checkbox-group-item::before {
     box-sizing: border-box;
 }
 
-/* 自定义对勾（选中状态） */
+/* CustomCheckStatus） */
 .checkbox-group-item::after {
     content: '';
     position: absolute;
-    left: 10px; /* 20px / 2，对齐 ::before 方框中心，避免压住右侧文案 */
+    left: 10px; /* 20px / 2，Alignment::before Box Centre, avoid pressing the right text*/
     top: 50%;
     transform: translate(-50%, -50%) scale(0) rotate(45deg);
     width: 5px;
@@ -96,11 +96,11 @@ table .checkbox-group-item::before {
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     opacity: 0;
     box-sizing: border-box;
-    /* 对勾旋转 45 度后，需要微调位置使其视觉居中 */
+    /* Round45 After that, we need to fine-tune our position to keep our visual center.*/
     transform-origin: center center;
 }
 
-/* 标签文本 */
+/* Tab Text*/
 .checkbox-group-item-label {
     font-size: var(--font-size-md, 16px);
     font-weight: 500;
@@ -109,7 +109,7 @@ table .checkbox-group-item::before {
     line-height: 1.5;
 }
 
-/* 悬停效果 */
+/* Suspend Effects*/
 .checkbox-group-item:hover:not(.disabled)::before {
     border-color: var(--primary-color, #165DFF);
     box-shadow: 0 0 0 3px rgba(22, 93, 255, 0.1);
@@ -119,7 +119,7 @@ table .checkbox-group-item::before {
     color: var(--primary-color, #165DFF);
 }
 
-/* 选中状态 */
+/* SelectStatus */
 .checkbox-group-item.active::before {
     border-color: var(--primary-color, #165DFF) !important;
     background-color: var(--primary-color, #165DFF) !important;
@@ -138,7 +138,7 @@ table .checkbox-group-item::before {
     font-weight: 600;
 }
 
-/* 选中时的动画效果 */
+/* Animation effects on selection*/
 @keyframes checkbox-ripple {
     0% {
         box-shadow: 0 0 0 0 rgba(22, 93, 255, 0.4);
@@ -152,7 +152,7 @@ table .checkbox-group-item::before {
     animation: checkbox-ripple 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 禁用状态 */
+/* DisableStatus */
 .checkbox-group-item.disabled {
     cursor: not-allowed;
     opacity: 0.5;
@@ -167,7 +167,7 @@ table .checkbox-group-item::before {
     color: var(--text-disabled, #bfbfbf);
 }
 
-/* 禁用且选中 */
+/* Disableand select*/
 .checkbox-group-item.disabled.active::before {
     background-color: var(--border-primary, #d9d9d9) !important;
     border-color: var(--border-primary, #d9d9d9) !important;
@@ -177,14 +177,14 @@ table .checkbox-group-item::before {
     border-color: var(--text-disabled, #bfbfbf);
 }
 
-/* 聚焦状态（键盘导航） */
+/* FocusStatus（Keyboard Navigator)*/
 .checkbox-group-item:focus-within:not(.disabled)::before {
     border-color: var(--primary-color, #165DFF);
     box-shadow: 0 0 0 4px rgba(22, 93, 255, 0.2);
     outline: none;
 }
 
-/* 全选/取消全选按钮区域 */
+/* Select All/CancelSelect AllButton Area*/
 .checkbox-group-actions {
     display: flex;
     padding: var(--spacing-sm, 8px) 0;
@@ -223,7 +223,7 @@ table .checkbox-group-item::before {
     background-color: rgba(22, 93, 255, 0.1);
 }
 
-/* 不同主题色变体 */
+/* Different theme colour variants*/
 .checkbox-group.checkbox-group-success .checkbox-group-item.active::before {
     border-color: var(--success-color, #52c41a) !important;
     background-color: var(--success-color, #52c41a) !important;
@@ -288,7 +288,7 @@ table .checkbox-group-item::before {
     color: var(--info-color, #1890ff);
 }
 
-/* 尺寸变体 - 小号 */
+/* Size variant - Small*/
 .checkbox-group.checkbox-group-sm .checkbox-group-item::before {
     width: 16px;
     height: 16px;
@@ -309,7 +309,7 @@ table .checkbox-group-item::before {
     gap: var(--spacing-md, 16px);
 }
 
-/* 尺寸变体 - 大号 */
+/* Size variant - Large*/
 .checkbox-group.checkbox-group-lg .checkbox-group-item::before {
     width: 24px;
     height: 24px;
@@ -331,18 +331,18 @@ table .checkbox-group-item::before {
     gap: var(--spacing-xl, 32px);
 }
 
-/* 垂直布局 */
+/* Vertical Layout*/
 .checkbox-group.checkbox-group-vertical {
     flex-direction: column;
     align-items: flex-start;
 }
 
-/* 内联布局（紧凑） */
+/* Internal Beginnings (closer)*/
 .checkbox-group.checkbox-group-inline {
     gap: var(--spacing-md, 16px);
 }
 
-/* 响应式：小屏幕垂直布局 */
+/* Response mode: small screen vertical layout*/
 @media (max-width: 640px) {
     .checkbox-group:not(.checkbox-group-inline) {
         flex-direction: column;
@@ -351,7 +351,7 @@ table .checkbox-group-item::before {
     }
 }
 
-/* 带边框的选项卡样式（可选） */
+/* tab Higher (optional)*/
 .checkbox-group.checkbox-group-bordered .checkbox-group-item {
     padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
     border: 1px solid var(--border-primary, #d9d9d9);

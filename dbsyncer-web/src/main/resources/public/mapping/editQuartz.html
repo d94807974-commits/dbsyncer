@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <div th:fragment="content">
-    <!-- 定时同步配置标题 -->
-    <p><i class="fa fa-clock-o text-success"></i> 定时配置</p>
+    <!-- ScheduledSyncConfigTitle-->
+    <p><i class="fa fa-clock-o text-success"></i> Time Configuration</p>
 
-    <!-- 第一行：Insert、Update、Delete -->
+    <!-- First line:Insert、Update、Delete -->
     <div class="grid grid-cols-3">
         <!-- Insert -->
         <div class="form-item">
@@ -42,7 +42,7 @@
         </div>
     </div>
 
-    <!-- 第二行：Cron、事件 -->
+    <!-- I -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - , -  -  -  -  -  -  -  -  -  - Cron、Event -->
     <div class="grid grid-cols-3 mt-4">
         <!-- Cron -->
         <div class="form-item">
@@ -50,11 +50,11 @@
             <input class="form-control" required name="timingCronExpression" th:value="${mapping?.listener?.cron}?:'*/30 * * * * ?'" type="text" placeholder="*/30 * * * * ?" />
         </div>
 
-        <!-- 事件 -->
+        <!-- Event -->
         <div class="form-item">
-            <label class="form-label">事件<i class="fa fa-question-circle text-tertiary" title="区分增删改事件"></i></label>
+            <label class="form-label">Event<i class="fa fa-question-circle text-tertiary" title="Distinguishing between additions and deletions"></i></label>
             <select name="timingEventFieldName" class="form-control">
-                <option value="" selected="selected">无</option>
+                <option value="" selected="selected">None</option>
                 <option th:each="c,s:${mapping?.sourceColumn}"
                         th:value="${c?.name}"
                         th:text="${c?.name} +' (' + ${c?.typeName} +')'"

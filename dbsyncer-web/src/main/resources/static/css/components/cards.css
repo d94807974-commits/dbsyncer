@@ -1,7 +1,7 @@
 /**
- * DBSyncer 卡片组件样式
+ * DBSyncer Card Component Style
  */
-/* ========== 基础卡片 ========== */
+/* ========== Basic card========== */
 .card {
   background-color: var(--bg-primary);
   border-radius: var(--radius-lg);
@@ -20,13 +20,13 @@
   display: none !important;
 }
 
-/* 工作区内嵌卡片：禁用 hover 上浮 */
+/* Workspace embedded card:Disable hover Up*/
 .card.card-static:hover {
   transform: none;
   box-shadow: var(--shadow-sm);
 }
 
-/* ========== 可选列表卡片（侧栏项） ========== */
+/* ========== OptionalListCard (sidebar entry)========== */
 .list-card {
   position: relative;
   border: 1px solid var(--border-primary);
@@ -107,20 +107,20 @@
   white-space: nowrap;
 }
 
-/* 工作区详情：面板与空状态互斥显示 */
+/* WorkspaceDetails：PanelandEmptyStatusCrusts show*/
 .workspace-detail > .workspace-detail-panel:not(.hidden) + .workspace-empty,
 .workspace-empty.hidden {
   display: none;
 }
 
-/* ========== 卡片头部 ========== */
+/* ========== Head of the card========== */
 .card-header {
   padding: var(--spacing-lg);
   border-bottom: 1px solid var(--border-secondary);
   background-color: var(--bg-primary);
 }
 
-/* ========== 卡片标题 ========== */
+/* ========== Card Title========== */
 .card-title {
   font-size: var(--font-size-lg);
   font-weight: 500;
@@ -128,19 +128,19 @@
   margin: 0;
 }
 
-/* ========== 卡片副标题 ========== */
+/* ========== Subheading of cards========== */
 .card-subtitle {
   font-size: var(--font-size-sm);
   color: var(--text-tertiary);
   margin: var(--spacing-xs) 0 0 0;
 }
 
-/* ========== 卡片内容 ========== */
+/* ========== Card content========== */
 .card-body {
   padding: var(--spacing-lg);
 }
 
-/* 卡片中的轻量交互元素 */
+/* Light interactive elements in cards*/
 .card button:not(.btn):not([class*='btn-']):not(.pagination-btn):not(.pagination-page-btn) {
   background: transparent;
   border: 0;
@@ -156,7 +156,7 @@
   background: #fff;
 }
 
-/* ========== 进度条卡片 ========== */
+/* ========== Progress Bar Card========== */
 .progress-card {
   background: #fff;
   border-radius: 8px;
@@ -180,7 +180,7 @@
   margin-bottom: 6px;
 }
 
-/* 列表进度条中间辅助信息 */
+/* ListProgress bar middle supportInfo */
 .progress-meta {
   display: flex;
   flex-direction: column;
@@ -253,7 +253,7 @@
   font-weight: 600;
 }
 
-/* ========== 迷你统计卡片 ========== */
+/* ========== Ministat card========== */
 .mini-stats-grid {
   display: grid;
   gap: var(--spacing-md);

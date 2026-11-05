@@ -1,5 +1,5 @@
 /**
- * 整库迁移结果详情页
+ * FullLibraryDetails of migration resultsPage
  */
 (function (window) {
     'use strict';
@@ -67,7 +67,7 @@
                     return rows;
                 }
             } catch (e) {
-                // 兼容旧版文本格式
+                // Compatible with old text formats
             }
         }
 
@@ -97,7 +97,7 @@
 
         rows.push({
             key: row.sourceTable || row.targetTable || '-',
-            error: content || '迁移成功'
+            error: content || 'Migration successful'
         });
         return rows;
     }
@@ -105,13 +105,13 @@
     function buildMigrationDetailBodyHtml(row) {
         var typeCode = row.type || '';
         var isRowData = typeCode === 'rowData';
-        var keyHeader = isRowData ? '主键' : '表名';
+        var keyHeader = isRowData ? 'Primary key' : 'Table name';
         var detailRows = parseMigrationDetailRows(row);
         var bodyHtml = '';
         if (detailRows.length === 0) {
             var failHint = Number(row.failTotal) > 0
-                ? '有失败计数但未落库错误样本（历史任务可重跑后查看）'
-                : '暂无错误详情';
+                ? 'Failure count exists but no persisted error samples (rerun historical tasks to view)'
+                : 'No error details at this time';
             bodyHtml = '<tr><td colspan="2" class="text-center text-gray-400">' + failHint + '</td></tr>';
         } else {
             detailRows.forEach(function (item) {
@@ -124,7 +124,7 @@
             });
         }
         return '<table class="table">'
-            + '<thead><tr><th>' + escapeHtml(keyHeader) + '</th><th class="width60p">错误信息</th></tr></thead>'
+            + '<thead><tr><th>' + escapeHtml(keyHeader) + '</th><th class="width60p">Error message</th></tr></thead>'
             + '<tbody>' + bodyHtml + '</tbody>'
             + '</table>';
     }
@@ -139,7 +139,7 @@
     function showMigrationDetail(detailId, migrationDetailCache) {
         var row = migrationDetailCache[detailId];
         if (!row) {
-            bootGrowl('未找到详情数据', 'warning');
+            bootGrowl('Proposed data not found', 'warning');
             return;
         }
 
@@ -147,12 +147,12 @@
         var isRowData = typeCode === 'rowData';
         closeMigrationDetailModal();
         migrationDetailModal = showConfirm({
-            title: isRowData ? '数据迁移详情' : '结构迁移详情',
+            title: isRowData ? 'Data migration details' : 'Structure migration details',
             icon: 'info',
             size: 'max',
             position: 'center',
             body: buildMigrationDetailBodyHtml(row),
-            confirmText: '关闭',
+            confirmText: 'Close',
             showCancel: false,
             onConfirm: function () {
                 migrationDetailModal = null;
@@ -217,8 +217,8 @@
         initFilterSelect('#detailStatusFilter');
 
         var typeTextMap = {
-            rowData: '数据迁移',
-            tableSchema: '表结构'
+            rowData: 'Data Migration',
+            tableSchema: 'Table schema'
         };
         var typeBadgeMap = {
             rowData: 'badge-primary',
@@ -264,12 +264,12 @@
                     + '<td>' + (row.successTotal != null ? row.successTotal : '-') + '</td>'
                     + '<td>' + formatFailTotal(row.failTotal) + '</td>'
                     + '<td>' + formatDate(row.updateTime || '') + '</td>'
-                    + '<td><button type="button" class="table-action-btn view diff-detail-btn" title="查看详情" onclick="showMigrationDetail(\'' + detailId.replace(/'/g, '') + '\')"><i class="fa fa-eye"></i></button></td>'
+                    + '<td>{\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FFFFFF} {\cH00FFFF} {\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FFFF} {\cH00FFFF} {\cHFFFFFF} {\cHFFFFFF} {\cHFFFFFF} {\cHFFFFFF}{\cH00} {\cH000 {\cH00} {\cH3030303030D0} {\cH00}' + detailId.replace(/'/g, '') + '\')"><i class="fa fa-eye"></i></button></td>'
                     + '</tr>';
             },
             emptyHtml: '<td colspan="11" class="text-center"><i class="fa fa-database empty-icon"></i>'
-                + '<p class="empty-text">暂无迁移结果</p>'
-                + '<p class="empty-description">任务执行完成后将在此展示各表迁移明细</p></td>'
+                + '<p class="empty-text">No relocation results.</p>'
+                + '<p class="empty-description">Once the assignment is completed, the tables will be shown here.</p></td>'
         });
     }
 

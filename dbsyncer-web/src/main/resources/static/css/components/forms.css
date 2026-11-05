@@ -1,8 +1,8 @@
 /**
- * DBSyncer 表单组件（输入框等）
+ * DBSyncer Form components (input boxes, etc.)
  */
 
-/* ========== 表单容器 ========== */
+/* ========== Form containers========== */
 .form-container {
     background-color: var(--bg-primary);
     border-radius: var(--radius-lg);
@@ -11,7 +11,7 @@
     overflow: hidden;
 }
 
-/* 列表顶栏含分组/筛选下拉时放开裁切，避免 absolute 菜单被挡住 */
+/* ListTop bar containsGroup/Uncut and avoid when filtering down.absolute Menu blocked.*/
 .form-container:has(.group-filter-wrap),
 .form-container:has(.form-filter) {
     overflow: visible;
@@ -23,7 +23,7 @@
     overflow: hidden;
 }
 
-/* ========== 文本输入框 ========== */
+/* ========== Text Input Box========== */
 .form-control {
     width: 100%;
     padding: 8px 12px;
@@ -44,7 +44,7 @@ textarea.form-control {
     line-height: 1.5;
 }
 
-/* 水平表单的间距与标签风格 */
+/* spacing of horizontal formsandTab Style*/
 .form-actions {
     display: flex;
     justify-content: flex-end;
@@ -79,7 +79,7 @@ select.form-control.is-invalid,
     font-size: 12px;
 }
 
-/* 错误抖动动画 */
+/* ErrorDiverse Animations*/
 @keyframes shake {
     0%, 100% {
         transform: translateX(0);
@@ -92,7 +92,7 @@ select.form-control.is-invalid,
     }
 }
 
-/* 列表筛选条：标签紧贴控件，横向自适应换行 */
+/* ListFilterbar: Label close to control, horizontal adaptation line break*/
 .form-filter {
     display: flex;
     flex-wrap: wrap;
@@ -136,7 +136,7 @@ select.form-control.is-invalid,
     width: 160px;
 }
 
-/* 筛选条内下拉不受触发器窄宽限制，避免搜索框/选项被裁切 */
+/* The filter does not draw downTriggerThin and wide. Avoid.SearchBox/options are cut*/
 .form-filter .dbsyncer-select {
     overflow: visible;
 }
@@ -183,7 +183,7 @@ select.form-control.is-invalid,
     }
 }
 
-/* 单项：标签+控件布局 */
+/* Single item: Label+Control Layout*/
 .form-item {
     display: grid;
     grid-template-columns: 120px 1fr;
@@ -191,7 +191,7 @@ select.form-control.is-invalid,
     column-gap: 16px;
 }
 
-/* 双类优先级高于 .form-item，配合权限 / 开关显隐 */
+/* Double priority above.form-item，CooperationPermission / Switches are hidden.*/
 .form-item.hidden {
     display: none;
 }
@@ -232,7 +232,7 @@ select.form-control.is-invalid,
     }
 }
 
-/* Switch 开关组件 */
+/* Switch Switch Component*/
 .form-switch {
     position: relative;
     display: inline-flex;
@@ -329,7 +329,7 @@ select.form-control.is-invalid,
     box-shadow: 0 0 0 2px rgba(22, 93, 255, 0.25);
 }
 
-/* 搜索组件 */
+/* SearchPersons*/
 .search-wrapper {
     position: relative;
     max-width: 100%;

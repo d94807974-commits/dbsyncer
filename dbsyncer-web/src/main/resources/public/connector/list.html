@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<!-- 查询连接器列表 -->
+<!-- QueryConnectorList -->
 <div class="form-container">
     <div class="card-header">
-        <h3 class="card-title text-center">连接管理</h3>
+        <h3 class="card-title text-center">Connections</h3>
     </div>
     <div class="card-body">
         <div class="flex items-center justify-between gap-2">
             <div class="flex items-center gap-2 flex-1 min-w-0">
                 <div id="searchConnector" class="search-wrapper w-320 max-w-full flex-shrink-0">
                     <i class="fa fa-search search-icon"></i>
-                    <input class="search-input" type="text" maxlength="32" placeholder="搜索连接名称">
-                    <span class="search-clear" title="清除">
+                    <input class="search-input" type="text" maxlength="32" placeholder="Search Connection Name">
+                    <span class="search-clear" title="Clear">
                         <i class="fa fa-times"></i>
                     </span>
                 </div>
@@ -22,7 +22,7 @@
             <div class="flex items-center gap-2 flex-shrink-0">
                 <span id="connectorGroupCreateHost" data-permission="connector:edit"></span>
                 <button id="connectorAddBtn" class="btn btn-primary" type="button" data-permission="connector:edit">
-                    <i class="fa fa-plus"></i> 添加
+                    <i class="fa fa-plus"></i> Add
                 </button>
             </div>
         </div>
@@ -31,11 +31,11 @@
             <thead>
             <tr>
                 <th></th>
-                <th>名称</th>
-                <th>类型</th>
-                <th>连接地址</th>
-                <th>状态</th>
-                <th>操作</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Connection Address</th>
+                <th>Status</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody id="connectorTableBody"></tbody>
@@ -46,15 +46,15 @@
 </div>
 
 <script>
-// 页面初始化
+// PageInitialize
 $(document).ready(function() {
-    // 定义返回函数，子页面返回
+    // DefinitionsBackFunctions，SonPageNoodles.Back
     window.backIndexPage = function () {
         doLoader('/connector/list');
     };
 
     let groupToolbar = null;
-    // 初始化分页管理器
+    // InitializeminPageManager
     const pagination = new PaginationManager({
         requestUrl: '/connector/search',
         tableBodySelector: '#connectorTableBody',
@@ -70,15 +70,15 @@ $(document).ready(function() {
         renderRow: function(connector, index) {
             const canEdit = !window.DBSPermission || DBSPermission.has('connector:edit');
             const editBtn = canEdit ? `
-                            <button class="table-action-btn view" title="修改" onclick="doLoader('/connector/page/edit?id=${connector.id}')">
+                            <button class="table-action-btn view" title="Edit" onclick="doLoader('/connector/page/edit?id=${connector.id}')">
                                 <i class="fa fa-edit"></i>
                             </button>` : '';
             const copyBtn = canEdit ? `
-                            <button class="table-action-btn copy" title="复制" onclick="copyConnector('${connector.id}')">
+                            <button class="table-action-btn copy" title="Copy" onclick="copyConnector('${connector.id}')">
                                 <i class="fa fa-copy"></i>
                             </button>` : '';
             const deleteBtn = canEdit ? `
-                            <button class="table-action-btn delete" title="删除" onclick="deleteConnector('${connector.id}')">
+                            <button class="table-action-btn delete" title="Delete" onclick="deleteConnector('${connector.id}')">
                                 <i class="fa fa-trash"></i>
                             </button>` : '';
             return `
@@ -89,11 +89,11 @@ $(document).ready(function() {
                     </td>
                     <td><img draggable="false" src="${$basePath}/img/${escapeHtml(connector.config.connectorType || '')}.png" style="width: 50px; height: 50px;"></td>
                     <td title="${escapeHtml(connector.config.url || '')}">${escapeHtml(connector.config.url || '')}</td>
-                    <td>${Number(connector.status) === 1 ? '<span class="badge badge-success">在线</span>' : '<span class="badge badge-error">离线</span>'}</td>
+                    <td>${Number(connector.status) === 1 ? '<span class="badge badge-success">Online</span>' : '<span class="badge badge-error">Offline</span>'}</td>
                     <td>
                         <div class="flex items-center">
                             ${editBtn}
-                            <button class="table-action-btn play" title="测试" onclick="testConnector('${connector.id}')">
+                            <button class="table-action-btn play" title="Test" onclick="testConnector('${connector.id}')">
                                 <i class="fa fa-flash"></i>
                             </button>
                             ${copyBtn}
@@ -103,7 +103,7 @@ $(document).ready(function() {
                 </tr>
             `;
         },
-        emptyHtml:'<td colspan="5" class="text-center"><i class="fa fa-database empty-icon"></i><p class="empty-text">暂无连接</p><p class="empty-description">点击"添加"按钮创建第一个连接</p></td>',
+        emptyHtml:'<td colspan="5" class="text-center"><i class="fa fa-database empty-icon"></i><p class="empty-text">Other Organiser</p><p class="empty-description">Click Add button to create the first connection</p></td>',
         customPageSize:true
     });
 
@@ -121,62 +121,62 @@ $(document).ready(function() {
     });
     groupToolbar.setListTotal(pagination.total || 0);
 
-    // 搜索框输入事件
+    // SearchBox InputEvent
     searchInput = initSearch('searchConnector', function (searchKey) {
         pagination.doSearch(groupToolbar.getSearchParams({ searchKey: searchKey }));
     });
 
-    // 注册到全局定时刷新管理器
+    // Register to GlobalScheduledRefreshManager
     PageRefreshManager.register(() => {
         pagination.doSearch(groupToolbar.getSearchParams({ searchKey: searchInput.getValue() }), pagination.currentPage);
     });
 
 });
 
-// 复制连接
+// CopyConnect
 function copyConnector(id) {
     doPoster("/connector/copy", { id: id }, function (response) {
         if (response.success) {
-            bootGrowl('复制成功', 'success');
+            bootGrowl('Copied successfully', 'success');
             backIndexPage();
         } else {
-            bootGrowl('复制失败: ' + response.message, 'danger');
+            bootGrowl('Copy failed: ' + response.message, 'danger');
         }
     });
 }
 
-// 测试连接
+// Test Connection
 function testConnector(id) {
-    // 显示加载状态
+    // Show LoadingStatus
     const btn = event.target.closest('.table-action-btn');
     const originalText = btn.innerHTML;
-    btn.innerHTML = '<i class="fa fa-spinner fa-spin" title="测试中"></i>';
+    btn.innerHTML = '<i class="fa fa-spinner fa-spin" title="Testing"></i>';
     btn.disabled = true;
     doPoster("/connector/test", { id: id }, function (response) {
         btn.innerHTML = originalText;
         btn.disabled = false;
         if (response.success) {
-            bootGrowl('测试成功', 'success');
+            bootGrowl('Test successful.', 'success');
         } else {
-            bootGrowl('测试失败: ' + response.message, 'danger');
+            bootGrowl('Test failed: ' + response.message, 'danger');
         }
     });
 }
 
-// 删除连接
+// DeleteConnect
 function deleteConnector(id) {
     showConfirm({
-        title: '确定要删除连接？',
+        title: 'Are you sure you want to delete the connection?',
         icon: 'warning',
         size: 'large',
         confirmType: 'danger',
         onConfirm: function() {
             doPoster("/connector/remove", { id: id }, function (response) {
                 if (response.success) {
-                    bootGrowl('删除成功', 'success');
+                    bootGrowl('Deleted successfully', 'success');
                     backIndexPage();
                 } else {
-                    bootGrowl('删除失败: ' + response.message, 'danger');
+                    bootGrowl('Failed to delete: ' + response.message, 'danger');
                 }
             });
         }

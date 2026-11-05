@@ -1,11 +1,11 @@
 /**
- * 整库迁移 - 新增/编辑页
+ * Database migration - Create/EditPage
  */
 (function () {
     const page = window.DATABASE_SYNC_PAGE || { mode: 'add', readOnly: false, task: null };
     const TABLE_PAGE_SIZE = 100;
     const TABLE_DISPLAY_MAX = 2000;
-    /** 右侧表映射详情每页条数 */
+    /** Right surface mapDetailsEveryPageNumber of bars*/
     const DETAIL_PAGE_SIZE = 10;
 
     const state = {
@@ -24,7 +24,7 @@
                 typeCounts: {}
             },
             tableSearchKey: '',
-            /** 当前连接器在选定库后是否提供 Schema 列表（由 getSchema 接口决定） */
+            /** CurrentConnectorin SelectionLibraryBackYesNoProvisionSchema List（BygetSchema InterfaceDecision)*/
             schemaEnabled: false
         },
         target: { connectorId: '' },
@@ -38,13 +38,13 @@
     let sourceConnectorSelect = null;
     let targetConnectorSelect = null;
     let pickerTargetConnectorSelect = null;
-    /** 连接器类型/名称缓存（远程分页累积） */
+    /** ConnectorType/NameC ConcreteminPageCumulative)*/
     let connectorTypeCache = {};
     let connectorLabelCache = {};
-    /** 目标连接远程配置（preferredType 随源端变化） */
+    /** Target ConnectionRemoteConfigure（preferredType Whatever.Sourcechange)*/
     let targetConnectorRemoteExtra = null;
     let pickerTargetConnectorRemoteExtra = null;
-    /** 暂不支持作为源端的连接器类型 */
+    /** Retention of actionSourceYes.ConnectorType */
     const UNSUPPORTED_SOURCE_CONNECTOR_TYPES = [];
     let tableTreeScrollBound = false;
     let tableCbSeq = 0;
@@ -53,9 +53,9 @@
     let detailPanelBound = false;
     let tablePickerModal = null;
     let tablePickerSearchTimer = null;
-    /** add=新建库映射；append=向当前库映射追加表 */
+    /** add=NewLibraryMaps;append=CurrentLibraryMap Append Table*/
     let tablePickerMode = 'add';
-    /** 程序化刷新连接器选项时忽略 onSelect，避免 setData 自动选中首项覆盖映射数据 */
+    /** ProgrammaticRefreshConnectorIgnore optionsonSelect，AvoidsetData AutoSelect FirstOverwriteMapData */
     let suppressConnectorSelect = false;
 
     function isReadOnly() {
@@ -181,8 +181,8 @@
     }
 
     /**
-     * 详情区目标连接按当前库映射的源/目标连接器过滤；
-     * 弹窗内目标连接按顶部源端过滤。二者互不干扰。
+     * DetailsSector EntitiesTarget ConnectionPress CurrentLibraryMap source/Target ConnectionFilters;
+     * In the window.Target ConnectionPress TopSourceFilter. alleges: The two alleges no interference.
      */
     function refreshTargetConnectorOptions() {
         const block = getActiveMappingBlock();
@@ -245,7 +245,7 @@
 
     function isOracleConnector(connectorId) {
         const type = normalizeConnectorType(getConnectorTypeById(connectorId));
-        // 达梦 / OceanBaseOracle 与 Oracle 一样以 Schema(用户) 为命名空间，无独立库列表
+        // Dream /OceanBaseOracle and Oracle Same asSchema(User) To name space,NoneIndependenceLibraryList
         return type === 'oracle' || type === 'dameng' || type === 'oceanbaseoracle';
     }
 
@@ -341,7 +341,7 @@
         return !!tablePickerModal;
     }
 
-    /** 弹窗内：源库/Schema 选中后联动覆盖目标库名、目标 Schema */
+    /** In the window:Source database/Schema OrganisationOverwriteTarget database name、Target schema */
     function syncPickerTargetFromSource() {
         const srcDb = (state.source.database || '').trim();
         const srcSchema = (state.source.schema || '').trim();
@@ -354,7 +354,7 @@
         }
     }
 
-    /** 源端库/Schema 就绪后填充目标命名空间；弹窗内强制联动，详情区仅在为空时默认填充 */
+    /** SourceLibrary/Schema Fill after ReadyObjective CombinedName space; forced connection in the window,DetailsDefault fill only when empty*/
     function fillTargetFromSource() {
         if (isPickerModalOpen()) {
             syncPickerTargetFromSource();
@@ -388,14 +388,14 @@
 
     function getConnectorLabel(selectId, connectorId) {
         if (!connectorId) {
-            return '未选择';
+            return 'No Selection';
         }
         const text = $('#' + selectId + ' option[value="' + connectorId + '"]').text() || '';
         const name = text.replace(/\([^)]*\)\s*$/, '').trim();
         return name || connectorId;
     }
 
-    /** 程序化赋值时不触发 onSelect，避免与 syncDetailPanelFromActiveMapping 形成递归 */
+    /** ProceduralizationValueTime does not triggeronSelect，Avoidand syncDetailPanelFromActiveMapping Form Recursive*/
     function setSelectValues(api, values) {
         if (!api || typeof api.setValues !== 'function') {
             return;
@@ -431,7 +431,7 @@
     }
 
     /**
-     * 临时方案：仅允许一条库映射关系。
+     * Interim programme: only one permitLibraryMapping。
      */
     function updateAddMappingButtonState() {
         const $btn = $('#btnAddDbMapping');
@@ -441,7 +441,7 @@
         const limitReached = state.mappings.length >= 1;
         $btn.prop('disabled', limitReached);
         if (limitReached) {
-            $btn.attr('title', '当前仅支持单条库映射关系');
+            $btn.attr('title', 'Currently only single library map relationships are supported');
         } else {
             $btn.removeAttr('title');
         }
@@ -547,23 +547,23 @@
     }
 
     function formatMappingCardSourceLineHtml(block) {
-        return '源&nbsp;&nbsp;&nbsp;&nbsp;库:' + formatDbWithConnectorType(getMappingSourceDbName(block), getMappingSourceConnectorId(block));
+        return 'Source &nbsp; &nbsp; &nbsp; &nbsp; library:' + formatDbWithConnectorType(getMappingSourceDbName(block), getMappingSourceConnectorId(block));
     }
 
     function formatMappingCardTargetLineHtml(block) {
         const connId = getMappingTargetConnectorId(block);
         const connName = getConnectorDisplayName(connId);
         const dbPart = formatDbWithConnectorType(getMappingTargetDbName(block), connId);
-        if (!connName || connName === '未选择') {
-            return '目标库: ' + dbPart;
+        if (!connName || connName === 'No Selection') {
+            return 'Target DB: ' + dbPart;
         }
-        return '目标库: ' + dbPart + ' · ' + escapeHtml(connName);
+        return 'Target DB: ' + dbPart + ' · ' + escapeHtml(connName);
     }
 
     function getMappingSourceLineTitle(block) {
         const db = getMappingSourceDbName(block) || '—';
         const type = getConnectorTypeById(getMappingSourceConnectorId(block));
-        return type ? ('源库: ' + db + '(' + type + ')') : ('源库: ' + db);
+        return type ? ('Source: ' + db + '(' + type + ')') : ('Source: ' + db);
     }
 
     function getMappingTargetLineTitle(block) {
@@ -571,8 +571,8 @@
         const connId = getMappingTargetConnectorId(block);
         const type = getConnectorTypeById(connId);
         const connName = getConnectorDisplayName(connId);
-        let title = type ? ('目标库: ' + db + '(' + type + ')') : ('目标库: ' + db);
-        if (connName && connName !== '未选择') {
+        let title = type ? ('Target DB: ' + db + '(' + type + ')') : ('Target DB: ' + db);
+        if (connName && connName !== 'No Selection') {
             title += ' · ' + connName;
         }
         return title;
@@ -642,7 +642,7 @@
         const srcLabel = formatMappingSourceLabel(block);
         const tgtNs = formatTargetNamespaceLabel(block);
         $('#mappingDetailTitle').html(
-            '<i class="fa fa-table"></i> 表映射明细'
+            '<i class="fa fa-table"></i>Map Details'
             + (srcLabel ? ' <span class="text-tertiary text-sm">(' + escapeHtml(srcLabel) + ' ➔ ' + escapeHtml(tgtNs) + ')</span>' : '')
         );
     }
@@ -682,7 +682,7 @@
         const srcLabel = formatMappingSourceLabel(block);
         const tgtNs = formatTargetNamespaceLabel(block);
         $('#mappingDetailTitle').html(
-            '<i class="fa fa-table"></i> 表映射明细'
+            '<i class="fa fa-table"></i>Map Details'
             + (srcLabel ? ' <span class="text-tertiary text-sm">(' + escapeHtml(srcLabel) + ' ➔ ' + escapeHtml(tgtNs) + ')</span>' : '')
         );
     }
@@ -708,7 +708,7 @@
         });
         syncMappingsJson();
         renderMappingDetail(false);
-        bootGrowl('已批量更新目标表名', 'success');
+        bootGrowl('Batch updated target table name', 'success');
     }
 
     function batchAddTablePrefix() {
@@ -717,27 +717,27 @@
         }
         const block = state.mappings[state.activeMappingIndex];
         if (!block || !(block.tableMappings || []).length) {
-            bootGrowl('当前映射没有可编辑的表', 'warning');
+            bootGrowl('There is no editable table for the current map', 'warning');
             return;
         }
         const inputId = 'batchTablePrefixInput';
         showConfirm({
-            title: '批量加目标表前缀',
-            message: '将为当前映射下的所有目标表名追加此前缀',
+            title: 'Batch add target table prefix',
+            message: 'Add Introducing prefixes to all target table names of the current map',
             icon: 'info',
             size: 'normal',
-            confirmText: '确定',
+            confirmText: 'OK',
             confirmType: 'primary',
             body: '<div class="form-item mb-0">'
-                + '<label class="form-label" for="' + inputId + '">表名前缀</label>'
+                + '<label class="form-label" for="' + inputId + '"\'The Table Name Prefix</label>'
                 + '<div class="form-control-area">'
-                + '<input type="text" id="' + inputId + '" class="form-control" maxlength="64" value="sync_" placeholder="例如 sync_"/>'
+                + '<input type="text" id="' + inputId + '54% of the world\'s population.'
                 + '</div></div>',
             onConfirm: function () {
                 const $input = $('#' + inputId);
                 const prefix = ($input.length ? $input.val() : '') || '';
                 if (!String(prefix).trim()) {
-                    bootGrowl('前缀不能为空', 'warning');
+                    bootGrowl('Prefix cannot be empty', 'warning');
                     return;
                 }
                 applyTablePrefixToBlock(block, prefix);
@@ -769,7 +769,7 @@
             } else {
                 state.source.schemaEnabled = false;
                 schemaSelect.setData([]);
-                bootGrowl('获取 Schema 失败: ' + (response.message || ''), 'danger');
+                bootGrowl('Can not open message ' + (response.message || ''), 'danger');
             }
             updateTargetSchemaVisibility();
         });
@@ -781,7 +781,7 @@
         state.source.schemaEnabled = false;
         state.source.checked = {};
         resetSourceTableList();
-        renderSourceTableTreeEmpty('暂无表，请选择连接器、库与 Schema');
+        renderSourceTableTreeEmpty('No tables yet. Select connector, database and schema');
         if (sourceDbSelect) {
             sourceDbSelect.setData([]);
         }
@@ -790,7 +790,7 @@
         }
     }
 
-    /** 打开添加映射弹窗时重置表单，保留已加载的库列表，不沿用上次选择 */
+    /** OpenAddWhen mapping the bullet windowResetForm, retain loadedLibraryList，Disable last selection*/
     function resetTablePickerForm() {
         tablePickerMode = 'add';
         state.source.database = '';
@@ -799,7 +799,7 @@
         state.source.checked = {};
         state.source.tableSearchKey = '';
         resetSourceTableList();
-        renderSourceTableTreeEmpty('暂无表，请选择连接器、库与 Schema');
+        renderSourceTableTreeEmpty('No tables yet. Select connector, database and schema');
         $('#sourceTableSearch').val('');
         $('#pickerTargetDatabase').val('');
         $('#pickerTargetSchema').val('');
@@ -816,7 +816,7 @@
         return tablePickerMode === 'append';
     }
 
-    /** 当前库映射已添加的源表名集合（追加模式下去重展示） */
+    /** CurrentLibraryMap alreadyAddYes.Source Table NamePool (additional mode to re-display)*/
     function getExcludedSourceTableSet() {
         const excluded = {};
         if (!isAppendTablePickerMode()) {
@@ -846,7 +846,7 @@
         return Array.isArray(data) && data.length > 0;
     }
 
-    /** 编辑页等场景下源端连接器已赋值但未走 onSelect 时，补拉弹窗内的库/Schema 选项 */
+    /** EditPageWait for the scene.SourceConnectorGrantedValueBut not gone.onSelect # When you're pulling in #Library/Schema Options*/
     function ensureSourcePickerOptionsLoaded() {
         const connectorId = state.source.connectorId;
         if (!connectorId) {
@@ -908,7 +908,7 @@
                     sourceDbSelect.setData(db);
                 }
             } else {
-                bootGrowl('获取数据库失败: ' + (response.message || ''), 'danger');
+                bootGrowl('Could not close temporary folder: %s ' + (response.message || ''), 'danger');
             }
         });
     }
@@ -931,7 +931,7 @@
         const s = state.source;
         if (!s.connectorId) {
             resetSourceTableList();
-            renderSourceTableTreeEmpty('暂无表，请选择连接器、库与 Schema');
+            renderSourceTableTreeEmpty('No tables yet. Select connector, database and schema');
             return;
         }
         const key = searchKey != null ? searchKey : s.tableSearchKey;
@@ -984,14 +984,14 @@
             s.tableMeta.loading = false;
             if (!res.success) {
                 updateTableTreeFooter(false);
-                bootGrowl(res.message || '加载表失败', 'danger');
+                bootGrowl(res.message || 'Loading table failed', 'danger');
                 if (typeof onComplete === 'function') {
                     onComplete();
                 }
                 return;
             }
             const payload = res.data || {};
-            // 服务端已按 excludeTablesJson 排除已添加表，前端不再二次过滤翻页
+            // Service has been pressedexcludeTablesJson ExcludedAdd Table，Do not double filter the frontendPage
             const pageItems = payload.data || [];
             s.tableMeta.fetchedCount = offset + pageItems.length;
             s.tableMeta.total = payload.total || 0;
@@ -1000,8 +1000,8 @@
                 refreshTableListDisplayMeta(s, false);
                 renderSourceTableTreeEmpty(
                     isAppendTablePickerMode()
-                        ? '当前库映射下无可添加的表（已添加的表已隐藏）'
-                        : '暂无表，请检查库/Schema 或调整搜索条件'
+                        ? 'The OVERVIEW OF THE CURRENT COURSE'
+                        : 'For the time being, check the library/ Schema or adjust the search conditions'
                 );
             } else if (reset) {
                 s.tables = pageItems.slice();
@@ -1034,7 +1034,7 @@
             return;
         }
         if (s.tableMeta.loading) {
-            bootGrowl('正在加载表列表，请稍候', 'warning');
+            bootGrowl('Loading table list, please wait', 'warning');
             return;
         }
         fetchSourceTablePage(false, function () {
@@ -1096,7 +1096,7 @@
             }
             const cbId = $cb.attr('id');
             $cb.checkboxGroup(TABLE_TREE_CHECKBOX_OPTIONS);
-            // 单选初始化会先包裹 checkbox-group，原 label 不再紧邻 input，需手动移除避免文案重复
+            // The initialization of the individual will start with the package.checkbox-group，Originallabel It's no longer close.input，Manual removal to avoid duplication of files
             if (cbId) {
                 $('label[for="' + cbId + '"]').each(function () {
                     const $label = $(this);
@@ -1176,7 +1176,7 @@
         const $box = $('#sourceTableTree');
         const meta = state.source.tableMeta;
         if (!meta.total) {
-            renderSourceTableTreeEmpty('暂无表，请检查库/Schema 或调整搜索条件');
+            renderSourceTableTreeEmpty('For the time being, check the library/ Schema or adjust the search conditions');
             return;
         }
         const folders = getTableFolderDefs();
@@ -1266,7 +1266,7 @@
         }
         const meta = state.source.tableMeta;
         if (loading) {
-            $footer.addClass('is-loading').html('<i class="fa fa-spinner fa-spin"></i> 加载中...');
+            $footer.addClass('is-loading').html('<i class="fa fa-spinner fa-spin"></i>Loading...');
             return;
         }
         $footer.removeClass('is-loading');
@@ -1276,11 +1276,11 @@
         }
         const selected = getSelectedTableCount();
         const total = meta.cappedTotal || meta.total;
-        let html = '<span class="picker-scroll-footer-count">已选中 ' + selected + ' / 共' + total + ' 张表</span>';
+        let html = '<span class="picker-scroll-footer-count">Selected ' + selected + ' / Total' + total + ' Watch</span>';
         if (meta.hasMore) {
-            html += '<span class="picker-scroll-footer-hint">向下滚动加载更多</span>';
+            html += '<span class="picker-scroll-footer-hint">Scroll More Down</span>';
         } else if (meta.truncated) {
-            html += '<span class="picker-scroll-footer-hint">共 ' + meta.total + ' 张，最多展示 ' + TABLE_DISPLAY_MAX + ' 张</span>';
+            html += '<span class="picker-scroll-footer-hint">Total ' + meta.total + ' Chang, show up ' + TABLE_DISPLAY_MAX + ' Chang!</span>';
         }
         $footer.html(html);
     }
@@ -1357,8 +1357,8 @@
     }
 
     /**
-     * 将表树 DOM 中的勾选状态写回 state（仅更新当前已渲染的表行，不覆盖未渲染项）。
-     * 解决再次打开弹窗时 UI 仍勾选但 state 已被清空导致校验失败的问题。
+     * Put the watch treeDOM Check inStatusWrite backstate（Update only the currently rendered table line, noOverwriteUnrendered).
+     * When you open the window againUI Still checked butstate AlreadyClearCause validationFailedThe problem.
      */
     function syncCheckedFromTableTreeDom() {
         $('#sourceTableTree .db-sync-table-cb').each(function () {
@@ -1386,7 +1386,7 @@
     }
 
     /**
-     * 按当前列表顺序为库映射、表映射生成连续序号（从 1 开始），保存时与后端一致。
+     * Press CurrentListOrder isLibraryMap, MapGenerateContinuousOrderNumber (from) 1 I'm not sure what I'm talking about.SaveTimeandThe back end is the same.
      */
     function reindexMappings() {
         state.mappings.forEach(function (block, dbIdx) {
@@ -1403,7 +1403,7 @@
     }
 
     /**
-     * 同一源库可配置多个不同目标库；仅当源端与目标端命名空间完全一致时才合并表映射。
+     * The same.Source databaseYeah.ConfigureMultipleTarget database；Only whenSourceandObjective CombinedMerge the map only when the end name space is fully consistent.
      */
     function findMappingIndex(sourceDatabase, sourceSchema, targetDatabase, targetSchema,
                               sourceConnectorId, targetConnectorId) {
@@ -1446,13 +1446,13 @@
         const btnDisabled = ro ? ' disabled' : '';
         return '<div class="dbsyncer-select-panel table-picker-body">'
             + '<div class="mb-4">'
-            + '<h5 class="text-sm font-medium mb-3"><span class="text-primary">1.</span> 选择源库</h5>'
+            + '<h5 class="text-sm font-medium mb-3"><span class="text-primary">1.</span>Select Source</h5>'
             + (appendMode
-                ? '<p class="text-warning text-sm mb-3"><i class="fa fa-info-circle"></i> 已固定为当前库映射的源库，已添加的表不显示</p>'
+                ? '<p class="text-warning text-sm mb-3"><i class="fa fa-info-circle"></i>The database has been fixed to the current library map and the added table is not shown</p>'
                 : '')
             + '<div class="grid grid-cols-2">'
             + buildPickerFormField(
-                '库',
+                'Library',
                 '<select id="sourceDatabase" class="form-control"' + selectDisabled + '></select>',
                 { controlType: 'select' }
             )
@@ -1463,37 +1463,37 @@
             )
             + '</div></div>'
             + '<div class="mb-4">'
-            + '<h5 class="text-sm font-medium mb-3"><span class="text-primary">2.</span> 指定目标库</h5>'
+            + '<h5 class="text-sm font-medium mb-3"><span class="text-primary">2.</span>Specify the target library</h5>'
             + '<p class="text-warning text-sm mb-3">'
-            + '<i class="fa fa-info-circle"></i> 暂时不支持异构类型(正在开发中)'
+            + '<i class="fa fa-info-circle"></i>Isomer type not supported for the time being (under development)'
             + '</p>'
             + '<div class="border border-dashed rounded-lg p-4 bg-secondary">'
             + '<div class="grid grid-cols-2">'
             + buildPickerFormField(
-                '目标连接<strong class="text-primary">*</strong>',
+                'Target Connection<strong class="text-primary">*</strong>',
                 '<select id="pickerTargetConnectorId" class="form-control"' + selectDisabled + '></select>',
                 { controlType: 'select' }
             )
             + buildPickerFormField(
-                '目标库名',
-                '<input type="text" id="pickerTargetDatabase" class="form-control" maxlength="128" placeholder="目标库名"'
+                'Target database name',
+                '== sync, corrected by elderman =='
                 + inputReadonly + '/>'
             )
             + buildPickerFormField(
-                '目标 Schema',
-                '<input type="text" id="pickerTargetSchema" class="form-control" maxlength="128" placeholder="目标 Schema"'
+                'Target schema',
+                '== sync, corrected by elderman =='
                 + inputReadonly + '/>',
                 { wrapId: 'pickerTargetSchemaWrap' }
             )
             + '</div></div></div>'
             + '<div>'
-            + '<h5 class="text-sm font-medium mb-3"><span class="text-primary">3.</span> 勾选需要同步的物理表</h5>'
+            + '<h5 class="text-sm font-medium mb-3"><span class="text-primary">3.</span>Check physical tables that require synchronization</h5>'
             + '<div class="flex items-center justify-between gap-2 mb-2">'
             + '<div class="search-wrapper flex-1"><i class="fa fa-search search-icon"></i>'
-            + '<input id="sourceTableSearch" class="search-input" type="text" maxlength="64" placeholder="输入表名过滤搜索..."'
+            + '"Input id" is "sourcetableSearch"'
             + (ro ? ' readonly' : '') + '/></div>'
             + '<div class="flex items-center gap-2 flex-shrink-0">'
-            + '<button type="button" id="btnClearAllTables" class="btn btn-outline btn-sm"' + btnDisabled + '>清空</button>'
+            + '<button type="button" id="btnClearAllTables" class="btn btn-outline btn-sm"' + btnDisabled + '> Clear</button>'
             + '</div></div>'
             + '<div id="sourceTableTree" class="picker-scroll picker-tree-checkbox-group"></div>'
             + '</div></div>';
@@ -1599,19 +1599,19 @@
         }
         syncActiveMappingFromDetailPanel();
         if (!state.source.connectorId) {
-            bootGrowl('请先选择源端连接器', 'warning');
+            bootGrowl('Please select a source connector first', 'warning');
             return;
         }
         closeTablePickerModal();
         tablePickerMode = 'add';
 
         tablePickerModal = showConfirm({
-            title: '选择源库与目标表映射',
+            title: 'Tools',
             size: 'max',
             position: 'center',
             body: buildTablePickerBodyHtml(),
-            confirmText: '确认添加',
-            cancelText: '取消',
+            confirmText: 'Confirm Add',
+            cancelText: 'Cancel',
             closeOnConfirm: false,
             onConfirm: function () {
                 if (addDatabaseMapping()) {
@@ -1626,11 +1626,11 @@
         initTablePickerControls();
         ensureSourcePickerOptionsLoaded();
         refreshPickerTargetDefaults();
-        renderSourceTableTreeEmpty('暂无表，请选择连接器、库与 Schema');
+        renderSourceTableTreeEmpty('No tables yet. Select connector, database and schema');
     }
 
     /**
-     * 针对当前库映射继续添加表：源/目标命名空间固定，已添加源表不展示。
+     * For the currentLibraryMap ContinueAdd Table：Source/Objective CombinedNamespace fixed, alreadyAddSource tableDon't show.
      */
     function openAppendTablePickerModal() {
         if (isReadOnly()) {
@@ -1639,17 +1639,17 @@
         syncActiveMappingFromDetailPanel();
         const block = getActiveMappingBlock();
         if (!block) {
-            bootGrowl('请先选择左侧库映射', 'warning');
+            bootGrowl('Please select the left library map first', 'warning');
             return;
         }
         const sourceConnectorId = getMappingSourceConnectorId(block) || state.source.connectorId;
         if (!sourceConnectorId) {
-            bootGrowl('请先选择源端连接器', 'warning');
+            bootGrowl('Please select a source connector first', 'warning');
             return;
         }
         closeTablePickerModal();
         tablePickerMode = 'append';
-        // 先写入固定命名空间，避免库列表 setData 自动选中首项触发误拉表
+        // Write a fixed namespace first, avoidLibraryList setData Automatically select the first trigger trigger error tab
         state.source.connectorId = sourceConnectorId;
         state.source.database = block.sourceDatabase || '';
         state.source.schema = (block.sourceSchema || '').trim();
@@ -1658,12 +1658,12 @@
         resetSourceTableList();
 
         tablePickerModal = showConfirm({
-            title: '继续添加表（已添加的表不显示）',
+            title: 'Continue adding table (added table does not appear)',
             size: 'max',
             position: 'center',
             body: buildTablePickerBodyHtml(),
-            confirmText: '确认添加',
-            cancelText: '取消',
+            confirmText: 'Confirm Add',
+            cancelText: 'Cancel',
             closeOnConfirm: false,
             onConfirm: function () {
                 if (addDatabaseMapping()) {
@@ -1690,22 +1690,22 @@
         $('#pickerTargetSchema').val(block.targetSchema || '').prop('readonly', true);
         updateTargetSchemaVisibility();
         updateTargetDatabaseFieldVisibility();
-        renderSourceTableTreeEmpty('正在加载可添加的表...');
+        renderSourceTableTreeEmpty('Loading addable tables...');
         loadAppendSourceOptionsThenTables(block);
     }
 
     /**
-     * 追加模式专用：固定源库后立即拉表；库/Schema 下拉仅做展示填充，互不等待，避免空白。
+     * Additional mode dedicated: fixedSource database(b) Draw immediately thereafter;Library/Schema Draw Coverage only, without waiting to avoid gaps.
      */
     function loadAppendSourceOptionsThenTables(block) {
         const connectorId = state.source.connectorId;
         const sourceDb = block.sourceDatabase || '';
         const sourceSchema = (block.sourceSchema || '').trim();
         if (!connectorId) {
-            renderSourceTableTreeEmpty('源端连接器不能为空');
+            renderSourceTableTreeEmpty('Source connection cannot be empty');
             return;
         }
-        // 关键：先按映射固定值拉表，不依赖下拉选项加载结果
+        // Key: Map fixed firstValueDraw 194.Result
         state.source.database = isOracleSourceConnector() ? '' : sourceDb;
         state.source.schema = sourceSchema;
         loadSourceTables(null, true);
@@ -1736,7 +1736,7 @@
                 return;
             }
             if (!response.success) {
-                bootGrowl('获取数据库失败: ' + (response.message || ''), 'danger');
+                bootGrowl('Could not close temporary folder: %s ' + (response.message || ''), 'danger');
                 return;
             }
             const dbOptions = (response.data || []).map(function (dbName) {
@@ -1746,7 +1746,7 @@
                 sourceDbSelect.setData(dbOptions);
                 setSelectValues(sourceDbSelect, sourceDb ? [sourceDb] : []);
             }
-            // 下拉回填后再次固定，防止 setData 改写 state
+            // Pull back and fill in again - preventsetData Rewritestate
             state.source.database = sourceDb;
             state.source.schema = sourceSchema;
             if (!sourceDb) {
@@ -1788,7 +1788,7 @@
     }
 
     /**
-     * 无库映射时清空右侧表映射展示区
+     * NoneLibraryMap timeClearRight surface map display area
      */
     function resetMappingDetailView() {
         state.activeMappingIndex = -1;
@@ -1821,25 +1821,25 @@
             const active = idx === state.activeMappingIndex ? ' is-active' : '';
             html += '<div class="list-card' + active + '" data-index="' + idx + '">';
             if (!isReadOnly()) {
-                html += '<button type="button" class="list-card-remove" data-index="' + idx + '" title="删除库映射">'
+                html += '<button type="button" class="list-card-remove" data-index="' + idx + '"title = "Demand Library Map"'
                     + '<i class="fa fa-times"></i></button>';
             }
             if (useFlowCard) {
                 html += formatMappingCardBodyHtml(block)
-                    + '<div class="list-card-footer">已选择 ' + count + ' 张表</div>';
+                    + '<div class="list-card-footer">Selected ' + count + ' Watch</div>';
             } else {
                 html += '<div class="flex items-center gap-2 text-sm mb-1">'
-                    + '<span class="list-card-label">源&nbsp;&nbsp;库</span>'
+                    + '<span class="list-card-label">Source &nbsp; &nbsp; library</span>'
                     + '<span class="list-card-value" title="' + escapeHtml(block.sourceDatabase || '') + '">'
                     + escapeHtml(block.sourceDatabase || '') + '</span></div>'
                     + (block.sourceSchema
                         ? ('<div class="flex items-center gap-2 text-sm mb-1">'
-                            + '<span class="list-card-label">源Schema</span>'
+                            + '<span class="list-card-label">Source 142</span>'
                             + '<span class="list-card-value" title="' + escapeHtml(block.sourceSchema || '') + '">'
                             + escapeHtml(block.sourceSchema || '') + '</span></div>')
                         : '')
                     + '<div class="flex items-center gap-2 text-sm mb-1">'
-                    + '<span class="list-card-label">目标</span>'
+                    + '<span class="list-card-label">Objective</span>'
                     + '<input type="text" class="form-control form-control-sm flex-1 min-w-0 mapping-card-tgt-db"'
                     + ' data-index="' + idx + '" value="' + escapeHtml(block.targetDatabase || '') + '"'
                     + ' title="' + escapeHtml(block.targetDatabase || '') + '"'
@@ -1847,14 +1847,14 @@
                     + '</div>'
                     + (block.sourceSchema
                         ? ('<div class="flex items-center gap-2 text-sm mb-1">'
-                            + '<span class="list-card-label">目标Schema</span>'
+                            + '<span class="list-card-label">Target/89</span>'
                             + '<input type="text" class="form-control form-control-sm flex-1 min-w-0 mapping-card-tgt-schema"'
                             + ' data-index="' + idx + '" value="' + escapeHtml(block.targetSchema || '') + '"'
                             + ' title="' + escapeHtml(block.targetSchema || '') + '"'
                             + (isReadOnly() ? ' readonly' : '') + '/>'
                             + '</div>')
                         : '')
-                    + '<div class="list-card-footer">#' + (block.index || (idx + 1)) + ' · 共 ' + count + ' 个对象</div>';
+                    + '<div class="list-card-footer">#' + (block.index || (idx + 1)) + ' :: Total ' + count + ' Object</div>';
             }
             html += '</div>';
         });
@@ -1879,7 +1879,7 @@
             e.stopPropagation();
             const idx = Number($(this).data('index'));
             showConfirm({
-                title: '确定要删除这条库同步路由吗？',
+                title: 'Are you sure you want to delete the library sync path?',
                 icon: 'warning',
                 size: 'large',
                 confirmType: 'danger',
@@ -1936,7 +1936,7 @@
                 + ' data-b="' + blockIndex + '" data-r="' + rowIndex + '" value="' + escapeHtml(targetTable) + '"'
                 + ' title="' + escapeHtml(targetTable) + '"/></td>'
                 + '<td><button type="button" class="table-action-btn delete btn-rm-detail-row"'
-                + ' data-b="' + blockIndex + '" data-r="' + rowIndex + '" title="删除">'
+                + ' data-b="' + blockIndex + '" data-r="' + rowIndex + '"title = delete"'
                 + '<i class="fa fa-times"></i></button></td>';
         }
         return html + '</tr>';
@@ -1960,11 +1960,11 @@
         }
         $pagination.removeClass('hidden');
 
-        $bar.append(createDetailNavBtn('首页', 'fa-angle-double-left', currentPage === 1, function () {
+        $bar.append(createDetailNavBtn('Home', 'fa-angle-double-left', currentPage === 1, function () {
             renderDetailTablePage(1);
         }));
 
-        $bar.append(createDetailNavBtn('上一页', 'fa-angle-left', currentPage === 1, function () {
+        $bar.append(createDetailNavBtn('Previous', 'fa-angle-left', currentPage === 1, function () {
             renderDetailTablePage(currentPage - 1);
         }));
 
@@ -1980,11 +1980,11 @@
             $bar.append(pageBtn);
         }
 
-        $bar.append(createDetailNavBtn('下一页', 'fa-angle-right', currentPage === totalPages, function () {
+        $bar.append(createDetailNavBtn('Next', 'fa-angle-right', currentPage === totalPages, function () {
             renderDetailTablePage(currentPage + 1);
         }));
 
-        $bar.append(createDetailNavBtn('末页', 'fa-angle-double-right', currentPage === totalPages, function () {
+        $bar.append(createDetailNavBtn('Last page', 'fa-angle-double-right', currentPage === totalPages, function () {
             renderDetailTablePage(totalPages);
         }));
     }
@@ -2016,7 +2016,7 @@
         }
         if (!html) {
             const colSpan = isReadOnly() ? 3 : 4;
-            html = '<tr><td colspan="' + colSpan + '" class="text-center text-tertiary py-4">暂无表映射</td></tr>';
+            html = '<tr><td colspan="' + colSpan + '"class="text-center text-tertiary py-4"</td></tr>';
         }
         $('#mappingDetailTableBody').html(html);
         renderDetailPagination(page, totalPages, total);
@@ -2057,16 +2057,16 @@
     }
 
     /**
-     * 校验目标表名非空；失败时定位到对应库映射并聚焦输入框。
-     * @returns {boolean} true 表示通过
+     * Verify INTRODUCTIONTarget Table NameNon-empty;FailedPosition to matchLibraryMap and focus the input box.
+     * @returns {boolean} true 1) Passed
      */
     function validateTargetTablesNotEmpty() {
         const hit = findFirstEmptyTargetTable();
         if (!hit) {
             return true;
         }
-        const sourceLabel = hit.sourceTable ? '源表「' + hit.sourceTable + '」' : '存在表';
-        bootGrowl('库映射 #' + (hit.mappingIndex + 1) + '：' + sourceLabel + '的目标表名不能为空', 'warning');
+        const sourceLabel = hit.sourceTable ? 'Source Table' + hit.sourceTable + '」' : 'Existing Table';
+        bootGrowl('Library Map#' + (hit.mappingIndex + 1) + '：' + sourceLabel + 'The target list name cannot be empty', 'warning');
         state.activeMappingIndex = hit.mappingIndex;
         renderMappingSidebar();
         renderMappingDetail(false);
@@ -2129,22 +2129,22 @@
     function addDatabaseMapping() {
         const sourceTables = getCheckedSourceTableNames();
         if (!state.source.connectorId) {
-            bootGrowl('请先选择源端连接器', 'warning');
+            bootGrowl('Please select a source connector first', 'warning');
             return false;
         }
         const pickerTargetId = getPickerTargetConnectorId();
         const sourceConnectorId = state.source.connectorId;
         const targetConnectorId = pickerTargetId || state.target.connectorId;
         if (!sourceConnectorId) {
-            bootGrowl('请先选择源端连接器', 'warning');
+            bootGrowl('Please select a source connector first', 'warning');
             return false;
         }
         if (!targetConnectorId) {
-            bootGrowl('请选择目标连接', 'warning');
+            bootGrowl('Please select the target connection', 'warning');
             return false;
         }
         if (!isSameConnectorType(sourceConnectorId, targetConnectorId)) {
-            bootGrowl('目标连接器必须与源端连接器同类型', 'warning');
+            bootGrowl('Target connector must be of the same type as source connector', 'warning');
             return false;
         }
         state.target.connectorId = targetConnectorId;
@@ -2154,16 +2154,16 @@
         const targetIsOracle = isOracleTargetConnector(targetConnectorId);
         if (!isSourceNamespaceReady()) {
             if (state.source.schemaEnabled) {
-                bootGrowl('请先选择源库和 Schema', 'warning');
+                bootGrowl('Please select the source library and Schema first', 'warning');
             } else if (sourceIsOracle) {
-                bootGrowl('请先选择源 Schema', 'warning');
+                bootGrowl('Please select the source, Schema.', 'warning');
             } else {
-                bootGrowl('请先选择源库', 'warning');
+                bootGrowl('Please select the source library first', 'warning');
             }
             return false;
         }
         if (!sourceTables.length) {
-            bootGrowl('请至少勾选一张源表，可使用「全选」', 'warning');
+            bootGrowl('Please tick at least one source table to use', 'warning');
             return false;
         }
         const sourceDb = sourceIsOracle ? '' : (state.source.database || '');
@@ -2185,11 +2185,11 @@
         }
         if (targetIsOracle) {
             if (!defaultTargetSchema) {
-                bootGrowl('请填写目标 Schema', 'warning');
+                bootGrowl('Please complete the target, Schema.', 'warning');
                 return false;
             }
         } else if (!defaultTargetDb) {
-            bootGrowl('目标库名不能为空', 'warning');
+            bootGrowl('Target library name cannot be empty.', 'warning');
             return false;
         }
         const existIdx = findMappingIndex(sourceDb, sourceSchema, defaultTargetDb, defaultTargetSchema,
@@ -2218,7 +2218,7 @@
             });
             state.activeMappingIndex = existIdx;
             if (!added) {
-                bootGrowl('该源库到目标库的映射已存在!', 'info');
+                bootGrowl('Map of the source to the target library already exists!', 'info');
             }
         } else {
             state.mappings.push({
@@ -2296,13 +2296,13 @@
             }
             setOverwriteSchemaChecked(false);
             showConfirm({
-                title: '确认开启覆盖结构？',
-                message: '开启会删除目标库已经存在的表',
+                title: 'Confirming an open cover structure?',
+                message: 'Opening removes the already existing table of the target library',
                 size: 'large',
                 icon: 'warning',
                 confirmType: 'danger',
-                confirmText: '确认',
-                cancelText: '取消',
+                confirmText: 'Confirm',
+                cancelText: 'Cancel',
                 onConfirm: function () {
                     setOverwriteSchemaChecked(true);
                 },
@@ -2379,7 +2379,7 @@
                 localStorage.setItem(key, JSON.stringify(parsed));
             }
         } catch (e) {
-            console.warn('[database-sync] 重置列表分页失败', e);
+            console.warn('[ NPO] Reset list page break failed', e);
         }
     }
 
@@ -2464,7 +2464,7 @@
                 return;
             }
             if (!state.mappings.length) {
-                bootGrowl('请至少添加一组库映射', 'warning');
+                bootGrowl('Please add at least one library map', 'warning');
                 return;
             }
             if (isUnsupportedSourceConnector(state.source.connectorId)) {
@@ -2475,7 +2475,7 @@
                 const srcId = getMappingSourceConnectorId(mapping);
                 const tgtId = getMappingTargetConnectorId(mapping);
                 if (!isSameConnectorType(srcId, tgtId)) {
-                    bootGrowl('库映射 #' + (i + 1) + '：目标连接器必须与源端连接器同类型', 'warning');
+                    bootGrowl('Library Map#' + (i + 1) + 'Target connector must be of the same type as source connector', 'warning');
                     return;
                 }
             }
@@ -2485,17 +2485,17 @@
             const btn = $(this);
             const original = btn.html();
             const saveUrl = isEditMode() ? '/database-sync/edit' : '/database-sync/add';
-            btn.html('<i class="fa fa-spinner fa-spin"></i> 保存中...').prop('disabled', true);
+            btn.html('<i class="fa fa-spinner fa-spin"></i> Saving...').prop('disabled', true);
             doPoster(saveUrl, $form.serializeJson(), function (response) {
                 btn.html(original).prop('disabled', false);
                 if (response.success) {
-                    bootGrowl(isEditMode() ? '修改成功' : '保存成功', 'success');
+                    bootGrowl(isEditMode() ? 'Changes successfully' : 'Saved successfully', 'success');
                     if (isEditMode()) {
                         resetDatabaseSyncListPagination();
                     }
                     backIndexPage();
                 } else {
-                    bootGrowl(response.message || '保存失败', 'danger');
+                    bootGrowl(response.message || 'Save failed', 'danger');
                 }
             });
         });

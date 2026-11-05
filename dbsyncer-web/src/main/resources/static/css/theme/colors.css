@@ -1,8 +1,8 @@
 /**
- * DBSyncer 色彩系统
+ * DBSyncer Colour System
  */
 
-/* 主色调类 */
+/* Main Tone*/
 .text-primary { color: var(--primary-color) !important; }
 .text-success { color: var(--success-color) !important; }
 .text-warning { color: var(--warning-color) !important; }
@@ -13,7 +13,7 @@
 .text-tertiary { color: var(--text-tertiary) !important; }
 .text-disabled { color: var(--text-disabled) !important; }
 
-/* 背景色类 */
+/* Background colour class*/
 .bg-primary { background-color: var(--bg-primary) !important; }
 .bg-secondary { background-color: var(--bg-secondary) !important; }
 .bg-tertiary { background-color: var(--bg-tertiary) !important; }
@@ -25,10 +25,10 @@
 .bg-white { background-color: #fff; }
 .bg-transparent { background-color: transparent; }
 
-/* 透明度背景色 */
+/* Transparency background colour*/
 .bg-info\/10 { background-color: rgba(24, 144, 255, 0.1); }
 
-/* 边框色类 */
+/* Border Classes*/
 .border-primary { border-color: var(--border-primary) !important; }
 .border-secondary { border-color: var(--border-secondary) !important; }
 .border-tertiary { border-color: var(--border-tertiary) !important; }

@@ -1,5 +1,5 @@
 /**
- * DBSyncer 左侧边栏样式
+ * DBSyncer Leftbar Style
  */
 
 .app-sidebar {
@@ -82,7 +82,7 @@
   font-size: 13px;
 }
 
-/* 二级分组（嵌套在一级分组内） */
+/* Level IIGroup（Embedded in Level 1GroupInternal)*/
 .sidebar-group-nested {
   margin-bottom: 0;
 }
@@ -105,7 +105,7 @@
   font-size: 13px;
 }
 
-/* 分组 */
+/* Group */
 .sidebar-group {
   position: relative;
   margin-bottom: 4px;
@@ -165,7 +165,7 @@
   transform: rotate(180deg);
 }
 
-/* 二级展开：纵向抽屉 */
+/* Level 2 expansion: vertical drawers*/
 .sidebar-group-children {
   display: grid;
   grid-template-rows: 0fr;
@@ -181,12 +181,12 @@
   overflow: hidden;
 }
 
-/* 浮层标题：仅收缩悬停时显示 */
+/* FloatShit.29 Title: Show only contractions when suspended*/
 .sidebar-group-flyout-title {
   display: none;
 }
 
-/* ========== 收缩态 ========== */
+/* ========== Shrink========== */
 body.sidebar-collapsed .app-sidebar {
   width: var(--sidebar-collapsed-width);
   overflow: visible;
@@ -226,7 +226,7 @@ body.sidebar-collapsed .sidebar-item.active {
   border-right: none;
 }
 
-/* 收缩态：悬停弹出二级菜单（贴侧栏右侧，浮于内容区之上） */
+/* Shrink: Suspend popup 2 (right side of the sidebar, floating above the content area)*/
 body.sidebar-collapsed .sidebar-group > .sidebar-group-children,
 body.sidebar-collapsed .sidebar-group.open > .sidebar-group-children {
   display: none;
@@ -277,7 +277,7 @@ body.sidebar-collapsed .sidebar-group > .sidebar-group-children .sidebar-item-su
   border-right: none;
 }
 
-/* 收缩态浮层内的嵌套分组 */
+/* Embedded in condensed floatsGroup */
 body.sidebar-collapsed .sidebar-group > .sidebar-group-children .sidebar-group-nested {
   margin: 0;
 }

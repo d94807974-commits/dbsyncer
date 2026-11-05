@@ -1,29 +1,29 @@
 /**
- * Checkbox Group 美化的方形复选框组件
- * 保持传统方形 checkbox 外观，但更精致优雅
+ * Checkbox Group Beautiful.Square checkbox component
+ * Keep the traditional square.checkbox Appearance, but more elegant.
  * 
- * @param {Object} options - 配置选项
- *   - theme: 主题色 ('primary', 'success', 'warning', 'danger', 'info')，默认 'primary'
- *   - size: 尺寸 ('sm', 'md', 'lg')，默认 'md'
- *   - layout: 布局方式 ('horizontal', 'vertical', 'inline')，默认 'horizontal'
- *   - bordered: 是否显示边框样式，默认 false
- *   - showSelectAll: 是否显示全选/取消全选按钮（复选框组），默认 false
- *   - onChange: 选中项变化时的回调函数，参数为 (values, labels)
+ * @param {Object} options - ConfigureOptions
+ *   - theme: Theme Colour('primary', 'success', 'warning', 'danger', 'info')，Default'primary'
+ *   - size: Dimensions('sm', 'md', 'lg')，Default'md'
+ *   - layout: Layout('horizontal', 'vertical', 'inline')，Default'horizontal'
+ *   - bordered: YesNoShow border style, defaultfalse
+ *   - showSelectAll: YesNoShowSelect All/CancelSelect Allbutton (checkbox group), defaultfalse
+ *   - onChange: Echo on selected changesFunctions，ParameterYes(values, labels)
  *
- * 使用方式：
- *   - $('input[type="checkbox"]').checkboxGroup(options)  // 直接选择 input
+ * Usage:
+ *   - $('input[type="checkbox"]').checkboxGroup(options)  // Direct Selectioninput
  * @example
  * $('.tableGroupCheckbox').checkboxGroup({
  *     theme: 'info',
  *     onChange: function(values) {
- *         console.log('选中:', values);
+ *         console.log('Organisation', values);
  *     }
  * });
  */
 (function($) {
     'use strict';
     
-    // HTML转义函数
+    // HTMLConversionFunctions
     function escapeHtml(text) {
         if (typeof window.escapeHtml === 'function') {
             return window.escapeHtml(text);
@@ -33,25 +33,25 @@
         return div.innerHTML;
     }
     
-    // 创建单个 checkbox 的包装
+    // Create Singlecheckbox Packaging
     function wrapCheckbox($checkbox, config) {
         const $label = $checkbox.next('label');
         
-        // 创建包装元素
+        // Create packing elements
         const $item = $('<div class="checkbox-group-item"></div>');
         
-        // 添加禁用状态
+        // AddDisableStatus
         if ($checkbox.prop('disabled')) {
             $item.addClass('disabled');
         }
         
-        // 添加选中状态
+        // AddSelectStatus
         const isChecked = $checkbox.prop('checked');
         if (isChecked) {
             $item.addClass('active');
         }
         
-        // 创建标签内容
+        // Create label content
         let labelText = '';
         if ($label.length) {
             labelText = $label.text();
@@ -68,14 +68,14 @@
         
         const $itemLabel = $('<span class="checkbox-group-item-label">' + escapeHtml(labelText) + '</span>');
         
-        // 先在 checkbox 的位置插入 item
+        // First.checkbox Organisationitem
         $checkbox.before($item);
         
-        // 然后将 checkbox 和标签移入包装元素
+        // ♪ And then will ♪checkbox and labels into packaging elements
         $item.append($checkbox);
         $item.append($itemLabel);
         
-        // 移除原始 label
+        // Remove Originallabel
         if ($label.length) {
             $label.remove();
         }
@@ -83,16 +83,16 @@
         return $item;
     }
     
-    // 绑定单个 checkbox 的事件
+    // Bind individualcheckbox Yes.Event
     function bindCheckboxEvents($container, $item, $checkbox, config, isSingle) {
-        // 点击项目时切换 checkbox 状态
+        // Switch when clicking itemscheckbox Status
         $item.on('click', function(e) {
             if ($item.hasClass('disabled')) {
                 e.preventDefault();
                 return;
             }
             
-            // 切换选中状态
+            // Toggle SelectionStatus
             const isChecked = $checkbox.prop('checked');
             if (isChecked) {
                 $item.removeClass('active');
@@ -104,20 +104,20 @@
             
             $checkbox.trigger('change');
             
-            // 触发回调
+            // Trigger echo
             if (config.onChange && typeof config.onChange === 'function') {
                 if (isSingle) {
-                    // 单个 checkbox，直接传递值
+                    // Singlecheckbox，Direct PassValue
                     config.onChange($checkbox.prop('checked') ? [$checkbox.val()] : [], 
                                    $checkbox.prop('checked') ? [$item.find('.checkbox-group-item-label').text()] : []);
                 } else {
-                    // 多个 checkbox，需要收集所有值
+                    // Multiplecheckbox，We need to collect everything.Value
                     triggerChangeEvent($container, config);
                 }
             }
         });
         
-        // 监听 checkbox 变化事件
+        // Listencheckbox ChangeEvent
         $checkbox.on('change', function() {
             if ($checkbox.prop('checked')) {
                 $item.addClass('active');
@@ -131,7 +131,7 @@
         });
     }
     
-    // 触发变化事件（容器方式）
+    // Trigger ChangeEvent（(Container mode)
     function triggerChangeEvent($container, config) {
         const selectedValues = [];
         const selectedLabels = [];
@@ -151,7 +151,7 @@
     }
     
     $.fn.checkboxGroup = function(options) {
-        // 默认配置
+        // DefaultConfigure
         const config = $.extend({
             theme: 'primary',
             size: 'md',
@@ -164,15 +164,15 @@
         return this.each(function() {
             const $element = $(this);
             
-            // 如果直接选择的是 input[type="checkbox"]，简化处理
+            // If it's a direct choice,Yes input[type="checkbox"]，Simplified processing
             if ($element.is('input[type="checkbox"]')) {
-                // 防止重复初始化
+                // Prevention of duplicate initialization
                 if ($element.data('checkboxGroupInitialized')) {
                     return;
                 }
                 $element.data('checkboxGroupInitialized', true);
                 
-                // 创建容器（如果需要）
+                // Create a container (if Selected)
                 let $container = $element.closest('.checkbox-group');
                 if (!$container.length) {
                     $container = $('<div class="checkbox-group"></div>');
@@ -180,7 +180,7 @@
                     $container.append($element);
                 }
                 
-                // 添加主题和尺寸类
+                // AddTheme and Size Category
                 if (config.theme && config.theme !== 'primary') {
                     $container.addClass('checkbox-group-' + config.theme);
                 }
@@ -188,13 +188,13 @@
                     $container.addClass('checkbox-group-' + config.size);
                 }
                 
-                // 创建包装
+                // Create Packaging
                 const $item = wrapCheckbox($element, config);
                 
-                // 绑定事件
+                // TieEvent
                 bindCheckboxEvents($container, $item, $element, config, true);
                 
-                // 创建简单的 API
+                // Create SimpleAPI
                 const api = {
                     getValue: function() {
                         return $element.prop('checked') ? $element.val() : null;
@@ -227,16 +227,16 @@
                 return;
             }
             
-            // 原有的容器方式处理
+            // Original packaging treatment
             const $container = $element;
             
-            // 防止重复初始化
+            // Prevention of duplicate initialization
             if ($container.data('checkboxGroupInitialized')) {
                 return;
             }
             $container.data('checkboxGroupInitialized', true);
             
-            // 添加主题和尺寸类
+            // AddTheme and Size Category
             if (config.theme && config.theme !== 'primary') {
                 $container.addClass('checkbox-group-' + config.theme);
             }
@@ -244,32 +244,32 @@
                 $container.addClass('checkbox-group-' + config.size);
             }
             
-            // 添加布局类
+            // AddLayout Class
             if (config.layout === 'vertical') {
                 $container.addClass('checkbox-group-vertical');
             } else if (config.layout === 'inline') {
                 $container.addClass('checkbox-group-inline');
             }
             
-            // 添加边框样式
+            // AddBorder Styles
             if (config.bordered) {
                 $container.addClass('checkbox-group-bordered');
             }
             
-            // 获取所有 checkbox
+            // Get Allcheckbox
             const $checkboxes = $container.find('input[type="checkbox"]');
             
             if ($checkboxes.length === 0) {
-                console.warn('[checkboxGroup] 未找到 checkbox 元素');
+                console.warn('[checkboxGroup] No checkbox elements found');
                 return;
             }
             
-            // 创建操作按钮区域（如果需要）
+            // CreateActions1) Button Area (if required
             let $actions = null;
             if (config.showSelectAll && $checkboxes.length > 1) {
                 $actions = $('<div class="checkbox-group-actions"></div>');
-                const $selectAllBtn = $('<button type="button" class="checkbox-group-action-btn">全选</button>');
-                const $deselectAllBtn = $('<button type="button" class="checkbox-group-action-btn">取消全选</button>');
+                const $selectAllBtn = $('<button type="button" class="checkbox-group-action-btn">Select All</button>');
+                const $deselectAllBtn = $('<button type="button" class="checkbox-group-action-btn">Unselect All</button>');
                 
                 $selectAllBtn.on('click', function(e) {
                     e.preventDefault();
@@ -287,14 +287,14 @@
                 $container.prepend($actions);
             }
             
-            // 包装每个 checkbox
+            // Pack them all.checkbox
             $checkboxes.each(function() {
                 const $checkbox = $(this);
                 const $item = wrapCheckbox($checkbox, config);
                 bindCheckboxEvents($container, $item, $checkbox, config, false);
             });
             
-            // 全选函数
+            // Select AllFunctions
             function selectAll() {
                 $container.find('.checkbox-group-item:not(.disabled)').each(function() {
                     const $item = $(this);
@@ -307,7 +307,7 @@
                 triggerChangeEvent($container, config);
             }
             
-            // 取消全选函数
+            // CancelSelect AllFunctions
             function deselectAll() {
                 $container.find('.checkbox-group-item').each(function() {
                     const $item = $(this);
@@ -318,7 +318,7 @@
                 triggerChangeEvent($container, config);
             }
             
-            // API 方法
+            // API Methodology
             const api = {
                 getValues: function() {
                     const values = [];

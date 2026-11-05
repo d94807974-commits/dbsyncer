@@ -1,5 +1,5 @@
 /**
- * 同步事件明细页（迁自监控 queryData）
+ * Sync Event DetailsPage（FromMonitor queryData）
  */
 (function (window) {
     'use strict';
@@ -30,7 +30,7 @@
 
     function jsonToTable(jsonObj) {
         var $content = '<table class="table">';
-        $content += '<thead><tr><th></th><th>字段</th><th>值</th></tr></thead>';
+        $content += '<thead><tr><th></th><th>Fields</th><th>Value</th></tr></thead>';
         $content += '<tbody>';
         var index = 1;
         $.each(jsonObj, function (name, value) {
@@ -48,10 +48,10 @@
 
     function columnsToTable(columns) {
         var $content = '<table class="table">';
-        $content += '<thead><tr><th></th><th>字段</th><th>类型</th><th>值</th></tr></thead>';
+        $content += '<thead><tr><th></th><th>Fields</th><th>Type</th><th>Value</th></tr></thead>';
         $content += '<tbody>';
         if (!columns || !columns.length) {
-            $content += '<tr><td colspan="4" class="text-center text-gray-400">暂无字段数据</td></tr>';
+            $content += '<tr><td colspan="4" class="text-center text-gray-400">Field data not available</td></tr>';
         } else {
             columns.forEach(function (col, i) {
                 var val = col.value;
@@ -73,7 +73,7 @@
     window.showMappingDataDetail = function (taskId, messageId) {
         doPoster('/monitor/getDataDetail', {taskId: taskId, messageId: messageId}, function (response) {
             if (!response.success) {
-                bootGrowl(response.message || '加载数据失败', 'danger');
+                bootGrowl(response.message || 'Failed to load data', 'danger');
                 return;
             }
             var message = response.data || {};
@@ -84,11 +84,11 @@
                 body = jsonToTable({});
             }
             showConfirm({
-                title: '数据详情',
+                title: 'Data details',
                 icon: 'info',
                 size: 'max',
                 body: body,
-                confirmText: '关闭',
+                confirmText: 'Close',
                 confirmType: 'primary'
             });
         });
@@ -96,8 +96,8 @@
 
     function renderDataState(success) {
         var state = {
-            0: {class: 'badge-error', text: '失败'},
-            1: {class: 'badge-success', text: '成功'}
+            0: {class: 'badge-error', text: 'Failed'},
+            1: {class: 'badge-success', text: 'Success'}
         };
         var config = state[success] || {class: 'badge-info', text: '-'};
         return '<span class="badge ' + config.class + '">' + config.text + '</span>';
@@ -132,10 +132,10 @@
 
         function renderDataButton(row) {
             var content = [];
-            content.push('<button class="table-action-btn view" title="查看数据" onclick="showMappingDataDetail(\''
+            content.push('<button class = "table-action-btn view" title = onclick = showMappingDataDetail'
                 + mappingId + '\',\'' + row.id + '\')"><i class="fa fa-eye"></i></button>');
             if (row.success === 0) {
-                content.push('<button class="table-action-btn play" title="重试" onclick="showRetryDetail(\''
+                content.push('♪ Button class ♪'
                     + mappingId + '\',\'' + row.id + '\')"><i class="fa fa-refresh"></i></button>');
             }
             return content.join(' ');
@@ -165,15 +165,15 @@
                     + '</tr>';
             },
             refreshCompleted: function () {
-                showMessageDetail($('.data-error'), 'warning', '异常信息');
+                showMessageDetail($('.data-error'), 'warning', 'Organisation');
             },
             emptyHtml: '<td colspan="7" class="text-center"><i class="fa fa-exchange empty-icon"></i>'
-                + '<p class="empty-text">暂无数据</p></td>'
+                + '<p class="empty-text">Data not available</p></td>'
         });
 
         $('#clearDataBtn').unbind('click').bind('click', function () {
             showConfirm({
-                title: '确认清空当前表数据？',
+                title: 'Confirm to empty current table data?',
                 icon: 'warning',
                 size: 'large',
                 confirmType: 'danger',
@@ -183,10 +183,10 @@
                         tableGroupId: tableGroupId || ''
                     }, function (response) {
                         if (response.success) {
-                            bootGrowl(response.data || '清空数据成功!', 'success');
+                            bootGrowl(response.data || 'Clear data!', 'success');
                             search();
                         } else {
-                            bootGrowl('清空数据失败: ' + response.message, 'danger');
+                            bootGrowl('Could not close temporary folder: %s ' + response.message, 'danger');
                         }
                     });
                 }

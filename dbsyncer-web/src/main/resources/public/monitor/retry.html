@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <div class="form-container">
     <div class="card-header">
         <h3 class="card-title text-center">[[${mapping?.name}]]</h3>
     </div>
     <div class="card-body">
-        <!-- 驱动同步关系 -->
+        <!-- MappingSyncRelations -->
         <div class="grid grid-cols-3">
             <div class="flex items-center">
                 <img draggable="false" style="width: 60px; height: 60px;" th:src="@{'/img/'+ ${mapping?.sourceConnector?.config?.connectorType} + '.png'}" />
                 <div class="ml-2">
                     <p class="text-md">[[${mapping?.sourceConnector?.name}]]</p>
-                    <p class="text-sm">数据源表：[[${message?.sourceTableName}]]</p>
+                    <p class="text-sm">Data source table:[[${message?.sourceTableName}]]</p>
                 </div>
             </div>
             <div class="text-info items-center text-center">
@@ -24,7 +24,7 @@ xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
                 <img draggable="false" style="width: 60px; height: 60px;" th:src="@{'/img/'+ ${mapping?.targetConnector?.config?.connectorType} + '.png'}" />
                 <div class="ml-2">
                     <p class="text-md">[[${mapping?.targetConnector?.name}]]</p>
-                    <p class="text-sm">目标源表：[[${message?.targetTableName}]]</p>
+                    <p class="text-sm">Target source table:[[${message?.targetTableName}]]</p>
                 </div>
             </div>
         </div>
@@ -39,15 +39,15 @@ xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
             <div class="flex items-center justify-between mt-4 mb-4">
                 <div>
                     <i class="fa fa-info-circle text-warning"></i>
-                    <span class="text-sm text-secondary">请检查数据的<b>字段类型、长度、非空</b>等是否符合目标库的设计规范。</span>
+                    <span class="text-sm text-secondary">Check the data.<b>Field type, length, non-empty</b>is in accordance with the design specifications of the target library.</span>
                 </div>
 
                 <div class="form-actions">
                     <button id="editDataSubmitBtn" type="button" class="btn btn-primary">
-                        <i class="fa fa-refresh"></i> 执行重试
+                        <i class="fa fa-refresh"></i> Execute Retry
                     </button>
                     <button type="button" class="btn btn-outline" onclick="backIndexPage()">
-                        <i class="fa fa-reply"></i> 返回
+                        <i class="fa fa-reply"></i> Back
                     </button>
                 </div>
             </div>
@@ -56,10 +56,10 @@ xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
             <thead>
             <tr>
                 <th></th>
-                <th>目标表字段</th>
-                <th>值类型</th>
-                <th>值</th>
-                <th>操作</th>
+                <th>Destination Table Fields</th>
+                <th>Value Type</th>
+                <th>Value</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -74,7 +74,7 @@ xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
                     </td>
                     <td class="font-mono text-sm" th:text="${c?.value}"></td>
                     <td>
-                        <button type="button" th:data-key="${c?.key}" class="table-action-btn play editData" title="修改">
+                        <button type="button" th:data-key="${c?.key}" class="table-action-btn play editData" title="Edit">
                             <i class="fa fa-edit text-success"></i>
                         </button>
                     </td>
@@ -107,13 +107,13 @@ xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
             $input.blur(function () {
                 const newValue = $(this).val().trim();
                 $valueCell.text(newValue);
-                // 更新值
+                // UpdateValue
                 if (newValue !== originalParams[key]) {
                     modifiedParams[key] = newValue;
                     $paramsInput.val(JSON.stringify(modifiedParams));
-                    $tr.addClass("badge-success").attr("title", "已修改");
+                    $tr.addClass("badge-success").attr("title", "modified");
                 } else {
-                    // 恢复原值，移除修改标记
+                    // RestoreValue，RemoveEditTag           
                     delete modifiedParams[key];
                     $paramsInput.val(JSON.stringify(modifiedParams));
                     $tr.removeClass("badge-success").removeAttr("title");
@@ -124,14 +124,14 @@ xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
     }
 
     $(function () {
-        // 绑定修改数据事件
+        // TieEditData FactEvent
         bindEditData();
 
-        // 提交重试
+        // SubmitTry again
         $("#editDataSubmitBtn").on("click", function() {
             doPoster("/monitor/sync", $("#editDataForm").serializeJson(), function(data) {
                 if (data.success) {
-                    bootGrowl("执行重试成功", "success");
+                    bootGrowl("Successful Present Retry", "success");
                     backIndexPage();
                 } else {
                     bootGrowl(data.message, "danger");
@@ -139,7 +139,7 @@ xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
             });
         });
 
-        // 返回函数（回到同步任务详情）
+        // BackFunctions（BackSync taskDetails）
         window.backIndexPage = () => {
             const mappingId = $("input[name='mappingId']").val();
             if (mappingId) {

@@ -1,21 +1,21 @@
 /**
- * 文件上传组件初始化
- * @param {string} selector - 上传容器选择器
- * @param {object} options - 配置选项
+ * DocumentationUploadInitiation of components
+ * @param {string} selector - UploadContainer Selector
+ * @param {object} options - ConfigureOptions
  */
 (function(window) {
     'use strict';
     
-    // 依赖检查
+    // Reliance on checking
     if (typeof window.notify !== 'function') {
-        console.error('[initFileUpload] 依赖 notify 函数未找到');
+        console.error('[init WhilstUpload] relies notify function not found');
         return;
     }
     
     function initFileUpload(selector, options) {
         var container = document.querySelector(selector);
         if (!container) {
-            console.error('文件上传容器未找到：' + selector);
+            console.error('File upload container not found:' + selector);
             return;
         }
 
@@ -24,17 +24,17 @@
         var fileInput = container.querySelector('.upload-input');
         
         if (!uploadArea || !uploadList || !fileInput) {
-            console.error('文件上传组件元素不完整');
+            console.error('File upload component elements incomplete');
             return;
         }
 
-        // 默认配置
+        // DefaultConfigure
         var config = {
             uploadUrl: options.uploadUrl || '/upload',
             accept: options.accept || [],
             maxFiles: options.maxFiles || 10,
-            maxSize: options.maxSize || 50 * 1024 * 1024, // 默认 50MB
-            autoUpload: options.autoUpload !== false, // 默认自动上传
+            maxSize: options.maxSize || 50 * 1024 * 1024, // Default50MB
+            autoUpload: options.autoUpload !== false, // Default AutoUpload
             onSuccess: options.onSuccess || function() {},
             onError: options.onError || function() {},
             onProgress: options.onProgress || function() {}
@@ -43,20 +43,20 @@
         var fileList = [];
         var uploadingCount = 0;
 
-        // 点击上传区域触发文件选择
+        // ClickUploadArea TriggerDocumentationSelection
         uploadArea.addEventListener('click', function(e) {
             if (!uploadArea.classList.contains('disabled')) {
                 fileInput.click();
             }
         });
 
-        // 文件选择
+        // DocumentationSelection
         fileInput.addEventListener('change', function(e) {
             handleFiles(e.target.files);
-            fileInput.value = ''; // 清空input，允许重复选择同一文件
+            fileInput.value = ''; // Clearinput，Allow repeated selection of the sameDocumentation
         });
 
-        // 拖拽上传
+        // DragUpload
         uploadArea.addEventListener('dragover', function(e) {
             e.preventDefault();
             e.stopPropagation();
@@ -76,24 +76,24 @@
             handleFiles(e.dataTransfer.files);
         });
 
-        // 处理文件
+        // ProcessingDocumentation
         function handleFiles(files) {
             if (!files || files.length === 0) return;
 
-            // 检查文件数量限制
+            // InspectionDocumentationQuantity limit
             if (fileList.length + files.length > config.maxFiles) {
                 window.notify({ 
-                    message: '最多只能上传 ' + config.maxFiles + ' 个文件', 
+                    message: 'Only upload at most. ' + config.maxFiles + ' File', 
                     type: 'warning' 
                 });
                 return;
             }
 
             Array.from(files).forEach(function(file) {
-                // 验证文件
+                // AuthenticationDocumentation
                 if (!validateFile(file)) return;
 
-                // 添加到文件列表
+                // AddPresent.DocumentationList
                 const fileObj = {
                     id: Date.now() + '_' + Math.random().toString(36).substr(2, 9),
                     file: file,
@@ -107,31 +107,31 @@
                 fileList.push(fileObj);
                 renderFileItem(fileObj);
 
-                // 自动上传
+                // AutoUpload
                 if (config.autoUpload) {
                     uploadFile(fileObj);
                 }
             });
         }
 
-        // 验证文件
+        // AuthenticationDocumentation
         function validateFile(file) {
-            // 检查文件扩展名
+            // InspectionDocumentationExtension
             if (config.accept.length > 0) {
                 const ext = '.' + file.name.split('.').pop().toLowerCase();
                 if (config.accept.indexOf(ext) === -1) {
                     window.notify({ 
-                        message: '不支持的文件类型：' + ext, 
+                        message: 'Unsupported file type:' + ext, 
                         type: 'warning' 
                     });
                     return false;
                 }
             }
 
-            // 检查文件大小
+            // InspectionDocumentation/5/
             if (file.size > config.maxSize) {
                 window.notify({ 
-                    message: '文件 "' + file.name + '" 超过大小限制（' + formatFileSize(config.maxSize) + '）', 
+                    message: 'Documentation "' + file.name + '" Beyond the size limit (' + formatFileSize(config.maxSize) + '）', 
                     type: 'warning' 
                 });
                 return false;
@@ -140,7 +140,7 @@
             return true;
         }
 
-        // 渲染文件项
+        // RenderDocumentationItem
         function renderFileItem(fileObj) {
             const item = document.createElement('div');
             item.className = 'upload-item ' + fileObj.status;
@@ -161,7 +161,7 @@
                     '<i class="fa fa-times"></i>' +
                 '</button>';
 
-            // 绑定删除事件
+            // TieDeleteEvent
             item.querySelector('[data-action="remove"]').addEventListener('click', function() {
                 removeFile(fileObj.id);
             });
@@ -169,7 +169,7 @@
             uploadList.appendChild(item);
         }
 
-        // 更新文件项状态
+        // UpdateDocumentationItemStatus
         function updateFileItem(fileObj) {
             const item = uploadList.querySelector('[data-file-id="' + fileObj.id + '"]');
             if (!item) return;
@@ -190,13 +190,13 @@
             } else if (fileObj.status === 'error') {
                 statusEl.innerHTML = '<div class="upload-status-icon error"><i class="fa fa-exclamation-circle"></i></div>';
                 progressEl.style.display = 'none';
-                item.title = fileObj.error || '上传失败';
+                item.title = fileObj.error || 'Upload failed';
             }
         }
 
-        // 上传文件
+        // UploadDocumentation
         function uploadFile(fileObj) {
-            if (uploadingCount >= 3) { // 限制并发上传数
+            if (uploadingCount >= 3) { // Restriction simultaneous distributionUploadNumber
                 setTimeout(function() {
                     uploadFile(fileObj);
                 }, 1000);
@@ -213,7 +213,7 @@
 
             const xhr = new XMLHttpRequest();
 
-            // 上传进度
+            // UploadProgress
             xhr.upload.addEventListener('progress', function(e) {
                 if (e.lengthComputable) {
                     fileObj.progress = Math.round((e.loaded / e.total) * 100);
@@ -222,7 +222,7 @@
                 }
             });
 
-            // 上传完成
+            // UploadFinish
             xhr.addEventListener('load', function() {
                 uploadingCount--;
                 try {
@@ -233,23 +233,23 @@
                         config.onSuccess(fileObj, response);
                     } else {
                         fileObj.status = 'error';
-                        fileObj.error = response.message || '上传失败';
+                        fileObj.error = response.message || 'Upload failed';
                         updateFileItem(fileObj);
                         config.onError(fileObj, fileObj.error);
                     }
                 } catch (e) {
                     fileObj.status = 'error';
-                    fileObj.error = '服务器响应格式错误';
+                    fileObj.error = 'Server response format error';
                     updateFileItem(fileObj);
                     config.onError(fileObj, fileObj.error);
                 }
             });
 
-            // 上传错误
+            // UploadError
             xhr.addEventListener('error', function() {
                 uploadingCount--;
                 fileObj.status = 'error';
-                fileObj.error = '网络错误';
+                fileObj.error = 'Network error';
                 updateFileItem(fileObj);
                 config.onError(fileObj, fileObj.error);
             });
@@ -258,20 +258,20 @@
             xhr.send(formData);
         }
 
-        // 删除文件
+        // DeleteDocumentation
         function removeFile(fileId) {
             var index = fileList.findIndex(function(f) { return f.id === fileId; });
             if (index === -1) return;
 
             var fileObj = fileList[index];
             
-            // 如果正在上传，可以取消上传（需要保存xhr对象）
+            // If it isUpload，Yeah.CancelUpload（Yes.SavexhrObject)
             if (fileObj.status === 'uploading') {
-                window.notify({ message: '文件正在上传中，无法删除', type: 'warning' });
+                window.notify({ message: 'File is being uploaded and cannot be deleted', type: 'warning' });
                 return;
             }
 
-            // 移除DOM
+            // RemoveDOM
             var item = uploadList.querySelector('[data-file-id="' + fileId + '"]');
             if (item) {
                 item.style.animation = 'fadeOut 0.3s ease-out';
@@ -280,11 +280,11 @@
                 }, 300);
             }
 
-            // 移除数据
+            // Remove Data
             fileList.splice(index, 1);
         }
 
-        // 格式化文件大小
+        // FormattingDocumentation/5/
         function formatFileSize(bytes) {
             if (bytes === 0) return '0 B';
             var k = 1024;
@@ -293,7 +293,7 @@
             return (bytes / Math.pow(k, i)).toFixed(2) + ' ' + sizes[i];
         }
 
-        // 公开方法
+        // Open methods
         return {
             getFiles: function() { return fileList; },
             clearFiles: function() {
@@ -310,7 +310,7 @@
         };
     }
     
-    // 导出到全局
+    // ExportTo Global Text
     window.initFileUpload = initFileUpload;
     
 })(window);

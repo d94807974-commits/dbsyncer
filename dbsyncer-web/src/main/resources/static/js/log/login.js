@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    /** 日期字符串 yyyy-MM-dd → 当天 00:00:00 毫秒 */
+    /** Date PROPOSALyyyy-MM-dd → When?days 00:00:00 ms */
     function toBeginMillis(value) {
         if (!value) {
             return '';
@@ -10,7 +10,7 @@
         return isNaN(t) ? '' : t;
     }
 
-    /** 日期字符串 yyyy-MM-dd → 当天 23:59:59.999 毫秒 */
+    /** Date PROPOSALyyyy-MM-dd → When?days 23:59:59.999 ms */
     function toEndMillis(value) {
         if (!value) {
             return '';
@@ -21,9 +21,9 @@
 
     function statusBadge(status) {
         if (Number(status) === 1) {
-            return '<span class="badge badge-success">成功</span>';
+            return '<span class="badge badge-success">Success</span>';
         }
-        return '<span class="badge badge-error">失败</span>';
+        return '<span class="badge badge-error">Failed</span>';
     }
 
     function getStatusFilter() {

@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <div th:fragment="content" th:if="${mapping?.extendedType eq 'SQL'}">
 
     <div th:if="${type eq 'target'}">
         <div class="flex justify-between mt-4">
-            <div>目标表不支持</div>
+            <div>Target list not supported</div>
 
             <div class="form-actions">
                 <button type="button" class="btn btn-outline" onclick="backIndexPage()">
-                    <i class="fa fa-reply"></i> 返回
+                    <i class="fa fa-reply"></i> Back
                 </button>
             </div>
         </div>
     </div>
 
     <div th:if="${type eq 'source'}">
-        <!-- SQL配置 -->
+        <!-- SQLConfig -->
         <div class="grid grid-cols-2 mt-4">
             <div class="form-item">
-                <label class="form-label">数据源表</label>
+                <label class="form-label">Source table</label>
                 <select id="custom_table_select" class="form-control" name="customTable">
                     <option th:each="t,s:${mapping?.customTables}" th:value="${t?.name}" th:text="${t?.name} + ' ('+${t?.type}+')'" th:data-sql="${t?.extInfo?.CT_SQL}" th:data-main-table="${t?.extInfo?.CT_MAIN}"/>
                 </select>
@@ -31,18 +31,18 @@
                 <div class="form-actions">
                     <button th:if="${mapping?.meta?.state eq 0 and mapping?.customTables.size gt 0}"
                             id="delSqlTableBtn" type="button" class="btn btn-outline">
-                        <i class="fa fa-remove"></i> 删除
+                        <i class="fa fa-remove"></i> Delete
                     </button>
                     <button th:if="${mapping?.meta?.state eq 0 and mapping?.customTables.size gt 0}"
                             id="editSqlTableBtn" type="button" class="btn btn-outline">
-                        <i class="fa fa-edit"></i> 修改
+                        <i class="fa fa-edit"></i> Edit
                     </button>
                     <button th:if="${mapping?.meta?.state eq 0}"
                             id="addSqlTableBtn" type="button" class="btn btn-primary">
-                        <i class="fa fa-plus"></i> 添加
+                        <i class="fa fa-plus"></i> Add
                     </button>
                     <button type="button" class="btn btn-outline" onclick="backIndexPage()">
-                        <i class="fa fa-reply"></i> 返回
+                        <i class="fa fa-reply"></i> Back
                     </button>
                 </div>
             </div>
@@ -50,13 +50,13 @@
 
         <div class="grid grid-cols-2 mt-4">
             <div class="form-item">
-                <label class="form-label">表名<strong class="text-primary">*</strong></label>
+                <label class="form-label">Table name<strong class="text-primary">*</strong></label>
                 <div class="form-control-area">
-                    <input class="form-control" name="tableName" type="text" maxlength="64" required placeholder="请输入表名"/>
+                    <input class="form-control" name="tableName" type="text" maxlength="64" required placeholder="Please enter a table name"/>
                 </div>
             </div>
             <div class="form-item">
-                <label class="form-label">主表<strong class="text-primary">*</strong><i class="fa fa-question-circle" title="用于增量同步，根据监听的主表获取增量数据"></i></label>
+                <label class="form-label">Main Table<strong class="text-primary">*</strong><i class="fa fa-question-circle" title="For incremental synchronization to capture incremental data according to the listening master table"></i></label>
                 <div class="form-control-area">
                     <select id="main_table_select" class="form-control" name="mainTable">
                         <option th:each="t,s:${mapping?.mainTables}" th:value="${t?.name}" th:text="${t?.name} + ' ('+${t?.type}+')'"/>
@@ -71,7 +71,7 @@
                 <div class="form-control-area">
                     <textarea name="sql" class="form-control" maxlength="8192" rows="10" required>SELECT T1.* FROM USER T1</textarea>
                     <button type="button" class="btn btn-outline mt-1" onclick="format()">
-                        <i class="fa fa-magic fa-flip-horizontal"></i> 美化
+                        <i class="fa fa-magic fa-flip-horizontal"></i> Beautiful.
                     </button>
                 </div>
             </div>
@@ -84,34 +84,34 @@
         const $text = $("textarea[name='sql']");
         const sql = $text.val().trim();
         if (!sql) {
-            bootGrowl("SQL 内容为空", "warning");
+            bootGrowl("SQL content is empty", "warning");
             return;
         }
         
         try {
             const formatted = formatSQL(sql);
             $text.val(formatted);
-            bootGrowl("SQL 美化成功", "success");
+            bootGrowl("SQL beautification successful", "success");
         } catch (e) {
-            console.error("SQL 格式化错误:", e);
-            bootGrowl("SQL 格式化失败: " + e.message, "danger");
+            console.error("SQL formatting error:", e);
+            bootGrowl("SQL formatting failed: " + e.message, "danger");
         }
     }
     
     /**
-     * SQL 美化函数
-     * @param {string} sql - 原始 SQL 语句
-     * @returns {string} 美化后的 SQL 语句
+     * SQL Beautiful.Functions
+     * @param {string} sql - OriginalSQL Statement
+     * @returns {string} Beautiful.AfterSQL Statement
      */
     function formatSQL(sql) {
-        // SQL 关键字列表（需要换行的主要关键字）
+        // SQL KeywordList（Main requiring line changeKeyword）
         const mainKeywords = ['SELECT', 'FROM', 'WHERE', 'JOIN', 'INNER JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'FULL JOIN',
             'GROUP BY', 'ORDER BY', 'HAVING', 'UNION', 'UNION ALL', 'INSERT', 'UPDATE', 'DELETE', 'SET', 'VALUES'];
         
-        // 将多个空格/换行统一为单个空格
+        // Align multiple spaces/ line breaks into single spaces
         let formatted = sql.replace(/[\r\n\t]+/g, ' ').replace(/\s+/g, ' ').trim();
         
-        // 在主要关键字前添加换行（不区分大小写）
+        // In the mainKeywordFrontAddLine BreakminCase)
         mainKeywords.forEach(function(keyword) {
             const regex = new RegExp('\\s+' + keyword + '\\s+', 'gi');
             formatted = formatted.replace(regex, function(match) {
@@ -119,15 +119,15 @@
             });
         });
         
-        // 处理 ON 关键字（JOIN 后的条件）
+        // ProcessingON Keyword（JOIN AfterCondition）
         formatted = formatted.replace(/\s+ON\s+/gi, '\n    ON ');
         
-        // 处理 AND/OR 关键字（WHERE/HAVING 后的条件）
+        // ProcessingAND/OR Keyword（WHERE/HAVING AfterCondition）
         formatted = formatted.replace(/\s+(AND|OR)\s+/gi, '\n    $1 ');
         
-        // 处理逗号：在 SELECT 字段列表中的逗号后换行
+        // Treatment of 88SELECT FieldListComma after line break
         formatted = formatted.replace(/(SELECT\s+)(.+?)(\s+FROM)/gi, function(match, select, fields, from) {
-            // 如果字段列表包含逗号，则每个字段换行
+            // IfFieldListIncludes commas, eachFieldLine Break
             if (fields.indexOf(',') > -1) {
                 const fieldList = fields.split(',').map(function(f) {
                     return '    ' + f.trim();
@@ -137,7 +137,7 @@
             return match;
         });
         
-        // 处理 GROUP BY 和 ORDER BY 的字段列表
+        // ProcessingGROUP BY andORDER BY Yes.FieldList
         formatted = formatted.replace(/(GROUP BY|ORDER BY)\s+(.+?)(?=\s+(?:HAVING|ORDER BY|UNION|$))/gi, function(match, keyword, fields) {
             if (fields.indexOf(',') > -1) {
                 const fieldList = fields.split(',').map(function(f) {
@@ -148,7 +148,7 @@
             return match;
         });
         
-        // 统一关键字为大写（保留已处理的换行）
+        // HarmonizationKeywordCapitalise (maintain processed line breaks)
         const keywordMap = {
             'select': 'SELECT', 'from': 'FROM', 'where': 'WHERE', 'join': 'JOIN',
             'inner join': 'INNER JOIN', 'left join': 'LEFT JOIN', 'right join': 'RIGHT JOIN', 'full join': 'FULL JOIN',
@@ -162,7 +162,7 @@
             formatted = formatted.replace(regex, keywordMap[key]);
         });
         
-        // 清理多余的空行并统一缩进
+        // Clear empty lines and scale them together In.
         const lines = formatted.split('\n');
         let indentLevel = 0;
         const indentSize = 4;
@@ -171,10 +171,10 @@
         lines.forEach(function(line) {
             const trimmed = line.trim();
             if (!trimmed) {
-                return; // 跳过空行
+                return; // Skip empty lines
             }
             
-            // 根据关键字调整缩进级别
+            // Based onKeywordAdjust Indent Level
             if (/^(FROM|WHERE|GROUP BY|ORDER BY|HAVING|UNION|INSERT|UPDATE|DELETE|SET|VALUES)\b/i.test(trimmed)) {
                 indentLevel = 0;
             } else if (/^(JOIN|INNER JOIN|LEFT JOIN|RIGHT JOIN|FULL JOIN)\b/i.test(trimmed)) {
@@ -183,7 +183,7 @@
                 indentLevel = 2;
             }
             
-            // 添加缩进
+            // AddCanaan
             const indent = ' '.repeat(indentLevel * indentSize);
             formattedLines.push(indent + trimmed);
         });
@@ -214,10 +214,10 @@
 
         function handleResponse(response, title) {
             if (response.success === true) {
-                bootGrowl(title + "成功！", "success");
+                bootGrowl(title + "Success!", "success");
                 doLoader('/mapping/pageCustomTable?id=' + $("#mappingId").val() + '&type=' + $("#customType").val());
             } else {
-                bootGrowl(response.message || title + "失败", "danger");
+                bootGrowl(response.message || title + "Failed", "danger");
             }
         }
 
@@ -228,24 +228,24 @@
             }
             const $btn = $(this);
             const originalText = $btn.html();
-            $btn.html(`<i class="fa fa-spinner fa-spin"></i> ${title}中...`).prop('disabled', true);
+            $btn.html(`<i class="fa fa-spinner fa-spin"></i> ${title}Medium...`).prop('disabled', true);
             let data = $form.serializeJson();
             data.operator = operator;
             doPoster("/mapping/saveCustomTable", data, function (response) {
                 $btn.html(originalText).prop('disabled', false);
-                handleResponse(response, title + "自定义表");
+                handleResponse(response, title + "Custom table");
             });
         }
 
-        //添加
+        //Add
         $("#addSqlTableBtn").on('click', function () {
-            submit("add", "添加");
+            submit("add", "Add");
         });
-        //修改
+        //Edit
         $("#editSqlTableBtn").on('click', function () {
-            submit("edit", "修改");
+            submit("edit", "Edit");
         });
-        //删除
+        //Delete
         $("#delSqlTableBtn").on('click', function () {
             let selected = customTableSelect.getValues() || [];
             if (selected.length >= 1) {
@@ -255,7 +255,7 @@
                     customTable: selected[0]
                 }
                 doPoster("/mapping/removeCustomTable", data, function (response) {
-                    handleResponse(response, "删除自定义表");
+                    handleResponse(response, "Delete custom table");
                 });
             }
         });

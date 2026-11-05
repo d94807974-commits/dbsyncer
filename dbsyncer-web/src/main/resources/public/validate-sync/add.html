@@ -1,91 +1,91 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <div class="form-container">
     <div class="card-header">
-        <h3 class="card-title text-center">添加订正校验</h3>
+        <h3 class="card-title text-center">Add Revised Verify</h3>
     </div>
 
     <div class="card-body">
         <div class="form-actions mb-4">
             <button id="validate-sync-submit-btn" type="button" class="btn btn-primary">
                 <i class="fa fa-save"></i>
-                保存
+                Save
             </button>
             <button class="btn btn-outline" onclick="backIndexPage()">
-                <i class="fa fa-reply"></i> 返回
+                <i class="fa fa-reply"></i> Back
             </button>
         </div>
 
         <form id="validate-sync-add-form">
-            <!-- 创建任务方式选择 -->
+            <!-- CreateTaskModalitiesSelection -->
             <div class="grid grid-cols-4">
                 <div id="task-create" class="radio-group">
                     <input type="radio" name="createType" value="link" checked />
-                    <label>关联同步任务</label>
+                    <label>Other Organiser 88</label>
                     <input type="radio" name="createType" value="custom" />
-                    <label>自定义</label>
+                    <label>Custom</label>
                 </div>
             </div>
 
             <div class="grid grid-cols-2 mt-5">
                 <div class="form-item">
-                    <label class="form-label">名称<strong class="text-primary">*</strong></label>
+                    <label class="form-label">Name<strong class="text-primary">*</strong></label>
                     <div class="form-control-area">
-                        <input class="form-control" name="name" type="text" maxlength="50" required placeholder="请输入任务名称"/>
+                        <input class="form-control" name="name" type="text" maxlength="50" required placeholder="Please enter task name"/>
                     </div>
                 </div>
             </div>
 
-            <!-- 自定义配置 -->
+            <!-- CustomConfig -->
             <div id="custom-config" class="hidden mt-4">
-                <!-- 数据源和目标源 -->
+                <!-- SourceandTarget -->
                 <div class="grid grid-cols-2">
-                    <!-- 数据源 -->
+                    <!-- Source -->
                     <div class="form-item">
                         <label class="form-label">
-                            <i class="fa fa-database text-primary"></i> 数据源<strong class="text-primary">*</strong>
+                            <i class="fa fa-database text-primary"></i> Source<strong class="text-primary">*</strong>
                         </label>
                         <select name="sourceConnectorId" id="sourceConnectorId" class="form-control"></select>
                     </div>
 
-                    <!-- 目标源 -->
+                    <!-- Target -->
                     <div class="form-item">
                         <label class="form-label">
-                            <i class="fa fa-database text-success"></i> 目标源<strong class="text-primary">*</strong>
+                            <i class="fa fa-database text-success"></i> Target<strong class="text-primary">*</strong>
                         </label>
                         <select name="targetConnectorId" id="targetConnectorId" class="form-control"></select>
                     </div>
                 </div>
 
-                <!-- 数据库配置 -->
+                <!-- Data FactLibraryConfig -->
                 <div class="grid grid-cols-2 mt-5">
                     <div class="form-item">
-                        <label class="form-label">源库</label>
+                        <label class="form-label">Source database</label>
                         <select name="sourceDatabase" id="sourceDatabase" class="form-control"></select>
                     </div>
                     <div class="form-item">
-                        <label class="form-label">目标库</label>
+                        <label class="form-label">Target database</label>
                         <select name="targetDatabase" id="targetDatabase" class="form-control"></select>
                     </div>
                 </div>
 
-                <!-- Schema配置 -->
+                <!-- SchemaConfig -->
                 <div class="grid grid-cols-2 mt-5">
                     <div class="form-item">
-                        <label class="form-label">源Schema</label>
+                        <label class="form-label">Source schema</label>
                         <select name="sourceSchema" id="sourceSchema" class="form-control"></select>
                     </div>
                     <div class="form-item">
-                        <label class="form-label">目标Schema</label>
+                        <label class="form-label">Target schema</label>
                         <select name="targetSchema" id="targetSchema" class="form-control"></select>
                     </div>
                 </div>
 
-                <!-- 驱动名称和匹配相似表 -->
+                <!-- MappingNameandMatch similar tables -->
                 <div class="grid grid-cols-2 mt-5">
                     <div class="form-item">
-                        <label class="form-label"><i class="fa fa-table text-info"></i> 匹配相似表</label>
+                        <label class="form-label"><i class="fa fa-table text-info"></i> Match similar tables</label>
                         <div class="form-control-area">
                             <label class="form-switch">
                                 <input name="autoMatchTable" type="checkbox" />
@@ -99,21 +99,21 @@
                     </div>
                 </div>
 
-                <!-- 表映射关系 -->
+                <!-- Map relation -->
                 <div class="grid mt-5">
                     <div class="form-item" id="tableGroups">
                         <label class="form-label">
-                            表映射关系
-                            <i class="fa fa-question-circle" title="适用于快速配置大量表映射关系场景"></i>
+                            Map relation
+                            <i class="fa fa-question-circle" title="Suitable for quickly configuring many table mappings"></i>
                         </label>
                         <div>
-                            <textarea name="tableGroups" class="form-control" rows="10" placeholder="请输入表映射关系，每行一个映射..."></textarea>
+                            <textarea name="tableGroups" class="form-control" rows="10" placeholder="Enter table mappings, one per line..."></textarea>
                             <label class="text-gray-500">
-                                <span class="text-sm">数据源表|目标源表=源表字段A1*|目标字段A2*,源表字段B1|目标字段B2</span>
-                                <i class="fa fa-question-circle" title="'|'表示映射关系，'='表示后面是表字段映射关系，有多个字段使用英文','拼接，'*'表示主键，如有多张表换行追加"></i>
+                                <span class="text-sm">source_table|target_table=srcFieldA1*|tgtFieldA2*,srcFieldB1|tgtFieldB2</span>
+                                <i class="fa fa-question-circle" title="= = = = = = = = = = = = * * * * * * * * * * * * * * * * * * * * * *"></i>
                                 <a class="text-sm" href="https://gitee.com/ghi/dbsyncer/wikis/%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/%E6%89%B9%E9%87%8F%E9%85%8D%E7%BD%AE%E8%A1%A8%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB"
-                                   title="操作手册>批量配置表映射关系" target='_blank'>
-                                    <i class="fa fa-external-link"></i>参考文档
+                                   title="Manual > Batch configure table mappings" target='_blank'>
+                                    <i class="fa fa-external-link"></i>Documentation
                                 </a>
                             </label>
                         </div>
@@ -121,11 +121,11 @@
                 </div>
             </div>
 
-            <!-- 关联配置 -->
+            <!-- AssociationConfig -->
             <div id="linked-config" class="hidden mt-4">
                 <div class="grid grid-cols-2 mt-5">
                     <div class="form-item">
-                        <label class="form-label">同步任务<strong class="text-primary">*</strong></label>
+                        <label class="form-label">Sync task<strong class="text-primary">*</strong></label>
                         <select name="mappingId" id="mappingTask" class="form-control">
                         </select>
                     </div>
@@ -159,7 +159,7 @@
 
     function isOracleConnector($connector, connectorId) {
         const type = resolveConnectorType($connector, connectorId);
-        // 达梦 / OceanBaseOracle 与 Oracle 一样以 Schema(用户) 为命名空间，无独立库列表
+        // Dream /OceanBaseOracle and Oracle Same asSchema(User) To name space,NoneIndependenceLibraryList
         return type && ['oracle', 'dameng', 'oceanbaseoracle'].indexOf(String(type).toLowerCase()) >= 0;
     }
 
@@ -187,7 +187,7 @@
                 }
                 schemaSelect.setData(array);
             } else {
-                bootGrowl("获取Schema信息失败: " + response.message, "danger");
+                bootGrowl("Could not close temporary folder: %s " + response.message, "danger");
             }
         })
     }
@@ -218,13 +218,13 @@
                 }
                 dbSelect.setData(db);
             } else {
-                bootGrowl("获取数据库信息失败: " + response.message, "danger");
+                bootGrowl("Could not close temporary folder: %s " + response.message, "danger");
             }
         })
     }
 
     function initDBSelect($connector, $database, $schema, role) {
-        // 为每个 select 组维护独立的连接器ID，避免上下文串用
+        // For eachselect Group maintains independenceConnectorID，Avoid context string
         let currentConnectorId = null;
 
         const schemaSelect = $schema.dbSelect({});
@@ -252,7 +252,7 @@
     }
 
     /**
-     * 切换「关联同步任务 / 自定义」时展示对应表单区域。
+     * Switch「Other Organiser 88 / Custom」displays the corresponding form area.
      */
     function showCreateType(model) {
         const custom = $("#custom-config");
@@ -270,7 +270,7 @@
         }
     }
 
-    // 绑定自定义+关联同步任务切换事件
+    // TieCustom+Other Organiser 88SwitchEvent
     function bindCreateTypeChange() {
         const createType = $('#task-create').radioGroup({
             theme: 'info',
@@ -279,12 +279,12 @@
                 showCreateType(value);
             }
         });
-        // 渲染选择radio配置
+        // Render Selection ratifyradioConfigure
         showCreateType(createType.getValue());
     }
 
     /**
-     * 同步任务下拉（远程分页，需用户显式选择）。
+     * Sync taskDraw Down (Loving)minPage，YesUserVisible selection.
      */
     function initMappingSelect() {
         $("#mappingTask").dbSelect(buildRemotePagingSelectOptions({
@@ -295,7 +295,7 @@
     }
 
     /**
-     * 关联同步任务模式下是否已选择具体任务（排除空占位）。
+     * Other Organiser 88ModeYesNoSelectedTasks（This post is part of our special coverage Syria Protests 2011.
      * @returns {boolean}
      */
     function hasMappingTaskSelected() {
@@ -315,18 +315,18 @@
         bindCreateTypeChange();
         initMappingSelect();
 
-        //保存
+        //Save
         $("#validate-sync-submit-btn").click(function () {
             const $form = $("#validate-sync-add-form");
             const createType = $form.find('input[name="createType"]:checked').val();
             if (createType === 'link' && !hasMappingTaskSelected()) {
-                bootGrowl("请选择同步任务", "warning");
+                bootGrowl("Other Organiser", "warning");
                 return;
             }
             if (validateForm($form)) {
                 const btn = $(this);
                 const originalText = btn.html();
-                btn.html('<i class="fa fa-spinner fa-spin"></i> 保存中...').prop('disabled', true);
+                btn.html('<i class="fa fa-spinner fa-spin"></i> Saving...').prop('disabled', true);
                 /** @type {Record<string, string|string[]>} */
                 let payload = $form.serializeJson();
                 if (createType === 'custom') {
@@ -335,7 +335,7 @@
                 doPoster("/validate-sync/add", payload, function (response) {
                     btn.html(originalText).prop('disabled', false);
                     if (response.success === true) {
-                        bootGrowl("保存订正校验成功!", "success");
+                        bootGrowl("Save modified verification successful!", "success");
                         const rawStr = localStorage.getItem("dbsyncer.pagination.validate-sync-list");
                         const raw = JSON.parse(rawStr);
                         raw.pageNum = 1;
