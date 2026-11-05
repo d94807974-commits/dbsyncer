@@ -21,17 +21,17 @@
         <module>dbsyncer-web</module>
     </modules>
 
-    <!-- 全局参数版本 -->
+    <!-- Global Parameter Version -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- maven 编译资源 版本 -->
+        <!-- Maven Compilation Resource Version -->
         <maven.compiler.source>1.8</maven.compiler.source>
-        <!-- maven 编译目标版本  -->
+        <!-- maven compiled target version -->
         <maven.compiler.target>1.8</maven.compiler.target>
-        <!-- maven 编译插件版本 -->
+        <!-- maven compile plugin version -->
         <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
 
-        <!-- 编码规范 -->
+        <!-- Coding Code -->
         <spotless-maven-plugin.version>2.29.0</spotless-maven-plugin.version>
 
         <java.version>1.8</java.version>
@@ -65,11 +65,11 @@
         <duckdb.version>1.5.3.0</duckdb.version>
         <hdrhistogram.version>2.1.12</hdrhistogram.version>
 
-        <!-- 可选参数 -->
+        <!-- Optional Parameters -->
         <skip.spotless>true</skip.spotless>
     </properties>
 
-    <!-- 统一管理第三方依赖jar -->
+    <!-- Unified management of third-party dependence jar -->
     <dependencyManagement>
         <dependencies>
             <!-- Import dependency management from Spring Boot -->
@@ -81,7 +81,7 @@
                 <scope>import</scope>
             </dependency>
 
-            <!-- Apache Commons 工具类 -->
+            <!-- Apache Adjusts Tool Category Adjusted -->
             <dependency>
                 <groupId>commons-fileupload</groupId>
                 <artifactId>commons-fileupload</artifactId>
@@ -112,7 +112,7 @@
                 <version>${protobuf.version}</version>
             </dependency>
 
-            <!-- smartcn中文分词器 -->
+            <!-- smartcn Chinese placeholder -->
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-analyzers-smartcn</artifactId>
@@ -183,7 +183,7 @@
                 <version>${kingbase.version}</version>
             </dependency>
 
-            <!-- 须同时锁定 sync/core/bson，避免被 spring-boot-dependencies 压到 4.2.x 导致 NoClassDefFoundError -->
+            <!-- Sync/ core/bson should be locked at the same time, avoiding spring-boot-dependincies to 4.2.x leading to NoClassDeffoundError -->
             <dependency>
                 <groupId>org.mongodb</groupId>
                 <artifactId>mongodb-driver-sync</artifactId>
@@ -326,16 +326,16 @@
                             <eclipse>
                                 <file>${maven.multiModuleProjectDirectory}/src/resources/spotless/java.xml</file>
                             </eclipse>
-                            <!-- 自动移除Java文件中未使用的导包 -->
+                            <!-- Automatically remove guidance packages not used in Java files -->
                             <removeUnusedImports />
-                            <!-- 标准化Java注解的格式（缩进/换行等） -->
+                            <!-- Standardized Java Note Format (indentation/line breaks, etc.) -->
                             <formatAnnotations />
                             <importOrder>
-                                <!-- 自定义Java导包的排序规则 -->
+                                <!-- Customized sorting rules for Java package -->
                                 <order>org.dbsyncer,org.apache,org,,jakarta,,javax,java,\#</order>
                             </importOrder>
                             <replaceRegex>
-                                <name>禁止通配符导入</name>
+                                <name>Ban wildcard import</name>
                                 <searchRegex>import\s+(static)*\s*[^\*\s]+\*;(\r\n|\r|\n)</searchRegex>
                                 <replacement>$1</replacement>
                             </replaceRegex>
@@ -357,15 +357,15 @@
                                 <sortProperties>false</sortProperties>
                             </sortPom>
                             <replace>
-                                <!-- 保留POM文件project节点前的首行空行 -->
-                                <name>保留首行空行</name>
+                                <!-- Keep an empty first line in front of the POM file project node -->
+                                <name>Keep first line empty lines</name>
                                 <search>project</search>
                                 <replacement>project</replacement>
                             </replace>
                         </pom>
                         <upToDateChecking>
                             <enabled>true</enabled>
-                            <!-- 开启检查，避免重复格式化已合规的文件 -->
+                            <!-- Turn on the check to avoid repeating the formatted documents -->
                         </upToDateChecking>
                     </configuration>
                     <executions>
@@ -381,7 +381,7 @@
             </plugins>
         </pluginManagement>
 
-        <!-- 全局公共插件 -->
+        <!-- Global Public Plugin -->
         <plugins>
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
@@ -391,15 +391,15 @@
     </build>
     <url>https://gitee.com/ghi/dbsyncer</url>
 
-    <!-- 镜像仓库地址 -->
+    <!-- Mirror repository address -->
     <repositories>
-        <!-- DataNucleus仓库 -->
+        <!-- DataNucleus repository -->
         <repository>
             <id>datanucleus</id>
             <url>http://www.datanucleus.org/downloads/maven2/</url>
         </repository>
 
-        <!-- 阿里云仓库 -->
+        <!-- Aliyun warehouse. -->
         <repository>
             <snapshots>
                 <enabled>false</enabled>
@@ -409,7 +409,7 @@
             <url>https://maven.aliyun.com/repository/google</url>
         </repository>
 
-        <!-- atlassian仓库 -->
+        <!-- Atlassian warehouse -->
         <repository>
             <releases>
                 <enabled>true</enabled>
