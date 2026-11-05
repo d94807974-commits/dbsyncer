@@ -36,7 +36,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 /**
- * 跨节点 Web SSO：已登录节点签发票据，目标节点消费后建立本地 Session。
+ * CrossNodes Web SSO：AlreadyLoginNodesissuing documents,Objective CombinedNodesCreate local after consumptionSession。
  *
  * @author wuji
  * @version 1.0.0
@@ -54,11 +54,11 @@ public class SsoController {
     private PermissionService permissionService;
 
     /**
-     * 已登录用户跳转到目标节点（携带短时票据）。
+     * AlreadyLoginUserJump toObjective CombinedNodes（Carrying a short-term note Responses
      *
-     * @param target   目标节点，格式 {@code ip:port}（勿带 http://，否则会被防火墙拦截）
-     * @param redirect 目标相对路径，默认 /
-     * @param response 响应
+     * @param target   Objective CombinedNodes，Format{@code ip:port}（Don't.And...http://，NothenIt will.Firewall.Cut.）
+     * @param redirect Objective CombinedRelative path, default /
+     * @param response Response
      */
     @GetMapping("/redirect")
     public void redirect(@RequestParam("target") String target,
@@ -73,35 +73,35 @@ public class SsoController {
         }
         try {
             if (!ssoTicketService.isAllowedTarget(target)) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "目标节点不在集群白名单中");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Target Multiple is not on the White List.");
                 return;
             }
             String username = authentication.getName();
             String roleCode = joinAuthorities(authentication.getAuthorities());
             String ticket = ssoTicketService.issue(username, roleCode, target);
             String safeRedirect = ssoTicketService.sanitizeRedirect(redirect);
-            // base 已含目标节点 context-path（与本机 server.servlet.context-path 一致）
+            // base IncludedObjective CombinedNodes context-path（andHere.server.servlet.context-path Unanimously)
             String base = ssoTicketService.normalizeTargetBase(target);
             String consumeUrl = base + "/sso/consume?ticket="
                     + URLEncoder.encode(ticket, StandardCharsets.UTF_8.name())
                     + "&redirect=" + URLEncoder.encode(safeRedirect, StandardCharsets.UTF_8.name());
             response.sendRedirect(consumeUrl);
         } catch (BizException e) {
-            logger.warn("SSO redirect 失败: {}", e.getMessage());
+            logger.warn("SSO direct failed: }", e.getMessage());
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
-            logger.error("SSO redirect 异常", e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "SSO 跳转失败");
+            logger.error("SSO direct", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "SSO Jump Failed");
         }
     }
 
     /**
-     * 目标节点消费票据并建立本地登录态。
+     * Objective CombinedNodesConsumer bills and establishment of localLoginState.
      *
-     * @param ticket   JWT 票据
-     * @param redirect 相对路径
-     * @param request  请求
-     * @param response 响应
+     * @param ticket   JWT Instruments
+     * @param redirect Relative Path
+     * @param request  Request
+     * @param response Response
      */
     @GetMapping("/consume")
     public void consume(@RequestParam("ticket") String ticket,
@@ -118,7 +118,7 @@ public class SsoController {
     }
 
     /**
-     * 本机相对路径重定向，自动拼接 {@code request.getContextPath()}。
+     * Re-direction of the machine relative path, automatic fusion{@code request.getContextPath()}。
      */
     private void sendLocalRedirect(HttpServletRequest request, HttpServletResponse response, String path)
             throws IOException {
@@ -126,7 +126,7 @@ public class SsoController {
     }
 
     private void establishSession(HttpServletRequest request, WebSsoTicket ssoTicket) {
-        // 目标节点按本地 RBAC 重载权限，避免票据里旧 roleCode / 过期权限码
+        // Objective CombinedNodesPress LocalRBAC ReloadPermissions，Avoid old papers.roleCode / ExpiryPermissionsCode
         String authorityString = permissionService.buildAuthorityString(ssoTicket.getUsername());
         if (StringUtil.isBlank(authorityString)) {
             authorityString = StringUtil.getIfBlank(ssoTicket.getRoleCode(), StringUtil.EMPTY);
@@ -140,7 +140,7 @@ public class SsoController {
         SecurityContextHolder.setContext(context);
         HttpSession session = request.getSession(true);
         session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
-        logger.info("SSO 登录成功: user={}, session={}", ssoTicket.getUsername(), session.getId());
+        logger.info("POLICY: user=}, session=}", ssoTicket.getUsername(), session.getId());
     }
 
     private String joinAuthorities(Collection<? extends GrantedAuthority> authorities) {

@@ -13,9 +13,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 /**
- * 时间窗口与 Nonce 校验，防止 OpenAPI 重放攻击。
+ * TimeWindowand Nonce Verify, prevent.OpenAPI Restart the attack.
  *
- * @author 穿云
+ * @author The clouds.
  * @version 2.0.0
  */
 @Component
@@ -24,7 +24,7 @@ public class TimestampValidator {
     private static final Logger logger = LoggerFactory.getLogger(TimestampValidator.class);
 
     /**
-     * 默认时间窗口：±5 分钟（毫秒）
+     * DefaultTimeWindow:±5 minutes（ms）
      */
     public static final long DEFAULT_TIME_WINDOW = 5 * 60 * 1000L;
 
@@ -32,17 +32,17 @@ public class TimestampValidator {
     private CacheService cacheService;
 
     /**
-     * 验证时间戳是否在有效时间窗口内。
+     * AuthenticationTimePokeYesNoIt's working.Timewindow.
      *
-     * @param timestamp  请求时间戳
-     * @param timeWindow 时间窗口（毫秒）
-     * @return 是否有效
+     * @param timestamp  RequestTimePoke
+     * @param timeWindow TimeWindowms）
+     * @return YesNoValid.
      */
     public boolean validateTimestamp(long timestamp, long timeWindow) {
         long now = System.currentTimeMillis();
         long diff = Math.abs(now - timestamp);
         if (diff > timeWindow) {
-            logger.warn("时间戳验证失败，当前时间: {}, 请求时间: {}, 差值: {}ms, 允许窗口: {}ms",
+            logger.warn("Timetamp authentication failed, current time: { 230, request time: }, margin: {} ms, allow window: {}ms",
                     now, timestamp, diff, timeWindow);
             return false;
         }
@@ -50,29 +50,29 @@ public class TimestampValidator {
     }
 
     /**
-     * 验证 Nonce 是否重复。
+     * AuthenticationNonce YesNoRepeat.
      *
-     * @param nonce     随机数
-     * @param timestamp 请求时间戳
-     * @return true 有效；false 重复或无效
+     * @param nonce     Random number
+     * @param timestamp RequestTimePoke
+     * @return true Effective;false Repeat orNoneEffect
      */
     public boolean validateNonce(String nonce, long timestamp) {
         if (StringUtil.isBlank(nonce)) {
-            logger.warn("Nonce为空");
+            logger.warn("Nance is empty.");
             return false;
         }
         String key = CacheConstant.OPENAPI_NONCE_PREFIX + nonce;
         if (cacheService.containsKey(key)) {
-            logger.warn("检测到重复的Nonce: {}", nonce);
+            logger.warn("Repeated Nance: {", nonce);
             return false;
         }
-        // Nonce 存活时间与时间窗口一致，过期后允许复用
+        // Nonce Survive.TimeandTimeWindow is consistent and waited until expiry to allow reuse
         cacheService.put(key, timestamp, DEFAULT_TIME_WINDOW);
         return true;
     }
 
     /**
-     * 验证时间戳和 Nonce。
+     * AuthenticationTimeStampNonce。
      */
     public boolean validate(long timestamp, String nonce, long timeWindow) {
         if (!validateTimestamp(timestamp, timeWindow)) {
@@ -82,7 +82,7 @@ public class TimestampValidator {
     }
 
     /**
-     * 验证时间戳和 Nonce（默认时间窗口）。
+     * AuthenticationTimeStampNonce（DefaultTimewindow).
      */
     public boolean validate(long timestamp, String nonce) {
         return validate(timestamp, nonce, DEFAULT_TIME_WINDOW);

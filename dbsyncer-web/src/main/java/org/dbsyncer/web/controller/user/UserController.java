@@ -31,11 +31,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 用户信息管理
+ * UserInfoManagement
  *
  * @author AE86
  * @ClassName: UserController
- * @date: 2017年7月7日 上午10:03:33
+ * @date: 2017Year7Intern7Morning10:03:33
  */
 @Controller
 @RequestMapping(value = "/user")
@@ -137,9 +137,9 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 提前解除登录失败锁定。
+     * Early release.Login failedLocked.
      */
-    @OperLog(type = OperLogType.USER_UPDATE, message = "解锁用户")
+    @OperLog(type = OperLogType.USER_UPDATE, message = "Unlock user")
     @PostMapping("/unlock")
     @ResponseBody
     public RestResult unlock(HttpServletRequest request) {
@@ -147,11 +147,11 @@ public class UserController extends BaseController {
             requirePermission("user:edit");
             Map<String, String> params = getParamsWithUserName(request);
             String username = params.get("username");
-            Assert.hasText(username, "用户名不能为空");
+            Assert.hasText(username, "Username cannot be empty");
             loginService.unlock(username);
             logService.log(LogType.UserLog.UPDATE,
-                    String.format("[%s]解锁账号[%s]", getUserName(), username));
-            return RestResult.restSuccess("解锁成功");
+                    String.format("[%s] Unlock account [%s]", getUserName(), username));
+            return RestResult.restSuccess("Unlocked.");
         } catch (Exception e) {
             logger.error(e.getLocalizedMessage(), e);
             return RestResult.restFail(e.getMessage());
@@ -165,7 +165,7 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 获取登录用户信息（含权限码，供前端显隐）。
+     * AccessLoginUserInfo（HamPermissionsCode for the front end.
      */
     private UserInfoVO getUserInfoVo() {
         String currentUserName = getUserName();
@@ -180,7 +180,7 @@ public class UserController extends BaseController {
     private String getUserName() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        Assert.hasText(username, "无法获取登录用户.");
+        Assert.hasText(username, "Unable to get logged-in user.");
         return username;
     }
 

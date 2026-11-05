@@ -71,7 +71,7 @@ public class NoticeController extends BaseController {
         return "notice/list";
     }
 
-    @OperLog(type = OperLogType.SYSTEM_INFO, message = "修改告警通知")
+    @OperLog(type = OperLogType.SYSTEM_INFO, message = "Modify alarm notice")
     @PostMapping("/edit")
     @ResponseBody
     public RestResult edit(HttpServletRequest request) {
@@ -85,7 +85,7 @@ public class NoticeController extends BaseController {
         }
     }
 
-    @OperLog(type = OperLogType.SYSTEM_INFO, message = "保存告警策略")
+    @OperLog(type = OperLogType.SYSTEM_INFO, message = "Save alarm strategy")
     @PostMapping("/strategy/save")
     @ResponseBody
     public RestResult saveStrategy(HttpServletRequest request) {
@@ -99,7 +99,7 @@ public class NoticeController extends BaseController {
         }
     }
 
-    @OperLog(type = OperLogType.SYSTEM_INFO, message = "删除告警策略")
+    @OperLog(type = OperLogType.SYSTEM_INFO, message = "Delete alarm strategy")
     @PostMapping("/strategy/remove")
     @ResponseBody
     public RestResult removeStrategy(HttpServletRequest request) {
@@ -113,7 +113,7 @@ public class NoticeController extends BaseController {
         }
     }
 
-    @OperLog(type = OperLogType.SYSTEM_INFO, message = "保存告警规则")
+    @OperLog(type = OperLogType.SYSTEM_INFO, message = "Keep the alarm rules.")
     @PostMapping("/rule/save")
     @ResponseBody
     public RestResult saveRule(HttpServletRequest request) {
@@ -127,7 +127,7 @@ public class NoticeController extends BaseController {
         }
     }
 
-    @OperLog(type = OperLogType.SYSTEM_INFO, message = "删除告警规则")
+    @OperLog(type = OperLogType.SYSTEM_INFO, message = "Delete alarm rules")
     @PostMapping("/rule/remove")
     @ResponseBody
     public RestResult removeRule(HttpServletRequest request) {
@@ -149,7 +149,7 @@ public class NoticeController extends BaseController {
             return RestResult.restSuccess(messageService.testSendMessage());
         } catch (Exception e) {
             logger.error(e.getLocalizedMessage(), e);
-            return RestResult.restFail("测试失败，请检查配置是否正确");
+            return RestResult.restFail("Sweden");
         }
     }
 

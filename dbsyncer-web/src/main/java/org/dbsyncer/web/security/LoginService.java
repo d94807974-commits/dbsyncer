@@ -15,9 +15,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 登录失败次数与账号锁定。
- * 已存在用户落库 {@code dbsyncer_user.LOGIN_FAIL_COUNT / LOCK_UNTIL}，集群节点共享；
- * 不存在的用户名仍用进程内缓存限流（防探测），重启清空。
+ * Login failedNumberandAccountLocked.
+ * ExistsUserDropLibrary {@code dbsyncer_user.LOGIN_FAIL_COUNT / LOCK_UNTIL}，ClusterNodesTotalEnjoyment;
+ * Non-existentUsernameStill using process cache limit flow (deception) to restartClear。
  *
  * @author wuji
  * @version 1.0.0
@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class LoginService {
 
     /**
-     * 连续失败上限
+     * ContinuousFailedUpper limit
      */
     public static final int MAX_ATTEMPTS = 3;
 
@@ -37,12 +37,12 @@ public class LoginService {
     private SystemConfigProfile systemConfigProfile;
 
     /**
-     * 未知用户名的进程内失败计数（不落库）
+     * UnknownUsernameIn the processFailedCounting (Uncounted)Library）
      */
     private final ConcurrentHashMap<String, LoginState> unknownAttempts = new ConcurrentHashMap<>();
 
     /**
-     * 当前配置的锁定时长（分钟），非法或未配置时回退系统配置默认值。
+     * CurrentConfigureThe lock.ScheduledLongminutes），Illegal or non-existentConfigureBackSystem settingsDefault value。
      */
     public int getLockMinutes() {
         SystemConfig config = systemConfigProfile.getSystemConfig();
@@ -51,14 +51,14 @@ public class LoginService {
     }
 
     /**
-     * 账号是否处于锁定中（过期则清零并返回 false）。
+     * AccountYesNoLocked (expired and zero)Back false）。
      */
     public boolean isLocked(String username) {
         return resolveLockUntil(username) > System.currentTimeMillis();
     }
 
     /**
-     * 剩余锁定分钟数（向上取整，至少 1；未锁定返回 0）。
+     * Remaining Locksminutes78 Number (upward, at least1；UnlockedBack 0）。
      */
     public long getRemainingLockMinutes(String username) {
         long lockUntil = resolveLockUntil(username);
@@ -72,7 +72,7 @@ public class LoginService {
     }
 
     /**
-     * 记录一次登录失败；达到阈值则锁定。
+     * Record it once.Login failed；Reaching the thresholdValuelock.
      */
     public LoginResult onFailure(String username) {
         int lockMinutes = getLockMinutes();
@@ -92,7 +92,7 @@ public class LoginService {
     }
 
     /**
-     * 当前锁定提示（已在锁定期内访问登录）。
+     * Current LockNotice（Visited during locking periodLogin）。
      */
     public LoginResult lockedResult(String username) {
         long remaining = getRemainingLockMinutes(username);
@@ -100,14 +100,14 @@ public class LoginService {
     }
 
     /**
-     * 登录成功，清除失败计数与锁定。
+     * Login succeeded，ClearFailedCountandLocked.
      */
     public void onSuccess(String username) {
         unlock(username);
     }
 
     /**
-     * 管理员解锁或登录成功清零。
+     * AdministratorUnlockorLogin succeededClear. Theirs.
      */
     public void unlock(String username) {
         if (StringUtil.isBlank(username)) {

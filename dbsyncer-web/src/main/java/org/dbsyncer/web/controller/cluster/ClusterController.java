@@ -31,7 +31,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * 集群管理。
+ * Cluster management。
  *
  * @author wuji
  * @version 1.0.0
@@ -53,7 +53,7 @@ public class ClusterController extends BaseController {
     private ClusterNodeMetricAggregator clusterNodeMetricAggregator;
 
     /**
-     * 集群列表页
+     * ClusterListPage
      */
     @GetMapping("/list")
     public String list(ModelMap model) {
@@ -63,7 +63,7 @@ public class ClusterController extends BaseController {
     }
 
     /**
-     * 心跳探测（免登录，供节点互探）。
+     * Heart rate.Detection (no Worldwide)Login，ForNodesI don't know.
      */
     @GetMapping("/ping")
     @ResponseBody
@@ -72,7 +72,7 @@ public class ClusterController extends BaseController {
     }
 
     /**
-     * 节点分页
+     * NodesminPage
      */
     @PostMapping("/query")
     @ResponseBody
@@ -86,15 +86,15 @@ public class ClusterController extends BaseController {
     }
 
     /**
-     * 修改节点名称
+     * UpdateNode Name
      */
-    @OperLog(type = OperLogType.SYSTEM_INFO, message = "修改集群配置")
+    @OperLog(type = OperLogType.SYSTEM_INFO, message = "Modify Cluster Configuration")
     @PostMapping("/edit")
     @ResponseBody
     public RestResult edit(@RequestParam("id") String id, @RequestParam("name") String name) {
         try {
             clusterService.updateNodeName(id, name);
-            return RestResult.restSuccess("修改节点名称成功");
+            return RestResult.restSuccess("Successfully modified node name");
         } catch (Exception e) {
             logger.error(e.getLocalizedMessage(), e);
             return RestResult.restFail(e.getMessage());
@@ -102,15 +102,15 @@ public class ClusterController extends BaseController {
     }
 
     /**
-     * 删除离线节点
+     * DeleteOfflineNodes
      */
-    @OperLog(type = OperLogType.SYSTEM_INFO, message = "删除集群节点")
+    @OperLog(type = OperLogType.SYSTEM_INFO, message = "Delete Cluster Node")
     @PostMapping("/remove")
     @ResponseBody
     public RestResult remove(@RequestParam("id") String id) {
         try {
             clusterService.removeNode(id);
-            return RestResult.restSuccess("删除节点成功");
+            return RestResult.restSuccess("Successfully deleted node");
         } catch (Exception e) {
             logger.error(e.getLocalizedMessage(), e);
             return RestResult.restFail(e.getMessage());
@@ -118,7 +118,7 @@ public class ClusterController extends BaseController {
     }
 
     /**
-     * 聚合各节点运行指标（本机直采 + 远端 HTTP）。
+     * Together.NodesOperational indicators (inline)+ FarHTTP）。
      */
     @GetMapping("/metrics")
     @ResponseBody
@@ -143,8 +143,8 @@ public class ClusterController extends BaseController {
     }
 
     /**
-     * 内部统一消息入口（按 type/event 路由）。须携带 {@code X-Cluster-Token}。
-     * <p>须同步返回 RestResult，供集群节点 HTTP 通知解析；不可加 {@code @Async}，否则易出现 200 空 body。
+     * Common internal message portal (bytype/event The route. Must carry{@code X-Cluster-Token}。
+     * <p>SynchroniseBack RestResult，For clustersNodes HTTP Notification parsing;notable{@code @Async}，NoIt's easy to show up.200 Emptybody。
      */
     @PostMapping("/internal/message")
     @ResponseBody
@@ -169,7 +169,7 @@ public class ClusterController extends BaseController {
     }
 
     /**
-     * 本机插件清单。须携带 {@code X-Cluster-Token}。
+     * Here.PluginList. Must carry{@code X-Cluster-Token}。
      */
     @GetMapping("/internal/plugin/manifest")
     @ResponseBody
@@ -183,7 +183,7 @@ public class ClusterController extends BaseController {
     }
 
     /**
-     * 读取本机插件文件。须携带 {@code X-Cluster-Token}。
+     * Read HomePluginDocumentation。Must carry{@code X-Cluster-Token}。
      */
     @GetMapping("/internal/plugin/file")
     public void pluginFile(HttpServletResponse response, @RequestParam("name") String name) {
@@ -209,7 +209,7 @@ public class ClusterController extends BaseController {
     }
 
     /**
-     * 接收插件文件。文件名在请求头 {@link PluginFile#FILE_NAME_HEADER}。须携带 {@code X-Cluster-Token}。
+     * ReceivedPluginDocumentation。FilenameOn request.{@link PluginFile#FILE_NAME_HEADER}。Must carry{@code X-Cluster-Token}。
      */
     @PostMapping("/internal/plugin/file")
     @ResponseBody
@@ -226,7 +226,7 @@ public class ClusterController extends BaseController {
     }
 
     /**
-     * 接收插件删除。文件名在请求头 {@link PluginFile#FILE_NAME_HEADER}。须携带 {@code X-Cluster-Token}。
+     * ReceivedPluginDelete。FilenameOn request.{@link PluginFile#FILE_NAME_HEADER}。Must carry{@code X-Cluster-Token}。
      */
     @PostMapping("/internal/plugin/remove")
     @ResponseBody
@@ -245,7 +245,7 @@ public class ClusterController extends BaseController {
     private byte[] readPluginBody(HttpServletRequest request) throws IOException {
         long length = request.getContentLengthLong();
         if (length > PluginFile.MAX_BYTES) {
-            throw new BizException("插件文件超过128MB");
+            throw new BizException("Plugin file exceeding 128MB");
         }
         int initial = length > 0 && length <= Integer.MAX_VALUE ? (int) length : 8192;
         ByteArrayOutputStream out = new ByteArrayOutputStream(initial);
@@ -256,7 +256,7 @@ public class ClusterController extends BaseController {
         while ((n = in.read(buf)) != -1) {
             total += n;
             if (total > PluginFile.MAX_BYTES) {
-                throw new BizException("插件文件超过128MB");
+                throw new BizException("Plugin file exceeding 128MB");
             }
             out.write(buf, 0, n);
         }

@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * 为可能写操作日志的请求包装缓存体，供 {@link OperLogInterceptor} 读取；本 Filter 不落库。
+ * For possibleOperation logsrequest for packaging of caches{@link OperLogInterceptor} reading;BenFilter Don't dropLibrary。
  *
  * @author wuji
  * @version 1.0.0

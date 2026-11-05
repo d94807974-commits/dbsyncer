@@ -80,7 +80,7 @@ public class ConfigController {
                     FileUtils.deleteQuietly(dest);
                     FileUtils.copyInputStreamToFile(file.getInputStream(), dest);
                     systemConfigService.refreshConfig(dest);
-                    String msg = String.format("导入配置文件%s", filename);
+                    String msg = String.format("Organisation", filename);
                     logger.info(msg);
                     logService.log(LogType.CacheLog.IMPORT, msg);
                 }
@@ -106,7 +106,7 @@ public class ConfigController {
             info.setAppName(appConfig.getName());
             info.setCreateTime(Instant.now().toEpochMilli());
             configExportService.exportZip(outputStream, info);
-            String msg = String.format("导出配置文件%s", fileName);
+            String msg = String.format("Export profile %s", fileName);
             logger.info(msg);
             logService.log(LogType.CacheLog.EXPORT, msg);
             outputStream.flush();

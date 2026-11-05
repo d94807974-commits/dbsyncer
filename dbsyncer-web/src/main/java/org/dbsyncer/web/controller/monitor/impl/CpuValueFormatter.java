@@ -13,7 +13,7 @@ public final class CpuValueFormatter implements ValueFormatter<Object, Object> {
     @Override
     public Object formatValue(Object value) {
         Double val = (Double) value;
-        // Micrometer system.cpu.usage 不可用时返回 -1（如首采、部分 Windows JVM）
+        // Micrometer system.cpu.usage When not availableBack -1（If you like, you like.min Windows JVM）
         if (val == null || Double.isNaN(val) || val < 0) {
             return 0.0;
         }

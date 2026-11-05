@@ -4,7 +4,7 @@
 package org.dbsyncer.web.security;
 
 /**
- * 一次登录失败后的计数与锁定状态，用于拼装提示文案。
+ * Once.Login failedCount laterandLockStatus，Used for the assemblyNoticeThe case.
  *
  * @author wuji
  * @version 1.0.0
@@ -41,17 +41,17 @@ public final class LoginResult {
     }
 
     /**
-     * 密码错误且尚未锁定。
+     * PasswordErrorAnd not yet locked.
      */
     public String badCredentialsMessage() {
-        return String.format("账号或密码错误，还剩%d次机会；连续失败%d次将锁定%d分钟", remainingAttempts, LoginService.MAX_ATTEMPTS, lockMinutes);
+        return String.format("Account or password error, %d opportunities remaining; %d consecutive failures will lock %d minutes", remainingAttempts, LoginService.MAX_ATTEMPTS, lockMinutes);
     }
 
     /**
-     * 本次失败后刚触发锁定，或已在锁定期内。
+     * This time.Failedis then triggered or is already in the locking period.
      */
     public String lockedMessage() {
         long minutes = Math.max(1L, remainingLockMinutes);
-        return String.format("账号已锁定，剩余%d分钟，请稍后再试或联系管理员解锁", minutes);
+        return String.format("Account 380, %d minutes left, please try again later or contact the administrator to unlock", minutes);
     }
 }

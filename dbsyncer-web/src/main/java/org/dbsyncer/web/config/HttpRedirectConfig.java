@@ -53,18 +53,18 @@ public class HttpRedirectConfig implements WebServerFactoryCustomizer<TomcatServ
         factory.addAdditionalTomcatConnectors(connector);
     }
 
-    // 配置过滤器顺序，确保在安全过滤器之前执行
+    // ConfigureFilter sequence to ensure implementation before security filter
     @Bean
     @ConditionalOnProperty(value = "server.http.redirect", havingValue = "true")
     public FilterRegistrationBean<Filter> httpsRedirectFilter() {
         FilterRegistrationBean<Filter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new HttpsRedirectFilter());
         registrationBean.addUrlPatterns("/*");
-        registrationBean.setOrder(1); // 高优先级
+        registrationBean.setOrder(1); // High Priority
         return registrationBean;
     }
 
-    // 重定向过滤器实现
+    // Redirect filter achieved
     public class HttpsRedirectFilter implements Filter {
 
         @Override
@@ -72,12 +72,12 @@ public class HttpRedirectConfig implements WebServerFactoryCustomizer<TomcatServ
             HttpServletRequest httpRequest = (HttpServletRequest) request;
             HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-            // 如果是HTTP请求且端口是HTTP端口，则重定向到HTTPS
+            // IfYesHTTPRequest andPortYesHTTPPort，Redirect toHTTPS
             if (!httpRequest.isSecure() && httpRequest.getLocalPort() == httpPort) {
                 StringBuffer url = httpRequest.getRequestURL();
                 String queryString = httpRequest.getQueryString();
 
-                // 构建HTTPS URL
+                // ICALLYHTTPS URL
                 String httpsUrl = url.toString().replaceFirst("http://", "https://").replace(":" + httpPort, ":" + httpsPort);
 
                 if (queryString != null) {

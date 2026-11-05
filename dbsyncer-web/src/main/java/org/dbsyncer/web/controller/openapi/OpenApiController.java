@@ -106,12 +106,12 @@ public class OpenApiController extends BaseController implements InitializingBea
         try {
             String lookupPath = getV1LookupPath(request);
             if (lookupPath == null) {
-                return OpenApiResponse.fail(OpenApiErrorCode.BAD_REQUEST, "请求路径无效");
+                return OpenApiResponse.fail(OpenApiErrorCode.BAD_REQUEST, "Invalid request path");
             }
             InvocableHandlerMethod invocableMethod = handlers.get(lookupPath);
             if (invocableMethod == null) {
-                logger.warn("OpenAPI v1 未找到对应接口: {}", lookupPath);
-                return OpenApiResponse.fail(OpenApiErrorCode.NOT_FOUND, "接口不存在: " + lookupPath);
+                logger.warn("OpenAPI v1 no matching API: {}", lookupPath);
+                return OpenApiResponse.fail(OpenApiErrorCode.NOT_FOUND, "API not found: " + lookupPath);
             }
 
             // GET/POST 等请求方法校验：请求方法必须在目标 handler 允许的方法列表中
@@ -126,16 +126,16 @@ public class OpenApiController extends BaseController implements InitializingBea
 
             // 解密入参
             String requestBody = readRequestBody(request);
-            Assert.hasText(requestBody, "请求体不能为空");
+            Assert.hasText(requestBody, "Request body must not be empty");
             // 先解析为OpenApiRequest格式（包含时间戳和nonce）
             OpenApiData apiData = JsonUtil.jsonToObj(requestBody, OpenApiData.class);
-            Assert.notNull(apiData, "请求数据不能为空.");
+            Assert.notNull(apiData, "Request data must not be empty.");
             // 验证时间戳和Nonce（在解密之前验证，避免无效请求消耗资源）
             Long timestamp = apiData.getTimestamp();
             String nonce = apiData.getNonce();
             Assert.notNull(timestamp, "Timestamp is empty.");
             Assert.hasText(nonce, "Nonce is empty.");
-            Assert.isTrue(timestampValidator.validate(timestamp, nonce), "时间戳或Nonce验证失败");
+            Assert.isTrue(timestampValidator.validate(timestamp, nonce), "Timestamp or nonce validation failed");
 
             // 解析加密请求
             RsaConfig rsaConfig = systemConfigService.getSystemConfig().getRsaConfig();
@@ -156,8 +156,8 @@ public class OpenApiController extends BaseController implements InitializingBea
             }
             return result;
         } catch (Exception e) {
-            logger.error("OpenAPI 执行失败", e);
-            return OpenApiResponse.fail(OpenApiErrorCode.INTERNAL_ERROR, "请求处理失败: " + e.getMessage());
+            logger.error("OpenAPI execution failed", e);
+            return OpenApiResponse.fail(OpenApiErrorCode.INTERNAL_ERROR, "Request processing failed: " + e.getMessage());
         }
     }
 
@@ -230,24 +230,24 @@ public class OpenApiController extends BaseController implements InitializingBea
         try {
             String secret = requestBody.get("secret");
             if (StringUtil.isBlank(secret)) {
-                return OpenApiResponse.fail(OpenApiErrorCode.BAD_REQUEST, "secret不能为空");
+                return OpenApiResponse.fail(OpenApiErrorCode.BAD_REQUEST, "secret must not be empty");
             }
 
             // 验证API密钥
             SystemConfig systemConfig = systemConfigService.getSystemConfig();
             if (!apiKeyManager.validate(systemConfig.getApiKeyConfig(), secret)) {
-                logger.error("无效凭证 {}", secret);
-                return OpenApiResponse.fail(OpenApiErrorCode.UNAUTHORIZED, "无效凭证");
+                logger.error("Invalid credentials {}", secret);
+                return OpenApiResponse.fail(OpenApiErrorCode.UNAUTHORIZED, "Invalid credentials");
             }
 
             // 获取JWT密钥（如果不存在会自动生成）
             Map<String, String> data = new HashMap<>();
             data.put("token", jwtSecretManager.generateToken()); // 生成Token
             data.put("expires", "7200"); // 2小时，单位：秒
-            return OpenApiResponse.success("登录成功", data);
+            return OpenApiResponse.success("Login succeeded", data);
         } catch (Exception e) {
-            logger.error("登录失败", e);
-            return OpenApiResponse.fail(OpenApiErrorCode.INTERNAL_ERROR, "登录失败: " + e.getMessage());
+            logger.error("Login failed", e);
+            return OpenApiResponse.fail(OpenApiErrorCode.INTERNAL_ERROR, "Login failed: " + e.getMessage());
         }
     }
 
@@ -267,21 +267,21 @@ public class OpenApiController extends BaseController implements InitializingBea
                 oldToken = oldToken.substring(7);
             }
             if (StringUtil.isBlank(oldToken)) {
-                return OpenApiResponse.fail(OpenApiErrorCode.UNAUTHORIZED, "Token不能为空");
+                return OpenApiResponse.fail(OpenApiErrorCode.UNAUTHORIZED, "Token must not be empty");
             }
             // 刷新Token
             String newToken = jwtSecretManager.refreshToken(oldToken);
             if (StringUtil.isBlank(newToken)) {
-                return OpenApiResponse.fail(OpenApiErrorCode.BAD_REQUEST, "Token无效或已过期");
+                return OpenApiResponse.fail(OpenApiErrorCode.BAD_REQUEST, "Token is invalid or expired");
             }
 
             Map<String, String> data = new HashMap<>();
             data.put("token", newToken);
             data.put("expires", "7200");
-            return OpenApiResponse.success("刷新Token成功", data);
+            return OpenApiResponse.success("Token refreshed successfully", data);
         } catch (Exception e) {
-            logger.error("刷新Token失败", e);
-            return OpenApiResponse.fail(OpenApiErrorCode.INTERNAL_ERROR, "刷新Token失败: " + e.getMessage());
+            logger.error("Refresh token failed", e);
+            return OpenApiResponse.fail(OpenApiErrorCode.INTERNAL_ERROR, "Refresh token failed: " + e.getMessage());
         }
     }
 

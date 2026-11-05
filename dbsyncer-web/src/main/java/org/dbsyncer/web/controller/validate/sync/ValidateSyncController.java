@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
- * 订正校验管理
+ * Data validationManagement
  *
  * @author wuji
  * @version 1.0.0
@@ -49,7 +49,7 @@ public class ValidateSyncController extends BaseController {
     private TableGroupService tableGroupService;
 
     /**
-     * 任务配置首页
+     * TasksConfigureFirst page
      */
     @RequestMapping("/list")
     public String index(ModelMap model) {
@@ -58,7 +58,7 @@ public class ValidateSyncController extends BaseController {
     }
 
     /**
-     * 添加任务页面
+     * AddTasksPageNoodles.
      */
     @GetMapping("/pageAdd")
     public String pageAdd(ModelMap model) {
@@ -66,7 +66,7 @@ public class ValidateSyncController extends BaseController {
     }
 
     /**
-     * 修改任务页面
+     * UpdateTasksPageNoodles.
      */
     @GetMapping("/page/{page}")
     public String pageEdit(ModelMap model, @PathVariable("page") String page, @RequestParam("id") String id,
@@ -91,9 +91,9 @@ public class ValidateSyncController extends BaseController {
     }
 
     /**
-     * 添加任务
+     * AddTasks
      */
-    @OperLog(type = OperLogType.MAPPING_INSERT, message = "新增订正校验")
+    @OperLog(type = OperLogType.MAPPING_INSERT, message = "Add Revised Validation")
     @PostMapping("/add")
     @ResponseBody
     public RestResult add(HttpServletRequest request) {
@@ -108,9 +108,9 @@ public class ValidateSyncController extends BaseController {
     }
 
     /**
-     * 修改任务
+     * UpdateTasks
      */
-    @OperLog(type = OperLogType.MAPPING_UPDATE, message = "修改订正校验")
+    @OperLog(type = OperLogType.MAPPING_UPDATE, message = "Modify Revised Validation")
     @PostMapping("/edit")
     @ResponseBody
     public RestResult edit(HttpServletRequest request) {
@@ -125,7 +125,7 @@ public class ValidateSyncController extends BaseController {
         }
     }
 
-    @OperLog(type = OperLogType.MAPPING_COPY, message = "复制订正校验")
+    @OperLog(type = OperLogType.MAPPING_COPY, message = "Copy Revised Validation")
     @PostMapping("/copy")
     @ResponseBody
     public RestResult add(@RequestParam("id") String id) {
@@ -140,9 +140,9 @@ public class ValidateSyncController extends BaseController {
     }
 
     /**
-     * 删除任务
+     * DeleteTasks
      */
-    @OperLog(type = OperLogType.MAPPING_DELETE, message = "删除订正校验")
+    @OperLog(type = OperLogType.MAPPING_DELETE, message = "Delete Revised Validation")
     @PostMapping("/remove")
     @ResponseBody
     public RestResult remove(@RequestParam(value = "id") String id) {
@@ -157,9 +157,9 @@ public class ValidateSyncController extends BaseController {
     }
 
     /**
-     * 启动任务
+     * StartTasks
      */
-    @OperLog(type = OperLogType.MAPPING_RUNNING, message = "启动订正校验")
+    @OperLog(type = OperLogType.MAPPING_RUNNING, message = "Credentials modified.")
     @PostMapping("/start")
     @ResponseBody
     public RestResult start(@RequestParam(value = "id") String id) {
@@ -174,9 +174,9 @@ public class ValidateSyncController extends BaseController {
     }
 
     /**
-     * 停止任务
+     * StopTasks
      */
-    @OperLog(type = OperLogType.MAPPING_STOP, message = "停止订正校验")
+    @OperLog(type = OperLogType.MAPPING_STOP, message = "Stop Revision Verification")
     @PostMapping("/stop")
     @ResponseBody
     public RestResult stop(@RequestParam(value = "id") String id) {
@@ -229,7 +229,7 @@ public class ValidateSyncController extends BaseController {
     }
 
     /**
-     * 分页搜索校验任务表（用于下拉框远程搜索）
+     * minPageSearchVerify INTRODUCTIONTasksTable (for bottom frame remote)Search）
      */
     @PostMapping("/searchTables")
     @ResponseBody
@@ -305,7 +305,7 @@ public class ValidateSyncController extends BaseController {
     }
 
     /**
-     * 查看执行结果
+     * ViewImplementation results
      */
     @PostMapping("/result")
     @ResponseBody
@@ -320,7 +320,7 @@ public class ValidateSyncController extends BaseController {
     }
 
     /**
-     * 分页查询校验结果明细
+     * minPageQuery VerificationResultDetails
      */
     @PostMapping("/searchResult")
     @ResponseBody
@@ -336,7 +336,7 @@ public class ValidateSyncController extends BaseController {
     }
 
     /**
-     * 按明细 ID 查询单条校验结果（含完整 CONTENT），供详情弹窗使用。
+     * By DetailsID Query Single VerifyResult（Contains fullCONTENT），ForDetailsBlast windows are used Thereafter.
      */
     @PostMapping("/getResultDetail")
     @ResponseBody
@@ -345,7 +345,7 @@ public class ValidateSyncController extends BaseController {
             requireResource(ConfigConstant.VALIDATE_SYNC, taskId, ResourceAclActionEnum.READ.getCode());
             Object detail = validateSyncService.getValidateResultDetail(taskId, id);
             if (detail == null) {
-                return RestResult.restFail("记录不存在", 404);
+                return RestResult.restFail("Record does not exist", 404);
             }
             return RestResult.restSuccess(detail);
         } catch (Exception e) {
@@ -355,7 +355,7 @@ public class ValidateSyncController extends BaseController {
     }
 
     /**
-     * 手动订正单条明细中尚未成功的差异数据。
+     * ManualRevisedNot yet specifiedSuccessYes.DiffsAccording to.
      */
     @PostMapping("/manualRevise")
     @ResponseBody

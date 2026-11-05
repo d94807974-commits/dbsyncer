@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 角色管理。
+ * Role management。
  *
  * @author wuji
  * @version 1.0.0
@@ -70,7 +70,7 @@ public class RoleController extends BaseController {
         return "role/edit";
     }
 
-    @OperLog(type = OperLogType.USER_INSERT, message = "新增角色")
+    @OperLog(type = OperLogType.USER_INSERT, message = "Add Role")
     @PostMapping("/add")
     @ResponseBody
     public RestResult add(HttpServletRequest request) {
@@ -85,7 +85,7 @@ public class RoleController extends BaseController {
         }
     }
 
-    @OperLog(type = OperLogType.USER_UPDATE, message = "修改角色")
+    @OperLog(type = OperLogType.USER_UPDATE, message = "Modify Role")
     @PostMapping("/edit")
     @ResponseBody
     public RestResult edit(HttpServletRequest request) {
@@ -100,7 +100,7 @@ public class RoleController extends BaseController {
         }
     }
 
-    @OperLog(type = OperLogType.USER_DELETE, message = "删除角色")
+    @OperLog(type = OperLogType.USER_DELETE, message = "Remove Role")
     @PostMapping("/remove")
     @ResponseBody
     public RestResult remove(HttpServletRequest request) {
@@ -126,7 +126,7 @@ public class RoleController extends BaseController {
             }
             String key = StringUtil.isNotBlank(permission.getModuleName())
                     ? permission.getModuleName()
-                    : "其他";
+                    : "Other";
             groups.computeIfAbsent(key, k -> new ArrayList<>()).add(permission);
         }
         return groups;

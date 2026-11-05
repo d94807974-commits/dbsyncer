@@ -1,48 +1,48 @@
-# 基础镜像
+# Basic mirror
 FROM crpi-hd9bjdgoqqg4ils8.cn-hangzhou.personal.cr.aliyuncs.com/xhtb-dbs/java:8
 
-# 维护者信息
+# Maintainer Information
 LABEL authors="chuanyun"
 
-# 定义时区参数
+# Define time zone parameters
 ENV TZ=Asia/Shanghai
-# 限制 glibc 分配区数量，减轻「JVM 回收正常但 Docker RSS 持续增长」（堆外/原生内存不归还 OS）
+# Limit the number of glibc distribution areas and reduce the "JVM recycling normal but Docker RSS continues to grow" (extra/nature memory not returned to OS)
 ENV MALLOC_ARENA_MAX=2
 
-# 设置时区
+# Set Timezone
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# 传递版本号参数
+# Pass version number parameters
 ARG DBSYNCER_VERSION
-# 设置环境变量，确保运行时能读取
+# Set the environment variable to ensure readability while running
 ENV DBSYNCER_VERSION=${DBSYNCER_VERSION}
 
-# 设置工作目录
+# Set Task Directory
 WORKDIR /app
 
-# 复制压缩包
+# Copy compression package
 COPY target/dbsyncer-$DBSYNCER_VERSION-bin.zip .
 
-# 解压、清理并重命名目录
+# Depress, clean and rename directories
 RUN unzip dbsyncer-$DBSYNCER_VERSION-bin.zip && \
     rm -rf dbsyncer-$DBSYNCER_VERSION-bin.zip && \
     mv dbsyncer-$DBSYNCER_VERSION dbsyncer && \
-    # 进入应用目录进行初始化操作
+    # Enter the application directory for initialization
     cd dbsyncer && \
-    # 添加执行权限
+    # Add execution permissions
     chmod +x bin/startup-docker.sh && \
-    # 创建必要的目录 (虽然 VOLUME 会挂载，但为了权限和结构完整，建议创建)
+    # Creates the necessary directory (although VOLUME will mount, it is recommended to create for the integrity of privileges and structures)
     mkdir -p logs conf data plugins
 
-# 暴露端口
+# Exposure Port
 EXPOSE 18686
 
-# 挂载卷 (注意：如果宿主机挂载了这些目录，容器内的原有文件会被隐藏)
+# Mounted Volume (Note: If these directories are mounted by the host, the original files in the container will be hidden)
 VOLUME [ "/app/dbsyncer/conf", "/app/dbsyncer/data", "/app/dbsyncer/logs", "/app/dbsyncer/plugins" ]
 
-# 设置工作目录为应用根目录
+# Set the work directory to apply root directory
 WORKDIR /app/dbsyncer
 
-# 启动命令
-# 使用 exec 形式执行脚本，确保脚本是 PID 1
+# Start Command
+# Execute scripts in exec format to ensure that scripts are PID 1
 ENTRYPOINT ["/bin/bash", "-c", "/app/dbsyncer/bin/startup-docker.sh"]

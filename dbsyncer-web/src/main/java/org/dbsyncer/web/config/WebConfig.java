@@ -17,9 +17,9 @@ import javax.annotation.Resource;
 import javax.servlet.MultipartConfigElement;
 
 /**
- * Web配置
+ * WebConfigure
  * 
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  */
 @Configuration
@@ -34,20 +34,20 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
-        // 上传单个文件最大值MB
+        // UploadSingleDocumentationMaxValueMB
         DataSize maxSize = DataSize.ofMegabytes(128);
         DataSize requestMaxSize = DataSize.ofMegabytes(128);
         factory.setMaxFileSize(maxSize);
-        // 设置一次上传文件的总大小
+        // SettingsOnce.UploadDocumentationTotal Size
         factory.setMaxRequestSize(requestMaxSize);
         return factory.createMultipartConfig();
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // 注册OpenAPI拦截器，拦截/openapi/**路径
+        // RegistrationOpenAPIInterceptor, Interceptor/openapi/**Path
         registry.addInterceptor(openApiInterceptor).addPathPatterns("/openapi/**");
-        // 操作日志：仅处理方法上带 @OperLog 的接口
+        // Operation logs：Handled only on@OperLog Yes.Interface
         registry.addInterceptor(operLogInterceptor).addPathPatterns("/**")
                 .excludePathPatterns("/css/**", "/js/**", "/img/**", "/plugins/**", "/openapi/**", "/login", "/login.html");
     }

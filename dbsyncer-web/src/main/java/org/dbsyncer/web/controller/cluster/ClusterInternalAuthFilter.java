@@ -23,12 +23,12 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 /**
- * 校验节点间共享密钥，保护 {@code /cluster/internal/**}。
+ * Verify INTRODUCTIONNodesMediumTotalTake the key, protect it.{@code /cluster/internal/**}。
  * <p>
- * 请求须携带头 {@link HttpClientUtil#CLUSTER_TOKEN_HEADER}。
- * {@code /cluster/ping} 仅存活探测，不在本过滤器范围内。
+ * Request to carry head{@link HttpClientUtil#CLUSTER_TOKEN_HEADER}。
+ * {@code /cluster/ping} Only live detection, not within this filter.
  * <p>
- * 鉴权成功后不写入 {@code SecurityContext}，避免 Spring Security 为无 Cookie 的节点互调创建 HttpSession。
+ * JurisdictionSuccessNot Later{@code SecurityContext}，AvoidSpring Security YesNone Cookie Yes.NodesSwitch CreateHttpSession。
  *
  * @author wuji
  * @version 1.0.0
@@ -45,7 +45,7 @@ public class ClusterInternalAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        // 获取请求路径，避免用户请求/.;之类的字符绕过权限判断，导致绕过权限检查风险。
+        // Fetch Request Path, AvoidUserRequest/.;That kind of characters go around.PermissionsThe judgment leads to a circumvention.PermissionsCheck risk.
         String path = urlPathHelper.getLookupPathForRequest(request);
         if (StringUtil.isNotBlank(path)) {
             return !path.startsWith("/cluster/internal/");
@@ -55,30 +55,30 @@ public class ClusterInternalAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        // 1. 配置是否开启
+        // 1. ConfigureYesNoOn
         if (!preloadTemplate.isPreloadCompleted()) {
             return;
         }
         String clusterSecret = systemConfigProfile.getSystemConfig().getClusterSecret();
         if (StringUtil.isBlank(clusterSecret)) {
-            reject(response, HttpServletResponse.SC_FORBIDDEN, "集群内部接口未配置集群鉴权密钥，已拒绝访问");
+            reject(response, HttpServletResponse.SC_FORBIDDEN, "Cluster internal interface is not configured, access denied");
             return;
         }
         String provided = request.getHeader(HttpClientUtil.CLUSTER_TOKEN_HEADER);
         if (!matches(clusterSecret, provided)) {
-            reject(response, HttpServletResponse.SC_UNAUTHORIZED, "集群内部接口鉴权失败");
+            reject(response, HttpServletResponse.SC_UNAUTHORIZED, "The internal interface failed");
             return;
         }
-        // 仅校验共享密钥；路径已在 Security 配置中 permitAll，勿写入 SecurityContext，否则会强制创建会话。
+        // Verify onlyTotaltaking keys;paths are already in placeSecurity ConfigureMediumpermitAll，Do Not WriteSecurityContext，NoConcerned about the situation in the country.
         filterChain.doFilter(request, response);
     }
 
     /**
-     * 常量时间比较，避免短 token 被逐字节探测。
+     * ConstantTimeCompare, avoid shorttoken Total bytes detected.
      *
-     * @param expected 配置的共享密钥
-     * @param provided 请求头
-     * @return 是否一致
+     * @param expected ConfigureYes.TotalTake the key
+     * @param provided Request Header
+     * @return YesNoConsistent
      */
     private boolean matches(String expected, String provided) {
         if (expected == null || provided == null) {

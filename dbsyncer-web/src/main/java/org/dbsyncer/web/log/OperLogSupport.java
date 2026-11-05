@@ -20,7 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * 操作日志参数采集与脱敏。
+ * Operation logsParameterCollectionandDesensitive.
  *
  * @author wuji
  * @version 1.0.0
@@ -88,7 +88,7 @@ public abstract class OperLogSupport {
     }
 
     /**
-     * 序列化 密码不记录明文
+     * SequencedPasswordNo record specified
      */
     public static Map<String, Object> sanitize(Map<String, Object> source) {
         if (CollectionUtils.isEmpty(source)) {
@@ -150,7 +150,7 @@ public abstract class OperLogSupport {
     }
 
     /**
-     * Servlet 默认编码为 ISO-8859-1，与本系统 UTF-8 JSON 不一致时回退 UTF-8，避免中文乱码。
+     * Servlet Default Encoding AsISO-8859-1，andThis systemUTF-8 JSON Back when inconsistentUTF-8，We're going to have to avoid Chinese.
      */
     private static String resolveBodyCharset(String encoding) {
         if (StringUtil.isBlank(encoding) || "ISO-8859-1".equalsIgnoreCase(encoding)) {

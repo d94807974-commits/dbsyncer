@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
- * 整库迁移
+ * Database migration
  *
  * @author wuji
  * @version 1.0.0
@@ -51,7 +51,7 @@ public class DatabaseSyncController extends BaseController {
     }
 
     /**
-     * 添加任务页面
+     * AddTasksPageNoodles.
      */
     @GetMapping("/pageAdd")
     public String pageAdd(ModelMap model) {
@@ -60,7 +60,7 @@ public class DatabaseSyncController extends BaseController {
     }
 
     /**
-     * 任务子页面（与订正校验一致：/page/{page}?id=xxx）
+     * TasksSonPageNoodlesandData validationUnanimously: /page/{page}?id=xxx）
      */
     @GetMapping("/page/{page}")
     public String page(ModelMap model, @PathVariable("page") String page, @RequestParam("id") String id,
@@ -68,14 +68,14 @@ public class DatabaseSyncController extends BaseController {
                       @RequestParam(value = "detailType", required = false) String detailType) {
         requireResource(ConfigConstant.DATABASE_SYNC, id, ResourceAclActionEnum.READ.getCode());
         if ("detail".equals(page)) {
-            Assert.hasText(id, "任务 ID 不能为空");
+            Assert.hasText(id, "Task ID cannot be empty");
             DatabaseSyncTaskVO task = databaseSyncService.get(id);
             model.put("taskId", id);
             model.put("taskName", task != null ? task.getName() : id);
             model.put("detailStatus", detailStatus == null ? "" : detailStatus.trim());
             model.put("detailType", detailType == null ? "" : detailType.trim());
         } else if ("edit".equals(page)) {
-            Assert.hasText(id, "任务 ID 不能为空");
+            Assert.hasText(id, "Task ID cannot be empty");
             DatabaseSyncTaskVO task = databaseSyncService.get(id);
             model.put("task", task);
             Integer metaState = task.getMetaState();
@@ -95,7 +95,7 @@ public class DatabaseSyncController extends BaseController {
         }
     }
 
-    @OperLog(type = OperLogType.MAPPING_INSERT, message = "新增整库迁移")
+    @OperLog(type = OperLogType.MAPPING_INSERT, message = "New Library Migration")
     @PostMapping("/add")
     @ResponseBody
     public RestResult add(HttpServletRequest request) {
@@ -108,7 +108,7 @@ public class DatabaseSyncController extends BaseController {
         }
     }
 
-    @OperLog(type = OperLogType.MAPPING_UPDATE, message = "修改整库迁移")
+    @OperLog(type = OperLogType.MAPPING_UPDATE, message = "Modify Library Migration")
     @PostMapping("/edit")
     @ResponseBody
     public RestResult edit(HttpServletRequest request) {
@@ -123,7 +123,7 @@ public class DatabaseSyncController extends BaseController {
         }
     }
 
-    @OperLog(type = OperLogType.MAPPING_DELETE, message = "删除整库迁移")
+    @OperLog(type = OperLogType.MAPPING_DELETE, message = "Remove Library Migration")
     @PostMapping("/remove")
     @ResponseBody
     public RestResult remove(@RequestParam("id") String id) {
@@ -137,7 +137,7 @@ public class DatabaseSyncController extends BaseController {
         }
     }
 
-    @OperLog(type = OperLogType.MAPPING_RUNNING, message = "启动整库迁移")
+    @OperLog(type = OperLogType.MAPPING_RUNNING, message = "Start the vault migration.")
     @PostMapping("/start")
     @ResponseBody
     public RestResult start(@RequestParam("id") String id) {
@@ -151,7 +151,7 @@ public class DatabaseSyncController extends BaseController {
         }
     }
 
-    @OperLog(type = OperLogType.MAPPING_STOP, message = "停止整库迁移")
+    @OperLog(type = OperLogType.MAPPING_STOP, message = "Stop library migration")
     @PostMapping("/stop")
     @ResponseBody
     public RestResult stop(@RequestParam("id") String id) {
@@ -166,7 +166,7 @@ public class DatabaseSyncController extends BaseController {
     }
 
     /**
-     * 预览连接器下表列表（新增页树形选择，滚动分页；offset/limit 由前端传入）
+     * PreviewConnectorTableList（InsertPageTree selection, scrollminPage；offset/limit From frontend)
      */
     @PostMapping("/searchResult")
     @ResponseBody

@@ -8,7 +8,7 @@ import org.dbsyncer.common.util.StringUtil;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * HTTP 请求工具。
+ * HTTP Request tool.
  *
  * @author wuji
  * @version 1.0.0
@@ -16,10 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 public abstract class RequestUtil {
 
     /**
-     * 获取客户端真实 IP（考虑反向代理）。
+     * Other OrganiserIP（Consider a reverse agent.
      *
-     * @param request HTTP 请求
-     * @return 客户端 IP，无法解析时返回空串
+     * @param request HTTP Request
+     * @return ClientIP，NoneDuring Law ResolutionBackEmpty string
      */
     public static String getClientIp(HttpServletRequest request) {
         if (request == null) {
