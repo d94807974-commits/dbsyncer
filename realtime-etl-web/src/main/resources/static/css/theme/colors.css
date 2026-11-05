@@ -1,0 +1,35 @@
+/**
+ * Realtime ETL Colour System
+ */
+
+/* Main Tone*/
+.text-primary { color: var(--primary-color) !important; }
+.text-success { color: var(--success-color) !important; }
+.text-warning { color: var(--warning-color) !important; }
+.text-error { color: var(--error-color) !important; }
+.text-info { color: var(--info-color) !important; }
+.text-violet { color: var(--violet-color) !important; }
+.text-secondary { color: var(--text-secondary) !important; }
+.text-tertiary { color: var(--text-tertiary) !important; }
+.text-disabled { color: var(--text-disabled) !important; }
+
+/* Background colour class*/
+.bg-primary { background-color: var(--bg-primary) !important; }
+.bg-secondary { background-color: var(--bg-secondary) !important; }
+.bg-tertiary { background-color: var(--bg-tertiary) !important; }
+.bg-quaternary { background-color: var(--bg-quaternary) !important; }
+.bg-info { background-color: var(--info-color) !important; }
+.bg-success { background-color: var(--success-color) !important; }
+.bg-warning { background-color: var(--warning-color) !important; }
+.bg-error { background-color: var(--error-color) !important; }
+.bg-white { background-color: #fff; }
+.bg-transparent { background-color: transparent; }
+
+/* Transparency background colour*/
+.bg-info\/10 { background-color: rgba(24, 144, 255, 0.1); }
+
+/* Border Classes*/
+.border-primary { border-color: var(--border-primary) !important; }
+.border-secondary { border-color: var(--border-secondary) !important; }
+.border-tertiary { border-color: var(--border-tertiary) !important; }
+.border-info { border-color: var(--info-color) !important; }

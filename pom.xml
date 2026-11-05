@@ -3,22 +3,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.ghi</groupId>
-    <artifactId>dbsyncer</artifactId>
+    <groupId>org.realtimeetl</groupId>
+    <artifactId>realtime-etl</artifactId>
     <version>2.1.6</version>
     <packaging>pom</packaging>
-    <name>dbsyncer</name>
+    <name>realtime-etl</name>
 
     <modules>
-        <module>dbsyncer-biz</module>
-        <module>dbsyncer-common</module>
-        <module>dbsyncer-connector</module>
-        <module>dbsyncer-manager</module>
-        <module>dbsyncer-parser</module>
-        <module>dbsyncer-plugin</module>
-        <module>dbsyncer-sdk</module>
-        <module>dbsyncer-storage</module>
-        <module>dbsyncer-web</module>
+        <module>realtime-etl-biz</module>
+        <module>realtime-etl-common</module>
+        <module>realtime-etl-connector</module>
+        <module>realtime-etl-manager</module>
+        <module>realtime-etl-parser</module>
+        <module>realtime-etl-plugin</module>
+        <module>realtime-etl-sdk</module>
+        <module>realtime-etl-storage</module>
+        <module>realtime-etl-web</module>
     </modules>
 
     <!-- Global Parameter Version -->
@@ -332,7 +332,7 @@
                             <formatAnnotations />
                             <importOrder>
                                 <!-- Customized sorting rules for Java package -->
-                                <order>org.dbsyncer,org.apache,org,,jakarta,,javax,java,\#</order>
+                                <order>org.realtimeetl,org.apache,org,,jakarta,,javax,java,\#</order>
                             </importOrder>
                             <replaceRegex>
                                 <name>Ban wildcard import</name>
@@ -389,7 +389,7 @@
             </plugin>
         </plugins>
     </build>
-    <url>https://gitee.com/ghi/dbsyncer</url>
+    <url></url>
 
     <!-- Mirror repository address -->
     <repositories>

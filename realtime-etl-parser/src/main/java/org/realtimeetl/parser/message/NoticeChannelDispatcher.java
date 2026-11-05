@@ -1,0 +1,198 @@
+/**
+ * Copyright 2026 Realtime ETL
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.realtimeetl.parser.message;
+
+import org.realtimeetl.common.model.RobotNoticeChannel;
+import org.realtimeetl.common.util.CollectionUtils;
+import org.realtimeetl.common.util.JsonUtil;
+import org.realtimeetl.common.util.StringUtil;
+import org.realtimeetl.parser.GroupRelProfile;
+import org.realtimeetl.parser.NoticeRuleProfile;
+import org.realtimeetl.parser.ParserException;
+import org.realtimeetl.parser.SystemConfigProfile;
+import org.realtimeetl.parser.model.GroupRel;
+import org.realtimeetl.parser.model.NoticeRule;
+import org.realtimeetl.sdk.constant.ConfigConstant;
+import org.realtimeetl.sdk.enums.NoticeChannelEnum;
+import org.realtimeetl.sdk.model.NoticeConfig;
+import org.realtimeetl.sdk.model.NoticeContent;
+import org.realtimeetl.sdk.model.NoticeMessage;
+import org.realtimeetl.sdk.notice.NoticeDeliveryHandler;
+import org.realtimeetl.sdk.notice.NoticeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * Can not open messageEnabledchannels;byGroup/Sync taskOverwriteMicro/ MicroNail. @ andEmailRecipient.
+ *
+ * @author Realtime ETL
+ * @version 1.0.0
+ * @date 2026-06-16 12:00
+ */
+@Component
+public class NoticeChannelDispatcher implements NoticeDeliveryHandler {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    private final Map<NoticeChannelEnum, NoticeService> notifyServiceMap = new ConcurrentHashMap<>();
+
+    @Resource
+    private SystemConfigProfile systemConfigProfile;
+
+    @Resource
+    private GroupRelProfile groupRelProfile;
+
+    @Resource
+    private NoticeRuleProfile noticeRuleProfile;
+
+    public void registerNotifyService(NoticeChannelEnum noticeChannelEnum, NoticeService notificationService) {
+        notifyServiceMap.put(noticeChannelEnum, notificationService);
+    }
+
+    public void removeNotifyService(NoticeChannelEnum noticeChannelEnum) {
+        notifyServiceMap.remove(noticeChannelEnum);
+    }
+
+    @Override
+    public void deliver(NoticeContent noticeContent) {
+        NoticeConfig noticeConfig = systemConfigProfile.getSystemConfig().getNoticeConfig();
+        if (noticeConfig == null || noticeContent == null || notifyServiceMap.isEmpty()) {
+            return;
+        }
+        NoticeRule rule = resolveNoticeRule(noticeContent);
+        NoticeConfig deliveryConfig = copyWithAtOverride(noticeConfig, rule);
+        NoticeMessage message = new NoticeMessage();
+        message.setNoticeConfig(deliveryConfig);
+        message.setNoticeContent(noticeContent);
+        notifyServiceMap.forEach((channel, service) -> {
+            try {
+                setMessageReceiversIfMail(channel, message, rule);
+                service.notify(message);
+            } catch (Exception e) {
+                logger.error("Send message error, channel: {}", channel, e);
+                throw new ParserException(e);
+            }
+        });
+    }
+
+    /**
+     * Parsing rules:MAPPING It's a priority.NoMergeGROUP；NoneRuleBack {@code null}。
+     */
+    private NoticeConfig copyWithAtOverride(NoticeConfig source, NoticeRule rule) {
+        if (rule == null) {
+            return source;
+        }
+        NoticeConfig copy = JsonUtil.jsonToObj(JsonUtil.objToJson(source), NoticeConfig.class);
+        if (copy == null) {
+            return source;
+        }
+        applyAt(copy.getWechat(), rule);
+        applyAt(copy.getDingTalk(), rule);
+        return copy;
+    }
+
+    private NoticeRule resolveNoticeRule(NoticeContent content) {
+        if (content == null) {
+            return null;
+        }
+        if (!StringUtil.equals(ConfigConstant.MAPPING, content.getResourceType())
+                || StringUtil.isBlank(content.getResourceId())) {
+            return null;
+        }
+        String mappingId = content.getResourceId();
+        NoticeRule mappingRule = noticeRuleProfile.getByScope(ConfigConstant.MAPPING, mappingId);
+        if (mappingRule != null) {
+            return mappingRule;
+        }
+
+        List<GroupRel> rels = groupRelProfile.listByResource(ConfigConstant.MAPPING, mappingId);
+        if (CollectionUtils.isEmpty(rels)) {
+            return null;
+        }
+        Set<String> groupIds = new LinkedHashSet<>();
+        for (GroupRel rel : rels) {
+            if (rel != null && StringUtil.isNotBlank(rel.getGroupId())) {
+                groupIds.add(rel.getGroupId());
+            }
+        }
+        if (groupIds.isEmpty()) {
+            return null;
+        }
+
+        List<NoticeRule> groupRules = noticeRuleProfile.listByScopeType(ConfigConstant.GROUP);
+        if (CollectionUtils.isEmpty(groupRules)) {
+            return null;
+        }
+
+        boolean atAll = false;
+        LinkedHashSet<String> phones = new LinkedHashSet<>();
+        LinkedHashSet<String> emails = new LinkedHashSet<>();
+        boolean matched = false;
+        for (NoticeRule rule : groupRules) {
+            if (rule == null || !groupIds.contains(rule.getScopeId())) {
+                continue;
+            }
+            matched = true;
+            if (rule.isAtAll()) {
+                atAll = true;
+            }
+            if (StringUtil.isNotBlank(rule.getAtPhones())) {
+                phones.addAll(Arrays.asList(StringUtil.split(rule.getAtPhones(), StringUtil.COMMA)));
+            }
+            if (StringUtil.isNotBlank(rule.getEmails())) {
+                emails.addAll(Arrays.asList(StringUtil.split(rule.getEmails(), StringUtil.COMMA)));
+            }
+        }
+        if (!matched) {
+            return null;
+        }
+        NoticeRule merged = new NoticeRule();
+        merged.setScopeType(ConfigConstant.GROUP);
+        merged.setAtAll(atAll ? 1 : 0);
+        merged.setAtPhones(StringUtil.join(phones, StringUtil.COMMA));
+        merged.setEmails(StringUtil.join(emails, StringUtil.COMMA));
+        return merged;
+    }
+
+    private void applyAt(RobotNoticeChannel channel, NoticeRule rule) {
+        if (channel == null || rule == null) {
+            return;
+        }
+        channel.setAtAll(rule.isAtAll());
+        // Robot API FieldStillatMobiles，RemoveValueFrom RulesatPhones
+        channel.setAtMobiles(rule.getAtPhones());
+    }
+
+    private void setMessageReceiversIfMail(NoticeChannelEnum channel, NoticeMessage message, NoticeRule rule) {
+        if (channel != NoticeChannelEnum.EMAIL) {
+            return;
+        }
+        if (rule == null || StringUtil.isBlank(rule.getEmails())) {
+            return;
+        }
+        message.setReceivers(new ArrayList<>(Arrays.asList(StringUtil.split(rule.getEmails(), StringUtil.COMMA))));
+    }
+}

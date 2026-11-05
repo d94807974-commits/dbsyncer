@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<div th:fragment="content" th:if="${mapping?.extendedType eq 'SEMI'}">
+    <!-- Semi-structuredConfig -->
+    <div class="grid grid-cols-2 mt-4">
+        <div class="form-item">
+            <label class="form-label">[[${type == 'source' ? 'Source' : 'Target'}]]Table</label>
+            <select id="custom_table_select" class="form-control" name="customTable">
+                <option th:each="t,s:${mapping?.customTables}"
+                        th:value="${t?.name}"
+                        th:text="${t?.name} + ' ('+${t?.type}+')'"
+                        th:data-column="${t?.columnJson}"
+                        th:data-ext-info="${t?.extInfoJson}" />
+            </select>
+        </div>
+
+        <div class="form-item justify-between">
+            <label class="form-label"></label>
+            <div class="form-actions">
+                <button th:if="${mapping?.meta?.state eq 0 and mapping?.customTables.size gt 0}"
+                        id="delSemiTableBtn" type="button" class="btn btn-outline">
+                    <i class="fa fa-remove"></i> Delete
+                </button>
+                <button th:if="${mapping?.meta?.state eq 0 and mapping?.customTables.size gt 0}"
+                        id="editSemiTableBtn" type="button" class="btn btn-outline">
+                    <i class="fa fa-edit"></i> Edit
+                </button>
+                <button th:if="${mapping?.meta?.state eq 0}"
+                        id="addSemiTableBtn" type="button" class="btn btn-primary">
+                    <i class="fa fa-plus"></i> Add
+                </button>
+                <button type="button" class="btn btn-outline" onclick="backIndexPage()">
+                    <i class="fa fa-reply"></i> Back
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="customItems" class="grid grid-cols-2 mt-4"></div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Type 
+            </th>
+            <th>Field</th>
+            <th>Primary key</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="fieldList">
+        <tr class="field-input-row">
+            <td></td>
+            <td style="overflow: visible; position: relative;">
+                <select class="form-control field-type-select">
+                    <option th:each="dataTypeItem,s:${dataType}" th:value="${dataTypeItem.name()}" th:text="${dataTypeItem.name()}" th:selected="${dataTypeItem.name() eq 'STRING'}"/>
+                </select>
+            </td>
+            <td><input class="form-control field-name-input" type="text" maxlength="64" placeholder="Please enter a field name"/></td>
+            <td></td>
+            <td>
+                <button class="table-action-btn view fieldAdd" type="button" title="Add">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="blank-block"></div>
+<script>
+    // GeneratehttpConfig
+    function renderHttpInfo(customType, extInfo, items) {
+        let connectorUrl = $("#connectorUrl").val();
+        let method = extInfo.method === undefined ? 'POST' : extInfo.method;
+        let api = extInfo.api === undefined ? '' : extInfo.api;
+        let contentType = extInfo.contentType === undefined ? '1' : extInfo.contentType;
+        items.push(`
+            <div class="form-item"></div>
+            <div class="form-item">
+                <label class="form-label">URL</label>
+                <div class="bg-gray-100">
+                    <input class="form-control" disabled type="text" value="${connectorUrl}">
+                </div>
+            </div>
+            <div class="form-item">
+                <label class="form-label">Interface<strong class="text-primary">*</strong></label>
+                <div class="form-control-area flex">
+                    <select class="form-control form-control-mini" name="method">
+                        <option value="POST" ${method === 'POST' ? 'selected' : ''}>POST</option>
+                        <option value="GET" ${method === 'GET' ? 'selected' : ''}>GET</option>
+                    </select>
+                    <input class="form-control ml-2" name="api" type="text" placeholder="Please enter the API path, e.g. /api/users" value="${api}" required />
+                </div>
+            </div>`);
+
+        // SourceConfig
+        if (customType === 'source') {
+            let params = extInfo.params === undefined ? '' : extInfo.params;
+            let extractPath = extInfo.extractPath === undefined ? '$.data.data[*]' : extInfo.extractPath;
+            let extractTotal = extInfo.extractTotal === undefined ? '$.data.total' : extInfo.extractTotal;
+            items.push(`
+            <div class="form-item">
+                <label class="form-label">Request parameters</label>
+                <div class="form-control-area">
+                    <input name="params" class="form-control" type="text" value="${params}" />
+                </div>
+            </div>
+            <div class="form-item">
+                <label class="form-label">Body</label>
+                <div class="form-control-area">
+                    <select class="form-control" name="contentType">
+                        <option value="1" ${contentType === '1' ? 'selected' : ''}>JSON</option>
+                        <option value="2" ${contentType === '2' ? 'selected' : ''}>x-www-form-urlencoded</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-item">
+                <label class="form-label">Parsing Format
+                    <i class="fa fa-question-circle" title="List of data returned by parsing interface, expression reference json"></i>
+                </label>
+                <div class="bg-gray-100">
+                    <input name="extractPath" class="form-control" type="text" value="${extractPath}" required />
+                </div>
+            </div>
+            <div class="form-item">
+                <label class="form-label">Total resolved<strong class="text-primary">*</strong>
+                    <i class="fa fa-question-circle" title="Parsing totals returned by interface, expression referencejson"></i></label>
+                <div class="bg-gray-100">
+                    <input name="extractTotal" class="form-control" type="text" value="${extractTotal}" required />
+                </div>
+            </div>`);
+            return;
+        }
+
+        // Objective CombinedConfig
+        let params = extInfo.params === undefined ? '' : extInfo.params;
+        let writePath = extInfo.writePath === undefined ? '' : extInfo.writePath;
+        items.push(`
+        <div class="form-item">
+            <label class="form-label">Request parameters</label>
+            <div class="form-control-area">
+                <input name="params" class="form-control" type="text" value="${params}" />
+            </div>
+        </div>
+        <div class="form-item">
+            <label class="form-label">Body</label>
+            <div class="form-control-area">
+                <select class="form-control" name="contentType">
+                    <option value="1" ${contentType === '1' ? 'selected' : ''}>JSON</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-item">
+            <label class="form-label">Writing Format
+                <i class="fa fa-question-circle" title="Replace the data list of the corresponding path according to the requested parameter format, expression reference json"></i>
+            </label>
+            <div class="bg-gray-100">
+                <input name="writePath" class="form-control" type="text" value="${writePath}" />
+            </div>
+        </div>`);
+    }
+
+    // GenerateredisConfig
+    function renderRedisInfo(customType, extInfo, items) {
+        let dataStructure = extInfo.dataStructure === undefined ? 'String' : extInfo.dataStructure;
+        items.push(`<div class="form-item">
+                    <label class="form-label">Data Structure<strong class="text-primary">*</strong></label>
+                    <div class="form-control-area">
+                        <select class="form-control" name="dataStructure" required>
+                            <option value="String" ${dataStructure === 'String' ? 'selected' : ''}>String</option>
+                            <option value="List" disabled ${dataStructure === 'List' ? 'selected' : ''}>List (under development)</option>
+                            <option value="Set" disabled ${dataStructure === 'Set' ? 'selected' : ''}>Set (under development)</option>
+                            <option value="ZSet" disabled ${dataStructure === 'ZSet' ? 'selected' : ''}>ZSet (developing)</option>
+                            <option value="Hash" disabled ${dataStructure === 'Hash' ? 'selected' : ''}>Hash (developing)</option>
+                        </select>
+                    </div>
+                </div>`);
+        if (customType === 'source') {
+            let stream = extInfo.stream !== undefined && extInfo.stream !== '' ? extInfo.stream
+                : (extInfo.keyPrefix === undefined ? '' : extInfo.keyPrefix);
+            items.push(`<div class="form-item">
+                <label class="form-label">Stream</label>
+                <div class="form-control-area">
+                    <input class="form-control" name="stream" type="text" maxlength="128" value="${stream}" placeholder="Red Leading name, e. g. user#, use a table name if empty"/>
+                </div>
+            </div>`);
+            let groupId = extInfo.groupId === undefined ? '' : extInfo.groupId;
+            items.push(`<div class="form-item">
+                    <label class="form-label">GroupId<strong class="text-primary">*</strong></label>
+                    <div class="form-control-area">
+                        <input class="form-control" name="groupId" type="text" maxlength="128" value="${groupId}" required placeholder="realtime-etl-group"/>
+                    </div>
+                </div>`);
+            let consumerName = extInfo.consumerName === undefined ? 'realtime-etl-consumer' : extInfo.consumerName;
+            items.push(`<div class="form-item">
+                        <label class="form-label">Consumer name</label>
+                        <div class="form-control-area">
+                            <input class="form-control" name="consumerName" type="text" maxlength="128" value="${consumerName}" placeholder="realtime-etl-consumer"/>
+                        </div>
+                    </div>`);
+            return;
+        }
+
+        let keyPrefix = extInfo.keyPrefix === undefined ? '' : extInfo.keyPrefix;
+        let keyJoiner = extInfo.keyJoiner === undefined || extInfo.keyJoiner === '' ? ':' : extInfo.keyJoiner;
+        let expireType = extInfo.expireType === undefined ? 'never' : extInfo.expireType;
+        let expireSeconds = extInfo.expireSeconds === undefined ? '' : extInfo.expireSeconds;
+        if (expireSeconds === '') {
+            expireSeconds = 86440;
+        }
+        items.push(`<div class="form-item">
+                <label class="form-label">Cachekey prefix</label>
+                <div class="form-control-area">
+                    <input class="form-control" name="keyPrefix" type="text" maxlength="128" value="${keyPrefix}" placeholder="e. g. user:cache if empty"/>
+                </div>
+            </div>`);
+        items.push(`<div class="form-item">
+                <label class="form-label">Main key speller <i class="fa fa-question-circle" title="Example effect: A:B:C"></i></label>
+                <div class="form-control-area">
+                    <input class="form-control" name="keyJoiner" type="text" maxlength="16" value="${keyJoiner}" placeholder="Default:"/>
+                </div>
+            </div>`);
+        items.push(`<div class="form-item">
+                <label class="form-label">Expiry Policy</label>
+                <div class="form-control-area">
+                    <div id="redis_expire_type" class="radio-group radio-group-control-height">
+                        <input type="radio" name="expireType" value="never" ${expireType === 'never' ? 'checked' : ''} />
+                        <label>Never Expiry</label>
+                        <input type="radio" name="expireType" value="expire" ${expireType === 'expire' ? 'checked' : ''} />
+                        <label>Due</label>
+                    </div>
+                </div>
+            </div>`);
+        items.push(`<div class="form-item">
+                <label class="form-label redis-expire-config hidden">Expiry time (sec)<strong class="text-primary">*</strong></label>
+                <div class="form-control-area redis-expire-config hidden">
+                    <input class="form-control" name="expireSeconds" type="number" min="1" maxlength="20" value="${expireSeconds}" placeholder="86440"/>
+                </div>
+            </div>`);
+    }
+
+    function initRedisForm(extInfo) {
+        initSelect($('select[name="dataStructure"]'));
+        const redisExpireConfig = $('.redis-expire-config');
+        const $expireInput = $('input[name="expireSeconds"]');
+        const toggleExpireConfig = function (expireType) {
+            if (expireType === 'expire') {
+                redisExpireConfig.show();
+                $expireInput.prop('required', true).prop('tabindex', 0);
+                if (!$expireInput.val()) {
+                    $expireInput.val(86440);
+                }
+            } else {
+                redisExpireConfig.hide();
+                $expireInput.prop('required', false).prop('tabindex', -1);
+            }
+        };
+        $('#redis_expire_type').radioGroup({ onChange: toggleExpireConfig});
+        toggleExpireConfig(extInfo.expireType || $('input[name="expireType"]:checked').val() || 'never');
+    }
+
+    function renderSemiInfo(tableName, extInfo) {
+        let connectorType = $("#connectorType").val();
+        let customType = $("#customType").val();
+        let config = {};
+        let items = [];
+        switch (connectorType) {
+            case 'Kafka':
+                config.label = 'Topic';
+                if (customType === 'source') {
+                    let groupId = extInfo.groupId === undefined ? '' : extInfo.groupId;
+                    items.push(`<div class="form-item">
+                        <label class="form-label">group.id<strong class="text-primary">*</strong></label>
+                        <div class="form-control-area">
+                            <input class="form-control" name="groupId" type="text" maxlength="128" value="${groupId}" required/>
+                        </div>
+                    </div>`);
+                }
+                break;
+            case 'RocketMQ':
+                config.label = 'Topic';
+                if (customType === 'source') {
+                    let groupId = extInfo.groupId === undefined ? '' : extInfo.groupId;
+                    let tags = extInfo.tags === undefined ? '*' : extInfo.tags;
+                    items.push(`<div class="form-item">
+                        <label class="form-label">GroupId<strong class="text-primary">*</strong></label>
+                        <div class="form-control-area">
+                            <input class="form-control" name="groupId" type="text" maxlength="128" value="${groupId}" required placeholder="realtime-etl-group"/>
+                        </div>
+                    </div>`);
+                    items.push(`<div class="form-item">
+                        <label class="form-label">Tags</label>
+                        <div class="form-control-area">
+                            <input class="form-control" name="tags" type="text" maxlength="128" value="${tags}" placeholder="*"/>
+                        </div>
+                    </div>`);
+                } else {
+                    let tags = extInfo.tags === undefined ? '*' : extInfo.tags;
+                    items.push(`<div class="form-item">
+                        <label class="form-label">Tags</label>
+                        <div class="form-control-area">
+                            <input class="form-control" name="tags" type="text" maxlength="128" value="${tags}" placeholder="*"/>
+                        </div>
+                    </div>`);
+                }
+                break;
+            case 'Redis':
+                config.label = 'Table name';
+                renderRedisInfo(customType, extInfo, items);
+                break;
+            case 'File':
+                config.label = 'Filename';
+                let separator = extInfo.separator === undefined ? '|' : extInfo.separator;
+                items.push(`<div class="form-item">
+                        <label class="form-label">Separator<strong class="text-primary">*</strong></label>
+                        <div class="form-control-area">
+                            <input class="form-control" name="separator" type="text" maxlength="128" value="${separator}" required/>
+                        </div>
+                    </div>`);
+                break;
+            case 'Http':
+                config.label = 'Name';
+                renderHttpInfo(customType, extInfo, items);
+                break;
+            default:
+                config.label = 'Table name';
+                break;
+        }
+        items.unshift(`<div class="form-item">
+            <label class="form-label">${config.label}<strong class="text-primary">*</strong></label>
+            <div class="form-control-area">
+                <input class="form-control" name="tableName" type="text" maxlength="64" placeholder="Please enter" value="${tableName}" required />
+            </div>
+        </div>`);
+        return items;
+    }
+
+    $(function () {
+        const $fieldList = $("#fieldList");
+
+        // UpdateNo.
+        function updateRowNumbers() {
+            $fieldList.find('tr:not(.field-input-row)').each(function(index) {
+                $(this).find('td:first').text(index + 1);
+            });
+        }
+
+        // SwitchPrimary key
+        function togglePrimaryKey($row) {
+            const $pkCell = $row.find('td:eq(3)');
+            if ($pkCell.find('.fa-key').length > 0) {
+                $pkCell.empty();
+            } else {
+                $pkCell.html('<i title="Primary key" class="fa fa-key text-warning"></i>');
+            }
+        }
+
+        // Fetch input lineValue
+        function getInputRowValues() {
+            const $inputRow = $fieldList.find('.field-input-row');
+            const fieldName = $inputRow.find('.field-name-input').val().trim();
+            const $typeSelect = $inputRow.find('.field-type-select');
+            // If initializeddbSelect，UsegetValues Methodology
+            const typeSelectApi = $typeSelect.data('dbSelect');
+            const fieldType = typeSelectApi ? (typeSelectApi.getValues()[0] || '') : $typeSelect.val();
+            return { fieldName: fieldName, fieldType: fieldType };
+        }
+
+        // ClearEnter Line
+        function clearInputRow() {
+            const $inputRow = $fieldList.find('.field-input-row');
+            $inputRow.find('.field-name-input').val('');
+        }
+
+        // Tie and drag.Event
+        function bindDragEvents($row) {
+            // Start Drag
+            $row.on('dragstart', function(e) {
+                e.originalEvent.dataTransfer.effectAllowed = 'move';
+                e.originalEvent.dataTransfer.setData('text/html', this.innerHTML);
+                $(this).addClass('dragging');
+            });
+
+            // Drag End
+            $row.on('dragend', function(e) {
+                $(this).removeClass('dragging');
+                $fieldList.find('tr').removeClass('drag-over');
+                updateRowNumbers();
+            });
+
+            // Drag through.
+            $row.on('dragover', function(e) {
+                // Moreover, drag to input line is not allowed
+                if ($(this).hasClass('field-input-row')) {
+                    return false;
+                }
+                if (e.preventDefault) {
+                    e.preventDefault();
+                }
+                e.originalEvent.dataTransfer.dropEffect = 'move';
+                $(this).addClass('drag-over');
+                return false;
+            });
+
+            // Drag away.
+            $row.on('dragleave', function(e) {
+                $(this).removeClass('drag-over');
+            });
+
+            // Placement
+            $row.on('drop', function(e) {
+                if (e.stopPropagation) {
+                    e.stopPropagation();
+                }
+                const $dragging = $fieldList.find('.dragging');
+                if ($dragging.length && $dragging[0] !== this && !$(this).hasClass('field-input-row')) {
+                    const draggingIndex = $dragging.index();
+                    const targetIndex = $(this).index();
+
+                    if (draggingIndex < targetIndex) {
+                        $(this).before($dragging);
+                    } else {
+                        $(this).after($dragging);
+                    }
+                    updateRowNumbers();
+                }
+                return false;
+            });
+        }
+
+        // AddFieldOkay.
+        function addFieldRow(fieldName, fieldType, isPrimaryKey) {
+            // UsejQuery Create elements, avoidXSS
+            const $newRow = $('<tr>I'm sorry.
+.addClass ('field-data-row')
+.attr ('title', 'double click to set/ unset primary key | drag sorting')
+.attr.
+...append(')<td>'))
+                .append($('<td>').text(fieldType))
+                .append($('<td>').text(fieldName))
+                .append($('<td>').html(isPrimaryKey ? '<i title="Primary key" class="fa fa-key text-warning"></i>' : ''))
+                .append($('<td>').html('<button class="table-action-btn delete fieldDelete" type="button" title="Delete"><i class="fa fa-trash"></i></button>'));
+
+            // Insert Before Input Line
+            $fieldList.find('.field-input-row').before($newRow);
+
+            // TieDeleteEvent
+            $newRow.find('.fieldDelete').on('click', function(e) {
+                e.stopPropagation();
+                deleteFieldRow($newRow);
+            });
+
+            // Bind double clickPrimary keyEvent
+            $newRow.on('dblclick', function(e) {
+                togglePrimaryKey($newRow);
+            });
+
+            // Tie and drag.Event
+            bindDragEvents($newRow);
+
+            // UpdateNo.
+            updateRowNumbers();
+        }
+
+        // DeleteFieldOkay.
+        function deleteFieldRow($row) {
+            $row.remove();
+            updateRowNumbers();
+        }
+
+        // AddFieldCommon logic (duplicate validation)
+        function handleAddField() {
+            const values = getInputRowValues();
+
+            if (!values.fieldName) {
+                bootGrowl("Please enter a field name", "warning");
+                return false;
+            }
+
+            if (!values.fieldType) {
+                bootGrowl("Select Field Type", "warning");
+                return false;
+            }
+
+            // InspectionField nameYesNoRepeat
+            let isDuplicate = false;
+            $fieldList.find('.field-data-row').each(function() {
+                const existingField = $(this).find('td:eq(2)').text().trim();
+                if (existingField.toLowerCase() === values.fieldName.toLowerCase()) {
+                    isDuplicate = true;
+                    return false;
+                }
+            });
+
+            if (isDuplicate) {
+                bootGrowl("Field name already exists Nature", "warning");
+                return false;
+            }
+
+            addFieldRow(values.fieldName, values.fieldType, false);
+            clearInputRow();
+            return true;
+        }
+
+        // Collect AllFieldData Fact
+        function collectColumns() {
+            const fieldData = [];
+            $fieldList.find('tr.field-data-row').each(function() {
+                const $row = $(this);
+                const typeName = $row.find('td:eq(1)').text().trim();
+                const name = $row.find('td:eq(2)').text().trim();
+                const pk = $row.find('td:eq(3) .fa-key').length > 0;
+
+                if (name) { // Only collectionsField nameData
+                    let row = { name: name, typeName: typeName }
+                    if (pk) {
+                        row.pk = pk;
+                    }
+                    fieldData.push(row);
+                }
+            });
+            return fieldData;
+        }
+
+        function handleResponse(response, title) {
+            if (response.success === true) {
+                bootGrowl(title + "Success!", "success");
+                doLoader('/mapping/pageCustomTable?id=' + $("#mappingId").val() + '&type=' + $("#customType").val());
+            } else {
+                bootGrowl(response.message || title + "Failed", "danger");
+            }
+        }
+
+        function submit(operator, title) {
+            const $form = $("#customTableForm");
+            if (!validateForm($form)) {
+                return;
+            }
+            const $btn = $(this);
+            const originalText = $btn.html();
+            $btn.html(`<i class="fa fa-spinner fa-spin"></i> ${title}Medium...`).prop('disabled', true);
+            let data = $form.serializeJson();
+            data.operator = operator;
+            data.columnList = JSON.stringify(collectColumns());
+            doPoster("/mapping/saveCustomTable", data, function (response) {
+                $btn.html(originalText).prop('disabled', false);
+                handleResponse(response, title + "Custom table");
+            });
+        }
+
+        function showCustomTableInfo($customSelect) {
+            let selected = $customSelect.getValues();
+            let items;
+            let extInfo = {};
+            if (selected.length >= 1) {
+                $(".field-data-row").remove();
+                let columns = JSON.parse($customSelect.getAttribute('column'));
+                extInfo = JSON.parse($customSelect.getAttribute('extInfo'));
+                for (let c of columns) {
+                    addFieldRow(c.name, c.typeName, c.pk);
+                }
+                items = renderSemiInfo(selected[0], extInfo);
+            } else {
+                // First EquallyAdd
+                items = renderSemiInfo('', {});
+            }
+            $("#customItems").html(items);
+            initSelect($('select[name="method"]'));
+            initSelect($('select[name="contentType"]'));
+            if ($("#connectorType").val() === 'Redis') {
+                initRedisForm(extInfo);
+            }
+        }
+
+        let customTableSelect = $("#custom_table_select").dbSelect({
+            type: 'single',
+            onSelect: function () {
+                showCustomTableInfo(customTableSelect);
+            }
+        });
+        showCustomTableInfo(customTableSelect);
+
+        // Initialize existingFieldTypeSelector
+        initSelect($('.field-type-select'));
+
+        //Add
+        $("#addSemiTableBtn").off('click').on('click', function () {
+            submit("add", "Add");
+        });
+        //Edit
+        $("#editSemiTableBtn").off('click').on('click', function () {
+            submit("edit", "Edit");
+        });
+        //Delete
+        $("#delSemiTableBtn").off('click').on('click', function () {
+            let selected = customTableSelect.getValues() || [];
+            if (selected.length >= 1) {
+                let data = {
+                    id: $("#mappingId").val(),
+                    type: $("#customType").val(),
+                    customTable: selected[0]
+                }
+                doPoster("/mapping/removeCustomTable", data, function (response) {
+                    handleResponse(response, "Delete custom table");
+                });
+            }
+        });
+
+        // AddFieldButton ClickEvent
+        $(".fieldAdd").off('click').on('click', function () {
+            handleAddField();
+        });
+
+        // Enter frameback keysAdd（Direct Call ProcessingFunctions，Avoid trigger button clickEvent）
+        $(".field-name-input").off('keypress').on('keypress', function (e) {
+            if (e.which === 13) { // EnterKeys
+                e.preventDefault();
+                e.stopPropagation();
+                handleAddField();
+            }
+        });
+    });
+</script>
+
+</div>

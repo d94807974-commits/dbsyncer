@@ -1,0 +1,388 @@
+/**
+ * Copyright 2026 Realtime ETL
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.realtimeetl.connector.mysql.cdc;
+
+import com.github.shyiko.mysql.binlog.event.DeleteRowsEventData;
+import com.github.shyiko.mysql.binlog.event.Event;
+import com.github.shyiko.mysql.binlog.event.EventHeader;
+import com.github.shyiko.mysql.binlog.event.EventHeaderV4;
+import com.github.shyiko.mysql.binlog.event.EventType;
+import com.github.shyiko.mysql.binlog.event.QueryEventData;
+import com.github.shyiko.mysql.binlog.event.RotateEventData;
+import com.github.shyiko.mysql.binlog.event.RowsQueryEventData;
+import com.github.shyiko.mysql.binlog.event.TableMapEventData;
+import com.github.shyiko.mysql.binlog.event.UpdateRowsEventData;
+import com.github.shyiko.mysql.binlog.event.WriteRowsEventData;
+import com.github.shyiko.mysql.binlog.network.ServerException;
+import net.sf.jsqlparser.JSQLParserException;
+import net.sf.jsqlparser.statement.Statement;
+import net.sf.jsqlparser.statement.alter.Alter;
+import org.realtimeetl.common.QueueOverflowException;
+import org.realtimeetl.common.util.NumberUtil;
+import org.realtimeetl.common.util.StringUtil;
+import org.realtimeetl.connector.mysql.MySQLException;
+import org.realtimeetl.connector.mysql.binlog.BinaryLogClient;
+import org.realtimeetl.connector.mysql.binlog.BinaryLogRemoteClient;
+import org.realtimeetl.sdk.config.DatabaseConfig;
+import org.realtimeetl.sdk.constant.ConnectorConstant;
+import org.realtimeetl.sdk.constant.DatabaseConstant;
+import org.realtimeetl.sdk.listener.AbstractDatabaseListener;
+import org.realtimeetl.sdk.listener.ChangedEvent;
+import org.realtimeetl.sdk.listener.event.DDLChangedEvent;
+import org.realtimeetl.sdk.listener.event.RowChangedEvent;
+import org.realtimeetl.sdk.model.ChangedOffset;
+import org.realtimeetl.sdk.util.SqlParserUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+/**
+ * @Author Realtime ETL
+ * @Version 1.0.0
+ * @Date 2022-05-28 22:02
+ */
+public class MySQLListener extends AbstractDatabaseListener {
+
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
+
+    protected final String binlogFilenameKey = "fileName";
+    protected final String binlogPositionKey = "position";
+    protected final Map<Long, TableMapEventData> tables = new HashMap<>();
+    protected BinaryLogClient client;
+    private final Lock connectLock = new ReentrantLock();
+
+    @Override
+    public void start() {
+        try {
+            connectLock.lock();
+            if (client != null && client.isConnected()) {
+                logger.error(getAlreadyStartedMessage());
+                return;
+            }
+            run();
+        } catch (Exception e) {
+            logger.error("Start failed: {}", e.getMessage());
+            throw wrapException(e);
+        } finally {
+            connectLock.unlock();
+        }
+    }
+
+    @Override
+    public void close() {
+        try {
+            connectLock.lock();
+            if (client != null) {
+                // Reconnect intervalconnected=false I'll have to.disconnect，I can't do that.stopped And interrupt.keepalive
+                client.disconnect();
+            }
+        } catch (Exception e) {
+            logger.error("Close failed: {}", e.getMessage());
+        } finally {
+            connectLock.unlock();
+        }
+    }
+
+    @Override
+    public Map<String, String> captureSnapshot() {
+        try {
+            final DatabaseConfig config = getConnectorInstance().getConfig();
+            BinaryLogClient captureClient = createBinlogClient(config);
+            captureClient.connect();
+            refreshSnapshot(captureClient.getBinlogFilename(), captureClient.getBinlogPosition());
+            captureClient.disconnect();
+            Map<String, String> captured = new HashMap<>(2);
+            captured.put(binlogFilenameKey, snapshot.get(binlogFilenameKey));
+            captured.put(binlogPositionKey, snapshot.get(binlogPositionKey));
+            return captured;
+        } catch (Exception e) {
+            logger.error(getCaptureSnapshotFailedMessage(), e.getMessage(), e);
+            return Collections.emptyMap();
+        }
+    }
+
+    @Override
+    public void refreshEvent(ChangedOffset offset) {
+        // Exclude ManualTry againActions
+        if (StringUtil.isBlank(offset.getNextFileName()) && offset.getPosition() == null) {
+            return;
+        }
+        refreshSnapshot(offset.getNextFileName(), (Long) offset.getPosition());
+    }
+
+    protected BinaryLogClient createBinlogClient(DatabaseConfig config) throws Exception {
+        return new BinaryLogRemoteClient(config.getHost(), config.getPort(), config.getUsername(), config.getPassword());
+    }
+
+    protected String getAlreadyStartedMessage() {
+        return "MySQLExtractor is already started";
+    }
+
+    protected String getCaptureSnapshotFailedMessage() {
+        return "Failed Coverage of MySQL binlog bit: }";
+    }
+
+    protected RuntimeException wrapException(Exception e) {
+        return new MySQLException(e);
+    }
+
+    protected RuntimeException wrapException(String message) {
+        return new MySQLException(message);
+    }
+
+    private void run() throws Exception {
+        final DatabaseConfig config = getConnectorInstance().getConfig();
+        boolean containsPos = snapshot.containsKey(binlogPositionKey);
+        client = createBinlogClient(config);
+        client.setBinlogFilename(snapshot.get(binlogFilenameKey));
+        client.setBinlogPosition(containsPos ? Long.parseLong(snapshot.get(binlogPositionKey)) : 0);
+        client.setTableMapEventByTableId(tables);
+        client.registerEventListener(new InnerEventListener());
+        client.registerLifecycleListener(new InnerLifecycleListener());
+
+        client.connect();
+
+        if (!containsPos) {
+            refreshSnapshot(client.getBinlogFilename(), client.getBinlogPosition());
+            super.forceFlushEvent();
+        }
+    }
+
+    private void refresh(EventHeader header) {
+        EventHeaderV4 eventHeaderV4 = (EventHeaderV4) header;
+        refresh(null, eventHeaderV4.getNextPosition());
+    }
+
+    private void refresh(String binlogFilename, long nextPosition) {
+        if (StringUtil.isNotBlank(binlogFilename)) {
+            client.setBinlogFilename(binlogFilename);
+        }
+        if (0 < nextPosition) {
+            client.setBinlogPosition(nextPosition);
+        }
+    }
+
+    private void refreshSnapshot(String binlogFilename, long nextPosition) {
+        snapshot.put(binlogFilenameKey, binlogFilename);
+        snapshot.put(binlogPositionKey, String.valueOf(nextPosition));
+    }
+
+    private void trySendEvent(ChangedEvent event) {
+        try {
+            // If you consumeEventFailed，Try again
+            while (client.isConnected()) {
+                try {
+                    sendChangedEvent(event);
+                    break;
+                } catch (QueueOverflowException e) {
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(1);
+                    } catch (InterruptedException ex) {
+                        logger.error(ex.getMessage(), ex);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    final class InnerLifecycleListener implements BinaryLogRemoteClient.LifecycleListener {
+
+        @Override
+        public void onConnect(BinaryLogRemoteClient client) {
+            // RecordsbinlogIncrementalPoints 71
+            refresh(client.getBinlogFilename(), client.getBinlogPosition());
+        }
+
+        @Override
+        public void onException(BinaryLogRemoteClient client, Exception e) {
+            if (!client.isConnected()) {
+                return;
+            }
+            if (e instanceof ServerException) {
+                ServerException serverException = (ServerException) e;
+                if (serverException.getErrorCode() == 1236) {
+                    String log = String.format("[ Superintendent]", client.getWorkerThreadName());
+                    errorEvent(wrapException(log + e.getMessage()));
+                    return;
+                }
+            }
+            // EventCenterFailed, the client may have moved the position tonextPosition，We need to drop the wheel to avoid restarting the bad points.
+            if (BinaryLogRemoteClient.isIncompleteEventGroupFailure(e)) {
+                String snapFile = snapshot.get(binlogFilenameKey);
+                long snapPos = NumberUtil.toLong(snapshot.get(binlogPositionKey), -1L);
+                String fileName = client.getBinlogFilename();
+                long position = client.getBinlogPosition();
+                boolean advanced = position > 0 && position != snapPos;
+                refreshSnapshot(fileName, position);
+                forceFlushEvent();
+                if (advanced) {
+                    errorEvent(wrapException(String.format(
+                            "[%s] binlog bits are in the middle of the event group and skip to %s/%d (former %s/%d). Please reset the location if the alarm continues. Reason: %s",
+                            client.getWorkerThreadName(), fileName, position, snapFile, snapPos, e.getMessage())));
+                } else {
+                    errorEvent(wrapException(String.format(
+                            "[%s] binlog bits are in the middle of the event group (%s/%d), but cannot resolve the textProsition, please reset the bits. Reason: %s",
+                            client.getWorkerThreadName(), fileName, position, e.getMessage())));
+                }
+                return;
+            }
+            errorEvent(wrapException(e.getMessage()));
+        }
+
+        @Override
+        public void onDisconnect(BinaryLogRemoteClient client) {
+        }
+
+    }
+
+    final class InnerEventListener implements BinaryLogRemoteClient.EventListener {
+
+        /**
+         * Africa onlydbsWritingEvent（SingleThreadsConsumption, non-competition)
+         */
+        private boolean notUniqueCodeEvent = true;
+
+        @Override
+        public void onEvent(Event event) {
+            // ROTATE > FORMAT_DESCRIPTION > TABLE_MAP > WRITE_ROWS > UPDATE_ROWS > DELETE_ROWS > XID
+            EventHeader header = event.getHeader();
+            if (header.getEventType() == EventType.XID) {
+                refresh(header);
+                return;
+            }
+
+            if (header.getEventType() == EventType.ROWS_QUERY) {
+                RowsQueryEventData data = event.getData();
+                notUniqueCodeEvent = isNotUniqueCodeEvent(data.getQuery());
+                return;
+            }
+
+            if (notUniqueCodeEvent && EventType.isUpdate(header.getEventType())) {
+                refresh(header);
+                UpdateRowsEventData data = event.getData();
+                if (isFilterTable(data.getTableId())) {
+                    data.getRows().forEach(m-> {
+                        List<Object> after = Stream.of(m.getValue()).collect(Collectors.toList());
+                        trySendEvent(new RowChangedEvent(getTableName(data.getTableId()), ConnectorConstant.OPERTION_UPDATE, after, client.getBinlogFilename(), client.getBinlogPosition()));
+                    });
+                }
+                return;
+            }
+            if (notUniqueCodeEvent && EventType.isWrite(header.getEventType())) {
+                refresh(header);
+                WriteRowsEventData data = event.getData();
+                if (isFilterTable(data.getTableId())) {
+                    data.getRows().forEach(m-> {
+                        List<Object> after = Stream.of(m).collect(Collectors.toList());
+                        trySendEvent(new RowChangedEvent(getTableName(data.getTableId()), ConnectorConstant.OPERTION_INSERT, after, client.getBinlogFilename(), client.getBinlogPosition()));
+                    });
+                }
+                return;
+            }
+            if (notUniqueCodeEvent && EventType.isDelete(header.getEventType())) {
+                refresh(header);
+                DeleteRowsEventData data = event.getData();
+                if (isFilterTable(data.getTableId())) {
+                    data.getRows().forEach(m-> {
+                        List<Object> before = Stream.of(m).collect(Collectors.toList());
+                        trySendEvent(new RowChangedEvent(getTableName(data.getTableId()), ConnectorConstant.OPERTION_DELETE, before, client.getBinlogFilename(), client.getBinlogPosition()));
+                    });
+                }
+                return;
+            }
+
+            if (EventType.QUERY == header.getEventType()) {
+                refresh(header);
+                parseDDL(event.getData());
+                return;
+            }
+
+            // Switchbinlog
+            if (header.getEventType() == EventType.ROTATE) {
+                RotateEventData data = event.getData();
+                refresh(data.getBinlogFilename(), data.getBinlogPosition());
+            }
+        }
+
+        private void parseDDL(QueryEventData data) {
+            if (isNotUniqueCodeEvent(data.getSql())) {
+                Statement statement = parseStatement(data.getSql());
+                if (statement instanceof Alter) {
+                    parseAlter(data, (Alter) statement);
+                }
+            }
+        }
+
+        private Statement parseStatement(String sql) {
+            try {
+                // skip BEGIN
+                if (!StringUtil.equalsIgnoreCase("BEGIN", sql)) {
+                    return SqlParserUtil.parse(sql);
+                }
+            } catch (JSQLParserException e) {
+                logger.warn("Unsupported ddl:}", sql);
+            }
+            return null;
+        }
+
+        private void parseAlter(QueryEventData data, Alter alter) {
+            // ALTER TABLE `test`.`my_user` MODIFY COLUMN `name` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL AFTER `id`
+            String tableName = StringUtil.replace(alter.getTable().getName(), StringUtil.BACK_QUOTE, StringUtil.EMPTY);
+            // databaseName 的取值不能为 QueryEventData#getDatabase, getDatabase 获取的是执行 SQL 语句时所在的数据库上下文,
+            // Oh, no.Yes alter StatementEditThe data on which the table is locatedLibrary
+            // Execute the following two statements in turnuse db1; alter table db2.my_user add column name varchar(128);
+            // data.getDatabase() 的值为 db1, 不是 db2, 必须从 alter 中获取 databaseName
+            String databaseName = alter.getTable().getSchemaName();
+            // alter Nothing.databaseName DescriptionYes alter table my_user xxx This format, Just get in the context.
+            if (StringUtil.isBlank(databaseName)) {
+                databaseName = data.getDatabase();
+            }
+            databaseName = StringUtil.replace(databaseName, StringUtil.BACK_QUOTE, StringUtil.EMPTY);
+            if (isFilterTable(databaseName, tableName)) {
+                trySendEvent(new DDLChangedEvent(tableName, ConnectorConstant.OPERTION_ALTER, data.getSql(), client.getBinlogFilename(), client.getBinlogPosition()));
+            }
+        }
+
+        private String getTableName(long tableId) {
+            return tables.get(tableId).getTable();
+        }
+
+        private boolean isFilterTable(long tableId) {
+            final TableMapEventData tableMap = tables.get(tableId);
+            return isFilterTable(tableMap.getDatabase(), tableMap.getTable());
+        }
+
+        private boolean isFilterTable(String dbName, String tableName) {
+            return StringUtil.equalsIgnoreCase(database, dbName) && filterTable.contains(tableName);
+        }
+
+        private boolean isNotUniqueCodeEvent(String sql) {
+            return !StringUtil.startsWith(sql, DatabaseConstant.DBS_UNIQUE_CODE);
+        }
+
+    }
+}

@@ -1,0 +1,53 @@
+/**
+ * Copyright 2026 Realtime ETL
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.realtimeetl.parser.ddl.alter;
+
+import org.realtimeetl.common.util.StringUtil;
+import org.realtimeetl.parser.ddl.AlterStrategy;
+import org.realtimeetl.sdk.config.DDLConfig;
+import org.realtimeetl.sdk.enums.DDLOperationEnum;
+
+import net.sf.jsqlparser.statement.alter.AlterExpression;
+
+import net.sf.jsqlparser.statement.alter.AlterExpression;
+
+/**
+ * ParsingchangeProperties
+ * <code>
+ *     ALTER TABLE `test`.`test_user`
+ * CHANGE COLUMN `name` `name2` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL AFTER `id`,
+ * CHANGE COLUMN `remark` `remark2` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL AFTER `name2`
+ * </code>
+ *
+ * @author Realtime ETL
+ */
+public class ChangeStrategy implements AlterStrategy {
+
+    @Override
+    public void parse(AlterExpression expression, DDLConfig ddlConfig) {
+        if (expression.getColDataTypeList() != null) {
+            for (AlterExpression.ColumnDataType columnDataType : expression.getColDataTypeList()) {
+                String oldColumnName = StringUtil.replace(expression.getColumnOldName(), StringUtil.BACK_QUOTE, StringUtil.EMPTY);
+                oldColumnName = StringUtil.replace(oldColumnName, StringUtil.DOUBLE_QUOTATION, StringUtil.EMPTY);
+
+                String changedColumnName = StringUtil.replace(columnDataType.getColumnName(), StringUtil.BACK_QUOTE, StringUtil.EMPTY);
+                changedColumnName = StringUtil.replace(changedColumnName, StringUtil.DOUBLE_QUOTATION, StringUtil.EMPTY);
+                ddlConfig.getChangedFieldNames().put(oldColumnName, changedColumnName);
+            }
+        }
+        ddlConfig.setDdlOperationEnum(DDLOperationEnum.ALTER_CHANGE);
+    }
+}

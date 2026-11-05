@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<div class="form-container">
+    <div class="card-header">
+ <h3 class="card-title text-center">System settings</h3>
+    </div>
+    <div class="card-body">
+        <form id="config-form-edit">
+ <!-- AdministratorActionsRegional -->
+            <div class="form-actions mb-4">
+                <button id="updateSystemBtn" type="button" class="btn btn-primary" data-permission="system:edit">
+ <span class="fa fa-save"></span> Save
+                </button>
+            </div>
+            <div class="grid grid-cols-2">
+                <div class="form-item">
+ <label class="form-label">RecordsSync succeededData</label>
+                    <div class="form-control-area">
+                        <label class="form-switch">
+                            <input name="enableStorageWriteSuccess" th:checked="${config?.enableStorageWriteSuccess}"
+                                   type="checkbox"/>
+                            <span class="switch-track">
+                                <span class="switch-option switch-option-on">Yes</span>
+                                <span class="switch-option switch-option-off">No</span>
+                                <span class="switch-thumb"></span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-item">
+ <label class="form-label">RecordsFullData/53/5<i class="fa fa-question-circle"
+ title="Not recommended to open in a production environment，Yes.SourceUse when the database is smaller，Common for testing"></i></label>
+                    <div class="form-control-area">
+                        <label class="form-switch">
+                            <input name="enableStorageWriteFull" th:checked="${config?.enableStorageWriteFull}"
+                                   type="checkbox"/>
+                            <span class="switch-track">
+                                <span class="switch-option switch-option-on">Yes</span>
+                                <span class="switch-option switch-option-off">No</span>
+                                <span class="switch-thumb"></span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-item">
+ <label class="form-label">RecordsSync failedData</label>
+                    <div class="form-control-area">
+                        <label class="form-switch">
+                            <input name="enableStorageWriteFail" th:checked="${config?.enableStorageWriteFail}"
+                                   type="checkbox"/>
+                            <span class="switch-track">
+                                <span class="switch-option switch-option-on">Yes</span>
+                                <span class="switch-option switch-option-off">No</span>
+                                <span class="switch-thumb"></span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-item">
+ <label class="form-label">RecordsFailedLog Length<strong class="text-primary">*</strong></label>
+                    <div class="form-control-area">
+                        <input type="number" class="form-control" min="1024" max="8192" required
+                               name="maxStorageErrorLength" th:value="${config?.maxStorageErrorLength}"/>
+                    </div>
+                </div>
+                <div th:if="${editionInfo != null and editionInfo.edition ne 'community'}" class="form-item">
+ <label class="form-label">Cluster Access Key<i class="fa fa-question-circle"
+ title="Internal interface sharing key between cluster nodes，Production cluster nodes must be configured the same Value，Prevention of unsubscribed missions"></i></label>
+                    <div class="form-control-area flex">
+                        <input type="text" class="form-control" name="clusterSecret"
+                               th:value="${config?.clusterSecret}"/>
+                        <div class="form-actions ml-2">
+                            <button type="button" class="btn btn-outline" id="generateClusterSecret">
+ <span class="fa fa-refresh"></span> Gene IDEA
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-item">
+ <label class="form-label">IncrementalTableExecutors<i class="fa fa-question-circle"
+ title="Maximum number of table executors per sync task. Beyond this limit, table mappings share executors."></i><strong
+                            class="text-primary">*</strong></label>
+                    <div class="form-control-area">
+                        <input type="number" class="form-control" min="1" max="200" required
+                               name="maxBufferActuatorSize" th:value="${config?.maxBufferActuatorSize}"/>
+                    </div>
+                </div>
+                <div th:if="${editionInfo != null and editionInfo.edition ne 'community'}" class="form-item">
+ <label class="form-label">FullTableRounded<i class="fa fa-question-circle"
+ title="FullTasks(FullSync，149. Revised verification，Library Migration)，MergeTableNumber"></i><strong
+                            class="text-primary">*</strong></label>
+                    <div class="form-control-area">
+                        <input type="number" class="form-control" min="1" max="64" required
+                               name="maxTableCount" th:value="${config?.maxTableCount}"/>
+                    </div>
+                </div>
+                <div th:if="${editionInfo != null and editionInfo.edition ne 'community'}" class="form-item">
+ <label class="form-label">FullSplit and Count<i class="fa fa-question-circle"
+ title="Sync Tasks(FullSync，Revised Validation，Library Migration)，Number of fractions processed together"></i><strong
+                            class="text-primary">*</strong></label>
+                    <div class="form-control-area">
+                        <input type="number" class="form-control" min="1" max="64" required
+                               name="maxPlanCount" th:value="${config?.maxPlanCount}"/>
+                    </div>
+                </div>
+                <div th:if="${editionInfo != null and editionInfo.edition ne 'community'}" class="form-item">
+ <label class="form-label">Total number of segments<i class="fa fa-question-circle"
+ title="Number of single readings with task×Threads are divided by the number of slices per wave；Benbo.AllWhen it's done, cut the next wave."></i><strong
+                            class="text-primary">*</strong></label>
+                    <div class="form-control-area">
+                        <input type="number" class="form-control" min="1" max="10000000" required
+                               name="shardTotal" th:value="${config?.shardTotal}"/>
+                    </div>
+                </div>
+                <div th:if="${editionInfo != null and editionInfo.edition ne 'community'}" class="form-item">
+ <label class="form-label">Timeout(milliseconds)<i class="fa fa-question-circle"
+ title="RunningIt's more than that.RefreshConsiders it time out."></i><strong
+                            class="text-primary">*</strong></label>
+                    <div class="form-control-area">
+                        <input type="number" class="form-control" min="60000" max="3600000" required
+                               name="shardTimeoutMs" th:value="${config?.shardTimeoutMs}"/>
+                    </div>
+                </div>
+                <div class="form-item">
+ <label class="form-label">Sync Data Expiry(days)<strong class="text-primary">*</strong></label>
+                    <div class="form-control-area">
+                        <input type="number" class="form-control" min="1" max="180" required name="expireDataDays"
+                               th:value="${config?.expireDataDays}"/>
+                    </div>
+                </div>
+                <div class="form-item">
+ <label class="form-label">System Log Expiry(days)<strong class="text-primary">*</strong></label>
+                    <div class="form-control-area">
+                        <input type="number" class="form-control" min="1" max="180" required name="expireLogDays"
+                               th:value="${config?.expireLogDays}"/>
+                    </div>
+                </div>
+                <div class="form-item">
+ <label class="form-label">Log file expired(days)<strong class="text-primary">*</strong></label>
+                    <div class="form-control-area">
+                        <input type="number" class="form-control" min="1" max="180" required name="expireFileLogDays"
+                               th:value="${config?.expireFileLogDays}"/>
+                    </div>
+                </div>
+                <div class="form-item">
+ <label class="form-label">LoginLock Length(minutes)<i class="fa fa-question-circle"
+ title="Key UsuallyLogin failedLength Logistic of locking account after reaching the ceiling"></i><strong
+                            class="text-primary">*</strong></label>
+                    <div class="form-control-area">
+                        <input type="number" class="form-control" min="1" max="1440" required name="loginLockMinutes"
+                               th:value="${config?.loginLockMinutes}"/>
+                    </div>
+                </div>
+            </div>
+            <div class="grid mt-5 grid-cols-2">
+                <div class="form-item">
+ <label class="form-label">Watermark<i class="fa fa-question-circle" title="RefreshPage validity"></i></label>
+                    <div class="form-control-area">
+                        <label class="form-switch">
+                            <input id="enableWatermark" name="enableWatermark" th:checked="${config?.enableWatermark}"
+                                   type="checkbox"/>
+                            <span class="switch-track">
+                                <span class="switch-option switch-option-on">Yes</span>
+                                <span class="switch-option switch-option-off">No</span>
+                                <span class="switch-thumb"></span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-item">
+ <label class="form-label watermark hidden">Watermark Content</label>
+                    <div class="form-control-area watermark hidden">
+                        <input type="text" class="form-control" maxlength="64" name="watermark"
+ placeholder="Please enterWatermark(Most64Word)." th:value="${config?.watermark}"/>
+                    </div>
+                </div>
+            </div>
+            <div class="grid mt-5 grid-cols-2">
+                <div class="form-item">
+ <label class="form-label">PrinttraceInformation<i class="fa fa-question-circle"
+ title="Only for Question，Production environment recommendationsClose"></i></label>
+                    <div class="form-control-area">
+                        <label class="form-switch">
+                            <input name="enablePrintTraceInfo" th:checked="${config?.enablePrintTraceInfo}"
+                                   type="checkbox"/>
+                            <span class="switch-track">
+                                <span class="switch-option switch-option-on">Yes</span>
+                                <span class="switch-option switch-option-off">No</span>
+                                <span class="switch-thumb"></span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+ <!-- OpenAPIConfigure -->
+            <div class="grid mt-5 grid-cols-1 lg:grid-cols-3">
+                <div class="form-item lg:col-span-2">
+ <label class="form-label">Openapi<i class="fa fa-question-circle"
+ title="External business systems can be generated with this configurationtoken，Direct CallRealtime ETLManagement interfaces，Could also sync data。"></i></label>
+                    <div class="form-control-area">
+                        <label class="form-switch">
+                            <input name="enableOpenAPI" th:checked="${config?.enableOpenAPI}" type="checkbox"/>
+                            <span class="switch-track">
+                                <span class="switch-option switch-option-on">Yes</span>
+                                <span class="switch-option switch-option-off">No</span>
+                                <span class="switch-thumb"></span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-item lg:col-span-2">
+ <label class="form-label open-api hidden">APIKey<i class="fa fa-question-circle"
+ title="intend to generatetokenIntroducing visitsOpenAPI，Please keep it safe after generation."></i></label>
+                    <div class="form-control-area flex">
+                        <input type="text" class="form-control open-api hidden" name="apiSecret"
+                               th:value="${config?.currentSecret}"/>
+                        <div class="form-actions ml-2">
+                            <button type="button" class="open-api hidden btn btn-outline" id="copyApiSecretBtn">
+ <i class="fa fa-copy"></i> Copy
+                            </button>
+                            <button type="button" class="open-api hidden btn btn-outline" id="generateApiSecret">
+ <span class="fa fa-refresh"></span> Generate
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid mt-5 grid-cols-1 lg:grid-cols-3">
+                <div class="form-item lg:col-span-2">
+ <label class="form-label open-api hidden">RSALength<i class="fa fa-question-circle"
+ title="Allow range to enter[1024,2048,4096,8192]"></i></label>
+                    <div class="form-control-area flex">
+                        <input type="number" class="form-control open-api hidden" name="rsaKeyLength" min="1024"
+ max="8192" placeholder="Allow range to enter[1024-8192]"
+                               th:value="${config?.currentRsa?.keyLength}?: 2048"/>
+                        <button id="generateRSA" type="button" class="open-api hidden btn btn-outline ml-2">
+ <span class="fa fa-refresh"></span> Generate
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid mt-5 open-api hidden">
+                <div class="form-item">
+ <label class="form-label">RSAPublic Equality Key</label>
+                    <div class="form-control-area">
+                        <textarea name="rsaPublicKey" class="form-control" disabled maxlength="8192" rows="5">[[${config?.currentRsa?.publicKey}]]</textarea>
+                        <button type="button" class="btn btn-outline mt-1" id="copyPublicKeyBtn">
+ <i class="fa fa-copy"></i> Copy
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-item">
+ <label class="form-label">RSAPrivate Key</label>
+                    <div class="form-control-area">
+                        <textarea name="rsaPrivateKey" class="form-control" disabled maxlength="8192" rows="10">[[${config?.currentRsa?.privateKey}]]</textarea>
+                        <button type="button" class="btn btn-outline mt-1" id="copyPrivateKeyBtn">
+ <i class="fa fa-copy"></i> Copy
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+ <!-- IPWhite list. -->
+            <div class="grid grid-cols-2 mt-5 open-api hidden">
+                <div class="form-item">
+ <label class="form-label">IPWhite list.<i class="fa fa-question-circle"
+ title="Only white lists after openingIPAccessibleOpenAPI"></i></label>
+                    <div class="form-control-area">
+                        <label class="form-switch">
+                            <input name="ipWhitelistEnabled" th:checked="${config?.ipWhitelistConfig?.enabled}"
+                                   type="checkbox" value="true"/>
+                            <span class="switch-track">
+                                <span class="switch-option switch-option-on">Yes</span>
+                                <span class="switch-option switch-option-off">No</span>
+                                <span class="switch-thumb"></span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-item ip-whitelist-detail">
+ <label class="form-label">Allow Local Access<i class="fa fa-question-circle"
+ title="127.0.0.1、localhostWait."></i></label>
+                    <div class="form-control-area">
+                        <label class="form-switch">
+                            <input name="ipWhitelistAllowLocalhost"
+                                   th:checked="${config?.ipWhitelistConfig?.allowLocalhost != null ? config.ipWhitelistConfig.allowLocalhost : true}"
+                                   type="checkbox" value="true"/>
+                            <span class="switch-track">
+                                <span class="switch-option switch-option-on">Yes</span>
+                                <span class="switch-option switch-option-off">No</span>
+                                <span class="switch-thumb"></span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-item ip-whitelist-detail">
+ <label class="form-label">IPWhite list.</label>
+                    <div class="form-control-area">
+                        <textarea name="ipWhitelist" class="form-control" rows="5"
+ placeholder="One in each line，Support：SingleIP、CIDR(192.168.1.0/24)、Scope(192.168.1.1-192.168.1.100)">[[${config?.ipWhitelistText}]]</textarea>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+        <div class="blank-block-md"></div>
+
+    </div>
+</div>
+
+<script>
+    $(function () {
+        const watermark = $('.watermark');
+        const openApiItems = $(".open-api");
+        const rsaKeyLength = $("input[name='rsaKeyLength']");
+        const apiSecret = $("input[name='apiSecret']");
+        const clusterSecret = $("input[name='clusterSecret']");
+        const rsaPublicKey = $("textarea[name='rsaPublicKey']");
+        const rsaPrivateKey = $("textarea[name='rsaPrivateKey']");
+        const generateApiSecretBtn = $("#generateApiSecret");
+        const generateClusterSecretBtn = $("#generateClusterSecret");
+        const generateRSABtn = $("#generateRSA");
+        const copyApiSecretBtn = $("#copyApiSecretBtn");
+        const copyPublicKeyBtn = $("#copyPublicKeyBtn");
+        const copyPrivateKeyBtn = $("#copyPrivateKeyBtn");
+
+        function toggleWatermark(checked) {
+            if (checked) {
+                watermark.show();
+            } else {
+                watermark.hide();
+            }
+        }
+
+        let switchApi = initSwitch($('#enableWatermark'), toggleWatermark);
+        toggleWatermark(switchApi.isChecked());
+
+ //Save
+        $("#updateSystemBtn").click(function () {
+            const $form = $("#config-form-edit");
+            if (validateForm($form)) {
+ // AllowUpdateParameters
+                rsaPublicKey.prop('disabled', false);
+                rsaPrivateKey.prop('disabled', false);
+                const submitBtn = $(this);
+                const originalText = submitBtn.html();
+ submitBtn.html('<i class="fa fa-spinner fa-spin"></i> Saving...').prop('disabled', true);
+                doPoster('/system/edit', $form.serializeJson(), function (response) {
+                    submitBtn.html(originalText).prop('disabled', false);
+                    if (response.success === true) {
+ bootGrowl("UpdateSuccess!", "success");
+                        doLoader("/system");
+                    } else {
+                        bootGrowl(response.message, "danger");
+                    }
+                });
+            }
+        });
+
+        generateRSABtn.click(function () {
+            const btn = $(this);
+            const originalText = btn.html();
+ btn.html('<i class="fa fa-spinner fa-spin"></i> Generating...').prop('disabled', true);
+            doPoster('/system/generateRSA', {'keyLength': rsaKeyLength.val()}, function (response) {
+                btn.html(originalText).prop('disabled', false);
+                if (response.success === true) {
+                    rsaPublicKey.text(response.data.publicKey);
+                    rsaPrivateKey.text(response.data.privateKey);
+ bootGrowl("GenerateRSASuccess!", "success");
+                } else {
+                    bootGrowl(response.message, "danger");
+                }
+            });
+        });
+
+ // Generate API Key（OpenAPI LoginCertificate）
+        generateApiSecretBtn.click(function () {
+            const btn = $(this);
+            const originalText = btn.html();
+ btn.html('<i class="fa fa-spinner fa-spin"></i> Gene Indeed...').prop('disabled', true);
+            doPoster('/system/generateApiSecret', {}, function (response) {
+                btn.html(originalText).prop('disabled', false);
+                if (response.success === true && response.data) {
+                    const secret = response.data;
+                    apiSecret.val(secret);
+ bootGrowl("GenerateAPIKeySuccess!", "success");
+                } else {
+                    bootGrowl(response.message || "danger");
+                }
+            });
+        });
+
+ // Gene Deploy Cluster Access Key
+        generateClusterSecretBtn.click(function () {
+            const btn = $(this);
+            const originalText = btn.html();
+ btn.html('<i class="fa fa-spinner fa-spin"></i> Generating...').prop('disabled', true);
+            doPoster('/system/generateApiSecret', {}, function (response) {
+                btn.html(originalText).prop('disabled', false);
+                if (response.success === true && response.data) {
+                    const secret = response.data;
+                    clusterSecret.val(secret);
+ bootGrowl("Generate cluster assurance keysSuccess!", "success");
+                } else {
+                    bootGrowl(response.message || "danger");
+                }
+            });
+        });
+
+        function bindCopyBtn(btn, element, content) {
+ // Remove old event binding first，Avoid duplication of bindings
+            btn.off('click');
+            btn.on('click', function () {
+                const text = element.val();
+                if (isBlank(text)) {
+ bootGrowl(content + "Empty，Unable to copy", "warning");
+                    return;
+                }
+                copyToClipboard(text, {
+                    button: $(this),
+ successMessage: "Copy" + content + "Success！",
+ originalText: "Copy",
+                    originalIcon: "fa-copy"
+                });
+            });
+        }
+
+ // Tie Copy Button Event
+        function bindCopyButtons() {
+ bindCopyBtn(copyApiSecretBtn, apiSecret, "APIKey");
+ bindCopyBtn(copyPublicKeyBtn, rsaPublicKey, "RSAPublic Key");
+ bindCopyBtn(copyPrivateKeyBtn, rsaPrivateKey, "RSAPrivate Key");
+        }
+
+        const ipWhitelistDetail = $(".ip-whitelist-detail");
+
+        function toggleIpWhitelistDetail(checked) {
+            if (checked) {
+                ipWhitelistDetail.show();
+            } else {
+                ipWhitelistDetail.hide();
+            }
+        }
+
+        let ipWhitelistSwitch = initSwitch($("input[name='ipWhitelistEnabled']"), toggleIpWhitelistDetail);
+
+        function toggleOpenApiItem(checked) {
+            rsaKeyLength.prop('disabled', !checked);
+            generateRSABtn.prop('disabled', !checked);
+            if (checked) {
+                openApiItems.show();
+                toggleIpWhitelistDetail(ipWhitelistSwitch.isChecked());
+ // Show After Area，Delayed binding event，Ensure DOM Element Rendered
+                setTimeout(function () {
+                    bindCopyButtons();
+                }, 100);
+                if (isBlank(apiSecret.val())) {
+                    generateApiSecretBtn.click();
+                }
+                if (isBlank(rsaPublicKey.val()) && isBlank(rsaPrivateKey.val())) {
+                    generateRSABtn.click();
+                }
+                return;
+            }
+            openApiItems.hide();
+        }
+
+        let enableOpenAPI = initSwitch($("input[name='enableOpenAPI']"), toggleOpenApiItem);
+        const enableOpenAPIChecked = enableOpenAPI.isChecked();
+        toggleOpenApiItem(enableOpenAPIChecked);
+ // If at firstStatusJust WIPO.YesShow RSA Configure，We also need to bind the event.
+        if (enableOpenAPIChecked) {
+            setTimeout(function () {
+                bindCopyButtons();
+            }, 100);
+        }
+
+ // Initial basis IPWhite list. Switch Combined/Hide「Allow Local Access」and「IPWhite list」Input 124
+        toggleIpWhitelistDetail(ipWhitelistSwitch.isChecked());
+    })
+</script>
+</html>

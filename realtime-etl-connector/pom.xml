@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.realtimeetl</groupId>
+        <artifactId>realtime-etl</artifactId>
+        <version>2.1.6</version>
+    </parent>
+    <artifactId>realtime-etl-connector</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>realtime-etl-connector-base</module>
+        <module>realtime-etl-connector-clickhouse</module>
+        <module>realtime-etl-connector-dameng</module>
+        <module>realtime-etl-connector-doris</module>
+        <module>realtime-etl-connector-duckdb</module>
+        <module>realtime-etl-connector-elasticsearch</module>
+        <module>realtime-etl-connector-file</module>
+        <module>realtime-etl-connector-gaussdb</module>
+        <module>realtime-etl-connector-gaussdb-mysql</module>
+        <module>realtime-etl-connector-h2</module>
+        <module>realtime-etl-connector-http</module>
+        <module>realtime-etl-connector-kafka</module>
+        <module>realtime-etl-connector-kingbase</module>
+        <module>realtime-etl-connector-mongodb</module>
+        <module>realtime-etl-connector-mysql</module>
+        <module>realtime-etl-connector-oceanbase</module>
+        <module>realtime-etl-connector-oceanbase-oracle</module>
+        <module>realtime-etl-connector-oracle</module>
+        <module>realtime-etl-connector-postgresql</module>
+        <module>realtime-etl-connector-redis</module>
+        <module>realtime-etl-connector-rocketmq</module>
+        <module>realtime-etl-connector-sqlite</module>
+        <module>realtime-etl-connector-sqlserver</module>
+        <module>realtime-etl-connector-starrocks</module>
+        <module>realtime-etl-connector-tidb</module>
+    </modules>
+</project>

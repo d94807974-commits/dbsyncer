@@ -1,0 +1,431 @@
+/**
+ * Copyright 2026 Realtime ETL
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.realtimeetl.biz.impl;
+
+import org.realtimeetl.biz.enums.BufferActuatorMetricEnum;
+import org.realtimeetl.biz.enums.StatisticEnum;
+import org.realtimeetl.biz.enums.ThreadPoolMetricEnum;
+import org.realtimeetl.biz.model.AppReportMetric;
+import org.realtimeetl.biz.model.DashboardMetric;
+import org.realtimeetl.biz.model.MetricResponse;
+import org.realtimeetl.biz.model.MetricResponseInfo;
+import org.realtimeetl.biz.model.Sample;
+import org.realtimeetl.biz.vo.SyncTrendStackVO;
+import org.realtimeetl.biz.vo.TpsVO;
+import org.realtimeetl.common.enums.CommonTaskStatusEnum;
+import org.realtimeetl.common.enums.TaskLevelEnum;
+import org.realtimeetl.common.metric.Bucket;
+import org.realtimeetl.common.metric.TimeRegistry;
+import org.realtimeetl.common.model.Paging;
+import org.realtimeetl.common.scheduled.ScheduledTaskJob;
+import org.realtimeetl.common.scheduled.ScheduledTaskService;
+import org.realtimeetl.common.util.CollectionUtils;
+import org.realtimeetl.common.util.DateFormatUtil;
+import org.realtimeetl.common.util.StringUtil;
+import org.realtimeetl.parser.MappingProfile;
+import org.realtimeetl.parser.MetaAggProfile;
+import org.realtimeetl.parser.TaskMetaProfile;
+import org.realtimeetl.parser.flush.BufferActuator;
+import org.realtimeetl.parser.model.Mapping;
+import org.realtimeetl.parser.model.Meta;
+import org.realtimeetl.parser.model.MetaAgg;
+import org.realtimeetl.sdk.constant.ConfigConstant;
+import org.realtimeetl.sdk.constant.ConnectorConstant;
+import org.realtimeetl.sdk.enums.StorageEnum;
+import org.realtimeetl.sdk.filter.Query;
+import org.realtimeetl.sdk.model.BufferActuatorMetric;
+import org.realtimeetl.sdk.spi.BufferActuatorRouterService;
+import org.realtimeetl.sdk.storage.StorageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+/**
+ * @author Realtime ETL
+ * @version 1.0.0
+ * @date 2020-04-23 11:30
+ */
+@Component
+public class MetricReporter implements ScheduledTaskJob {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Resource
+    private MappingProfile mappingProfile;
+
+    @Resource
+    private MetaAggProfile metaAggProfile;
+
+    @Resource
+    private TaskMetaProfile taskMetaProfile;
+
+    @Resource
+    private BufferActuator generalBufferActuator;
+
+    @Resource
+    private BufferActuator storageBufferActuator;
+
+    @Resource
+    private BufferActuatorRouterService bufferActuatorRouter;
+
+    @Resource
+    private ScheduledTaskService scheduledTaskService;
+
+    @Resource
+    private StorageService storageService;
+
+    @Resource
+    private TimeRegistry timeRegistry;
+
+    private volatile boolean running;
+
+    private LocalDateTime queryTime;
+
+    private final DashboardMetric dashboardMetric = new DashboardMetric();
+
+    private final AppReportMetric report = new AppReportMetric();
+
+    private static final int SHOW_REPORT_DAYS = 30;
+
+    @PostConstruct
+    private void init() {
+        scheduledTaskService.start(5000, this);
+    }
+
+    public List<MetricResponse> getMetricInfo() {
+        List<MetricResponseInfo> list = new ArrayList<>();
+        BufferActuatorMetricEnum general = BufferActuatorMetricEnum.GENERAL;
+        BufferActuatorMetricEnum storage = BufferActuatorMetricEnum.STORAGE;
+        list.add(collect(generalBufferActuator, general.getCode(), general.getGroup(), general.getMetricName()));
+        list.add(collect(storageBufferActuator, storage.getCode(), storage.getGroup(), storage.getMetricName()));
+        return list.stream().map(MetricResponseInfo::getResponse).collect(Collectors.toList());
+    }
+
+    public Paging<MetricResponse> queryActuator(String taskId, String searchKey, int pageNum, int pageSize) {
+        Paging<MetricResponse> paging = new Paging<>(pageNum, pageSize);
+        List<BufferActuatorMetric> metrics = bufferActuatorRouter.listMetrics();
+        if (!CollectionUtils.isEmpty(metrics)) {
+            List<MetricResponseInfo> tableList = new ArrayList<>();
+            String tableGroupCode = BufferActuatorMetricEnum.TABLE_GROUP.getCode();
+            for (BufferActuatorMetric metric : metrics) {
+                if (StringUtil.isNotBlank(taskId) && !StringUtil.equals(taskId, metric.getTaskId())) {
+                    continue;
+                }
+                if (StringUtil.isNotBlank(searchKey) && !StringUtil.contains(metric.getName(), searchKey)) {
+                    continue;
+                }
+                tableList.add(collect(metric, tableGroupCode));
+            }
+            if (!CollectionUtils.isEmpty(tableList)) {
+                int offset = (pageNum * pageSize) - pageSize;
+                paging.setData(tableList.stream().sorted(Comparator.comparing(MetricResponseInfo::getQueueUp).reversed()).map(MetricResponseInfo::getResponse).skip(offset).limit(pageSize)
+                        .collect(Collectors.toList()));
+                paging.setTotal(tableList.size());
+            }
+        }
+        return paging;
+    }
+
+    private MetricResponseInfo collect(BufferActuatorMetric metric, String code) {
+        Meta meta = taskMetaProfile.getMeta(metric.getTaskId());
+        String group = StringUtil.EMPTY;
+        if (meta != null) {
+            Mapping mapping = mappingProfile.get(meta.getTaskId());
+            if (mapping != null) {
+                group = mapping.getName();
+            }
+        }
+        MetricResponseInfo info = new MetricResponseInfo();
+        info.setQueueUp(metric.getQueueSize());
+        String msg = "Backlog" + StringUtil.COLON + info.getQueueUp() + StringUtil.FORWARD_SLASH + metric.getQueueCapacity() + StringUtil.SPACE
+                + ThreadPoolMetricEnum.CORE_SIZE.getMetricName() + StringUtil.COLON + metric.getActiveCount() + StringUtil.FORWARD_SLASH
+                + metric.getMaxPoolSize() + StringUtil.SPACE + ThreadPoolMetricEnum.COMPLETED.getMetricName() + StringUtil.COLON
+                + metric.getCompletedTaskCount();
+        info.setResponse(new MetricResponse(code, group, metric.getName(), Collections.singletonList(new Sample(StatisticEnum.COUNT.getTagValueRepresentation(), msg))));
+        return info;
+    }
+
+    public AppReportMetric getAppReportMetric() {
+        queryTime = LocalDateTime.now();
+        // BacklogTasks(General actuator + Table-group actuator)
+        report.setQueueUp(bufferActuatorRouter.getQueueSize() + generalBufferActuator.getQueue().size());
+        report.setQueueCapacity(bufferActuatorRouter.getQueueCapacity() + generalBufferActuator.getQueueCapacity());
+        // EnduringTasks
+        report.setStorageQueueUp(storageBufferActuator.getQueue().size());
+        report.setStorageQueueCapacity(storageBufferActuator.getQueueCapacity());
+        // Executor TPS
+        report.setTps(getOneMinBufferActuatorRate());
+        return report;
+    }
+
+    public DashboardMetric getMappingReportMetric() {
+        queryTime = LocalDateTime.now();
+        return dashboardMetric;
+    }
+
+    @Override
+    public void run() {
+        if (running || null == queryTime) {
+            return;
+        }
+        // InactiveTimeScope(30sInternal)
+        if (LocalDateTime.now().minusSeconds(30).isAfter(queryTime)) {
+            return;
+        }
+
+        // RefreshReport
+        try {
+            running = true;
+            // minPageScanTasksAdministrationMeta，PressPageCumulative, avoid one-time loadingMemory
+            AtomicLong successTotal = new AtomicLong();
+            AtomicLong failTotal = new AtomicLong();
+            AtomicLong mappingSuccessTotal = new AtomicLong();
+            AtomicLong mappingFailTotal = new AtomicLong();
+            AtomicLong insertTotal = new AtomicLong();
+            AtomicLong updateTotal = new AtomicLong();
+            AtomicLong deleteTotal = new AtomicLong();
+            AtomicLong ddlTotal = new AtomicLong();
+            AtomicLong totalMeta = new AtomicLong();
+            AtomicLong runningMeta = new AtomicLong();
+            AtomicLong failMeta = new AtomicLong();
+            AtomicLong lastWeekMeta = new AtomicLong();
+            long lastWeekTime = Timestamp.valueOf(LocalDateTime.now().minusWeeks(1)).getTime();
+
+            taskMetaProfile.pageScanMetas(TaskLevelEnum.TASK.getCode(), ConfigConstant.PAGE_SIZE, page -> {
+                if (CollectionUtils.isEmpty(page)) {
+                    return;
+                }
+                successTotal.addAndGet(sumMetaCounter(page, Meta::getSuccess));
+                failTotal.addAndGet(sumMetaCounter(page, Meta::getFail));
+                insertTotal.addAndGet(getMappingInsert(page));
+                updateTotal.addAndGet(getMappingUpdate(page));
+                deleteTotal.addAndGet(getMappingDelete(page));
+                ddlTotal.addAndGet(getMappingDll(page));
+                for (Meta meta : page) {
+                    if (meta == null) {
+                        continue;
+                    }
+                    totalMeta.incrementAndGet();
+                    if (meta.getCreateTime() <= lastWeekTime) {
+                        lastWeekMeta.incrementAndGet();
+                    }
+                    if (CommonTaskStatusEnum.isRunning(meta.getState())) {
+                        runningMeta.incrementAndGet();
+                    }
+                    if (meta.getFail() != null && meta.getFail().get() > 0) {
+                        failMeta.incrementAndGet();
+                    }
+                    if (StringUtil.isNotBlank(meta.getTaskId()) && mappingProfile.get(meta.getTaskId()) != null) {
+                        if (meta.getSuccess() != null) {
+                            mappingSuccessTotal.addAndGet(meta.getSuccess().get());
+                        }
+                        if (meta.getFail() != null) {
+                            mappingFailTotal.addAndGet(meta.getFail().get());
+                        }
+                    }
+                }
+            });
+
+            if (totalMeta.get() == 0) {
+                dashboardMetric.reset();
+                return;
+            }
+            dashboardMetric.setSuccess(successTotal.get());
+            dashboardMetric.setFail(failTotal.get());
+            dashboardMetric.setInsert(insertTotal.get());
+            dashboardMetric.setUpdate(updateTotal.get());
+            dashboardMetric.setDelete(deleteTotal.get());
+            dashboardMetric.setDdl(ddlTotal.get());
+            dashboardMetric.setTotalMeta(totalMeta.get());
+            dashboardMetric.setLastWeekMeta(lastWeekMeta.get());
+            dashboardMetric.setRunningMeta(runningMeta.get());
+            dashboardMetric.setFailMeta(failMeta.get());
+            updateSyncTrendFromDaily(mappingSuccessTotal.get(), mappingFailTotal.get());
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+            running = false;
+        }
+    }
+
+    /**
+     * Sync Trends：Completing date points by fixed calendar window0）；History Day Read{@code realtime_etl_meta_agg}，Today in real time.
+     */
+    private void updateSyncTrendFromDaily(long todaySuccess, long todayFail) {
+        SyncTrendStackVO stack = dashboardMetric.getTrend();
+        stack.getLabels().clear();
+        stack.getSuccess().clear();
+        stack.getFail().clear();
+
+        LocalDate end = LocalDate.now();
+        LocalDate start = end.minusDays(SHOW_REPORT_DAYS - 1L);
+        String today = end.format(DateFormatUtil.YYYY_MM_DD);
+
+        Map<String, MetaAgg> byDate = new HashMap<>();
+        List<MetaAgg> rows = metaAggProfile.listRecent(SHOW_REPORT_DAYS);
+        if (!CollectionUtils.isEmpty(rows)) {
+            for (MetaAgg row : rows) {
+                if (row == null || StringUtil.isBlank(row.getStatDate())) {
+                    continue;
+                }
+                byDate.put(row.getStatDate(), row);
+            }
+        }
+
+        for (LocalDate day = start; !day.isAfter(end); day = day.plusDays(1)) {
+            String label = day.format(DateFormatUtil.YYYY_MM_DD);
+            stack.getLabels().add(label);
+            if (StringUtil.equals(today, label)) {
+                stack.getSuccess().add(todaySuccess);
+                stack.getFail().add(todayFail);
+                continue;
+            }
+            MetaAgg row = byDate.get(label);
+            stack.getSuccess().add(row == null ? 0L : row.getSuccess());
+            stack.getFail().add(row == null ? 0L : row.getFail());
+        }
+    }
+
+    /**
+     * AccessExecutor TPS
+     */
+    public TpsVO getOneMinBufferActuatorRate() {
+        Bucket[] buckets = timeRegistry.meter(TimeRegistry.GENERAL_BUFFER_ACTUATOR_TPS).getBucketAll();
+        TpsVO vo = new TpsVO();
+        Instant now = Instant.now();
+        long oneMin = now.minus(1, ChronoUnit.MINUTES).toEpochMilli();
+        // Show Only1minutesInternal
+        Map<String, Long> map = new HashMap<>();
+        Stream.of(buckets).filter(b -> b.getTime() >= oneMin).sorted(Comparator.comparing(Bucket::getTime))
+                .forEach(b -> map.put(DateFormatUtil.timestampToString(new Timestamp(b.getTime()), DateFormatUtil.HH_MM_SS), b.get()));
+        for (int i = 0; i < buckets.length; i++) {
+            long milli = now.minus(buckets.length - i, ChronoUnit.SECONDS).toEpochMilli();
+            String key = DateFormatUtil.timestampToString(new Timestamp(milli), DateFormatUtil.HH_MM_SS);
+            vo.addName(key);
+            vo.addValue(map.getOrDefault(key, 0L));
+        }
+        vo.setAverage(Math.floor(map.values().stream().mapToInt(Long::intValue).average().orElse(0)));
+        return vo;
+    }
+
+    /**
+     * CurrentsecondsExecut MOUS 5.5%（RecentTimeThe count.
+     *
+     * @return ArticleSecond
+     */
+    public long getCurrentBufferActuatorTps() {
+        TpsVO vo = getOneMinBufferActuatorRate();
+        if (CollectionUtils.isEmpty(vo.getValue())) {
+            return 0L;
+        }
+        Object last = vo.getValue().get(vo.getValue().size() - 1);
+        if (last instanceof Number) {
+            return ((Number) last).longValue();
+        }
+        return 0L;
+    }
+
+    /**
+     * SummaryPageTasksAdministrationMeta Calculator(s)SUCCESS / FAIL Wait.
+     */
+    private long sumMetaCounter(List<Meta> page, Function<Meta, AtomicLong> getter) {
+        if (CollectionUtils.isEmpty(page) || getter == null) {
+            return 0L;
+        }
+        long total = 0L;
+        for (Meta meta : page) {
+            if (meta == null) {
+                continue;
+            }
+            AtomicLong counter = getter.apply(meta);
+            if (counter != null) {
+                total += counter.get();
+            }
+        }
+        return total;
+    }
+
+    private long getMappingInsert(List<Meta> page) {
+        return queryMappingMetricCount(page, (query) -> query.addFilter(ConfigConstant.CONFIG_MODEL_TYPE, ConnectorConstant.OPERTION_INSERT));
+    }
+
+    private long getMappingUpdate(List<Meta> page) {
+        return queryMappingMetricCount(page, (query) -> query.addFilter(ConfigConstant.CONFIG_MODEL_TYPE, ConnectorConstant.OPERTION_UPDATE));
+    }
+
+    private long getMappingDelete(List<Meta> page) {
+        return queryMappingMetricCount(page, (query) -> query.addFilter(ConfigConstant.CONFIG_MODEL_TYPE, ConnectorConstant.OPERTION_DELETE));
+    }
+
+    private long getMappingDll(List<Meta> page) {
+        return queryMappingMetricCount(page, (query) -> query.addFilter(ConfigConstant.CONFIG_MODEL_TYPE, ConnectorConstant.OPERTION_ALTER));
+    }
+
+    private long queryMappingMetricCount(List<Meta> page, Consumer<Query> operation) {
+        if (CollectionUtils.isEmpty(page)) {
+            return 0L;
+        }
+        // DetailsminTable: IndividualTasksminTable(realtime_etl_task_detail_{taskId})After CAT, add
+        long total = 0L;
+        for (Meta meta : page) {
+            if (meta == null || StringUtil.isBlank(meta.getTaskId())) {
+                continue;
+            }
+            Query query = new Query(1, 1);
+            query.setQueryTotal(true);
+            query.setType(StorageEnum.TASK_DETAIL);
+            query.setTaskId(meta.getTaskId());
+            operation.accept(query);
+            Paging paging = storageService.query(query);
+            total += paging.getTotal();
+        }
+        return total;
+    }
+
+    private MetricResponseInfo collect(BufferActuator bufferActuator, String code, String group, String metricName) {
+        MetricResponseInfo info = new MetricResponseInfo();
+        ThreadPoolTaskExecutor threadTask = (ThreadPoolTaskExecutor) bufferActuator.getExecutor();
+        ThreadPoolExecutor pool = threadTask.getThreadPoolExecutor();
+        info.setQueueUp(bufferActuator.getQueue().size());
+        String msg = "Backlog" + StringUtil.COLON + info.getQueueUp() + StringUtil.FORWARD_SLASH + bufferActuator.getQueueCapacity() + StringUtil.SPACE + ThreadPoolMetricEnum.CORE_SIZE.getMetricName()
+                + StringUtil.COLON + pool.getActiveCount() + StringUtil.FORWARD_SLASH + pool.getMaximumPoolSize() + StringUtil.SPACE + ThreadPoolMetricEnum.COMPLETED.getMetricName() + StringUtil.COLON
+                + pool.getCompletedTaskCount();
+        info.setResponse(new MetricResponse(code, group, metricName, Collections.singletonList(new Sample(StatisticEnum.COUNT.getTagValueRepresentation(), msg))));
+        return info;
+    }
+
+}

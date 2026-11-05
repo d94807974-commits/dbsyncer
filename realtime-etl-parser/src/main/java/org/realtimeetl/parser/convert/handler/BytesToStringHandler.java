@@ -1,0 +1,22 @@
+package org.realtimeetl.parser.convert.handler;
+
+import org.realtimeetl.parser.convert.AbstractHandler;
+
+/**
+ * Byte [ ] Turning
+ *
+ * @author Realtime ETL
+ * @version 1.0.0
+ * @date 2021/12/20 23:04
+ */
+public class BytesToStringHandler extends AbstractHandler {
+
+    @Override
+    public Object convert(String args, Object value) {
+        if (value instanceof byte[]) {
+            byte[] b = (byte[]) value;
+            value = new String(b);
+        }
+        return value;
+    }
+}

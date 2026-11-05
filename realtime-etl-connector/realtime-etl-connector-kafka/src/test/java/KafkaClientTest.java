@@ -1,0 +1,166 @@
+/**
+ * Copyright 2026 Realtime ETL
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import org.realtimeetl.common.util.JsonUtil;
+import org.realtimeetl.connector.kafka.KafkaConnector;
+import org.realtimeetl.connector.kafka.KafkaConnectorInstance;
+import org.realtimeetl.connector.kafka.config.KafkaConfig;
+import org.realtimeetl.connector.kafka.util.KafkaUtil;
+import org.realtimeetl.sdk.enums.DataTypeEnum;
+import org.realtimeetl.sdk.model.Field;
+
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * @author Realtime ETL
+ * @version 1.0.0
+ * @date 2021/11/23 23:13
+ */
+public class KafkaClientTest {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    private KafkaConnectorInstance instance;
+    private KafkaConsumer<String, Object> consumer;
+    private KafkaProducer<String, Object> producer;
+    private final String topic = "my_topic";
+    private final String groupId = "my_group";
+
+    @Before
+    public void init() {
+        KafkaConfig config = new KafkaConfig();
+        config.setUrl("127.0.0.1:9092");
+        String properties = "connections.max.idle.ms=60000\n" + "request.timeout.ms=30000\n" + "retry.backoff.ms=100";
+        config.getProperties().putAll(KafkaUtil.parse(properties));
+
+        config.getExtInfo()
+                .put(KafkaUtil.CONSUMER_PROPERTIES, "key.deserializer=org.apache.kafka.common.serialization.StringDeserializer\n"
+                        + "value.deserializer=org.realtimeetl.connector.kafka.serialization.JsonToMapDeserializer\n" + "auto.offset.reset=latest\n" + "enable.auto.commit=false\n"
+                        + "auto.commit.interval.ms=5000\n" + "max.poll.records=500\n" + "max.poll.interval.ms=300000\n" + "max.partition.fetch.bytes=1048576\n" + "fetch.min.bytes=1\n"
+                        + "fetch.max.wait.ms=500\n" + "heartbeat.interval.ms=3000\n" + "session.timeout.ms=10000");
+
+        config.getExtInfo()
+                .put(KafkaUtil.PRODUCER_PROPERTIES, "key.serializer=org.apache.kafka.common.serialization.StringSerializer\n"
+                        + "value.serializer=org.realtimeetl.connector.kafka.serialization.MapToJsonSerializer\n" + "acks=1\n" + "batch.size=32768\n" + "buffer.memory=33554432\n"
+                        + "enable.idempotence=false\n" + "linger.ms=10\n" + "retries=1\n" + "max.block.ms=60000\n" + "max.request.size=1048576");
+        instance = new KafkaConnectorInstance(config);
+
+        // Ensure production
+        producer = instance.getProducer(topic);
+        // Consumer Tenure
+        // consumer = instance.getConsumer(topic, groupId);
+    }
+
+    @After
+    public void close() {
+        if (consumer != null) {
+            consumer.close();
+        }
+        if (instance != null) {
+            instance.close();
+        }
+    }
+
+    @Test
+    public void testProducerAndConsumer() {
+        logger.info("test begin");
+        KafkaConnector connector = new KafkaConnector();
+        logger.info("ping {}", connector.isAlive(instance));
+
+        // Model producers
+        for (int i = 0; i < 2; i++) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", i);
+            map.put("name", "Chang Empower" + i);
+            map.put("create_date", new Timestamp(System.currentTimeMillis()));
+
+            String key = String.valueOf(i);
+            String message = JsonUtil.objToJson(map);
+            System.out.println("Can not open message " + message);
+            Future<RecordMetadata> send = producer.send(new ProducerRecord<>(topic, key, map));
+            System.out.println("Can not open message " + JsonUtil.objToJson(send));
+        }
+
+        // new Consumer().start();
+        // TimeUnit.SECONDS.sleep(6000);
+        logger.info("test end");
+    }
+
+    private String getFields() {
+        List<Field> fields = new ArrayList<>();
+        fields.add(genField("id", DataTypeEnum.STRING, true));
+        fields.add(genField("name", DataTypeEnum.STRING));
+        fields.add(genField("age", DataTypeEnum.INT));
+        fields.add(genField("count", DataTypeEnum.LONG));
+        fields.add(genField("type", DataTypeEnum.SHORT));
+        fields.add(genField("money", DataTypeEnum.FLOAT));
+        fields.add(genField("score", DataTypeEnum.DOUBLE));
+        fields.add(genField("status", DataTypeEnum.BOOLEAN));
+        fields.add(genField("create_date", DataTypeEnum.DATE));
+        fields.add(genField("time", DataTypeEnum.TIME));
+        fields.add(genField("update_time", DataTypeEnum.TIMESTAMP));
+        return JsonUtil.objToJson(fields);
+    }
+
+    private Field genField(String name, DataTypeEnum typeEnum) {
+        return genField(name, typeEnum, false);
+    }
+
+    private Field genField(String name, DataTypeEnum typeEnum, boolean pk) {
+        return new Field(name, typeEnum.name(), 12, pk);
+    }
+
+    class Consumer extends Thread {
+
+        public Consumer() {
+            setName("Consumer-thread");
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                ConsumerRecords<String, Object> records = consumer.poll(100);
+                for (ConsumerRecord<String, Object> record : records) {
+                    logger.info("Message received: offset ={, key ={, value ={", record.offset(), record.key(), record.value());
+                }
+                try {
+                    TimeUnit.MILLISECONDS.sleep(10);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
+}

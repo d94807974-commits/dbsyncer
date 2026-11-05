@@ -1,0 +1,275 @@
+/**
+ * Copyright 2026 Realtime ETL
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.realtimeetl.connector.base;
+
+import org.realtimeetl.common.model.Result;
+import org.realtimeetl.common.util.CollectionUtils;
+import org.realtimeetl.common.util.JsonUtil;
+import org.realtimeetl.sdk.config.CommandConfig;
+import org.realtimeetl.sdk.config.DDLConfig;
+import org.realtimeetl.sdk.connector.AbstractConnector;
+import org.realtimeetl.sdk.connector.ConnectorInstance;
+import org.realtimeetl.sdk.connector.ConnectorServiceContext;
+import org.realtimeetl.sdk.connector.DefaultConnectorServiceContext;
+import org.realtimeetl.sdk.listener.Listener;
+import org.realtimeetl.sdk.model.ConnectorConfig;
+import org.realtimeetl.sdk.model.MetaInfo;
+import org.realtimeetl.sdk.model.Table;
+import org.realtimeetl.sdk.plugin.PluginContext;
+import org.realtimeetl.sdk.plugin.ReaderContext;
+import org.realtimeetl.sdk.spi.ConnectorService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
+
+import javax.annotation.PostConstruct;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.ServiceLoader;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * ConnectorPlant
+ *
+ * @author Realtime ETL
+ * @version 1.0.0
+ * @date 2019-09-18 23:30
+ */
+@Component
+public class ConnectorFactory implements DisposableBean {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    private final Map<String, ConnectorInstance> pool = new ConcurrentHashMap<>();
+
+    private final Map<String, ConnectorService> service = new ConcurrentHashMap<>();
+
+    private final Set<String> connectorTypes = new HashSet<>();
+
+    @PostConstruct
+    private void init() {
+        ServiceLoader<ConnectorService> services = ServiceLoader.load(ConnectorService.class, Thread.currentThread().getContextClassLoader());
+        for (ConnectorService s : services) {
+            service.putIfAbsent(s.getConnectorType(), s);
+            connectorTypes.add(s.getConnectorType());
+        }
+    }
+
+    @Override
+    public void destroy() {
+        pool.values().forEach(this::disconnect);
+        pool.clear();
+    }
+
+    /**
+     * Create Connection，BackCacheConnectobject. The same.{@code instanceId} Existing or reused, no new and no old examples removed.
+     *
+     * @param instanceId ExamplesID
+     * @param config     ConnectConfigure
+     * @param catalog    Contents
+     * @param schema     Mode
+     * @return ConnectExample (cloning)
+     */
+    public ConnectorInstance connect(String instanceId, ConnectorConfig config, String catalog, String schema) {
+        Assert.notNull(config, "ConnectorConfig can not be null.");
+        Assert.hasText(instanceId, "instanceId can not be blank.");
+        ConnectorService connectorService = getConnectorService(config);
+
+        // only first created Procedures; and by AllowingcomputeIfAbsent Promise the same.instanceId Only one pool.
+        ConnectorInstance pooledInstance = pool.computeIfAbsent(instanceId, id -> {
+            DefaultConnectorServiceContext context = new DefaultConnectorServiceContext();
+            context.setCatalog(catalog);
+            context.setSchema(schema);
+            ConnectorInstance created = connectorService.connect(config, context);
+            if (created == null) {
+                throw new ConnectorException("Connection configuration anomaly: Could not create connection instance");
+            }
+            return created;
+        });
+
+        try {
+            ConnectorInstance clone = (ConnectorInstance) pooledInstance.clone();
+            clone.setConfig(config);
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new ConnectorException(e);
+        }
+    }
+
+    public boolean contains(String instanceId) {
+        return pool.containsKey(instanceId);
+    }
+
+    public ConnectorInstance connect(String instanceId) {
+        ConnectorInstance instance = pool.get(instanceId);
+        Assert.notNull(instance, "ConnectorInstance can not null");
+        return instance;
+    }
+
+    /**
+     * Get a listener.
+     */
+    public Listener getListener(String connectorType, String listenerType) {
+        return getConnectorService(connectorType).getListener(listenerType);
+    }
+
+    /**
+     * InspectionConnectConfigureYesNoAvailable Lawyers
+     */
+    public boolean isAlive(String instanceId, ConnectorConfig config) {
+        Assert.hasText(instanceId, "ConnectorConfigId can not be null.");
+        Assert.notNull(config, "ConnectorConfig can not be null.");
+        ConnectorInstance instance = pool.get(instanceId);
+        if (instance != null) {
+            return getConnectorService(config).isAlive(instance);
+        }
+        return false;
+    }
+
+    /**
+     * AccessConfigureTable
+     */
+    public List<Table> getTables(ConnectorInstance connectorInstance, ConnectorServiceContext context) {
+        Assert.notNull(connectorInstance, "ConnectorInstance can not be null.");
+        List<Table> tableList = getConnectorService(connectorInstance.getConfig()).getTable(connectorInstance, context);
+        // Ups 55/2
+        Collections.sort(tableList, Comparator.comparing(Table::getName));
+        return tableList;
+    }
+
+    /**
+     * AccessConfigureTableMetaInfo
+     */
+    public List<MetaInfo> getMetaInfo(ConnectorInstance connectorInstance, ConnectorServiceContext context) {
+        Assert.notNull(connectorInstance, "ConnectorInstance can not be null.");
+        return getConnectorService(connectorInstance.getConfig()).getMetaInfo(connectorInstance, context);
+    }
+
+    public Object getPosition(ConnectorInstance connectorInstance) {
+        Assert.notNull(connectorInstance, "ConnectorInstance can not be null.");
+        return getConnectorService(connectorInstance.getConfig()).getPosition(connectorInstance);
+    }
+
+    /**
+     * AccessConnectorSyncParameter
+     */
+    public Map<String, String> getCommand(CommandConfig sourceCommandConfig, CommandConfig targetCommandConfig) {
+        Assert.notNull(sourceCommandConfig, "SourceCommandConfig can not be null.");
+        Assert.notNull(targetCommandConfig, "TargetCommandConfig can not be null.");
+        Map<String, String> map = new HashMap<>();
+        Map sCmd = getConnectorService(sourceCommandConfig.getConnectorType()).getSourceCommand(sourceCommandConfig);
+        if (!CollectionUtils.isEmpty(sCmd)) {
+            map.putAll(sCmd);
+        }
+
+        Map tCmd = getConnectorService(targetCommandConfig.getConnectorType()).getTargetCommand(targetCommandConfig);
+        if (!CollectionUtils.isEmpty(tCmd)) {
+            map.putAll(tCmd);
+        }
+        return map;
+    }
+
+    public Result reader(ReaderContext context) {
+        ConnectorInstance connectorInstance = context.getSourceConnectorInstance();
+        Assert.notNull(connectorInstance, "ConnectorInstance can not null");
+        Assert.notNull(context, "ReaderContext can not null");
+        Result result = getConnectorService(connectorInstance.getConfig()).reader(connectorInstance, context);
+        Assert.notNull(result, "Connector reader result can not null");
+        return result;
+    }
+
+    public Result writer(PluginContext context) {
+        ConnectorInstance targetInstance = context.getTargetConnectorInstance();
+        Assert.notNull(targetInstance, "targetConnectorInstance can not null");
+        ConnectorService targetConnector = getConnectorService(targetInstance.getConfig());
+        if (targetConnector instanceof AbstractConnector) {
+            AbstractConnector conn = (AbstractConnector) targetConnector;
+            try {
+                conn.convertProcessBeforeWriter(context, targetConnector.getSchemaResolver());
+            } catch (Exception e) {
+                Result result = new Result();
+                result.getError().append(e.getMessage());
+                result.addFailData(context.getTargetList());
+                if (context.isEnablePrintTraceInfo()) {
+                    logger.error("traceId:{}, tableName:{}, event:{}, targetList:{}, result:{}", context.getTraceId(), context.getSourceTable().getName(), context.getEvent(), context
+                            .getTargetList(), JsonUtil.objToJson(result));
+                }
+                return result;
+            }
+        }
+
+        Result result = targetConnector.writer(targetInstance, context);
+        if (context.isEnablePrintTraceInfo()) {
+            logger.info("traceId:{}, tableName:{}, event:{}, result:{}", context.getTraceId(), context.getSourceTable().getName(), context.getEvent(), JsonUtil.objToJson(result));
+        }
+        Assert.notNull(result, "Connector writer batch result can not null");
+        return result;
+    }
+
+    public Result writerDDL(ConnectorInstance connectorInstance, DDLConfig ddlConfig) {
+        Assert.notNull(connectorInstance, "ConnectorInstance can not null");
+        Result result = getConnectorService(connectorInstance.getConfig()).writerDDL(connectorInstance, ddlConfig);
+        Assert.notNull(result, "Connector writer batch result can not null");
+        return result;
+    }
+
+    public ConnectorService getConnectorService(ConnectorConfig connectorConfig) {
+        Assert.notNull(connectorConfig, "ConnectorConfig can not null");
+        return getConnectorService(connectorConfig.getConnectorType());
+    }
+
+    public ConnectorService getConnectorService(String connectorType) {
+        ConnectorService connectorService = service.get(connectorType);
+        if (connectorService == null) {
+            Assert.isTrue(false, "Unsupported connector type:" + connectorType);
+        }
+        return connectorService;
+    }
+
+    public Set<String> getConnectorTypeAll() {
+        return connectorTypes;
+    }
+
+    /**
+     * Disconnect
+     */
+    public void disconnect(String instanceId) {
+        ConnectorInstance instance = pool.get(instanceId);
+        if (instance == null) {
+            return;
+        }
+        // Atomically remove instance, but do not block backActions
+        pool.computeIfPresent(instanceId, (k, v) -> (v == instance) ? null : v);
+        // Execute outside lockDisconnectActions，Avoid blocking.OtherThreads
+        disconnect(instance);
+    }
+
+    private void disconnect(ConnectorInstance connectorInstance) {
+        Assert.notNull(connectorInstance, "ConnectorInstance can not be null.");
+        getConnectorService(connectorInstance.getConfig()).disconnect(connectorInstance);
+    }
+
+    public Map<String, ConnectorInstance> getPool() {
+        return pool;
+    }
+}

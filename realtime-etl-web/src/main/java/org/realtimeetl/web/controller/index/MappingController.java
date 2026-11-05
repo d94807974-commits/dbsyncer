@@ -1,0 +1,338 @@
+/**
+ * Copyright 2026 Realtime ETL
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.realtimeetl.web.controller.index;
+
+import org.realtimeetl.biz.DataSyncService;
+import org.realtimeetl.biz.MappingService;
+import org.realtimeetl.biz.enums.ResourceAclActionEnum;
+import org.realtimeetl.biz.model.DataSyncRequest;
+import org.realtimeetl.biz.vo.MappingVO;
+import org.realtimeetl.biz.vo.RestResult;
+import org.realtimeetl.common.util.JsonUtil;
+import org.realtimeetl.common.util.StringUtil;
+import org.realtimeetl.sdk.constant.ConfigConstant;
+import org.realtimeetl.sdk.enums.DataTypeEnum;
+import org.realtimeetl.web.controller.BaseController;
+import org.realtimeetl.web.log.OperLog;
+import org.realtimeetl.web.log.OperLogType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+
+@Controller
+@RequestMapping("/mapping")
+public class MappingController extends BaseController {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Resource
+    private MappingService mappingService;
+
+    @Resource
+    private DataSyncService dataSyncService;
+
+    /**
+     * Sync taskListPageNoodles.
+     */
+    @GetMapping("/list")
+    public String list(ModelMap model) {
+        return "mapping/list";
+    }
+
+    /**
+     * AddSync taskPageNoodles.
+     */
+    @GetMapping("/pageAdd")
+    public String page(ModelMap model) {
+        return "mapping/add";
+    }
+
+    @GetMapping("/page/{page}")
+    public String page(ModelMap model, @PathVariable("page") String page, @RequestParam(value = "id") String id,
+                       @RequestParam(value = "detailStatus", required = false) String detailStatus,
+                       @RequestParam(value = "tableGroupId", required = false) String tableGroupId,
+                       @RequestParam(value = "status", required = false) String status) {
+        requireResource(ConfigConstant.MAPPING, id, ResourceAclActionEnum.READ.getCode());
+        if (StringUtil.equals("detail", page)) {
+            model.put("mappingId", id);
+            model.put("mapping", mappingService.getMapping(id));
+            model.put("detailStatus", detailStatus == null ? "" : detailStatus.trim());
+            return "mapping/detail";
+        }
+        if (StringUtil.equals("events", page)) {
+            MappingVO mapping = mappingService.getMapping(id);
+            model.put("mappingId", id);
+            model.put("mapping", mapping);
+            model.put("tableGroupId", tableGroupId == null ? "" : tableGroupId.trim());
+            String dataStatus = status;
+            if (StringUtil.isBlank(dataStatus)) {
+                if (StringUtil.equals("fail", detailStatus)) {
+                    dataStatus = "0";
+                } else if (StringUtil.equals("success", detailStatus)) {
+                    dataStatus = "1";
+                } else {
+                    dataStatus = "-1";
+                }
+            }
+            model.put("dataStatus", dataStatus);
+            return "mapping/events";
+        }
+        model.put("mapping", mappingService.getMapping(id));
+        initConfig(model);
+        initEditionInfo(model);
+        return "mapping/" + page;
+    }
+
+    @GetMapping("/pageCustomTable")
+    public String page(ModelMap model, @RequestParam(value = "id") String id, @RequestParam(value = "type") String type) {
+        requireResource(ConfigConstant.MAPPING, id, ResourceAclActionEnum.READ.getCode());
+        model.put("mapping", mappingService.getMappingCustomTable(id, type));
+        model.put("type", type);
+        List<DataTypeEnum> dataTypeEnums = Arrays.asList(DataTypeEnum.values());
+        Collections.sort(dataTypeEnums, Comparator.comparing(DataTypeEnum::name));
+        model.put("dataType", dataTypeEnums);
+        return "mapping/customTable";
+    }
+
+    @RequestMapping("/get")
+    @ResponseBody
+    public RestResult get(@RequestParam(value = "id") String id) {
+        try {
+            requireResource(ConfigConstant.MAPPING, id, ResourceAclActionEnum.READ.getCode());
+            return RestResult.restSuccess(mappingService.getMapping(id));
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage(), e);
+            return RestResult.restFail(e.getMessage());
+        }
+    }
+
+    @PostMapping("/search")
+    @ResponseBody
+    public RestResult search(HttpServletRequest request) {
+        try {
+            Map<String, String> params = getParams(request);
+            return RestResult.restSuccess(mappingService.search(params));
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage(), e);
+            return RestResult.restFail(e.getMessage());
+        }
+    }
+
+    /**
+     * Sync taskDetails：Summary by MapSuccess/Failures
+     */
+    @PostMapping("/searchResult")
+    @ResponseBody
+    public RestResult searchResult(HttpServletRequest request) {
+        try {
+            Map<String, String> params = getParams(request);
+            String mappingId = params.get(ConfigConstant.CONFIG_MODEL_ID);
+            if (StringUtil.isBlank(mappingId)) {
+                mappingId = params.get("id");
+            }
+            requireResource(ConfigConstant.MAPPING, mappingId, ResourceAclActionEnum.READ.getCode());
+            return RestResult.restSuccess(mappingService.searchTableGroupResult(params));
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage(), e);
+            return RestResult.restFail(e.getMessage());
+        }
+    }
+
+    @OperLog(type = OperLogType.MAPPING_COPY)
+    @PostMapping("/copy")
+    @ResponseBody
+    public RestResult add(@RequestParam("id") String id) {
+        try {
+            requirePermission("mapping:edit");
+            requireResource(ConfigConstant.MAPPING, id, ResourceAclActionEnum.WRITE.getCode());
+            return RestResult.restSuccess(mappingService.copy(id, currentUsername()));
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage(), e);
+            return RestResult.restFail(e.getMessage());
+        }
+    }
+
+    @OperLog(type = OperLogType.MAPPING_INSERT)
+    @PostMapping(value = "/add")
+    @ResponseBody
+    public RestResult add(HttpServletRequest request) {
+        try {
+            requirePermission("mapping:edit");
+            Map<String, String> params = getParams(request);
+            return RestResult.restSuccess(mappingService.add(params));
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage(), e);
+            return RestResult.restFail(e.getMessage());
+        }
+    }
+
+    @OperLog(type = OperLogType.MAPPING_UPDATE)
+    @PostMapping(value = "/edit")
+    @ResponseBody
+    public RestResult edit(HttpServletRequest request) {
+        try {
+            requirePermission("mapping:edit");
+            Map<String, String> params = getParams(request);
+            requireResource(ConfigConstant.MAPPING, params.get(ConfigConstant.CONFIG_MODEL_ID), ResourceAclActionEnum.WRITE.getCode());
+            return RestResult.restSuccess(mappingService.edit(params));
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage(), e);
+            return RestResult.restFail(e.getMessage());
+        }
+    }
+
+    @OperLog(type = OperLogType.MAPPING_DELETE)
+    @PostMapping("/remove")
+    @ResponseBody
+    public RestResult remove(@RequestParam(value = "id") String id) {
+        try {
+            requirePermission("mapping:edit");
+            requireResource(ConfigConstant.MAPPING, id, ResourceAclActionEnum.WRITE.getCode());
+            return RestResult.restSuccess(mappingService.remove(id));
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage(), e);
+            return RestResult.restFail(e.getMessage());
+        }
+    }
+
+    @OperLog(type = OperLogType.MAPPING_RUNNING)
+    @PostMapping("/start")
+    @ResponseBody
+    public RestResult start(@RequestParam(value = "id") String id) {
+        try {
+            requirePermission("mapping:operate");
+            requireResource(ConfigConstant.MAPPING, id, ResourceAclActionEnum.OPERATE.getCode());
+            return RestResult.restSuccess(mappingService.start(id));
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage(), e);
+            return RestResult.restFail(e.getMessage());
+        }
+    }
+
+    @OperLog(type = OperLogType.MAPPING_STOP)
+    @PostMapping("/stop")
+    @ResponseBody
+    public RestResult stop(@RequestParam(value = "id") String id) {
+        try {
+            requirePermission("mapping:operate");
+            requireResource(ConfigConstant.MAPPING, id, ResourceAclActionEnum.OPERATE.getCode());
+            return RestResult.restSuccess(mappingService.stop(id));
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage(), e);
+            return RestResult.restFail(e.getMessage());
+        }
+    }
+
+    @PostMapping(value = "/refreshTables")
+    @ResponseBody
+    public RestResult refreshTables(@RequestParam(value = "id") String id) {
+        try {
+            requirePermission("mapping:edit");
+            requireResource(ConfigConstant.MAPPING, id, ResourceAclActionEnum.WRITE.getCode());
+            return RestResult.restSuccess(mappingService.refreshMappingTables(id));
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage(), e);
+            return RestResult.restFail(e.getMessage());
+        }
+    }
+
+    @PostMapping("/searchTables")
+    @ResponseBody
+    public RestResult searchTables(HttpServletRequest request) {
+        try {
+            Map<String, String> params = getParams(request);
+            requireResource(ConfigConstant.MAPPING, params.get(ConfigConstant.CONFIG_MODEL_ID), ResourceAclActionEnum.READ.getCode());
+            return RestResult.restSuccess(mappingService.searchTables(params));
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage(), e);
+            return RestResult.restFail(e.getMessage());
+        }
+    }
+
+    @PostMapping("/searchCustomTable")
+    @ResponseBody
+    public RestResult searchCustomTable(HttpServletRequest request) {
+        try {
+            Map<String, String> params = getParams(request);
+            requireResource(ConfigConstant.MAPPING, params.get(ConfigConstant.CONFIG_MODEL_ID), ResourceAclActionEnum.READ.getCode());
+            return RestResult.restSuccess(mappingService.searchCustomTable(params));
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage(), e);
+            return RestResult.restFail(e.getMessage());
+        }
+    }
+
+    @OperLog(type = OperLogType.MAPPING_UPDATE, message = "Save Custom Table")
+    @PostMapping(value = "/saveCustomTable")
+    @ResponseBody
+    public RestResult saveCustomTable(HttpServletRequest request) {
+        try {
+            requirePermission("mapping:edit");
+            Map<String, String> params = getParams(request);
+            requireResource(ConfigConstant.MAPPING, params.get(ConfigConstant.CONFIG_MODEL_ID), ResourceAclActionEnum.WRITE.getCode());
+            return RestResult.restSuccess(mappingService.saveCustomTable(params));
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage(), e);
+            return RestResult.restFail(e.getMessage());
+        }
+    }
+
+    @OperLog(type = OperLogType.MAPPING_UPDATE, message = "Delete custom table")
+    @PostMapping(value = "/removeCustomTable")
+    @ResponseBody
+    public RestResult removeCustomTable(HttpServletRequest request) {
+        try {
+            requirePermission("mapping:edit");
+            Map<String, String> params = getParams(request);
+            requireResource(ConfigConstant.MAPPING, params.get(ConfigConstant.CONFIG_MODEL_ID), ResourceAclActionEnum.WRITE.getCode());
+            return RestResult.restSuccess(mappingService.removeCustomTable(params));
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage(), e);
+            return RestResult.restFail(e.getMessage());
+        }
+    }
+
+    @PostMapping("/sync")
+    @ResponseBody
+    public RestResult sync(HttpServletRequest request) {
+        try {
+            String requestBody = readRequestBody(request);
+            logger.info("Received Sync Data: {", requestBody);
+            DataSyncRequest syncRequest = JsonUtil.jsonToObj(requestBody, DataSyncRequest.class);
+            dataSyncService.syncBatch(syncRequest);
+            return RestResult.restSuccess(null);
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage(), e);
+            return RestResult.restFail(e.getMessage());
+        }
+    }
+
+}

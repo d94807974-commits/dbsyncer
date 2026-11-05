@@ -1,0 +1,129 @@
+/**
+ * Copyright 2026 Realtime ETL
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.realtimeetl.connector.dameng.schema;
+
+import org.realtimeetl.common.util.StringUtil;
+import org.realtimeetl.connector.dameng.DamengException;
+import org.realtimeetl.connector.dameng.schema.support.DamengBooleanType;
+import org.realtimeetl.connector.dameng.schema.support.DamengByteType;
+import org.realtimeetl.connector.dameng.schema.support.DamengBytesType;
+import org.realtimeetl.connector.dameng.schema.support.DamengDecimalType;
+import org.realtimeetl.connector.dameng.schema.support.DamengDoubleType;
+import org.realtimeetl.connector.dameng.schema.support.DamengFloatType;
+import org.realtimeetl.connector.dameng.schema.support.DamengIntType;
+import org.realtimeetl.connector.dameng.schema.support.DamengLongType;
+import org.realtimeetl.connector.dameng.schema.support.DamengShortType;
+import org.realtimeetl.connector.dameng.schema.support.DamengStringType;
+import org.realtimeetl.connector.dameng.schema.support.DamengTimeType;
+import org.realtimeetl.connector.dameng.schema.support.DamengTimestampType;
+import org.realtimeetl.connector.oracle.schema.OracleSchemaResolver;
+import org.realtimeetl.sdk.model.Field;
+import org.realtimeetl.sdk.schema.DataType;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Stream;
+
+/**
+ * Dream standard dataTypeParser
+ * <p>Yes.Oracle TypeIt's on the map.TypeName (e.g.INT、VARCHAR、DATETIME、IMAGE Wait.</p>
+ *
+ * @author Realtime ETL.
+ * @version 1.0.0
+ * @date 2026-06-07 02:00
+ */
+public final class DamengSchemaResolver extends OracleSchemaResolver {
+
+    private static final Map<String, DataType> DAMENG_TYPES = new HashMap<>();
+
+    static {
+        Stream.of(
+                new DamengBooleanType(),
+                new DamengByteType(),
+                new DamengBytesType(),
+                new DamengDecimalType(),
+                new DamengDoubleType(),
+                new DamengFloatType(),
+                new DamengIntType(),
+                new DamengLongType(),
+                new DamengShortType(),
+                new DamengStringType(),
+                new DamengTimeType(),
+                new DamengTimestampType()
+        ).forEach(DamengSchemaResolver::register);
+    }
+
+    private static void register(DataType dataType) {
+        dataType.getSupportedTypeName().forEach(typeName -> {
+            if (DAMENG_TYPES.containsKey(typeName)) {
+                throw new DamengException("Duplicate type name: " + typeName);
+            }
+            DAMENG_TYPES.put(typeName, dataType);
+        });
+    }
+
+    /**
+     * NormativeTypeName: uppercase, removedOutlook saluteparenthesis.
+     * <p>For example:{@code TIMESTAMP(6) WITH TIME ZONE} → {@code TIMESTAMP WITH TIME ZONE}</p>
+     */
+    public static String normalizeTypeName(String typeName) {
+        if (typeName == null) {
+            return null;
+        }
+        String normalized = typeName.trim().toUpperCase(Locale.ROOT);
+        normalized = normalized.replaceAll("\\(\\s*\\d+\\s*\\)", "");
+        return normalized.replaceAll("\\s+", " ").trim();
+    }
+
+    @Override
+    protected DataType getDataType(Map<String, DataType> mapping, Field field) {
+        String normalized = normalizeTypeName(field.getTypeName());
+        DataType damengType = DAMENG_TYPES.get(normalized);
+        if (damengType != null) {
+            return damengType;
+        }
+        // TimeIntervalTypeProcessing by String
+        if (normalized != null && normalized.startsWith("INTERVAL")) {
+            return DAMENG_TYPES.get("VARCHAR");
+        }
+        DataType oracleType = mapping.get(normalized);
+        if (oracleType != null) {
+            return oracleType;
+        }
+        return mapping.get(field.getTypeName());
+    }
+
+    @Override
+    public Object merge(Object val, Field field) {
+        return super.merge(val, normalizeField(field));
+    }
+
+    @Override
+    public Object convert(Object val, Field field) {
+        return super.convert(val, normalizeField(field));
+    }
+
+    private Field normalizeField(Field field) {
+        String normalized = normalizeTypeName(field.getTypeName());
+        if (StringUtil.equals(normalized, field.getTypeName())) {
+            return field;
+        }
+        Field copy = new Field(field.getName(), normalized, field.getType(), field.isPk(), field.getColumnSize(), field.getRatio());
+        copy.setLabelName(field.getLabelName());
+        return copy;
+    }
+}

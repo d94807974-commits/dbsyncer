@@ -1,0 +1,102 @@
+/**
+ * Copyright 2026 Realtime ETL
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.realtimeetl.connector.sqlserver.cdc;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * @Author Xinpeng.Fu
+ * @Version 1.0.0
+ * @Date 2022-05-22 22:56
+ */
+public class LsnPuller {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    /**
+     * Spacing for UpdateLSNTime（ms）
+     */
+    private static final long DEFAULT_POLL_INTERVAL_MILLIS = 100;
+
+    private static volatile LsnPuller instance = null;
+    private final Map<String, SqlServerListener> map = new ConcurrentHashMap<>();
+    private Worker worker;
+
+    private LsnPuller() {
+        initWorker();
+    }
+
+    private static LsnPuller getInstance() {
+        if (instance == null) {
+            synchronized (LsnPuller.class) {
+                if (instance == null) {
+                    instance = new LsnPuller();
+                }
+            }
+        }
+        return instance;
+    }
+
+    private void initWorker() {
+        worker = new Worker();
+        worker.setName("cdc-LsnPuller");
+        worker.setDaemon(false);
+        worker.start();
+    }
+
+    public static void addExtractor(String taskId, SqlServerListener listener) {
+        getInstance().map.put(taskId, listener);
+    }
+
+    public static void removeExtractor(String taskId) {
+        getInstance().map.remove(taskId);
+    }
+
+    final class Worker extends Thread {
+
+        @Override
+        public void run() {
+            while (!isInterrupted()) {
+                try {
+                    if (map.isEmpty()) {
+                        TimeUnit.SECONDS.sleep(1);
+                        continue;
+                    }
+                    Lsn maxLsn = null;
+                    for (SqlServerListener listener : map.values()) {
+                        maxLsn = listener.getMaxLsn();
+                        if (null != maxLsn && maxLsn.isAvailable() && maxLsn.compareTo(listener.getLastLsn()) > 0) {
+                            listener.pushStopLsn(maxLsn);
+                        }
+                    }
+                    TimeUnit.MILLISECONDS.sleep(DEFAULT_POLL_INTERVAL_MILLIS);
+                } catch (Throwable e) {
+                    logger.error("Error", e);
+                    try {
+                        TimeUnit.SECONDS.sleep(1);
+                    } catch (InterruptedException ex) {
+                        logger.warn(ex.getMessage());
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,218 @@
+/**
+ * Copyright 2026 Realtime ETL
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.realtimeetl.connector.sqlserver.schema.support;
+
+import org.realtimeetl.common.util.DateFormatUtil;
+import org.realtimeetl.connector.sqlserver.SqlServerException;
+import org.realtimeetl.connector.sqlserver.schema.HierarchyIdBinaryCode;
+import org.realtimeetl.connector.sqlserver.schema.SqlServerGeographyData;
+import org.realtimeetl.connector.sqlserver.schema.SqlServerGeometryData;
+import org.realtimeetl.sdk.model.Field;
+import org.realtimeetl.sdk.schema.support.StringType;
+import org.locationtech.jts.geom.Geometry;
+import org.locationtech.jts.io.ParseException;
+import org.locationtech.jts.io.WKBReader;
+import org.springframework.util.StringUtils;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+/**
+ * @Author Realtime ETL.
+ * @Version 1.0.0
+ * @Date 2026-01-11 22:21
+ */
+public final class SqlServerStringType extends StringType {
+
+    private enum TypeEnum {
+
+        CHAR("char"),
+        VARCHAR("varchar"),
+        NCHAR("nchar"),
+        NVARCHAR("nvarchar"),
+        TEXT("text"),
+        XML("xml"),
+        N_TEXT("ntext"),
+        HIERARCHY_ID("hierarchyid"),
+        UNIQUE_IDENTIFIER("uniqueidentifier"),
+        GEOMETRY("geometry"),
+        GEOGRAPHY("geography");
+
+        private final String value;
+
+        TypeEnum(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public static TypeEnum getType(String type) {
+            for (TypeEnum e : TypeEnum.values()) {
+                if (e.getValue().equals(type)) {
+                    return e;
+                }
+            }
+            return null;
+        }
+    }
+
+    @Override
+    public Set<String> getSupportedTypeName() {
+        return Arrays.stream(TypeEnum.values()).map(TypeEnum::getValue).collect(Collectors.toSet());
+    }
+
+    @Override
+    protected String merge(Object val, Field field) {
+        if (val instanceof byte[]) {
+            TypeEnum type = TypeEnum.getType(field.getTypeName());
+            if (type != null) {
+                switch (type) {
+                    case GEOMETRY:
+                    case GEOGRAPHY:
+                        return parseToWKTWithSRID((byte[]) val);
+                    case HIERARCHY_ID:
+                        return HierarchyIdBinaryCode.parseToHierarchyPath((byte[]) val);
+                    default:
+                        break;
+                }
+            }
+            return new String((byte[]) val);
+        }
+
+        if (val instanceof Number) {
+            Number number = (Number) val;
+            return number.toString();
+        }
+
+        if (val instanceof Timestamp) {
+            return DateFormatUtil.timestampToString((Timestamp) val);
+        }
+
+        if (val instanceof Date) {
+            return DateFormatUtil.dateToString((Date) val);
+        }
+
+        if (val instanceof java.util.Date) {
+            return DateFormatUtil.dateToString((java.util.Date) val);
+        }
+        if (val instanceof String) {
+            return val.toString();
+        }
+        return throwUnsupportedException(val, field);
+    }
+
+    @Override
+    protected Object getDefaultConvertedVal(Field field) {
+        TypeEnum type = TypeEnum.getType(field.getTypeName());
+        if (type != null) {
+            switch (type) {
+                case GEOMETRY:
+                    return new SqlServerGeometryData(null);
+                case GEOGRAPHY:
+                    return new SqlServerGeographyData(null);
+                default:
+                    break;
+            }
+        }
+        return super.getDefaultConvertedVal(field);
+    }
+
+    @Override
+    protected Object convert(Object val, Field field) {
+        if (val instanceof String) {
+            String stringValue = (String) val;
+            TypeEnum type = TypeEnum.getType(field.getTypeName());
+            if (type != null) {
+                switch (type) {
+                    case HIERARCHY_ID:
+                    case UNIQUE_IDENTIFIER:
+                        if (!StringUtils.hasText(stringValue) || "NULL".equalsIgnoreCase(stringValue)) {
+                            return null;
+                        }
+                        return stringValue;
+                    case GEOMETRY:
+                        return new SqlServerGeometryData(val);
+                    case GEOGRAPHY:
+                        return new SqlServerGeographyData(val);
+                    default:
+                        break;
+                }
+            }
+        }
+        return super.convert(val, field);
+    }
+
+    /**
+     * WillSQL Server CDC Geometry ConvertStandardWKB
+     * Steps: Extract coordinates -> Create StandardWKB -> UseWKBReader Parsing
+     */
+    public static String parseToWKTWithSRID(byte[] bytes) {
+        try {
+            if (bytes == null || bytes.length < 22) {
+                return null;
+            }
+
+            // ParsingSRID
+            int srid = ((bytes[1] & 0xFF) << 8) | (bytes[0] & 0xFF);
+
+            // Parsing Coordinates
+            ByteBuffer buffer = ByteBuffer.wrap(bytes, 6, 16);
+            buffer.order(ByteOrder.LITTLE_ENDIAN);
+            double x = buffer.getDouble();
+            double y = buffer.getDouble();
+
+            // UseEWKB TermsGeometry
+            byte[] ewkb = createEWKBPoint(x, y, srid);
+            WKBReader reader = new WKBReader();
+            Geometry geometry = reader.read(ewkb);
+
+            return "SRID=" + srid + ";" + geometry.toText();
+        } catch (ParseException e) {
+            throw new SqlServerException(e);
+        }
+    }
+
+    /**
+     * TermsEWKB Point
+     */
+    private static byte[] createEWKBPoint(double x, double y, int srid) {
+        // EWKB Structure: Byte Order(1) + Type(4) + SRID(4) + Coordinates(16)
+        ByteBuffer buffer = ByteBuffer.allocate(1 + 4 + 4 + 8 + 8); // 25Bytes
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
+
+        // Byte Order Tags
+        buffer.put((byte) 1);
+
+        // GeometryType: Point with SRID flag (0x20000000)
+        buffer.putInt(1 | 0x20000000);
+
+        // SRID
+        buffer.putInt(srid);
+
+        // Coordinates
+        buffer.putDouble(x);
+        buffer.putDouble(y);
+
+        return buffer.array();
+    }
+}

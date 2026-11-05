@@ -1,0 +1,178 @@
+/**
+ * Copyright 2026 Realtime ETL
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.realtimeetl.parser.impl;
+
+import org.realtimeetl.common.enums.CommonTaskStatusEnum;
+import org.realtimeetl.common.event.RemoveValidateSyncCacheEvent;
+import org.realtimeetl.common.model.Paging;
+import org.realtimeetl.common.util.CollectionUtils;
+import org.realtimeetl.common.util.StringUtil;
+import org.realtimeetl.parser.AbstractConfigModelProfile;
+import org.realtimeetl.parser.TableGroupProfile;
+import org.realtimeetl.parser.TaskDetailMetaProfile;
+import org.realtimeetl.parser.TaskMetaProfile;
+import org.realtimeetl.parser.TaskProfile;
+import org.realtimeetl.parser.ValidateSyncProfile;
+import org.realtimeetl.parser.model.TableGroup;
+import org.realtimeetl.sdk.constant.ConfigConstant;
+import org.realtimeetl.sdk.enums.StorageEnum;
+import org.realtimeetl.sdk.enums.ValidateSyncDetailTypeEnum;
+import org.realtimeetl.sdk.model.ValidateSyncTask;
+import org.realtimeetl.sdk.storage.StorageService;
+import org.realtimeetl.sdk.util.TaskDetailUtil;
+import org.realtimeetl.storage.enums.StorageDataStatusEnum;
+import org.realtimeetl.storage.impl.SnowflakeIdWorker;
+import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
+
+import javax.annotation.Resource;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+
+/**
+ * @author Realtime ETL.
+ * @version 1.0.0
+ * @date 2026-09-29 20:21
+ */
+@Component
+public final class ValidateSyncProfileImpl extends AbstractConfigModelProfile<ValidateSyncTask> implements ValidateSyncProfile, ApplicationListener<RemoveValidateSyncCacheEvent> {
+
+    @Resource
+    private TaskProfile taskProfile;
+
+    @Resource
+    private TaskDetailMetaProfile taskDetailMetaProfile;
+
+    @Resource
+    private TaskMetaProfile taskMetaProfile;
+
+    @Resource
+    private StorageService storageService;
+
+    @Resource
+    private SnowflakeIdWorker snowflakeIdWorker;
+
+    @Resource
+    private TableGroupProfile tableGroupProfile;
+
+    @Override
+    public ValidateSyncTask get(String id) {
+        return getCache(id);
+    }
+
+    @Override
+    public String add(ValidateSyncTask task) {
+        return taskProfile.addTask(task);
+    }
+
+    @Override
+    public String update(ValidateSyncTask task) {
+        String id = taskProfile.updateTask(task);
+        removeCacheAndNotice(task.getId());
+        return id;
+    }
+
+    @Override
+    public void delete(String id) {
+        taskProfile.dropTaskDetailTable(id);
+        taskProfile.deleteTask(id);
+        tableGroupProfile.removeTableGroupsByTaskId(id);
+        taskMetaProfile.removeMeta(id);
+        removeCacheAndNotice(id);
+    }
+
+    @Override
+    public Paging<ValidateSyncTask> query(int pageNum, int pageSize, String searchKey, List<String> ids) {
+        return taskProfile.queryTasks(ValidateSyncTask.class, pageNum, pageSize, searchKey, ids);
+    }
+
+    @Override
+    public void pageScanTasks(int pageSize, Consumer<List<ValidateSyncTask>> pageConsumer) {
+        taskProfile.pageScanTasks(ValidateSyncTask.class, pageSize, pageConsumer);
+    }
+    
+    @Override
+    public void onApplicationEvent(RemoveValidateSyncCacheEvent event) {
+        removeCache(event.getCommonMessage().getId());
+        taskMetaProfile.removeMetaCache(event.getCommonMessage().getId());
+    }
+
+    /**
+     * Save/EditTime to recreate detailminCobra line: FirstClearminTable, then map the current table× OnTypeFullInsertREADY All right.
+     */
+    @Override
+    public void syncTaskTableMetaDetails(String taskId) {
+        Assert.hasText(taskId, "Task ID cannot be empty");
+        ValidateSyncTask task = get(taskId);
+        Assert.notNull(task, "Task does not exist");
+        taskDetailMetaProfile.clearData(taskId);
+        List<String> types = resolveEnabledDetailTypes(task);
+        if (types.isEmpty()) {
+            return;
+        }
+        long now = Instant.now().toEpochMilli();
+        tableGroupProfile.pageScanTableGroups(taskId, ConfigConstant.PAGE_SIZE, page -> {
+            if (CollectionUtils.isEmpty(page)) {
+                return;
+            }
+            List<Map> toAdd = new ArrayList<>();
+            for (TableGroup group : page) {
+                if (group == null || StringUtil.isBlank(group.getId())) {
+                    continue;
+                }
+                String targetTable = group.getTargetTable() == null ? StringUtil.EMPTY : group.getTargetTable().getName();
+                for (String type : types) {
+                    toAdd.add(newReadyRow(group.getId(), type, targetTable, now));
+                }
+            }
+            if (!CollectionUtils.isEmpty(toAdd)) {
+                storageService.addBatch(StorageEnum.TASK_DETAIL, taskId, toAdd);
+            }
+        });
+    }
+
+    private List<String> resolveEnabledDetailTypes(ValidateSyncTask task) {
+        List<String> types = new ArrayList<>(2);
+        if (task.isEnableSchema()) {
+            types.add(ValidateSyncDetailTypeEnum.TABLE_SCHEMA.getValue());
+        }
+        if (task.isEnableRowData()) {
+            types.add(ValidateSyncDetailTypeEnum.ROW_DATA.getValue());
+        }
+        return types;
+    }
+
+    private Map<String, Object> newReadyRow(String tableGroupId, String type, String targetTable, long now) {
+        Map<String, Object> content = new HashMap<>();
+        content.put(ConfigConstant.TASK_STATUS, CommonTaskStatusEnum.READY.getCode());
+        Map<String, Object> row = new HashMap<>();
+        row.put(ConfigConstant.CONFIG_MODEL_ID, String.valueOf(snowflakeIdWorker.nextId()));
+        row.put(ConfigConstant.DATA_TABLE_GROUP_ID, tableGroupId);
+        row.put(ConfigConstant.CONFIG_MODEL_TYPE, type);
+        row.put(ConfigConstant.DETAIL_TARGET_TABLE, StringUtil.getIfBlank(targetTable, StringUtil.EMPTY));
+        // Success or failureFieldDefaultFailedposition;life cycle inDATA.status / meta.STATE
+        row.put(ConfigConstant.DETAIL_IS_SUCCESS, StorageDataStatusEnum.FAIL.getValue());
+        row.put(ConfigConstant.BINLOG_DATA, TaskDetailUtil.serializeContent(content));
+        row.put(ConfigConstant.CONFIG_MODEL_CREATE_TIME, now);
+        row.put(ConfigConstant.CONFIG_MODEL_UPDATE_TIME, now);
+        return row;
+    }
+}

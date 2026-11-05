@@ -1,0 +1,50 @@
+package org.realtimeetl.parser.model;
+
+import org.realtimeetl.common.util.StringUtil;
+import org.realtimeetl.parser.flush.BufferResponse;
+
+import java.util.LinkedList;
+import java.util.List;
+
+/**
+ * @author Realtime ETL
+ * @version 1.0.0
+ * @date 2022/3/27 18:11
+ */
+public class WriterResponse extends AbstractWriter implements BufferResponse {
+
+    private final List<List<Object>> dataList = new LinkedList<>();
+
+    private transient boolean isMerged;
+
+    @Override
+    public int getTaskSize() {
+        return dataList.size();
+    }
+
+    @Override
+    public String getSuffixName() {
+        return StringUtil.HORIZONTAL.concat(getEvent());
+    }
+
+    @Override
+    public void clearDataList() {
+        this.dataList.clear();
+    }
+
+    public void addData(List<Object> data) {
+        dataList.add(data);
+    }
+
+    public List<List<Object>> getDataList() {
+        return dataList;
+    }
+
+    public boolean isMerged() {
+        return isMerged;
+    }
+
+    public void setMerged(boolean merged) {
+        isMerged = merged;
+    }
+}

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<!-- CommunityTip -->
+<div th:if="${editionInfo.edition eq 'community'}" class="text-center">
+    <h3 class="text-xl text-center text-gray-500">[[${editionInfo.editionName}]]</h3>
+
+ <!-- Introduction to cluster functions -->
+    <div class="bg-info/10 border border-info rounded-lg p-4 mb-6 text-left">
+        <h4 class="text-lg font-semibold text-info mb-2">
+ <i class="fa fa-sitemap"></i> What?YesCluster？
+        </h4>
+        <p class="text-sm text-secondary mb-3">
+ In short,◦：Multiple Realtime ETL Form a set of nodes<strong>High Available Sync Service</strong>。Single node failure，Automatically take over tasks at the remaining nodes；When the data sync pressure gets high，Multinodes Shared Burden，Achieving faster、A more stable synchronized capability。
+        </p>
+ <p class="text-sm text-secondary mb-2 font-medium text-info">Four core strengths：</p>
+        <ul class="text-sm text-secondary mb-3 pl-4">
+ <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>High performance</strong>: large tasks are split automatically for parallel sync.
+            </li>
+ <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>High Reportedly</strong>：Smart Task Allocation、Abnormal automatic recovery，Done without running again.，It's less complicated.
+            </li>
+ <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>High Available（HA）</strong>：Some machine's 124.，The other machines will take over immediately.，Keep your business running.、55. Data onward
+            </li>
+ <li><i class="fa fa-angle-right text-info"></i> <strong>Dynamic expansion</strong>：We'll be on the line.，The power goes with it.，You don't have to stop and restart.、No additional configuration required
+            </li>
+        </ul>
+        <p class="text-sm text-secondary">
+ Context：Require Availability for Synchronization、Large-scale Data Sync scene。For example, multi-bank sync to the silo.、TB Level Data Migration、IncrementalSynchronized Religion 1w+ TPS
+ Operations。
+        </p>
+    </div>
+
+    <p class="text-secondary mb-6">
+ This feature is available in the professional edition.</p>
+</div>
+
+<!-- Near 1 Minute indicator（Cluster Convergence） -->
+<div th:if="${editionInfo.edition ne 'community' and clusterEnabled}" class="grid grid-cols-3 mb-5">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title text-center" id="clusterTpsTitle">TPS</h3>
+        </div>
+        <div class="card-body">
+            <canvas id="clusterTpsChart" height="160"></canvas>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+ <h3 class="card-title text-center">Stack</h3>
+        </div>
+        <div class="card-body">
+            <canvas id="clusterQueueChart" height="160"></canvas>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+ <h3 class="card-title text-center">Split Tasks</h3>
+        </div>
+        <div class="card-body">
+            <canvas id="clusterWorkItemChart" height="160"></canvas>
+        </div>
+    </div>
+</div>
+
+
+<!-- Cluster -->
+<div th:if="${editionInfo.edition ne 'community'}" class="form-container">
+    <div class="card-body">
+        <div class="mb-4 text-sm text-secondary" th:unless="${clusterEnabled}">
+ Current Single Mode。Enable cluster configuration realtime-etl.cluster.enabled=true，Use MySQL Storage，andConfirmCluster functionality mandated NAP。
+        </div>
+
+        <table th:if="${clusterEnabled}" class="table">
+            <thead>
+            <tr>
+ <th>Nodes</th>
+ <th>Status</th>
+ <th>Time</th>
+ <th>Tasks</th>
+ <th>Swallow.</th>
+ <th>ResourcesSource</th>
+ <th>PluginsNumber</th>
+ <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="clusterTableBody"></tbody>
+        </table>
+        <div th:if="${clusterEnabled}" class="blank-block"></div>
+    </div>
+</div>
+
+<script th:if="${editionInfo.edition ne 'community' and clusterEnabled}"
+        th:src="@{/js/cluster/cluster-list.js}"></script>
+</html>
