@@ -4,7 +4,7 @@
 package org.dbsyncer.sdk.enums;
 
 /**
- * 通知渠道枚举
+ * Channel of notificationEnumeration
  *
  * @Author AE86
  * @Version 1.0.0
@@ -12,7 +12,7 @@ package org.dbsyncer.sdk.enums;
  */
 public enum NoticeChannelEnum {
     /**
-     * 邮件
+     * Email
      */
     EMAIL,
     /**
@@ -20,11 +20,11 @@ public enum NoticeChannelEnum {
      */
     HTTP,
     /**
-     * 企业微信
+     * Corporate Wisdom
      */
     WE_CHAT,
     /**
-     * 钉钉
+     * Nail.
      */
     DING_TALK;
 

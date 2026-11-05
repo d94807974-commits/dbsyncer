@@ -12,7 +12,7 @@ import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-07 01:00
  */
@@ -28,7 +28,7 @@ public final class RocketMQConnectorInstance implements ConnectorInstance<Rocket
             ping();
         } catch (Exception e) {
             close();
-            throw new RocketMQException("创建 RocketMQ Producer 失败，URL: " + config.getUrl() + "，错误: " + e.getMessage(), e);
+            throw new RocketMQException("Failed to create RocketMQ Producer, URL: " + config.getUrl() + ", Error: " + e.getMessage(), e);
         }
     }
 
@@ -62,7 +62,7 @@ public final class RocketMQConnectorInstance implements ConnectorInstance<Rocket
 
     public void ping() {
         if (producer == null) {
-            throw new RocketMQException("RocketMQ Producer 未初始化");
+            throw new RocketMQException("RocketMQ Producer not initialized");
         }
     }
 

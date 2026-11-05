@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * TiDB 连接器（兼容 MySQL 协议）
+ * TiDB Connector（CompatibilityMySQL )
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-07 00:10
  */

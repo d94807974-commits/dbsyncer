@@ -4,7 +4,7 @@
 package org.dbsyncer.sdk.storage;
 
 /**
- * 原生请求参数
+ * NativeRequest parameters
  *
  * @author wuji
  * @version 1.0.0
@@ -23,11 +23,11 @@ public class ExecuteRequest {
     }
 
     /**
-     * 构建无分页查询。
+     * ICALLYNoneminPagequery.
      *
-     * @param sql  SQL（参数用 ? 占位）
-     * @param args 绑定参数
-     * @return 查询参数
+     * @param sql  SQL（ParameterUse? (in position)
+     * @param args TieParameter
+     * @return QuestionParameter
      */
     public static ExecuteRequest of(String sql, Object... args) {
         ExecuteRequest query = new ExecuteRequest();
@@ -37,10 +37,10 @@ public class ExecuteRequest {
     }
 
     /**
-     * 设置分页（pageNum/pageSize 均需 &gt; 0 才生效）。
+     * SettingsminPage（pageNum/pageSize Both&gt; 0 It's only effective.
      *
-     * @param pageNum  页码（从 1 起）
-     * @param pageSize 每页条数
+     * @param pageNum  PageCode (from1 Start
+     * @param pageSize EveryPageNumber of bars
      * @return this
      */
     public ExecuteRequest page(int pageNum, int pageSize) {
@@ -50,7 +50,7 @@ public class ExecuteRequest {
     }
 
     /**
-     * 是否启用分页。
+     * YesNoEnableminPage。
      *
      * @return true 表示按分页查询
      */

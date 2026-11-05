@@ -4,26 +4,26 @@
 package org.dbsyncer.common.model;
 
 /**
- * 配置版本信息
+ * ConfigureVersionInfo
  *
  * @version 1.0.0
- * @Author 穿云
+ * @Author The clouds.
  * @Date 2026-02-06 08:30
  */
 public abstract class ConfigVersion {
 
     /**
-     * 版本号（从1开始递增）
+     * VersionNumber (from)1Start Incremental)
      */
     private int version;
 
     /**
-     * 创建时间（毫秒时间戳）
+     * Created at（msTimePoke)
      */
     private Long createTime;
 
     /**
-     * 是否启用
+     * YesNoEnable
      */
     private boolean enabled = true;
 

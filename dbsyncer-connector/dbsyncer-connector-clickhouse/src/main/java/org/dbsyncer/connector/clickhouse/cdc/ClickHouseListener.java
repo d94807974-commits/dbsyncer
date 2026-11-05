@@ -25,9 +25,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * ClickHouse 增量监听器：基于主键游标轮询（适用于 MergeTree 等追加写入场景）。
+ * ClickHouse IncrementalListener: based onPrimary keyTraveler 's round of inquiry (forMergeTree As soon as it is added.
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-05-29 23:50
  */
@@ -66,7 +66,7 @@ public final class ClickHouseListener extends AbstractDatabaseListener {
             try {
                 pollTable(database, instance, table);
             } catch (Exception e) {
-                logger.error("ClickHouse 增量轮询失败, table={}", table.getName(), e);
+                logger.error("Crick House failed in the incremental round, table=}", table.getName(), e);
                 errorEvent(e);
             }
         }
@@ -79,11 +79,11 @@ public final class ClickHouseListener extends AbstractDatabaseListener {
         }
         List<Field> pkFields = PrimaryKeyUtil.findPrimaryKeyFields(columns);
         if (CollectionUtils.isEmpty(pkFields) || pkFields.size() != 1) {
-            throw new ClickHouseException(String.format("ClickHouse 日志增量要求单字段数值主键, 表=%s", table.getName()));
+            throw new ClickHouseException(String.format("The Clickhouse log increment requires the primary value of a field, table = %s", table.getName()));
         }
         Field pkField = pkFields.get(0);
         if (!PrimaryKeyUtil.isSupportedCursor(columns)) {
-            throw new ClickHouseException(String.format("ClickHouse 日志增量主键类型不支持游标, 表=%s, 字段=%s", table.getName(), pkField.getName()));
+            throw new ClickHouseException(String.format("ClickHouse Incremental Primary Key type does not support cursor, table = %s, field = %s", table.getName(), pkField.getName()));
         }
 
         String snapshotKey = SNAPSHOT_PREFIX + table.getName();

@@ -1,12 +1,12 @@
 <assembly>
     <id>bin</id>
     <formats>
-        <!--支持 zip，tar，tar.gz，tar.bz2，jar，dir，war 等 -->
+        <!-- Zip, tar, tar, gz, tar.bz2, jar, dir, war, etc. -->
         <format>zip</format>
     </formats>
     <includeBaseDirectory>true</includeBaseDirectory>
     <fileSets>
-        <!-- 配置文件 -->
+        <!-- Profile -->
         <fileSet>
             <directory>src/main/resources</directory>
             <outputDirectory>conf</outputDirectory>
@@ -17,20 +17,20 @@
             <fileMode>0644</fileMode>
         </fileSet>
 
-        <!-- 插件 -->
+        <!-- Plugin -->
         <fileSet>
             <directory>src/main/assembly/plugins</directory>
             <outputDirectory>plugins</outputDirectory>
         </fileSet>
 
-        <!-- 执行脚本 -->
+        <!-- Execute Script -->
         <fileSet>
             <directory>src/main/assembly/bin</directory>
             <outputDirectory>bin</outputDirectory>
             <fileMode>0755</fileMode>
         </fileSet>
 
-        <!-- 其它 -->
+        <!-- Relationship -->
         <fileSet>
             <directory>src/main/assembly</directory>
             <outputDirectory>/</outputDirectory>

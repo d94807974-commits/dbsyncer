@@ -7,9 +7,9 @@ import org.dbsyncer.common.enums.CommonMessageTypeEnum;
 import org.dbsyncer.common.message.CommonMessage;
 
 /**
- * 删除配置缓存消息
+ * DeleteConfigureCan not open message
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-09-23 00:27
  */

@@ -9,19 +9,19 @@ public class SqlBuilderConfig {
 
     private Database database;
 
-    // 架构名
+    // Structure Name
     private String schema;
 
-    // 表名
+    // Table name
     private String tableName;
 
-    // 主键列表
+    // Primary keyList
     private List<String> primaryKeys;
 
-    // 字段
+    // Field
     private List<Field> fields;
 
-    // 过滤条件
+    // Filter Conditions
     private String queryFilter;
 
     public SqlBuilderConfig(Database database, String schema, String tableName, List<String> primaryKeys, List<Field> fields, String queryFilter) {

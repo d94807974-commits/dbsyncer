@@ -120,9 +120,9 @@ public class MonitorServiceImpl extends BaseServiceImpl implements MonitorServic
         metricMap.putIfAbsent(MetricEnum.THREADS_LIVE.getCode(), new DoubleRoundMetricDetailFormatter());
         metricMap.putIfAbsent(MetricEnum.THREADS_PEAK.getCode(), new DoubleRoundMetricDetailFormatter());
         metricMap.putIfAbsent(MetricEnum.SYSTEM_ENV.getCode(), vo -> {
-            // 操作系统
+            // ActionsSystem
             String osName = System.getProperty("os.name");
-            // 架构
+            // Structure
             vo.setDetail(String.format("%s %s %s", osName, System.getProperty("os.arch"), System.getProperty("os.version")));
         });
         systemInfo = new MetricResponse();
@@ -135,7 +135,7 @@ public class MonitorServiceImpl extends BaseServiceImpl implements MonitorServic
         int pageNum = NumberUtil.toInt(params.get("pageNum"), 1);
         int pageSize = NumberUtil.toInt(params.get("pageSize"), 50);
         String searchKey = params.get("searchKey");
-        // 按任务分页，避免扫全量 Meta（含校验/迁移等非同步任务）
+        // PressTasksminPage，Avoid SweepingFull Meta（Including verification/relocationSync task）
         Paging<Mapping> paging = mappingProfile.query(pageNum, pageSize, searchKey, null);
         Paging<MetaVO> result = new Paging<>(pageNum, pageSize);
         if (paging == null) {
@@ -181,12 +181,12 @@ public class MonitorServiceImpl extends BaseServiceImpl implements MonitorServic
         List<DataVO> list = new ArrayList<>();
         for (Map row : data) {
             try {
-                // 精简分表列映射到 DataVO：TYPE→event, IS_SUCCESS→success, TARGET_TABLE→targetTableName
+                // StreamliningminTable Map toDataVO：TYPE→event, IS_SUCCESS→success, TARGET_TABLE→targetTableName
                 row.put("event", row.get(ConfigConstant.CONFIG_MODEL_TYPE));
                 row.put("success", row.get(ConfigConstant.DETAIL_IS_SUCCESS));
                 row.put(ConfigConstant.DATA_TARGET_TABLE_NAME, row.get(ConfigConstant.DETAIL_TARGET_TABLE));
                 DataVO dataVo = convert2Vo(row, DataVO.class);
-                // 列表不解 blob，字段详情按需拉取
+                // ListI don't know.blob，FieldDetailsAs required
                 dataVo.setJson(null);
                 list.add(dataVo);
             } catch (Exception e) {
@@ -199,16 +199,16 @@ public class MonitorServiceImpl extends BaseServiceImpl implements MonitorServic
 
     @Override
     public String clearData(String id, String tableGroupId) {
-        Assert.hasText(id, "同步任务不存在.");
+        Assert.hasText(id, "Sync task does not exist.");
         Mapping mapping = mappingProfile.get(id);
-        Assert.notNull(mapping, "同步任务不存在.");
+        Assert.notNull(mapping, "Sync task does not exist.");
 
         Query query = new Query();
         query.setType(StorageEnum.TASK_DETAIL);
         query.setTaskId(id);
         query.addFilter(ConfigConstant.DATA_TABLE_GROUP_ID, tableGroupId);
         storageService.delete(query);
-        return "清空当前表同步数据成功";
+        return "Successfully emptied current table sync data";
     }
 
     @Override
@@ -253,19 +253,19 @@ public class MonitorServiceImpl extends BaseServiceImpl implements MonitorServic
 
     @Override
     public LogVO getLogDetail(String id) {
-        Assert.hasText(id, "日志ID不能为空");
+        Assert.hasText(id, "Log ID cannot be empty");
         Query query = new Query(1, 1);
         query.setType(StorageEnum.LOG);
         query.addFilter(ConfigConstant.CONFIG_MODEL_ID, id);
         Map row = storageService.queryObject(query);
-        Assert.notNull(row, "日志不存在");
+        Assert.notNull(row, "Log does not exist");
         return enrichLogVo(convert2Vo(row, LogVO.class));
     }
 
     @Override
     public String clearLog() {
         storageService.clear(StorageEnum.LOG, null);
-        return "清空日志成功";
+        return "Clear Log Success";
     }
 
     private Query buildLogQuery(Map<String, String> params) {
@@ -281,7 +281,7 @@ public class MonitorServiceImpl extends BaseServiceImpl implements MonitorServic
         if (StringUtil.isNotBlank(ip)) {
             query.addFilter(ConfigConstant.LOG_IP, ip, true);
         }
-        // 关键字：模糊匹配日志内容（与性能监控日志查询一致）
+        // Keyword：Fuzzy MatchLogContentandPerformance monitorLogQuery is consistent)
         String json = params.get(ConfigConstant.CONFIG_MODEL_JSON);
         if (StringUtil.isNotBlank(json)) {
             query.addFilter(ConfigConstant.CONFIG_MODEL_JSON, json, true);
@@ -338,7 +338,7 @@ public class MonitorServiceImpl extends BaseServiceImpl implements MonitorServic
                     return vo;
                 }
             } catch (Exception ignore) {
-                // 旧纯文本或非法 JSON，按原文展示
+                // Old plain text or illegalJSON，Show by Original
             }
         }
         vo.setMessage(json);
@@ -356,9 +356,9 @@ public class MonitorServiceImpl extends BaseServiceImpl implements MonitorServic
     public AppReportMetric queryAppMetric(List<MetricResponse> metrics) {
         AppReportMetric app = metricReporter.getAppReportMetric();
         metrics.add(systemInfo);
-        // 系统指标
+        // System indicators
         metrics.addAll(metricReporter.getMetricInfo());
-        // 合并分组显示
+        // MergeGroupShow
         app.setMetrics(metricGroupProcessor.process(metricResponseToVo(metrics)));
         return app;
     }
@@ -379,9 +379,9 @@ public class MonitorServiceImpl extends BaseServiceImpl implements MonitorServic
 
     @Override
     public void run() {
-        // 预警：仅任务级 Meta，分页扫描；每个同步任务单独发送，便于按任务覆盖 @
+        // Early warning: onlyTasksAdministrationMeta，minPagescanning;eachSync taskSend separately, easy to pressTasksOverwrite @
         long endTime = System.currentTimeMillis();
-        // 下界回看，避免异步落库晚于水位推进导致漏通知
+        // Look back down and avoid moving forward.LibraryLate 275-50.
         long fromTime = Math.max(0L, LAST_EXECUTE_TIME.get() - FAIL_DETAIL_LOOK_BACK_MS);
         taskMetaProfile.pageScanMetas(TaskLevelEnum.TASK.getCode(), ConfigConstant.PAGE_SIZE, page -> {
             for (Meta meta : page) {
@@ -405,7 +405,7 @@ public class MonitorServiceImpl extends BaseServiceImpl implements MonitorServic
                     continue;
                 }
                 MappingErrorContent content = new MappingErrorContent();
-                content.setTitle("同步失败");
+                content.setTitle("Sync failed");
                 content.setResourceType(ConfigConstant.MAPPING);
                 content.setResourceId(mapping.getId());
                 writeMappingReport(meta, content);
@@ -414,16 +414,16 @@ public class MonitorServiceImpl extends BaseServiceImpl implements MonitorServic
                 }
             }
         });
-        //重置上一次的时间
+        //ResetLast time.Time
         LAST_EXECUTE_TIME.set(endTime);
-        // 采集连接离线状态
+        // CollectionConnect OfflineStatus
         collectConnectorOffline();
     }
 
     private void collectConnectorOffline() {
-        // 防止首次启动，连接器状态还未刷新，默认还是离线状态，防止误判
+        // Prevention of the first timeStart，ConnectorStatusNot yet.Refresh，Default returnYesOfflineStatus，Prevention of miscalculation
         if (LocalDateTime.now().minusMinutes(1).isAfter(delayTime)) {
-            // 采集连接离线状态
+            // CollectionConnect OfflineStatus
             ConnectorOfflineContent content = new ConnectorOfflineContent();
             connectorConfigService.getConnectorAll().forEach(connector -> {
                 if (connector.getStatus() != YesNoEnum.YES.getCode()) {
@@ -435,7 +435,7 @@ public class MonitorServiceImpl extends BaseServiceImpl implements MonitorServic
                 }
             });
             if (!CollectionUtils.isEmpty(content.getErrorItems())) {
-                content.setTitle("连接离线");
+                content.setTitle("Connect Offline");
                 sendNotifyMessage(content);
             }
         }
@@ -460,7 +460,7 @@ public class MonitorServiceImpl extends BaseServiceImpl implements MonitorServic
 
     private Paging queryData(String taskId, int pageNum, int pageSize, String error, String status, String tableGroupId) {
         Query query = new Query(pageNum, pageSize);
-        // 列表不查 DATA blob，详情弹窗再按 id 拉取
+        // ListNo, no, no.DATA blob，DetailsHit the window again.id Pull manipulate
         Set<String> selectFields = new HashSet<>();
         selectFields.add(ConfigConstant.CONFIG_MODEL_ID);
         selectFields.add(ConfigConstant.DATA_TABLE_GROUP_ID);
@@ -473,11 +473,11 @@ public class MonitorServiceImpl extends BaseServiceImpl implements MonitorServic
         query.setSelectFlied(selectFields);
 
         query.setTaskId(taskId);
-        // 查询异常信息
+        // QuestionOrganisation
         if (StringUtil.isNotBlank(error)) {
             query.addFilter(ConfigConstant.DATA_ERROR, error, true);
         }
-        // 查询数据状态
+        // Query DataStatus
         if (StringUtil.isNotBlank(status) && !StringUtil.equals("-1", status)) {
             query.addFilter(ConfigConstant.DETAIL_IS_SUCCESS, NumberUtil.toInt(status));
         }
@@ -489,7 +489,7 @@ public class MonitorServiceImpl extends BaseServiceImpl implements MonitorServic
     }
 
     private void deleteExpiredData() {
-        // 明细分表：逐个任务分表按过期时间清理
+        // DetailsminTable: IndividualTasksminTable byExpiration time3, 2, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 3, 3, 4, 3, 3, 3, 4, 4, favoured, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 10, 3
         int expireDataDays = systemConfigService.getSystemConfig().getExpireDataDays();
         long expiredTime = Timestamp.valueOf(LocalDateTime.now().minusDays(expireDataDays)).getTime();
         taskMetaProfile.pageScanMetas(TaskLevelEnum.TASK.getCode(), ConfigConstant.PAGE_SIZE, page -> {
@@ -518,7 +518,7 @@ public class MonitorServiceImpl extends BaseServiceImpl implements MonitorServic
     }
 
     /**
-     * 删除过期的日志文件（logs目录下的归档.log文件）
+     * DeleteExpiredLogDocumentation（logsArchive under Directory.logDocumentation）
      */
     private void deleteExpiredFileLog() {
         String logHome = System.getProperty("LOG_HOME", "logs");
@@ -539,14 +539,14 @@ public class MonitorServiceImpl extends BaseServiceImpl implements MonitorServic
         for (File file : files) {
             if (file.isDirectory()) {
                 deleteExpiredLogFile(file, expireFileLogDays, expireMillis);
-                // 如果子目录已空，删除空目录
+                // If the subdirectories are empty,DeleteEmpty directory
                 File[] children = file.listFiles();
                 if (children != null && children.length == 0) {
                     file.delete();
                 }
             } else if (file.getName().endsWith(".log") && file.lastModified() < expireMillis) {
                 if (file.delete()) {
-                    logger.info("删除过期{}天的日志文件: {}", expireFileLogDays, file.getAbsolutePath());
+                    logger.info("Delete the expired {day log file: {", expireFileLogDays, file.getAbsolutePath());
                 }
             }
         }
@@ -554,7 +554,7 @@ public class MonitorServiceImpl extends BaseServiceImpl implements MonitorServic
 
     private MetaVO convertMeta2Vo(Meta meta) {
         Mapping mapping = mappingProfile.get(meta.getTaskId());
-        // 非同步驱动（校验/迁移等）跳过
+        // UnsyncDriver（Check/transfer, etc.) Skip
         if (mapping == null || !StringUtil.equals(ConfigConstant.MAPPING, mapping.getType())
                 || StringUtil.isBlank(mapping.getModel())) {
             return null;
@@ -589,7 +589,7 @@ public class MonitorServiceImpl extends BaseServiceImpl implements MonitorServic
         if (started) {
             return;
         }
-        // 间隔10分钟预警
+        // Interval10minutesEarly warning
         scheduledTaskService.start(CONNECTOR_MONITOR_KEY, "0 */10 * * * ?", this);
         started = true;
     }

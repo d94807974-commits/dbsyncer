@@ -11,7 +11,7 @@ import org.dbsyncer.sdk.model.Table;
 import java.util.List;
 
 /**
- * 查询同步参数模板
+ * Query SyncParameterTemplates
  *
  * @author AE86
  * @version 1.0.0
@@ -26,7 +26,7 @@ public class CommandConfig {
     private List<Filter> filter;
 
     /**
-     * 数据库/目录（如 MongoDB database、JDBC catalog）
+     * Data FactLibrary/ContentsMongoDB database、JDBC catalog）
      */
     private String catalog;
 
@@ -34,7 +34,7 @@ public class CommandConfig {
 
     private ConnectorInstance connectorInstance;
 
-    // 覆盖写入
+    // OverwriteWriting
     private boolean forceUpdate;
 
     public CommandConfig(String connectorType, String schema, Table table, ConnectorInstance connectorInstance, List<Filter> filter) {

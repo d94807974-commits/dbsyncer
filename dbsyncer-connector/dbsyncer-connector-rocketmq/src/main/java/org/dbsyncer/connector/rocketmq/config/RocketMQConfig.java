@@ -7,7 +7,7 @@ import org.dbsyncer.connector.rocketmq.util.RocketMQUtil;
 import org.dbsyncer.sdk.model.ConnectorConfig;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-07 01:00
  */

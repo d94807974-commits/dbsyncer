@@ -21,69 +21,69 @@ import java.util.Map;
 public interface MonitorService {
 
     /**
-     * 分页查询驱动元信息（供监控页下拉远程搜索）
+     * minPageQuestionMappingMetaInfo（ForMonitorPageDraw Down RemoteSearch）
      *
      * @param params pageNum、pageSize、searchKey
-     * @return 分页结果
+     * @return minPageResult
      */
     Paging<MetaVO> queryMeta(Map<String, String> params);
 
     /**
-     * 查询同步数据
+     * QuestionSync data
      */
     Paging queryData(Map<String, String> params);
 
     /**
-     * 清空同步数据；tableGroupId 非空时仅清空该表映射下明细与表级 Meta。
+     * Empty Sync Data；tableGroupId Non-empty hours onlyClearThe table is fine.andTableMeta。
      */
     String clearData(String id, String tableGroupId);
 
     /**
-     * 查询操作日志（监控页，关键字搜 JSON）
+     * QuestionOperation logs（MonitorPage，KeywordSearch.JSON）
      */
     Paging queryLog(Map<String, String> params);
 
     /**
-     * 查询登录日志（TYPE 90/91）
+     * QuestionLogin logs（TYPE 90/91）
      */
     Paging queryLoginLog(Map<String, String> params);
 
     /**
-     * 查询操作日志（排除登录 TYPE）
+     * QuestionOperation logs（ExcludeLogin TYPE）
      */
     Paging queryOperLog(Map<String, String> params);
 
     /**
-     * 按 ID 查询日志详情（含解析后的请求/返回参数）
+     * PressID QuestionLogDetails（Request/included requestBackParameter）
      */
     LogVO getLogDetail(String id);
 
     /**
-     * 清空操作日志
+     * ClearOperation logs
      */
     String clearLog();
 
     /**
-     * 删除过期的数据和日志
+     * DeleteOverdue data andLog
      */
     void deleteExpiredDataAndLog();
 
     /**
-     * 获取应用报告
+     * Access to application reports
      *
      * @return
      */
     AppReportMetric queryAppMetric(List<MetricResponse> metrics);
 
     /**
-     * 获取仪表盘报告
+     * AccessDashboardReport
      *
      * @return
      */
     DashboardMetric queryDashboardMetric();
 
     /**
-     * 查询表执行器
+     * QuestionTable-group actuator
      *
      * @return
      */

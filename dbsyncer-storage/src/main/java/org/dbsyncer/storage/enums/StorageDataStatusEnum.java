@@ -4,7 +4,7 @@
 package org.dbsyncer.storage.enums;
 
 /**
- * 同步数据状态枚举
+ * Sync dataStatusEnumeration
  *
  * @author AE86
  * @version 1.0.0
@@ -13,13 +13,13 @@ package org.dbsyncer.storage.enums;
 public enum StorageDataStatusEnum {
 
     /**
-     * 失败
+     * Failed
      */
-    FAIL(0, "失败"),
+    FAIL(0, "Failed"),
     /**
-     * 成功
+     * Success
      */
-    SUCCESS(1, "成功");
+    SUCCESS(1, "Success");
 
     private final int value;
 

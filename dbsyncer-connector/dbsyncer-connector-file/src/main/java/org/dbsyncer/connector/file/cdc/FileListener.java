@@ -90,7 +90,7 @@ public class FileListener extends AbstractListener<FileConnectorInstance> {
             worker.setDaemon(false);
             worker.start();
         } catch (Exception e) {
-            logger.error("启动失败:{}", e.getMessage());
+            logger.error("Start failed: {}", e.getMessage());
             closePipelineAndWatch();
             throw new FileException(e);
         } finally {
@@ -143,7 +143,7 @@ public class FileListener extends AbstractListener<FileConnectorInstance> {
                 worker = null;
             }
         } catch (Exception e) {
-            logger.error("关闭失败:{}", e.getMessage());
+            logger.error("Close failed: {}", e.getMessage());
         }
     }
 

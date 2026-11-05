@@ -8,12 +8,12 @@ import org.dbsyncer.sdk.config.DatabaseConfig;
 import java.util.Properties;
 
 /**
- * MySQL 连接器常量
+ * MySQL ConnectorConstant
  */
 public final class MySQLConstant {
 
     /**
-     * 补全 JDBC 连接参数，移除已废弃的 autoReconnect
+     * CompletionJDBC Connection parameters，Remove AbandonedautoReconnect
      */
     public static void enrichJdbcProperties(DatabaseConfig config) {
         Properties properties = config.getProperties();

@@ -11,12 +11,12 @@ package org.dbsyncer.sdk.model;
 public class Product {
 
     /**
-     * 功能名称
+     * UNDAF functionName
      */
     private String name;
 
     /**
-     * 有效时间
+     * Valid.Time
      */
     private long effectiveTime;
 

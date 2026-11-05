@@ -1,5 +1,5 @@
 
-// 显示对话框
+// Show Dialog
 function showMessageDetail($message, icon, title) {
     $message.unbind('click').bind('click', function() {
         const content = $(this).text();
@@ -14,15 +14,15 @@ function showMessageDetail($message, icon, title) {
     });
 }
 
-// 打开重试页面
+// OpenTry againPageNoodles.
 function showRetryDetail(taskId, messageId) {
     doLoader("/monitor/page/retry?taskId=" + taskId + "&messageId=" + messageId);
 }
 
-// 将 JSON 对象转换为表格 HTML
+// WillJSON ObjectConvertAs TableHTML
 function jsonToTable(jsonObj) {
     let $content = '<table class="table">';
-    $content += '<thead><tr><th></th><th>字段</th><th>值</th></tr></thead>';
+    $content += '<thead><tr><th></th><th>Fields</th><th>Value</th></tr></thead>';
     $content += '<tbody>';
     let index = 1;
     $.each(jsonObj, function (name, value) {
@@ -38,7 +38,7 @@ function jsonToTable(jsonObj) {
     return $content;
 }
 
-// 显示数据详情对话框
+// ShowData detailsdialogue box
 function showDataDetail(id) {
     const $element = $("#" + id);
     const content = $element.text();
@@ -47,20 +47,20 @@ function showDataDetail(id) {
     }
 
     try {
-        // 尝试解析 JSON
+        // Try ParsingJSON
         const jsonObj = JSON.parse(content);
         showConfirm({
-            title: '数据详情',
+            title: 'Data details',
             icon: 'info',
             size: 'max',
             body: jsonToTable(jsonObj),
-            confirmText: '关闭',
+            confirmText: 'Close',
             confirmType: 'primary'
         });
     } catch (e) {
-        // 如果解析失败，显示原始文本
+        // If parsingFailed，Show original text
         showConfirm({
-            title: '数据详情',
+            title: 'Data details',
             icon: 'info',
             size: 'max',
             message: content
@@ -68,7 +68,7 @@ function showDataDetail(id) {
     }
 }
 
-// 查看执行器
+// ViewExecut MOU
 function bindQueryActuatorEvent() {
     let pagination;
     let metaSelect;
@@ -81,12 +81,12 @@ function bindQueryActuatorEvent() {
         }
     }
 
-    // 搜索函数
+    // SearchFunctions
     function search() {
         pagination.doSearch(params());
     }
 
-    // 驱动下拉（远程分页搜索，跳过初始化回调避免重复请求）
+    // DriverDraw Down (Loving)minPageSearch，Skip initialized callback to avoid duplicate requests)
     metaSelect = $('#searchActuatorMeta').dbSelect({
         type: 'single',
         remoteSearch: true,
@@ -104,14 +104,14 @@ function bindQueryActuatorEvent() {
                     let converted = rows.map(function (row) {
                         const name = row.mappingName || '';
                         const model = row.model || '';
-                        // 执行器指标按 Mapping/taskId 关联，不能用 Meta 主键
+                        // Executor indicator byMapping/taskId Linkage, no use.Meta Primary key
                         return {
                             label: name + ' (' + model + ')',
                             value: row.taskId || ''
                         };
                     });
                     if (Number(query.pageNum) === 1) {
-                        converted = [{ label: '无', value: '' }].concat(converted);
+                        converted = [{ label: 'None', value: '' }].concat(converted);
                     }
                     onSuccess({
                         pageNum: paging.pageNum || query.pageNum,
@@ -120,7 +120,7 @@ function bindQueryActuatorEvent() {
                         data: converted
                     });
                 } else {
-                    bootGrowl(res.message || '加载驱动列表失败', 'danger');
+                    bootGrowl(res.message || 'Failed to load driver list', 'danger');
                     if (typeof onError === 'function') {
                         onError();
                     }
@@ -130,12 +130,12 @@ function bindQueryActuatorEvent() {
         onSelect: search
     });
 
-    // 搜索框输入事件
+    // SearchBox InputEvent
     if (document.getElementById('searchActuator')) {
         searchInput = initSearch('searchActuator', search);
     }
 
-    // 初始化分页管理器
+    // InitializeminPageManager
     pagination = new PaginationManager({
         requestUrl: '/monitor/queryActuator',
         tableBodySelector: '#actuatorList',
@@ -151,7 +151,7 @@ function bindQueryActuatorEvent() {
                 </tr>
             `;
         },
-        emptyHtml: '<td colspan="3" class="text-center"><i class="fa fa-tasks empty-icon"></i><p class="empty-text">暂无数据</p></td>'
+        emptyHtml: '<td colspan="3" class="text-center"><i class="fa fa-tasks empty-icon"></i><p class="empty-text">Data not available</p></td>'
     });
     return {
         search: function() {
@@ -161,7 +161,7 @@ function bindQueryActuatorEvent() {
 }
 
 $(function () {
-    // 图表实例
+    // Chart Examples
     let charts = {
         queue: null,
         storage: null,
@@ -170,19 +170,19 @@ $(function () {
         memory: null
     };
 
-    // Chart.js 默认配置
+    // Chart.js DefaultConfigure
     Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
     Chart.defaults.font.size = 12;
     Chart.defaults.color = '#8c8c8c';
 
     /**
-     * 初始化折线图（TPS、CPU、内存、堆积、持久化）
+     * InitializeLine Chart（TPS、CPU、Memory、Backlog、Enduring）
      */
     function initLineChart(canvasId, label, color, solidFill) {
         const ctx = document.getElementById(canvasId);
         if (!ctx) return null;
         
-        // 如果是实心填充，使用不透明颜色；否则使用半透明
+        // IfYesSolid filling, using non-transparent colours;NoUse translucent
         const bgColor = solidFill ? color.replace('1)', '0.6)') : color.replace('1)', '0.1)');
         
         return new Chart(ctx, {
@@ -244,7 +244,7 @@ $(function () {
     }
     
     /**
-     * 更新折线图数据
+     * Update line chart data
      */
     function updateLineChart(chart, labels, data) {
         if (!chart) return;
@@ -253,7 +253,7 @@ $(function () {
         chart.update('none');
     }
 
-    // 堆积/持久化：按 TPS 同一套时间点采样，缺测点用上一个值补齐
+    // Backlog/Enduring：PressTPS Same thing.TimeTake a sample, use the last spot.ValueCompletion
     const queueSamples = {};
     const storageSamples = {};
 
@@ -287,14 +287,14 @@ $(function () {
     }
 
     /**
-     * 初始化所有图表
+     * Initialize all charts
      */
     function initCharts() {
         charts.tps = initLineChart('tpsChart', 'TPS', 'rgba(245, 108, 108, 1)', false);
-        charts.cpu = initLineChart('cpuChart', 'CPU使用率', 'rgba(82, 196, 26, 1)', false);
-        charts.memory = initLineChart('memoryChart', '内存使用', 'rgba(24, 144, 255, 1)', true);
-        charts.queue = initLineChart('queueChart', '堆积', 'rgba(250, 173, 20, 1)', false);
-        charts.storage = initLineChart('storageChart', '持久化', 'rgba(114, 46, 209, 1)', false);
+        charts.cpu = initLineChart('cpuChart', 'C Produce Use', 'rgba(82, 196, 26, 1)', false);
+        charts.memory = initLineChart('memoryChart', 'Memory Usage', 'rgba(24, 144, 255, 1)', true);
+        charts.queue = initLineChart('queueChart', 'Backlog', 'rgba(250, 173, 20, 1)', false);
+        charts.storage = initLineChart('storageChart', 'Enduring', 'rgba(114, 46, 209, 1)', false);
     }
 
     function updateMetricsTable(metrics){
@@ -330,16 +330,16 @@ $(function () {
         }
         let state = processBarState(data.totalPercent);
         $("#cpuProgressBar").html(`<div class="progress-header">
-                <span class="progress-title">CPU使用率</span>
+                <span class="progress-title">C Produce Use</span>
                 <span class="progress-value ${state.title}">${data.totalPercent}%</span>
             </div>
             <div class="progress-bar">
                 <div class="progress-fill ${state.value}" style="width: ${data.totalPercent}%"></div>
             </div>
             <div class="progress-detail">
-                <span>核心数 <strong>${data.core}</strong></span>
-                <span>用户态 <strong>${data.userPercent}%</strong></span>
-                <span>系统态 <strong>${data.sysPercent}%</strong></span>
+                <span>Core<strong>${data.core}</strong></span>
+                <span>UserState<strong>${data.userPercent}%</strong></span>
+                <span>System State<strong>${data.sysPercent}%</strong></span>
             </div>`);
     }
 
@@ -349,16 +349,16 @@ $(function () {
         }
         let state = processBarState(data.totalPercent);
         $("#memoryProgressBar").html(`<div class="progress-header">
-                <span class="progress-title">内存使用率</span>
+                <span class="progress-title">Memory UsageRate</span>
                 <span class="progress-value ${state.title}">${data.totalPercent}%</span>
             </div>
             <div class="progress-bar">
                 <div class="progress-fill ${state.value}" style="width: ${data.totalPercent}%"></div>
             </div>
             <div class="progress-detail">
-                <span>总内存 <strong>${data.sysTotal} GB</strong></span>
-                <span>用户态 <strong>${data.jvmUsed} / ${data.jvmTotal} GB</strong></span>
-                <span>系统态 <strong>${data.sysUsed} GB</strong></span>
+                <span>TotalMemory <strong>${data.sysTotal} GB</strong></span>
+                <span>UserState<strong>${data.jvmUsed} / ${data.jvmTotal} GB</strong></span>
+                <span>System State<strong>${data.sysUsed} GB</strong></span>
             </div>`);
     }
 
@@ -368,15 +368,15 @@ $(function () {
         }
         let state = processBarState(data.usedPercent);
         $("#diskProgressBar").html(`<div class="progress-header">
-                <span class="progress-title">磁盘使用率</span>
+                <span class="progress-title">DiskUsage</span>
                 <span class="progress-value ${state.title}">${data.usedPercent}%</span>
             </div>
             <div class="progress-bar">
                 <div class="progress-fill ${state.value}" style="width: ${data.usedPercent}%"></div>
             </div>
             <div class="progress-detail">
-                <span>总容量 <strong>${data.total} GB</strong></span>
-                <span>已使用 <strong>${data.used} GB</strong></span>
+                <span>Total capacity<strong>${data.total} GB</strong></span>
+                <span>Used<strong>${data.used} GB</strong></span>
             </div>`);
     }
 
@@ -384,9 +384,9 @@ $(function () {
         doGetter("/monitor/metric", {}, function (response) {
             if (response.success === true) {
                 const r = response.data;
-                // 更新折线图数据
+                // Update line chart data
                 updateLineChart(charts.tps, r.tps.name, r.tps.value);
-                $("#tps").text(r.tps.average > 0 ? '执行器TPS, 平均:'+ r.tps.average + '/秒' : '执行器TPS');
+                $("#tps").text(r.tps.average > 0 ? 'Executor TPS, average:'+ r.tps.average + 'Second' : 'Executor TPS');
                 updateLineChart(charts.cpu, r.cpu.name, r.cpu.value);
                 updateLineChart(charts.memory, r.memory.name, r.memory.value);
                 const tpsLabels = (r.tps && r.tps.name) || [];
@@ -400,20 +400,20 @@ $(function () {
         });
     }
     
-    // 页面加载完成后初始化
+    // PagePasta LoadFinishInitialize after
     initCharts();
 
-    // 定义返回函数，子页面返回
+    // DefinitionsBackFunctions，SonPageNoodles.Back
     window.backIndexPage = function () {
         doLoader('/monitor');
     };
 
-    // 立即执行一次更新
+    // ImmediatelyRun onceUpdate
     updateMonitorData();
 
     const queryActuator = bindQueryActuatorEvent();
 
-    // 注册到全局定时刷新管理器
+    // Register to GlobalScheduledRefreshManager
     PageRefreshManager.register(() => {
         updateMonitorData();
         queryActuator.search();

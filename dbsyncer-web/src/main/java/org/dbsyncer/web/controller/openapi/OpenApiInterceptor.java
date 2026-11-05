@@ -26,10 +26,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**
- * OpenAPI拦截器
- * 处理token验证和加密解密
+ * OpenAPIInterceptor
+ * ProcessingtokenAuthentication and encryption decryption
  * 
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  */
 @Component
@@ -37,7 +37,7 @@ public class OpenApiInterceptor implements HandlerInterceptor {
 
     private static final Logger logger = LoggerFactory.getLogger(OpenApiInterceptor.class);
     
-    // Token请求头名称
+    // TokenRequest HeaderName
     private static final String TOKEN_HEADER = "Authorization";
     private static final String TOKEN_PREFIX = "Bearer ";
     
@@ -58,57 +58,57 @@ public class OpenApiInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
         try {
-            // 1. 配置是否开启
+            // 1. ConfigureYesNoOn
             if (!preloadTemplate.isPreloadCompleted()) {
-                writeErrorResponse(response, OpenApiErrorCode.SERVICE_UNAVAILABLE, "服务暂不可用");
+                writeErrorResponse(response, OpenApiErrorCode.SERVICE_UNAVAILABLE, "Service not available for the time being");
                 return false;
             }
             SystemConfig systemConfig = systemConfigService.getSystemConfig();
             if (!systemConfig.isEnableOpenAPI()) {
-                writeErrorResponse(response, OpenApiErrorCode.NOT_FOUND, "未开放API");
+                writeErrorResponse(response, OpenApiErrorCode.NOT_FOUND, "Unopen API");
                 return false;
             }
 
-            // 2. 验证IP白名单（优先验证，避免无效请求消耗资源）
+            // 2. AuthenticationIP whitelist（Prioritization, AvoidNoneConsumption on requestResource）
             // 所有OpenAPI接口都需要验证IP白名单，包括登录接口
             String clientIp = RequestUtil.getClientIp(request);
-            // 获取请求路径，避免用户请求/.;之类的字符绕过权限判断，导致绕过权限检查风险。
+            // Fetch Request Path, AvoidUserRequest/.;That kind of characters go around.PermissionsThe judgment leads to a circumvention.PermissionsCheck risk.
             String requestPath = urlPathHelper.getLookupPathForRequest(request);
             if (!ipWhitelistManager.isAllowed(systemConfig.getIpWhitelistConfig(), clientIp)) {
-                logger.warn("IP {} 不在白名单中，拒绝访问 {}", clientIp, requestPath);
-                writeErrorResponse(response, OpenApiErrorCode.FORBIDDEN, "IP地址不在白名单中");
+                logger.warn(") Not in white list, denied access", clientIp, requestPath);
+                writeErrorResponse(response, OpenApiErrorCode.FORBIDDEN, "The IP address is not on the white list.");
                 return false;
             }
 
-            // 3. 排除认证接口（登录、刷新token）
+            // 3. Exclude authenticationInterface（Login、Refreshtoken）
             if (isAuthEndpoint(requestPath)) {
                 return true;
             }
             
-            // 4. 验证Token
+            // 4. AuthenticationToken
             String token = extractToken(request);
             if (!jwtSecretManager.verifyToken(token)) {
-                writeErrorResponse(response, OpenApiErrorCode.UNAUTHORIZED, "Token无效或已过期");
+                writeErrorResponse(response, OpenApiErrorCode.UNAUTHORIZED, "Token is invalid or expired");
                 return false;
             }
             
             return true;
         } catch (Exception e) {
-            logger.error("OpenAPI拦截器处理失败", e);
-            writeErrorResponse(response, OpenApiErrorCode.INTERNAL_ERROR, "请求处理失败: " + e.getMessage());
+            logger.error("OpenAPI interceptor failed.", e);
+            writeErrorResponse(response, OpenApiErrorCode.INTERNAL_ERROR, "Request failed: " + e.getMessage());
             return false;
         }
     }
 
     /**
-     * 判断是否为认证接口
+     * Judgement ConfirmationYesNoAs AuthenticationInterface
      */
     private boolean isAuthEndpoint(String path) {
         return path.endsWith("/openapi/auth/login") || path.endsWith("/openapi/auth/refresh");
     }
 
     /**
-     * 从请求头中提取Token
+     * Extract from requestToken
      */
     private String extractToken(HttpServletRequest request) {
         String authHeader = request.getHeader(TOKEN_HEADER);
@@ -119,7 +119,7 @@ public class OpenApiInterceptor implements HandlerInterceptor {
     }
 
     /**
-     * 写入错误响应
+     * WritingErrorResponse
      */
     private void writeErrorResponse(HttpServletResponse response, int code, String message) throws IOException {
         response.setStatus(HttpServletResponse.SC_OK);

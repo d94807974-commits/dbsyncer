@@ -194,7 +194,7 @@ public class MonitorController extends BaseController {
     }
 
     /**
-     * 按需获取单条同步数据字段详情（不解列表 blob）
+     * Get Provincial Lines on NeedsSync dataFieldDetails（I don't know.List blob）
      */
     @PostMapping("/getDataDetail")
     @ResponseBody
@@ -207,7 +207,7 @@ public class MonitorController extends BaseController {
         }
     }
 
-    @OperLog(type = OperLogType.SYSTEM_INFO, message = "清空日志")
+    @OperLog(type = OperLogType.SYSTEM_INFO, message = "Empty Log")
     @PostMapping("/clearLog")
     @ResponseBody
     public RestResult clearLog() {
@@ -260,7 +260,7 @@ public class MonitorController extends BaseController {
 
     private void collectCpu() {
         collectStackMetric(MetricEnum.CPU_USAGE, cpu, cpuValueFormatter);
-        // 采集瞬时数据
+        // Collect instantaneous data
         long[] ticks = processor.getSystemCpuLoadTicks();
         if (prevTicks != null) {
             long user = ticks[CentralProcessor.TickType.USER.getIndex()] - prevTicks[CentralProcessor.TickType.USER.getIndex()];
@@ -269,22 +269,22 @@ public class MonitorController extends BaseController {
             long idle = ticks[CentralProcessor.TickType.IDLE.getIndex()] - prevTicks[CentralProcessor.TickType.IDLE.getIndex()];
             long total = user + nice + system + idle;
 
-            // 防止除零错误：如果 total 为 0，说明 CPU tick 没有变化，使用默认值 0
+            // Prevention of ZeroError：If cares.total Yes0，Description CPU tick No change, useDefault value 0
             if (total == 0) {
                 cpu.setUserPercent(BigDecimal.ZERO);
                 cpu.setSysPercent(BigDecimal.ZERO);
                 cpu.setTotalPercent(BigDecimal.ZERO);
             } else {
-                // 用户态CPU使用率（user + nice）
+                // UserStateC Produce Use（user + nice）
                 BigDecimal userCpuPercent = BigDecimal.valueOf(user + nice).divide(BigDecimal.valueOf(total), 6, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100))
                         .setScale(2, RoundingMode.HALF_UP);
                 cpu.setUserPercent(userCpuPercent);
 
-                // 系统态CPU使用率
+                // System StateC Produce Use
                 BigDecimal systemCpuPercent = BigDecimal.valueOf(system).divide(BigDecimal.valueOf(total), 6, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)).setScale(2, RoundingMode.HALF_UP);
                 cpu.setSysPercent(systemCpuPercent);
 
-                // 总CPU使用率（非空闲时间）
+                // TotalC Produce Use（NotFreeTime）
                 BigDecimal totalCpuPercent = BigDecimal.valueOf(total - idle).divide(BigDecimal.valueOf(total), 6, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100))
                         .setScale(2, RoundingMode.HALF_UP);
                 cpu.setTotalPercent(totalCpuPercent);
@@ -299,14 +299,14 @@ public class MonitorController extends BaseController {
 
     private void collectMemory() {
         collectStackMetric(MetricEnum.MEMORY_USED, memory, memoryValueFormatter);
-        // 系统 总内存
+        // SystemMemory
         memory.setSysTotal(gbValueFormatter.formatValue(globalMemory.getTotal()));
-        // 系统 已使用
+        // System used
         memory.setSysUsed(gbValueFormatter.formatValue(globalMemory.getTotal() - globalMemory.getAvailable()));
         memory.setTotalPercent(formatPercent(memory.getSysUsed(), memory.getSysTotal()));
-        // JVM 已使用
+        // JVM Used
         memory.setJvmUsed(gbValueFormatter.formatValue(collectValue(MetricEnum.MEMORY_USED)));
-        // JVM 总内存
+        // JVM TotalMemory
         memory.setJvmTotal(gbValueFormatter.formatValue(collectValue(MetricEnum.MEMORY_MAX)));
     }
 
@@ -315,13 +315,13 @@ public class MonitorController extends BaseController {
         Map<String, HealthComponent> details = health.getComponents();
         Health diskSpace = (Health) details.get("diskSpace");
         Map<String, Object> diskSpaceDetails = diskSpace.getDetails();
-        // 总容量
+        // Total capacity
         disk.setTotal(gbValueFormatter.formatValue(diskSpaceDetails.get("total")));
-        // 剩余量
+        // Remaining
         disk.setFree(gbValueFormatter.formatValue(diskSpaceDetails.get("free")));
-        // 已使用
+        // Used
         disk.setUsed(disk.getTotal().subtract(disk.getFree()));
-        // 使用百分比
+        // Use 100minThat's right.
         disk.setUsedPercent(formatPercent(disk.getUsed(), disk.getTotal()));
     }
 
@@ -339,7 +339,7 @@ public class MonitorController extends BaseController {
     private MetricResponse getMetricResponse(String code) {
         MetricsEndpoint.MetricResponse metric = metricsEndpoint.metric(code, null);
         if (metric == null) {
-            throw new IllegalArgumentException("不支持指标=" + code);
+            throw new IllegalArgumentException("Indicator not supported =" + code);
         }
         MetricResponse metricResponse = new MetricResponse();
         MetricEnum metricEnum = MetricEnum.getMetric(metric.getName());

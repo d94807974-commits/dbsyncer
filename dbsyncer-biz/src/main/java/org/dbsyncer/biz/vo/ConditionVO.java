@@ -17,17 +17,17 @@ import java.util.List;
 public class ConditionVO {
 
     /**
-     * 条件
+     * Condition
      */
     private List<OperationEnum> operation;
 
     /**
-     * 系统参数(定时配置)
+     * System Parameters(Time Configuration)
      */
     private List<QuartzFilterEnum> quartzFilter;
 
     /**
-     * 运算符
+     * Operators
      */
     private List<FilterEnum> filter;
 

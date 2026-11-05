@@ -30,9 +30,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * H2 内嵌数据库连接器
+ * H2 Embedded DataLibraryConnector
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2021-11-22 23:55
  */
@@ -99,13 +99,13 @@ public final class H2Connector extends AbstractDatabaseConnector {
 
     @Override
     public String buildCreateDatabaseSql(String databaseName, String schemaName) {
-        throw new H2Exception("H2 暂时不支持该功能");
+        throw new H2Exception("H2 does not support this feature yet");
 
     }
 
     @Override
     public boolean databaseExists(DatabaseConnectorInstance connectorInstance, String databaseName, String schemaName) {
-        throw new H2Exception("H2 暂时不支持该功能");
+        throw new H2Exception("H2 does not support this feature yet");
     }
 
     @Override
@@ -115,7 +115,7 @@ public final class H2Connector extends AbstractDatabaseConnector {
 
     @Override
     public String getSourceTableDDL(DatabaseConnectorInstance sourceInstance, String sourceTableName) {
-        throw new H2Exception("H2 暂时不支持该功能");
+        throw new H2Exception("H2 does not support this feature yet");
     }
 
     @Override
@@ -170,7 +170,7 @@ public final class H2Connector extends AbstractDatabaseConnector {
     @Override
     public String buildModifyColumnsSql(DatabaseConnectorInstance targetInstance, ValidateSyncTask task, String targetTableName,
                                         List<Field> sourceDefinitions, List<String> targetColumnNames) {
-        throw new H2Exception("H2 暂时不支持该功能");
+        throw new H2Exception("H2 does not support this feature yet");
     }
 
     @Override

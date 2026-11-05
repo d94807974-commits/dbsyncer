@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * ClickHouse Time 类型解析器
+ * ClickHouse Time TypeParser
  *
  * @author wuji
  * @version 1.0.0

@@ -8,42 +8,42 @@ package org.dbsyncer.parser.model;
 public class UserInfo {
 
     /**
-     * 唯一ID
+     * Unique ID
      */
     private String id;
 
     /**
-     * 创建时间
+     * Created at
      */
     private Long createTime;
 
     /**
-     * 更新时间
+     * UpdateTime
      */
     private Long updateTime;
 
     /**
-     * 账号
+     * Account
      */
     private String username;
 
     /**
-     * 昵称
+     * Nickname
      */
     private String nickname;
 
     /**
-     * 密码
+     * Password
      */
     private String password;
 
     /**
-     * 角色
+     * Role
      */
     private String roleCode;
 
     /**
-     * 连续登录失败次数
+     * Number of consecutive login failures
      */
     private int loginFailCount;
 

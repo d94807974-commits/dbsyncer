@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 资源授权（侧栏「资源授权」）。
+ * Resource authorization（Sidebar「Resource authorization」）。
  *
  * @author wuji
  * @version 1.0.0
@@ -108,7 +108,7 @@ public class ResourceAclController extends BaseController {
         return "acl/edit";
     }
 
-    @OperLog(type = OperLogType.USER_UPDATE, message = "保存资源授权")
+    @OperLog(type = OperLogType.USER_UPDATE, message = "Authority to save resources")
     @PostMapping("/save")
     @ResponseBody
     public RestResult save(HttpServletRequest request) {
@@ -123,7 +123,7 @@ public class ResourceAclController extends BaseController {
         }
     }
 
-    @OperLog(type = OperLogType.USER_DELETE, message = "删除资源授权")
+    @OperLog(type = OperLogType.USER_DELETE, message = "Delete Resource Authorization")
     @PostMapping("/remove")
     @ResponseBody
     public RestResult remove(HttpServletRequest request) {

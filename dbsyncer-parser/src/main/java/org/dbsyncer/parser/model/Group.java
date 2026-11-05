@@ -7,8 +7,8 @@ import org.dbsyncer.common.model.ConfigModel;
 import org.dbsyncer.sdk.constant.ConfigConstant;
 
 /**
- * 业务分组（{@code dbsyncer_group}）。
- * <p>勿与表映射 {@link TableGroup} 混淆。
+ * Business group（{@code dbsyncer_group}）。
+ * <p>Don't.andMap{@link TableGroup} Confusion.
  *
  * @author wuji
  * @version 1.0.0

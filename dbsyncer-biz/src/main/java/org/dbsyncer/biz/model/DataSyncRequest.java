@@ -6,24 +6,24 @@ package org.dbsyncer.biz.model;
 import java.util.List;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-02-23 15:24
  */
 public class DataSyncRequest {
 
     /**
-     * 驱动任务id
+     * MappingTasksid
      */
     private String mappingId;
 
     /**
-     * 表任务id
+     * TableTasksid
      */
     private String tableGroupId;
 
     /**
-     * 变更数据
+     * Change data
      */
     private List<DataSyncEvent> dataList;
 

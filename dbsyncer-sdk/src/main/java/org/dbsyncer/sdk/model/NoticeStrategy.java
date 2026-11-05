@@ -7,7 +7,7 @@ import org.dbsyncer.sdk.enums.NoticeFrequencyEnum;
 import org.dbsyncer.sdk.enums.NoticeTypeEnum;
 
 /**
- * 告警通知策略（运行时，每种通知类型对应一条）。
+ * Alert notificationPolicy (Run-time, each notification)TypeCorresponding article).
  *
  * @author wuji
  * @version 1.0.0

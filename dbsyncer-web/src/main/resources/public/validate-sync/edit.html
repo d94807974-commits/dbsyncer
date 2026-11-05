@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <div class="form-container">
     <form id="validate-sync-modify-form" method="post">
@@ -8,8 +8,8 @@
                 <div class="lg:col-span-2"></div>
                 <div class="lg:col-span-2 card-title text-center">
                     <span id="task-name-modify" class="text-xxl">[[${task?.name}]]</span>
-                    <i class="fa fa-edit text-info text-xl cursor-pointer" th:title="点击修改名称" th:onclick="taskModifyName()"></i>
-                    <!-- 隐藏表单值 -->
+                    <i class="fa fa-edit text-info text-xl cursor-pointer" th:title="Click to rename" th:onclick="taskModifyName()"></i>
+                    <!-- Hide FormsValue -->
                     <div class="hidden">
                         <input id="taskId" name="id" type="text" th:value="${task?.id}"/>
                         <input name="name" type="text" th:value="${task?.name}"/>
@@ -19,14 +19,14 @@
             </div>
         </div>
         <div class="card-body">
-            <!-- 校验关系 -->
+            <!-- Verify INTRODUCTIONRelations -->
             <div class="grid grid-cols-3">
                 <div class="flex items-center">
                     <img draggable="false" class="connector-logo-lg" th:src="@{'/img/'+ ${task?.sourceConnector?.config?.connectorType} + '.png'}" alt="" />
                     <div class="ml-2">
                         <p class="text-md">[[${task?.sourceConnector?.name}]]</p>
                         <p class="text-sm">
-                            源库：[[${task?.sourceDatabase}]]
+                            Source database：[[${task?.sourceDatabase}]]
                             <span th:if="${!#strings.isEmpty(task?.sourceDatabase) and !#strings.isEmpty(task?.sourceSchema)}"> (</span>
                             [[${task?.sourceSchema}]]
                             <span th:if="${!#strings.isEmpty(task?.sourceDatabase) and !#strings.isEmpty(task?.sourceSchema)}"> )</span>
@@ -42,7 +42,7 @@
                     <div class="ml-2">
                         <p class="text-md">[[${task?.targetConnector?.name}]]</p>
                         <p class="text-sm">
-                            目标库：[[${task?.targetDatabase}]]
+                            Target database：[[${task?.targetDatabase}]]
                             <span th:if="${!#strings.isEmpty(task?.targetDatabase) and !#strings.isEmpty(task?.targetSchema)}"> (</span>
                             [[${task?.targetSchema}]]
                             <span th:if="${!#strings.isEmpty(task?.targetDatabase) and !#strings.isEmpty(task?.targetSchema)}"> )</span>
@@ -51,48 +51,48 @@
                 </div>
             </div>
 
-            <!-- 同步模式选择 -->
+            <!-- SyncModeSelection -->
             <div class="flex items-center justify-end mt-4">
                 <div class="form-actions">
                     <span th:if="${task?.metaState eq 1 or task?.metaState eq 2}">
                         <button type="button" class="btn btn-info" disabled>
-                            <i class="fa fa-save"></i> 运行中
+                            <i class="fa fa-save"></i> Running
                         </button>
                     </span>
                     <button th:if="${task?.metaState eq null or task?.metaState eq 0 or task?.metaState eq 3}"
                             id="task-submit-btn"
                             type="button"
                             class="btn btn-primary">
-                        <i class="fa fa-save"></i> 保存
+                        <i class="fa fa-save"></i> Save
                     </button>
                     <button type="button" class="btn btn-outline" onclick="backIndexPage()">
-                        <i class="fa fa-reply"></i> 返回
+                        <i class="fa fa-reply"></i> Back
                     </button>
                 </div>
             </div>
 
-            <!-- 映射关系区域 -->
-            <h3><i class="fa fa-table text-success"></i> 映射关系</h3>
+            <!-- MappingRegional-->
+            <h3><i class="fa fa-table text-success"></i> Mapping</h3>
             <div th:replace="validate-sync/editTable :: content"></div>
 
-            <!-- 高级配置区域 -->
-            <h3><i class="fa fa-table text-info"></i> 高级配置</h3>
-            <p class="text-xs text-tertiary">对所有表映射关系都生效</p>
-              <!-- 全量配置 -->
+            <!-- Advanced settingsRegional-->
+            <h3><i class="fa fa-table text-info"></i> Advanced settings</h3>
+            <p class="text-xs text-tertiary">Applies to all table mappings</p>
+              <!-- FullConfig -->
              <div th:replace="validate-sync/editSetting :: content"></div>
 
-            <!-- 执行策略选择 -->
-            <p><i class="fa fa-history text-success"></i> 执行策略</p>
+            <!-- Implementation strategySelection -->
+            <p><i class="fa fa-history text-success"></i> Implementation strategy</p>
             <div class="grid grid-cols-4">
                 <div id="task-trigger" class="radio-group">
                     <input type="radio" name="trigger" value="once" th:checked="${'once' eq task?.trigger}" />
-                    <label>执行一次</label>
+                    <label>Run once</label>
                     <input type="radio" name="trigger" value="timing" th:checked="${'timing' eq task?.trigger}" />
-                    <label>定时</label>
+                    <label>Scheduled</label>
                 </div>
             </div>
 
-            <!-- Cron配置 -->
+            <!-- CronConfig -->
             <div th:id="trigger-cron" class="hidden">
                 <div class="grid grid-cols-3 mt-4">
                     <div class="form-item">
@@ -102,34 +102,34 @@
                 </div>
             </div>
 
-            <p><i class="fa fa-database text-success"></i> 校验范围</p>
+            <p><i class="fa fa-database text-success"></i> Verification scope</p>
             <div id="validate-sync-scope" class="checkbox-group mt-4"
                  th:with="schemaUnsupported=${#strings.equalsIgnoreCase(#strings.defaultString(task?.sourceConnector?.config?.connectorType, ''), 'elasticsearch') or #strings.equalsIgnoreCase(#strings.defaultString(task?.sourceConnector?.config?.connectorType, ''), 'sqlite') or #strings.equalsIgnoreCase(#strings.defaultString(task?.targetConnector?.config?.connectorType, ''), 'elasticsearch') or #strings.equalsIgnoreCase(#strings.defaultString(task?.targetConnector?.config?.connectorType, ''), 'sqlite')}">
                 <input type="checkbox" name="enableSync" value="true" th:checked="${task?.enableSync}" />
-                <label>订正</label>
+                <label>Revised</label>
 
                 <input type="checkbox" name="enableRowData" value="true" th:checked="${task?.enableRowData}" />
-                <label>行数据</label>
+                <label>Row data</label>
 
                 <input type="checkbox" name="enableSchema" value="true"
                        th:disabled="${schemaUnsupported}"
                        th:checked="${!schemaUnsupported and task?.enableSchema}" />
-                <label>表结构</label>
+                <label>Table schema</label>
 <!--                <input type="checkbox" name="enableIndex" value="true" th:checked="${task?.enableIndex}" />-->
-<!--                <label>索引</label>-->
+<!--                <label>Index</label>-->
 <!--                <input type="checkbox" name="enableTrigger" value="true" th:checked="${task?.enableTrigger}" />-->
-<!--                <label>触发器</label>-->
+<!--                <label>Trigger</label>-->
 <!--                <input type="checkbox" name="enableFunction" value="true" th:checked="${task?.enableFunction}" />-->
-<!--                <label>函数</label>-->
+<!--                <label>Functions</label>-->
             </div>
 
-            <p><i class="fa fa-database text-success"></i> 目标策略</p>
-            <p class="text-xs text-tertiary">反向校验，对比源表，目标表多余的行</p>
+            <p><i class="fa fa-database text-success"></i> Target strategy</p>
+            <p class="text-xs text-tertiary">Re Highly verified, contrast source table, redundant lines of target list</p>
             <div id="validate-sync-target-strategy" class="grid grid-cols-2 gap-4 mt-4">
                 <div class="form-item mb-0">
                     <label class="form-label">
-                        反向校验
-                        <i class="fa fa-question-circle text-tertiary" title="开启扫描目标表，记录源表不存在的多余行"></i>
+                        Reverse check
+                        <i class="fa fa-question-circle text-tertiary" title="Open scanning target sheets to record excess lines where source forms do not exist"></i>
                     </label>
                     <div class="form-control-area">
                         <label class="form-switch">
@@ -145,8 +145,8 @@
                 </div>
                 <div id="validate-sync-delete-extra-wrap" class="form-item mb-0 hidden">
                     <label class="form-label">
-                        反向订正
-                        <i class="fa fa-question-circle text-tertiary" title="任务执行时自动删除源表不存在的多余行，不可恢复；须开启行数据与反向校验"></i>
+                        Reverse Revision
+                        <i class="fa fa-question-circle text-tertiary" title="Automatically delete redundant lines from the source table when the task is performed and cannot be restored; line data and reverse verification must be started"></i>
                     </label>
                     <div class="form-control-area">
                         <label class="form-switch">
@@ -162,10 +162,10 @@
                 </div>
             </div>
 
-            <!-- 过滤条件 -->
+            <!-- Filter Conditions -->
             <div th:replace="validate-sync/editFilter :: content"></div>
 
-            <!-- 空白块 -->
+            <!-- EmptyWhite Block -->
             <div class="blank-block"></div>
 
         </div>
@@ -173,7 +173,7 @@
 </div>
 
 <script type="text/javascript">
-    // 修改驱动名称
+    // EditMappingName
     function taskModifyName() {
         const $name = $("#task-name-modify");
         const tmp = $name.text();
@@ -197,7 +197,7 @@
         }
     }
 
-    // 绑定执行一次+定时切换事件
+    // TieRun once+ScheduledSwitchEvent
     function bindTriggerChange() {
         const trigger = $('#task-trigger').radioGroup({
             theme: 'info',
@@ -206,20 +206,20 @@
                 showTriggerConfig(value);
             }
         });
-        // 渲染选择radio配置
+        // Render Selection ratifyradioConfig
         showTriggerConfig(trigger.getValue());
     }
 
     /**
-     * 「行数据」与「表结构」至少勾选一个方可保存。
-     * @param {JQuery} $form 表单
+     * 「Row data」and「Table schema」Let's try it at least.Save。
+     * @param {JQuery} $form Form
      * @returns {boolean}
      */
     function validateValidateSyncScope($form) {
         var rowData = $form.find('input[name="enableRowData"]').is(':checked');
         var schema = $form.find('input[name="enableSchema"]').is(':checked');
         if (!rowData && !schema) {
-            bootGrowl('请至少勾选「行数据」或「表结构」中的一项。', 'danger');
+            bootGrowl('Please tick at least one of the "line data" or "table structure".', 'danger');
             return false;
         }
         return true;
@@ -263,11 +263,11 @@
             return true;
         }
         if (!reverseScan) {
-            bootGrowl('反向订正须先开启反向校验。', 'danger');
+            bootGrowl('Reverse Around revision is subject to reverse verification.', 'danger');
             return false;
         }
         if (!$form.find('input[name="enableRowData"]').is(':checked')) {
-            bootGrowl('反向订正须同时开启行数据。', 'danger');
+            bootGrowl('Reverse revision must be accompanied by the opening of line data.', 'danger');
             return false;
         }
         return true;
@@ -275,8 +275,8 @@
 
     function showReverseSyncConfirm(onConfirm) {
         showConfirm({
-            title: '确定开启反向订正？',
-            message: '以源库为权威基准，删除目标库内源库不存在的冗余记录，删除操作不可恢复，请确认源库数据完整无误后继续。',
+            title: 'Make sure you start the reverse revision?',
+            message: 'Use the repository as the authoritative benchmark, remove redundant records that do not exist in the target library, and delete operations cannot be restored. Please confirm that the database is complete and continue.',
             size: 'large',
             icon: 'warning',
             confirmType: 'danger',
@@ -314,11 +314,11 @@
         var saveTask = function () {
             var $btn = $('#task-submit-btn');
             var originalText = $btn.html();
-            $btn.html('<i class="fa fa-spinner fa-spin"></i> 保存中...').prop('disabled', true);
+            $btn.html('<i class="fa fa-spinner fa-spin"></i> Saving...').prop('disabled', true);
             doPoster('/validate-sync/edit', $form.serializeJson(), function (response) {
                 $btn.html(originalText).prop('disabled', false);
                 if (response.success === true) {
-                    bootGrowl('保存成功!', 'success');
+                    bootGrowl('Saved successfully!', 'success');
                     var rawStr = localStorage.getItem('dbsyncer.pagination.validate-sync-list');
                     var raw = JSON.parse(rawStr);
                     raw.pageNum = 1;
@@ -350,7 +350,7 @@
         bindReverseSyncConfirm();
         syncTargetStrategyState();
 
-        // 保存
+        // Save
         $('#task-submit-btn').click(function () {
             submitValidateSyncForm();
         });

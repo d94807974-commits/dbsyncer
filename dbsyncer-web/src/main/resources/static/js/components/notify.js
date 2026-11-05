@@ -1,5 +1,5 @@
 /**
- * 通知/Toast 组件
+ * Notification/Toast Component
  */
 (function(window) {
     'use strict';
@@ -48,7 +48,7 @@
                 (cfg.title ? '<div class="toast-title">' + cfg.title + '</div>' : '') +
                 '<div class="toast-message">' + cfg.message + '</div>' +
             '</div>' +
-            '<button type="button" class="toast-close" aria-label="关闭">&times;</button>' +
+            '<button type="button" class="toast-close" aria-label="Close">&times;</button>' +
             '<div class="toast-progress"><div class="toast-progress-bar"></div></div>';
 
         var closeBtn = toast.querySelector('.toast-close');
@@ -99,7 +99,7 @@
         notify({ message: message, type: type || 'info', duration: duration || 3200 });
     }
     
-    // 导出到全局
+    // ExportTo Global Text
     window.notify = notify;
     window.removeToast = removeToast;
     window.bootGrowl = bootGrowl;

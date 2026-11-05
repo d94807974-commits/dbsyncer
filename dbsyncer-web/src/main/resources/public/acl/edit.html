@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <div class="form-container">
     <div class="card-header">
         <h3 class="card-title text-center"
-            th:text="${acl != null} ? '资源授权' : '资源授权'">资源授权</h3>
+            th:text="$acl!=full}? 'Resource authorization': 'Resource authorization'">Resource authorization</h3>
     </div>
     <div class="card-body">
         <div class="form-actions mb-4">
             <button class="btn btn-outline" type="button" onclick="backIndexPage()">
-                <i class="fa fa-reply"></i> 返回
+                <i class="fa fa-reply"></i> Back
             </button>
             <button id="aclSubmitBtn" class="btn btn-primary" type="button" data-permission="acl:edit">
-                <i class="fa fa-save"></i> 保存
+                <i class="fa fa-save"></i> Save
             </button>
         </div>
         <div class="border-t mb-5"></div>
@@ -21,27 +21,27 @@
         <form id="acl-form-edit" method="post">
             <input type="hidden" name="id" th:value="${acl?.id}"/>
 
-            <!-- 授权类型 -->
-            <h4 class="card-title mb-3">授权类型</h4>
+            <!-- License type -->
+            <h4 class="card-title mb-3">License type</h4>
             <div class="form-item mb-3">
-                <label class="form-label">类型<strong class="text-primary">*</strong></label>
+                <label class="form-label">Type<strong class="text-primary">*</strong></label>
                 <div class="form-control-area">
                     <div id="subjectTypeGroup" class="radio-group radio-group-control-height">
                         <input type="radio" name="subjectType" value="0"
                                th:checked="${acl?.subjectType == 0}"/>
-                        <label>用户</label>
+                        <label>User</label>
                         <input type="radio" name="subjectType" value="1"
                                th:checked="${acl == null or acl.subjectType == 1}"/>
-                        <label>角色</label>
+                        <label>Role</label>
                     </div>
                 </div>
             </div>
             <div class="form-item mb-5">
-                <label class="form-label" id="subjectPickLabel">选择角色<strong class="text-primary">*</strong></label>
+                <label class="form-label" id="subjectPickLabel">Organisation<strong class="text-primary">*</strong></label>
                 <div class="form-control-area">
                     <div id="roleSelectWrap" class="w-320 max-w-full">
                         <select id="subjectRoleId" class="form-control" name="subjectId">
-                            <option value="">请选择角色</option>
+                            <option value="">Please select a role</option>
                             <option th:each="r : ${roles}"
                                     th:value="${r.id}"
                                     th:text="${r.name}"
@@ -50,7 +50,7 @@
                     </div>
                     <div id="userSelectWrap" class="hidden w-320 max-w-full">
                         <select id="subjectUsername" class="form-control" name="username">
-                            <option value="">请选择用户</option>
+                            <option value="">Select User</option>
                             <option th:each="u : ${users}"
                                     th:value="${u.username}"
                                     th:text="${u.nickname + ' (' + u.username + ')'}"
@@ -62,42 +62,42 @@
 
             <div class="border-t mb-5"></div>
 
-            <!-- 资源范围 -->
-            <h4 class="card-title mb-3">资源范围</h4>
+            <!-- Resource scope -->
+            <h4 class="card-title mb-3">Resource scope</h4>
             <p class="text-sm text-tertiary mb-4"
-               th:text="${acl != null} ? '修改当前授权对应的资源与权限。' : '可勾选多种资源类型，并在下方列表中多选具体资源；权限对全部选中资源统一生效。'">
+               th:text="$ {acl!=null}? 'Modify the resources and authority corresponding to the current mandate. ' : 'can tick multiple resource types and select more specific resources in the list below; permissions are valid for all selected resources. ♪ I'm sorry ♪">
             </p>
             <div class="form-item mb-4">
-                <label class="form-label">资源类型<strong class="text-primary">*</strong></label>
+                <label class="form-label">Resource type<strong class="text-primary">*</strong></label>
                 <div class="form-control-area">
                     <div id="resourceTypeGroup" class="checkbox-group checkbox-group-inline">
                         <input type="checkbox" id="rtype_group" name="resourceTypeItem" value="group"
                                th:checked="${acl == null or acl.resourceType == 'group'}"
                                th:disabled="${acl != null and acl.resourceType != 'group'}"/>
-                        <label for="rtype_group">业务分组</label>
+                        <label for="rtype_group">Business group</label>
                         <input type="checkbox" id="rtype_connector" name="resourceTypeItem" value="connector"
                                th:checked="${acl?.resourceType == 'connector'}"
                                th:disabled="${acl != null and acl.resourceType != 'connector'}"/>
-                        <label for="rtype_connector">连接</label>
+                        <label for="rtype_connector">Connect</label>
                         <input type="checkbox" id="rtype_mapping" name="resourceTypeItem" value="mapping"
                                th:checked="${acl?.resourceType == 'mapping'}"
                                th:disabled="${acl != null and acl.resourceType != 'mapping'}"/>
-                        <label for="rtype_mapping">同步任务</label>
+                        <label for="rtype_mapping">Sync task</label>
                         <input type="checkbox" id="rtype_validateSync" name="resourceTypeItem" value="validateSync"
                                th:checked="${acl?.resourceType == 'validateSync'}"
                                th:disabled="${acl != null and acl.resourceType != 'validateSync'}"/>
-                        <label for="rtype_validateSync">订正校验</label>
+                        <label for="rtype_validateSync">Data validation</label>
                         <input type="checkbox" id="rtype_databaseSync" name="resourceTypeItem" value="databaseSync"
                                th:checked="${acl?.resourceType == 'databaseSync'}"
                                th:disabled="${acl != null and acl.resourceType != 'databaseSync'}"/>
-                        <label for="rtype_databaseSync">整库迁移</label>
+                        <label for="rtype_databaseSync">Database migration</label>
                     </div>
                 </div>
             </div>
 
             <div id="resourceListPanel" class="mb-5">
                 <div id="groupResourceWrap" class="form-item mb-3">
-                    <label class="form-label">业务分组<strong class="text-primary">*</strong></label>
+                    <label class="form-label">Business group<strong class="text-primary">*</strong></label>
                     <div class="form-control-area">
                         <div class="w-320 max-w-full">
                             <select id="resourceGroupId" class="form-control">
@@ -110,7 +110,7 @@
                     </div>
                 </div>
                 <div id="connectorResourceWrap" class="form-item mb-3">
-                    <label class="form-label">连接<strong class="text-primary">*</strong></label>
+                    <label class="form-label">Connect<strong class="text-primary">*</strong></label>
                     <div class="form-control-area">
                         <div class="w-320 max-w-full">
                             <select id="resourceConnectorId" class="form-control">
@@ -123,7 +123,7 @@
                     </div>
                 </div>
                 <div id="mappingResourceWrap" class="form-item mb-3">
-                    <label class="form-label">同步任务<strong class="text-primary">*</strong></label>
+                    <label class="form-label">Sync task<strong class="text-primary">*</strong></label>
                     <div class="form-control-area">
                         <div class="w-320 max-w-full">
                             <select id="resourceMappingId" class="form-control">
@@ -136,7 +136,7 @@
                     </div>
                 </div>
                 <div id="validateSyncResourceWrap" class="form-item mb-3">
-                    <label class="form-label">订正校验<strong class="text-primary">*</strong></label>
+                    <label class="form-label">Data validation<strong class="text-primary">*</strong></label>
                     <div class="form-control-area">
                         <div class="w-320 max-w-full">
                             <select id="resourceValidateSyncId" class="form-control">
@@ -149,7 +149,7 @@
                     </div>
                 </div>
                 <div id="databaseSyncResourceWrap" class="form-item mb-3">
-                    <label class="form-label">整库迁移<strong class="text-primary">*</strong></label>
+                    <label class="form-label">Database migration<strong class="text-primary">*</strong></label>
                     <div class="form-control-area">
                         <div class="w-320 max-w-full">
                             <select id="resourceDatabaseSyncId" class="form-control">
@@ -165,14 +165,14 @@
 
             <div class="border-t mb-5"></div>
 
-            <!-- 权限档位：开=可读写，关=只读 -->
-            <h4 class="card-title mb-3">权限</h4>
+            <!-- PermissionTranche: Open=Read/Write，Off=Read-only -->
+            <h4 class="card-title mb-3">Permission</h4>
             <p class="text-sm text-tertiary mb-4">
-                作用于上面全部选中资源；关闭为只读（可查看），开启为可读写（含编辑与启停）。</p>
+                Actes on all resources selected above; closes as read-only (visible) and opens as readable and writing (including editing and start-up).</p>
             <div class="form-item mb-4">
-                <label class="form-label">可读写</label>
+                <label class="form-label">Read/Write</label>
                 <div class="form-control-area">
-                    <label class="form-switch" title="开启：可读写；关闭：只读">
+                    <label class="form-switch" title="Open: read-and-write; off: read-only">
                         <input id="aclPermissionSwitch" name="permission" type="checkbox"
                                th:checked="${acl == null or acl.permission == 1}"/>
                         <span class="switch-track">
@@ -202,11 +202,11 @@
         const SUBJECT_ROLE = '1';
 
         const RESOURCE_META = {
-            group: {wrap: '#groupResourceWrap', select: '#resourceGroupId', label: '业务分组'},
-            connector: {wrap: '#connectorResourceWrap', select: '#resourceConnectorId', label: '连接'},
-            mapping: {wrap: '#mappingResourceWrap', select: '#resourceMappingId', label: '同步任务'},
-            validateSync: {wrap: '#validateSyncResourceWrap', select: '#resourceValidateSyncId', label: '订正校验'},
-            databaseSync: {wrap: '#databaseSyncResourceWrap', select: '#resourceDatabaseSyncId', label: '整库迁移'}
+            group: {wrap: '#groupResourceWrap', select: '#resourceGroupId', label: 'Business group'},
+            connector: {wrap: '#connectorResourceWrap', select: '#resourceConnectorId', label: 'Connect'},
+            mapping: {wrap: '#mappingResourceWrap', select: '#resourceMappingId', label: 'Sync task'},
+            validateSync: {wrap: '#validateSyncResourceWrap', select: '#resourceValidateSyncId', label: 'Data validation'},
+            databaseSync: {wrap: '#databaseSyncResourceWrap', select: '#resourceDatabaseSyncId', label: 'Database migration'}
         };
 
         window.backIndexPage = function () {
@@ -218,7 +218,7 @@
         Object.keys(RESOURCE_META).forEach(function (key) {
             $(RESOURCE_META[key].select).dbSelect({type: resourceSelectType});
         });
-        // 必须按容器初始化：按 input 初始化会走 isSingle，onChange 只带当前一项
+        // The container shall be initialized: pressinput Initialization will go.isSingle，onChange Only the current one
         $('#resourceTypeGroup').checkboxGroup({
             theme: 'primary',
             size: 'md',
@@ -234,11 +234,11 @@
             if (current === SUBJECT_USER) {
                 $('#roleSelectWrap').hide();
                 $('#userSelectWrap').show();
-                $('#subjectPickLabel').html('选择用户<strong class="text-primary">*</strong>');
+                $('#subjectPickLabel').html('SelectionUser<strong class="text-primary">*</strong>');
             } else {
                 $('#userSelectWrap').hide();
                 $('#roleSelectWrap').show();
-                $('#subjectPickLabel').html('选择角色<strong class="text-primary">*</strong>');
+                $('#subjectPickLabel').html('Organisation<strong class="text-primary">*</strong>');
             }
         }
 
@@ -251,7 +251,7 @@
         }
 
         function readSelectValues($el) {
-            // dbSelect 多选状态在组件内，原生 select 无 multiple 时 .val() 只能拿到一项
+            // dbSelect Multiple SelectionsStatusIt's inside the component, native.select None multiple Time.val() Only one.
             const api = $el.data('dbSelect');
             if (api && typeof api.getValues === 'function') {
                 return (api.getValues() || []).filter(function (v) {
@@ -270,7 +270,7 @@
             return [val];
         }
 
-        // form-item 的 display:grid 会盖过 .hidden，用 show/hide 设内联样式
+        // form-item Yes.display:grid It'll cover..hidden，Useshow/hide Inline Styles
         function syncResourceTypePanel(values) {
             const types = Array.isArray(values) ? values : selectedResourceTypes();
             Object.keys(RESOURCE_META).forEach(function (key) {
@@ -300,7 +300,7 @@
                 $input.closest('.checkbox-group-item').toggleClass('active', checked).toggleClass('disabled', !checked);
             });
         }
-        // 初始全部隐藏，再按勾选显示，避免未勾选类型残留可见
+        // InitialAllHide, then tick, avoid not tickingTypeResidual visible
         Object.keys(RESOURCE_META).forEach(function (key) {
             $(RESOURCE_META[key].wrap).hide();
         });
@@ -309,16 +309,16 @@
         $('#aclSubmitBtn').on('click', function () {
             const subjectType = String($('#subjectTypeGroup input[name="subjectType"]:checked').val() || SUBJECT_ROLE);
             if (subjectType === SUBJECT_ROLE && !$('#subjectRoleId').val()) {
-                bootGrowl('请选择角色', 'warning');
+                bootGrowl('Please select a role', 'warning');
                 return;
             }
             if (subjectType === SUBJECT_USER && !$('#subjectUsername').val()) {
-                bootGrowl('请选择用户', 'warning');
+                bootGrowl('Select User', 'warning');
                 return;
             }
             const types = selectedResourceTypes();
             if (!types.length) {
-                bootGrowl('请选择资源类型', 'warning');
+                bootGrowl('Select the resource type', 'warning');
                 return;
             }
             const segments = [];
@@ -332,7 +332,7 @@
                 }
             });
             if (!total) {
-                bootGrowl('请选择资源', 'warning');
+                bootGrowl('Select Resources', 'warning');
                 return;
             }
             const data = {
@@ -352,14 +352,14 @@
 
             const $btn = $(this);
             const originalText = $btn.html();
-            $btn.html('<i class="fa fa-spinner fa-spin"></i> 保存中...').prop('disabled', true);
+            $btn.html('<i class="fa fa-spinner fa-spin"></i> Saving...').prop('disabled', true);
             doPoster('/acl/save', data, function (response) {
                 $btn.html(originalText).prop('disabled', false);
                 if (response.success !== true) {
-                    bootGrowl(response.message || '保存失败', 'danger');
+                    bootGrowl(response.message || 'Save failed', 'danger');
                     return;
                 }
-                const tip = (typeof response.data === 'string' && response.data) ? response.data : '保存成功！';
+                const tip = (typeof response.data === 'string' && response.data) ? response.data : 'Saved!';
                 bootGrowl(tip, 'success');
                 backIndexPage();
             });

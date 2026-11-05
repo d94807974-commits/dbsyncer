@@ -156,9 +156,9 @@ public class ConnectorController extends BaseController {
             requireResource(ConfigConstant.CONNECTOR, id, ResourceAclActionEnum.READ.getCode());
             boolean isAlive = connectorConfigService.isAlive(id);
             if (isAlive) {
-                return RestResult.restSuccess("连接测试成功");
+                return RestResult.restSuccess("Connection test successful");
             } else {
-                return RestResult.restFail("连接测试失败");
+                return RestResult.restFail("Connection test failed");
             }
         } catch (Exception e) {
             logger.error(e.getLocalizedMessage(), e);

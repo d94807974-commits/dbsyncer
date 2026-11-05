@@ -13,7 +13,7 @@ import org.dbsyncer.sdk.model.ConnectorConfig;
 public class FileConfig extends ConnectorConfig {
 
     /**
-     * 文件目录
+     * DocumentationContents
      */
     private String fileDir;
 

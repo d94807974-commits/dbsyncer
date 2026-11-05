@@ -6,25 +6,25 @@ package org.dbsyncer.sdk.enums;
 import org.dbsyncer.sdk.SdkException;
 
 /**
- * 标准数据类型
+ * Standard ContextType
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2024-11-23 22:39
  */
 public enum DataTypeEnum {
 
-    /** 文本 */
+    /** Text*/
     STRING,
-    /** 整型 */
+    /** Integer*/
     BYTE, SHORT, INT, LONG,
-    /** 浮点型 */
+    /** Floating Point Type*/
     DECIMAL, DOUBLE, FLOAT,
-    /** 布尔型 */
+    /** Boolean*/
     BOOLEAN,
-    /** 时间 */
+    /** Time */
     DATE, TIME, TIMESTAMP,
-    /** 二进制 */
+    /** Binary*/
     BYTES;
 
     public static DataTypeEnum getType(String type) {

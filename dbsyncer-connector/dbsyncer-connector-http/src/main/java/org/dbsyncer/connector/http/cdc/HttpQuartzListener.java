@@ -26,11 +26,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * CDC-Http 定时监听器
- * 在 checkLastPoint 中一次性根据 snapshot 和当前时间生成时间/日期类占位符的替换值，
- * 与 $pageIndex$、$pageSize$、$cursor$ 在 reader 中统一替换。
+ * CDC-Http ScheduledListener
+ * Yes.checkLastPoint One-time basissnapshot & CurrentTimeGenerateTime/date type placeholdersReplaceValue，
+ * and $pageIndex$、$pageSize$、$cursor$ Yes.reader UnifiedReplace。
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-02-02 00:01
  */
@@ -39,7 +39,7 @@ public final class HttpQuartzListener extends AbstractQuartzListener {
     @Override
     public void init() {
         super.init();
-        // 初始化游标参数
+        // Initialise CursorParameter
         getCommands().forEach(cmd -> {
             Properties extInfo = cmd.getTable().getExtInfo();
             String paramsTemplate = extInfo.getProperty(HttpConstant.PARAMS);
@@ -63,7 +63,7 @@ public final class HttpQuartzListener extends AbstractQuartzListener {
     protected Point checkLastPoint(TableGroupQuartzCommand cmd, int index) {
         Point point = new Point();
 
-        // 从表配置读取 PARAMS 模板，扫描其中的时间/日期类系统占位符
+        // From TableConfigureReadPARAMS Template 3/Scan OFTime/Date class system placeholder
         String paramsTemplate = cmd.getTable() != null && cmd.getTable().getExtInfo() != null
                 ? cmd.getTable().getExtInfo().getProperty(HttpConstant.PARAMS)
                 : null;
@@ -71,7 +71,7 @@ public final class HttpQuartzListener extends AbstractQuartzListener {
             return point;
         }
 
-        // 找出模板中出现的 QuartzFilterEnum 占位符（按 index 排序，与 DB 一致）
+        // Finds out what happens in the templateQuartzFilterEnum Placeholder (byindex Sort,and DB Unanimously)
         List<QuartzFilterEnum> filterEnums = Stream.of(QuartzFilterEnum.values())
                 .sorted(Comparator.comparing(QuartzFilterEnum::getIndex))
                 .filter(f -> StringUtil.contains(paramsTemplate, f.getType()))
@@ -80,7 +80,7 @@ public final class HttpQuartzListener extends AbstractQuartzListener {
             return point;
         }
 
-        // 统一生成静态变量：占位符 -> 替换值（时间/日期），并维护 snapshot
+        // HarmonizationGenerateStatic variable: placeholder -> ReplaceValue（Time/WORKING DATE) and MAINTENANCEsnapshot
         Map<String, Object> staticVars = new LinkedHashMap<>();
         for (QuartzFilterEnum filterEnum : filterEnums) {
             String type = filterEnum.getType();

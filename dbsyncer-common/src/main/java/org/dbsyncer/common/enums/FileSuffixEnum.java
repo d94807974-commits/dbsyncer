@@ -3,7 +3,7 @@ package org.dbsyncer.common.enums;
 import org.dbsyncer.common.util.StringUtil;
 
 /**
- * 文件格式
+ * DocumentationFormat
  *
  * @author AE86
  * @version 1.0.0
@@ -22,7 +22,7 @@ public enum FileSuffixEnum {
     JSON("json"),
 
     /**
-     * ZIP 配置包
+     * ZIP ConfigurePackage
      */
     ZIP("zip");
 
@@ -33,7 +33,7 @@ public enum FileSuffixEnum {
     }
 
     /**
-     * 获取文件类型
+     * AccessDocumentationType
      *
      * @param suffix
      * @return

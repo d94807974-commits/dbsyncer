@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * {@link PermissionService} 实现。
+ * {@link PermissionService} Achieved.
  *
  * @author wuji
  * @version 1.0.0
@@ -66,7 +66,7 @@ public class PermissionServiceImpl implements PermissionService {
         if (CollectionUtils.isEmpty(userRoles)) {
             return Collections.emptySet();
         }
-        //获取用户角色
+        //AccessUserRole
         List<String> roleIds = userRoles.stream()
                 .filter(ur -> ur != null && StringUtil.isNotBlank(ur.getRoleId()))
                 .map(UserRole::getRoleId)
@@ -76,7 +76,7 @@ public class PermissionServiceImpl implements PermissionService {
         if (CollectionUtils.isEmpty(roleIds)) {
             return Collections.emptySet();
         }
-        //获取角色code语句
+        //AccessRolecodeStatement
         List<RolePermission> rolePermissions = rbacProfile.listRolePermissionsByRoleIds(roleIds);
         if (CollectionUtils.isEmpty(rolePermissions)) {
             return Collections.emptySet();
@@ -91,7 +91,7 @@ public class PermissionServiceImpl implements PermissionService {
         }
         Set<String> codes = new LinkedHashSet<>();
 
-        //获取菜单code
+        //Get Menucode
         for (Permission permission : rbacProfile.listPermissionsByIds(permissionIds)) {
             if (permission != null && StringUtil.isNotBlank(permission.getCode())) {
                 codes.add(permission.getCode());

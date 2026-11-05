@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.Properties;
 
 /**
- * Kafka连接器工具类
+ * KafkaConnectorTool class
  *
  * @Author AE86
  * @Version 1.0.0

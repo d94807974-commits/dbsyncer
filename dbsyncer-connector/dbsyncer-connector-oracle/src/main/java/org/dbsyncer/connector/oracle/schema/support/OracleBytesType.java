@@ -17,7 +17,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2024-12-25 00:03
  */
@@ -49,7 +49,7 @@ public final class OracleBytesType extends BytesType {
 
     @Override
     protected byte[] getDefaultMergedVal(Field field) {
-        // SQL NULL 保持 null，勿归一成空数组，避免写入 EMPTY_BLOB 与校验误判
+        // SQL NULL Holdnull，Do not group into empty arrays, avoid writingEMPTY_BLOB andVerify miscalculation
         return null;
     }
 
@@ -71,47 +71,47 @@ public final class OracleBytesType extends BytesType {
         }
         if (val instanceof String) {
             String s = (String) val;
-            // 处理 Oracle HEXTORAW 格式: HEXTORAW('30303030303030303030303030303030')
-            // 支持多种格式: HEXTORAW('...'), HEXTORAW("..."), HEXTORAW(...)
+            // ProcessingOracle HEXTORAW Format: HEXTORAW('30303030303030303030303030303030')
+            // Support multiple formats: HEXTORAW('...'), HEXTORAW("..."), HEXTORAW(...)
             if (s.trim().toUpperCase().startsWith("HEXTORAW(")) {
-                // 提取括号内的内容
+                // Extract the contents in brackets
                 int startIdx = s.indexOf('(');
                 int endIdx = s.lastIndexOf(')');
                 if (startIdx >= 0 && endIdx > startIdx) {
                     String hexContent = s.substring(startIdx + 1, endIdx).trim();
-                    // 移除引号（单引号或双引号）
+                    // Remove quotation marks (single or double quotation marks)
                     if ((hexContent.startsWith("'") && hexContent.endsWith("'")) || (hexContent.startsWith("\"") && hexContent.endsWith("\""))) {
                         hexContent = hexContent.substring(1, hexContent.length() - 1);
                     }
                     return StringUtil.hexStringToByteArray(hexContent);
                 }
             }
-            // 处理 EMPTY_BLOB() 格式
+            // ProcessingEMPTY_BLOB() Format
             if ("EMPTY_BLOB()".equalsIgnoreCase(s.trim())) {
                 return new byte[0];
             }
-            // 处理纯十六进制字符串（只包含 0-9, A-F, a-f）
+            // Processing pure hexadecimal strings (includes only)0-9, A-F, a-f）
             if (isHexString(s)) {
                 return StringUtil.hexStringToByteArray(s);
             }
-            // 普通字符串转换为字节数组
+            // Normal StringConvertAs byte array
             return s.getBytes();
         }
         return throwUnsupportedException(val, field);
     }
 
     /**
-     * 判断字符串是否为十六进制字符串
+     * CriterionYesNois a hexadecimal string
      */
     private boolean isHexString(String str) {
         if (StringUtil.isBlank(str)) {
             return false;
         }
-        // 十六进制字符串长度必须是偶数
+        // Hexadecimal stringLengthI have to.YesEven
         if (str.length() % 2 != 0) {
             return false;
         }
-        // 检查是否只包含十六进制字符
+        // InspectionYesNoInclude hexadecimal characters only
         for (char c : str.toCharArray()) {
             if (!((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f'))) {
                 return false;
@@ -132,7 +132,7 @@ public final class OracleBytesType extends BytesType {
                 return wrapBlobIfNeeded(bytes, field);
             }
             if ("EMPTY_BLOB()".equals(s)) {
-                // 空 BLOB 与 SQL NULL 区分：写入 EMPTY_BLOB，而非 setNull
+                // EmptyBLOB and SQL NULL Sector Entitiesmin：WritingEMPTY_BLOB，NotsetNull
                 return wrapBlobIfNeeded(new byte[0], field);
             }
             return wrapBlobIfNeeded(s.getBytes(), field);

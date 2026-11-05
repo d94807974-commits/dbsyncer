@@ -1,53 +1,53 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<!-- 社区版提示 -->
+<!-- CommunityTip -->
 <div th:if="${editionInfo.edition eq 'community'}" class="text-center">
     <h3 class="text-xl text-center text-gray-500">[[${editionInfo.editionName}]]</h3>
 
-    <!-- 整库迁移功能介绍 -->
+    <!-- Database migrationUNDAF functionIntroduction -->
     <div class="bg-info/10 border border-info rounded-lg p-4 mb-6 text-left">
         <h4 class="text-lg font-semibold text-info mb-2">
-            <i class="fa fa-database"></i> 什么是整库迁移？
+            <i class="fa fa-database"></i> What's a vault migration?
         </h4>
         <p class="text-sm text-secondary mb-3">
-            整库迁移是将<strong>源数据库</strong>的整个库完整迁移到<strong>目标数据库</strong>的功能。支持表结构、全量数据等一次性迁移，适用于数据库升级、跨平台迁移、数据中心迁移等场景。
+            The whole house is moving.<strong>Source Number</strong>Acting full library<strong>Target database</strong>. Supports one-time migrations such as table structure, full volume data, etc., that apply to such scenarios as database upgrades, cross-platform migration, data centre migration, etc.
         </p>
         <ul class="text-sm text-secondary mb-3 pl-4">
-            <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>全量迁移</strong>：一次性迁移多个数据库的所有对象
+            <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>Full migration</strong>One-time migration of all objects from multiple databases
             </li>
-            <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>结构同步</strong>：自动创建数据库和表对象
+            <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>Structure Sync</strong>: Autocreate databases and table objects
             </li>
         </ul>
         <p class="text-sm text-secondary">
-            适用于：数据库版本升级、跨数据库平台迁移、数据灾备、读写分离架构搭建等场景。
+            Applicable: scenes such as database version upgrades, cross-database platform migration, data disaster preparedness, reading and writing separation architecture.
         </p>
     </div>
 
     <p class="text-secondary mb-6">
-        该功能仅在专业版开放，请下载
+        This feature is only available in Professional edition. Please download
         <a href="https://gitee.com/ghi/dbsyncer/releases"
            class="text-primary hover-underline font-medium"
-           title="下载专业版 dbsyncer-enterprise-x.x.x-bin.zip"
+           title="Download Professional edition dbsyncer-enterprise-x.x.x-bin.zip"
            target="_blank">
-            <i class="fa fa-download"></i> 专业版
+            <i class="fa fa-download"></i> Professional
         </a>
     </p>
 </div>
 
-<!-- 整库迁移列表 -->
+<!-- Database migrationList -->
 <div th:if="${editionInfo.edition ne 'community'}" class="form-container">
     <div class="card-header">
-        <h3 class="card-title text-center">整库迁移</h3>
+        <h3 class="card-title text-center">Database migration</h3>
     </div>
     <div class="card-body">
         <div class="flex items-center justify-between gap-2">
             <div class="flex items-center gap-2 flex-1 min-w-0">
                 <div id="database-sync-search" class="search-wrapper w-320 max-w-full flex-shrink-0">
                     <i class="fa fa-search search-icon"></i>
-                    <input class="search-input" type="text" maxlength="32" placeholder="搜索任务名称">
-                    <span class="search-clear" title="清除">
+                    <input class="search-input" type="text" maxlength="32" placeholder="Search by task name">
+                    <span class="search-clear" title="Clear">
                         <i class="fa fa-times"></i>
                     </span>
                 </div>
@@ -56,7 +56,7 @@
             <div class="flex items-center gap-2 flex-shrink-0">
                 <span id="databaseSyncGroupCreateHost" data-permission="mapping:edit"></span>
                 <button id="databaseSyncAddBtn" class="btn btn-primary" type="button" data-permission="mapping:edit">
-                    <i class="fa fa-plus"></i> 添加
+                    <i class="fa fa-plus"></i> Add
                 </button>
             </div>
         </div>
@@ -65,12 +65,12 @@
             <thead>
             <tr>
                 <th></th>
-                <th>任务名称</th>
-                <th>库映射数</th>
-                <th>结果</th>
-                <th>状态</th>
-                <th>最后执行</th>
-                <th>操作</th>
+                <th>Task name</th>
+                <th>Library Maps</th>
+                <th>Result</th>
+                <th>Status</th>
+                <th>Final implementation</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody id="database-sync-table"></tbody>

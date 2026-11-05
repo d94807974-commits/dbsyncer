@@ -45,11 +45,11 @@ public final class InsertSql implements SqlParser {
     public String parse() {
         try {
             Insert insert = (Insert) CCJSqlParserUtil.parse(this.sql);
-            // 替换表名
+            // ReplaceTable name
             Table table = new Table();
             table.setName(targetTableName);
             insert.setTable(table);
-            // 替换字段
+            // ReplaceField
             List<Column> columns = insert.getColumns();
             for (Column column : columns) {
                 fieldMappingList.stream().filter(x->x.getSource().getName().equals(column.getColumnName().replaceAll("\"", ""))).findFirst()

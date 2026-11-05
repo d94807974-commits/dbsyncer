@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * {@link NoticeRuleProfile} 实现。
+ * {@link NoticeRuleProfile} Achieved.
  *
  * @author wuji
  * @version 1.0.0

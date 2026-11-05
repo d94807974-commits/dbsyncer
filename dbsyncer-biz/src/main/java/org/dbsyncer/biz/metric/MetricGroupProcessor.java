@@ -8,9 +8,9 @@ import org.dbsyncer.biz.vo.MetricResponseVO;
 import java.util.List;
 
 /**
- * 合并分组指标
+ * MergeGroupIndicators
  *
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2025-04-15 23:13
  */

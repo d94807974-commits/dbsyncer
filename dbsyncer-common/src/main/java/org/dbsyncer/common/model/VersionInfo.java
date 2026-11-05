@@ -4,16 +4,16 @@
 package org.dbsyncer.common.model;
 
 /**
- * 版本信息
+ * VersionInfo
  *
  * @version 1.0.0
- * @Author 穿云
+ * @Author The clouds.
  * @Date 2026-01-22 00:30
  */
 public final class VersionInfo {
 
     /**
-     * 大版本-小版本-编号-年-月-日-序号
+     * LargeVersion-SmallVersion-Number-year-month-day-yearNo.
      */
     private long version;
 

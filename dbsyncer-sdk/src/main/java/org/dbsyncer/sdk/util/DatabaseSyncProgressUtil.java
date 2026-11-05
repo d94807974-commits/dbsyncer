@@ -14,9 +14,9 @@ import java.math.RoundingMode;
 import java.util.List;
 
 /**
- * 整库迁移任务进度：按组合模式计算（仅结构 / 仅数据 / 都同步）。
- * <p>结构+数据都开时分阶段：结构未完按结构表进度 0~100；结构完成后按数据行级进度重新从 0~100。
- * <p>数据阶段按「表等权」汇总各表行级完成度，避免仅少数表回写 sourceTotal 时全局分母偏小导致进度虚高。
+ * Library Migration TaskProgress: PressCompositeMode Count (structure / only)Data / Synchronise.
+ * <p>Structure+When Sovereignty is open,minPhase: Structure incomplete by chart degrees0~100；StructureFinishThen reset from the data level0~100。
+ * <p>Data phase by「Qualifications」Summary of table rowsFinishdegrees, avoid only a few returns WritesourceTotal GlobalminThe mother's smallness Factes that progress is weak.
  *
  * @author wuji
  * @version 1.0.0
@@ -30,14 +30,14 @@ public final class DatabaseSyncProgressUtil {
     }
 
     /**
-     * 计算进度百分比 0~100。
+     * Count 100% progressminThat's right.0~100。
      *
-     * @param task                任务配置（开关）
-     * @param tableGroupSize      表映射总数
-     * @param roundDone           任务级 Meta 是否本轮已完成（STATE=DONE）
-     * @param tableSnapshots      各表明细 Meta 快照（可含 null）
-     * @param syncedRowsPerTable  各表已同步行（与 snapshots 同序，可空）
-     * @param sourceTotalPerTable 各表源端总行（与 snapshots 同序，可空；无缓存为 0）
+     * @param task                TasksConfigure（Switchtip)
+     * @param tableGroupSize      MapTotal
+     * @param roundDone           TasksAdministrationMeta YesNoCurrent roundCompleted（STATE=DONE）
+     * @param tableSnapshots      It's all very specific.Meta Reliablenull）
+     * @param syncedRowsPerTable  Watches are on foot.and snapshots Reciprocal, empty)
+     * @param sourceTotalPerTable TablesSourceTotal (%)and snapshots (a) In the same order, be empty;NoneCache As0）
      */
     public static BigDecimal calculateProgressPercent(DatabaseSyncTask task, int tableGroupSize,
                                                       boolean roundDone,
@@ -62,7 +62,7 @@ public final class DatabaseSyncProgressUtil {
         if (!schema) {
             return dataPart.multiply(HUNDRED).setScale(2, RoundingMode.HALF_UP);
         }
-        // 都同步：结构阶段满 100 后再进入数据阶段（数据进度重新从 0 计）
+        // Synchronization: full structure phase100 Then we're going to the data phase.0 Total
         BigDecimal schemaPart = ratio(countSchemaDoneTables(tableSnapshots), tableGroupSize);
         if (schemaPart.compareTo(ONE) < 0) {
             return schemaPart.multiply(HUNDRED).setScale(2, RoundingMode.HALF_UP);
@@ -71,7 +71,7 @@ public final class DatabaseSyncProgressUtil {
     }
 
     /**
-     * 列表展示的已完成表数：启用阶段均已完成的表。
+     * ListPresentedCompletedTable:EnablePhasesCompletedThe table.
      */
     public static int countCompletedTables(DatabaseSyncTask task, int totalTableCount, boolean roundDone,
                                            List<CommonTaskSnapshot> tableSnapshots) {
@@ -94,7 +94,7 @@ public final class DatabaseSyncProgressUtil {
     }
 
     /**
-     * 数据进度：每张表等权。单表完成度 = 已完成 1；有 sourceTotal 则 synced/source；否则 0。
+     * Data progress: equal rights per table. FormFinishdegrees= Completed 1；Yes Notably.sourceTotal thensynced/source；Nothen0。
      */
     private static BigDecimal tableWeightedDataRatio(List<CommonTaskSnapshot> tableSnapshots,
                                                      List<Long> syncedRowsPerTable,
@@ -192,7 +192,7 @@ public final class DatabaseSyncProgressUtil {
     }
 
     /**
-     * 任务级 Meta.state 是否为本轮已完成（与 {@link org.dbsyncer.common.enums.CommonTaskStatusEnum#DONE} 同码）。
+     * TasksAdministrationMeta.state YesNoFor current cycleCompleted（and {@link org.dbsyncer.common.enums.CommonTaskStatusEnum#DONE} Same number.
      */
     public static boolean isRoundDone(Integer metaState) {
         return CommonTaskStatusEnum.isDone(metaState);

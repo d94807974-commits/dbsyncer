@@ -3,7 +3,7 @@ package org.dbsyncer.sdk.listener;
 import java.util.Map;
 
 /**
- * 数据变更监听器
+ * Data Change Listener
  *
  * @version 1.0.0
  * @Author AE86
@@ -12,35 +12,35 @@ import java.util.Map;
 public interface Watcher {
 
     /**
-     * 数据变更前置事件
+     * Data FactChangeFrontSetEvent
      *
      * @param context
      */
     void changeEventBefore(QuartzListenerContext context);
 
     /**
-     * 数据变更事件
+     * Data FactChangeEvent
      *
      * @param event
      */
     void changeEvent(ChangedEvent event);
 
     /**
-     * 持久化增量点事件
+     * EnduringIncrementalPoints 71Event
      *
      * @param snapshot
      */
     void flushEvent(Map<String, String> snapshot);
 
     /**
-     * 异常事件
+     * ErrorEvent
      *
      * @param e
      */
     void errorEvent(Exception e);
 
     /**
-     * 获取Meta更新时间
+     * AccessMetaUpdated at
      *
      * @return
      */

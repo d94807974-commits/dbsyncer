@@ -48,7 +48,7 @@ public class MappingController extends BaseController {
     private DataSyncService dataSyncService;
 
     /**
-     * 同步任务列表页面
+     * Sync taskListPageNoodles.
      */
     @GetMapping("/list")
     public String list(ModelMap model) {
@@ -56,7 +56,7 @@ public class MappingController extends BaseController {
     }
 
     /**
-     * 添加同步任务页面
+     * AddSync taskPageNoodles.
      */
     @GetMapping("/pageAdd")
     public String page(ModelMap model) {
@@ -135,7 +135,7 @@ public class MappingController extends BaseController {
     }
 
     /**
-     * 同步任务详情：按表映射汇总成功/失败数
+     * Sync taskDetails：Summary by MapSuccess/Failures
      */
     @PostMapping("/searchResult")
     @ResponseBody
@@ -278,7 +278,7 @@ public class MappingController extends BaseController {
         }
     }
 
-    @OperLog(type = OperLogType.MAPPING_UPDATE, message = "保存自定义表")
+    @OperLog(type = OperLogType.MAPPING_UPDATE, message = "Save Custom Table")
     @PostMapping(value = "/saveCustomTable")
     @ResponseBody
     public RestResult saveCustomTable(HttpServletRequest request) {
@@ -293,7 +293,7 @@ public class MappingController extends BaseController {
         }
     }
 
-    @OperLog(type = OperLogType.MAPPING_UPDATE, message = "删除自定义表")
+    @OperLog(type = OperLogType.MAPPING_UPDATE, message = "Delete custom table")
     @PostMapping(value = "/removeCustomTable")
     @ResponseBody
     public RestResult removeCustomTable(HttpServletRequest request) {
@@ -313,7 +313,7 @@ public class MappingController extends BaseController {
     public RestResult sync(HttpServletRequest request) {
         try {
             String requestBody = readRequestBody(request);
-            logger.info("接收同步数据：{}", requestBody);
+            logger.info("Received Sync Data: {", requestBody);
             DataSyncRequest syncRequest = JsonUtil.jsonToObj(requestBody, DataSyncRequest.class);
             dataSyncService.syncBatch(syncRequest);
             return RestResult.restSuccess(null);

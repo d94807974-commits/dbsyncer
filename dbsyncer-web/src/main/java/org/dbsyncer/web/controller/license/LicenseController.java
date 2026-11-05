@@ -76,17 +76,17 @@ public class LicenseController extends BaseController {
     public static final String STATUS = "status";
     public static final String DATA = "data";
     public static final String MSG = "msg";
-    // 到期提醒10天内
+    // DueOrganisation10daysInternal
     private static final long TEN_DAYS_MILLIS = 864000000L;
-    // 全部正常
+    // AllNormal
     private static final String PRODUCT_STATUS_NORMAL = "normal";
-    // 无正常、有即将过期
+    // NoneNormal、Yes.Expiring soon
     private static final String PRODUCT_STATUS_EXPIRING = "expiring";
-    // 全部过期
+    // AllExpiry
     private static final String PRODUCT_STATUS_EXPIRED = "expired";
-    // 有正常 + 有异常
+    // Yes.Normal + Yes.Error
     private static final String PRODUCT_STATUS_PARTIAL = "partial";
-    // 无产品列表
+    // NoneProductsList
     private static final String PRODUCT_STATUS_INACTIVE = "inactive";
 
     @RequestMapping("")
@@ -170,7 +170,7 @@ public class LicenseController extends BaseController {
         infoVo.setEditionName(licenseService.getEditionEnum().getMessage());
         ProductInfo productInfo = licenseService.getProductInfo();
         if (productInfo == null || CollectionUtils.isEmpty(productInfo.getProducts())) {
-            // 专业版软件已部署，但尚未激活任何产品授权
+            // ProfessionalSoftware deployed, but not yet availableNot activatedAny productAuthorization
             infoVo.setEditionStatus(PRODUCT_STATUS_INACTIVE);
             return RestResult.restSuccess(infoVo);
         }
@@ -185,7 +185,7 @@ public class LicenseController extends BaseController {
     }
 
     /**
-     * 按全部产品聚合版本状态。
+     * PressAllProduct aggregationVersionStatus。
      */
     private void fillAggregateStatus(EditionInfoVO infoVo, List<ProductStatusVO> products) {
         long normalCount = products.stream()
@@ -198,7 +198,7 @@ public class LicenseController extends BaseController {
                 .filter(product -> PRODUCT_STATUS_EXPIRED.equals(product.getStatus()))
                 .count();
 
-        // 需要关注异常的产品
+        // Needing attention.Errorproducts
         List<ProductStatusVO> attentionProducts = products.stream()
                 .filter(product -> !PRODUCT_STATUS_NORMAL.equals(product.getStatus()))
                 .collect(Collectors.toList());
@@ -257,15 +257,15 @@ public class LicenseController extends BaseController {
             ProductStatusVO product = attentionProducts.get(0);
             return product.getName() + " " + statusLabel(product.getStatus());
         }
-        return attentionProducts.size() + " 项需关注";
+        return attentionProducts.size() + " Item for attention";
     }
 
     private String statusLabel(String status) {
         if (PRODUCT_STATUS_EXPIRING.equals(status)) {
-            return "即将过期";
+            return "Expiring soon";
         }
         if (PRODUCT_STATUS_EXPIRED.equals(status)) {
-            return "已过期";
+            return "Expired";
         }
         return "";
     }
@@ -273,34 +273,34 @@ public class LicenseController extends BaseController {
     private void formatEffectiveTimeContent(EditionInfoVO infoVo) {
         LocalDateTime before = LocalDateTime.ofInstant(Instant.ofEpochMilli(infoVo.getCurrentTime()), ZoneId.systemDefault());
         LocalDateTime after = LocalDateTime.ofInstant(Instant.ofEpochMilli(infoVo.getEffectiveTime()), ZoneId.systemDefault());
-        // 1. 先算整年
+        // 1. know the whole year.
         long years = ChronoUnit.YEARS.between(before, after);
         before = before.plusYears(years);
-        // 2. 再算整月
+        // 2. The whole month.
         long months = ChronoUnit.MONTHS.between(before, after);
         if (years > 0) {
-            infoVo.setEffectiveContent(String.format("还剩%d年%d个月", years, months));
+            infoVo.setEffectiveContent(String.format("%d %d months remaining", years, months));
             return;
         }
-        // 3. 再算整天
+        // 3. Rewinding.days
         before = before.plusMonths(months);
         long days = ChronoUnit.DAYS.between(before, after);
         days = days <= 0 ? 0 : days;
         if (months > 0) {
-            infoVo.setEffectiveContent(String.format("还剩%d个月%d天", months, days));
+            infoVo.setEffectiveContent(String.format("%d months %d days remaining", months, days));
             return;
         }
-        // 4. 最后算小时
+        // 4. Finally.hours
         before = before.plusDays(days);
         long hours = ChronoUnit.HOURS.between(before, after);
         hours = hours <= 0 ? 0 : hours;
-        infoVo.setEffectiveContent(String.format("还剩%d天%d小时", days, hours));
+        infoVo.setEffectiveContent(String.format("Peaceday %d hours left", days, hours));
     }
 
     private String getLicenseContent(Map<String, String> params) throws IOException {
         ProductInfo info = JsonUtil.jsonToObj(JsonUtil.objToJson(params), ProductInfo.class);
         UserInfo userInfo = getUserInfo();
-        Assert.notNull(userInfo, "会话过期，请重新登录");
+        Assert.notNull(userInfo, "Acting expired session, please re-entry");
         info.setLicenseKey(licenseService.getKey());
         info.setOsName(System.getProperty("os.name"));
         info.setVersion(Version.CURRENT.getVersion());
@@ -308,7 +308,7 @@ public class LicenseController extends BaseController {
     }
 
     public String invoke(ProductInfo info) throws IOException {
-        // 授权服务历史协议：body 为 URL 编码后的 JSON，Content-Type 仍为 application/json
+        // AuthorizationService history agreements:body YesURL EncodedJSON，Content-Type Stillapplication/json
         String data = URLEncoder.encode(JsonUtil.objToJson(info), "UTF-8");
         try {
             HttpResult response = HttpClientUtil.post(serverAddress, data, ContentType.APPLICATION_JSON);
@@ -320,19 +320,19 @@ public class LicenseController extends BaseController {
                         return result.get(DATA);
                     }
                 }
-                throw new IllegalArgumentException(result == null ? "授权服务返回异常" : result.get(MSG));
+                throw new IllegalArgumentException(result == null ? "Authorized service returns abnormal." : result.get(MSG));
             }
         } catch (IllegalArgumentException e) {
             throw e;
         } catch (HttpHostConnectException e) {
-            throw new IllegalArgumentException("网络连接异常，无法激活");
+            throw new IllegalArgumentException("Network connection is abnormal. Could not activate");
         } catch (Exception e) {
             if (e instanceof IOException) {
                 throw (IOException) e;
             }
             throw new IOException(e);
         }
-        throw new IllegalArgumentException("授权服务地址异常，无法激活");
+        throw new IllegalArgumentException("Authorized 287 Address Unable to Activate");
     }
 
     private UserInfo getUserInfo() {

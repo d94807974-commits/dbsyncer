@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * {@link RbacProfile} 实现。
+ * {@link RbacProfile} Achieved.
  *
  * @author wuji
  * @version 1.0.0

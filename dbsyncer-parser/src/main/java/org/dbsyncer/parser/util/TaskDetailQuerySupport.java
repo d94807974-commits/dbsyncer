@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * 任务明细查询 SQL 片段拼装（WHERE / ORDER BY / taskId 校验），便于单测。
+ * TasksDetailed queriesSQL Snippet Collapse()WHERE / ORDER BY / taskId Similarly, it can be easily measured.
  *
  * @author wuji
  * @version 1.0.0
@@ -28,19 +28,19 @@ public final class TaskDetailQuerySupport {
     }
 
     /**
-     * 校验任务 ID（仅允许字母数字，防止分表名注入）。
+     * Verify INTRODUCTIONTasks ID（Allow alphanumeric only to preventminTable nameInjection.
      */
     public static void assertTaskId(String taskId) {
         if (StringUtil.isBlank(taskId) || !TASK_ID_PATTERN.matcher(taskId).matches()) {
-            throw new ParserException("非法任务ID");
+            throw new ParserException("Illegal task ID");
         }
     }
 
     /**
-     * 解析 ORDER BY：显式 orderBy &gt; statusMetric 默认排序 &gt; UPDATE_TIME。
+     * ParsingORDER BY：VisibleorderBy &gt; statusMetric Default Sorting&gt; UPDATE_TIME。
      */
     public static String resolveOrderSql(TaskDetailQuery query) {
-        Assert.notNull(query, "查询参数不能为空");
+        Assert.notNull(query, "Query parameters cannot be empty");
         if (query.getOrderBy() != null) {
             return query.getOrderBy().getSql();
         }
@@ -51,11 +51,11 @@ public final class TaskDetailQuerySupport {
     }
 
     /**
-     * 拼装 WHERE，并向 args 追加占位参数。
+     * CollapseWHERE，Andargs Additional positionParameter。
      */
     public static String buildWhere(TaskDetailQuery query, List<Object> args) {
-        Assert.notNull(query, "查询参数不能为空");
-        Assert.notNull(args, "参数列表不能为空");
+        Assert.notNull(query, "Query parameters cannot be empty");
+        Assert.notNull(args, "The argument list cannot be empty");
         StringBuilder where = new StringBuilder("WHERE tg.TASK_ID = ? ");
         args.add(query.getTaskId());
         if (StringUtil.isNotBlank(query.getDetailId())) {
@@ -67,7 +67,7 @@ public final class TaskDetailQuerySupport {
             args.add(query.getDetailType());
         }
         if (query.getDetailStatus() != null) {
-            Assert.notNull(query.getStatusMetric(), "按状态筛选时 statusMetric 不能为空");
+            Assert.notNull(query.getStatusMetric(), "StatusMetric cannot be empty during status filtering");
             String column = query.getStatusMetric().getColumn();
             if (query.getDetailStatus() == TaskDetailStatusEnum.SUCCESS) {
                 where.append("AND ").append(column).append(" = 0 ");

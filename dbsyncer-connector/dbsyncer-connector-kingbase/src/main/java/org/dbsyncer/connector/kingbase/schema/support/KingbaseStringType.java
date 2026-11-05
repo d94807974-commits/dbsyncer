@@ -24,7 +24,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-06 18:30
  */
@@ -32,23 +32,23 @@ public final class KingbaseStringType extends StringType {
 
     private enum TypeEnum {
 
-        // 标准字符串类型
+        // Standard StringType
         UUID("uuid"), VARCHAR("varchar"), TEXT("text"), CHAR("char"), BPCHAR("bpchar"), NAME("name"),
-        // JSON 类型
+        // JSON Type
         JSON("json"), JSONB("jsonb"),
-        // 几何类型
+        // GeometryType
         POINT("point"),
-        // PostGIS 扩展类型
+        // PostGIS ExtensionType
         GEOMETRY("geometry"), GEOGRAPHY("geography"),
-        // 网络类型
+        // NetworkType
         INET("inet"), CIDR("cidr"), MACADDR("macaddr"), MACADDR8("macaddr8"),
-        // 文本搜索类型
+        // TextSearchType
         TSQUERY("tsquery"), TSVECTOR("tsvector"),
-        // 范围类型
+        // ScopeType
         TSRANGE("tsrange"), TSTZRANGE("tstzrange"), DATERANGE("daterange"), INT4RANGE("int4range"), INT8RANGE("int8range"), NUMRANGE("numrange"),
-        // 位串类型
+        // BitstringType
         BIT("bit"), BIT_VARYING("bit varying"), VARBIT("varbit"),
-        // 其他类型
+        // OtherType
         CITEXT("citext"), XML("xml"), PG_LSN("pg_lsn"), TXID_SNAPSHOT("txid_snapshot");
         private final String value;
 
@@ -108,7 +108,7 @@ public final class KingbaseStringType extends StringType {
 
     @Override
     protected Object convert(Object val, Field field) {
-        // 规范化类型名，处理带 schema 前缀（如 "public"."geometry"）的情况
+        // NormativeTypeName, handle tape.schema Prefix(s)"public"."geometry"）Situation
         String rawTypeName = PostgreSQLSchemaResolver.normalizeTypeName(field.getTypeName());
         if (PostgreSQLSchemaResolver.isArrayType(rawTypeName)) {
             if (val instanceof String) {
@@ -118,10 +118,10 @@ public final class KingbaseStringType extends StringType {
                 return val;
             }
         }
-        // 将类型名转大写并替换空格为下划线，以匹配 TypeEnum
+        // WillTypeCapitaliseReplaceSpace is underlined to matchTypeEnum
         String enumName = rawTypeName.toUpperCase().replace(" ", "_");
         KingbaseStringType.TypeEnum typeEnum = KingbaseStringType.TypeEnum.valueOf(enumName);
-        // BIT 类型需要特殊处理：支持 Integer、Boolean、Number、String 等多种输入
+        // BIT TypeNeed for special treatment: supportInteger、Boolean、Number、String Wait for multiple inputs
         if (typeEnum == KingbaseStringType.TypeEnum.BIT) {
             return convertToBit(val);
         }
@@ -133,7 +133,7 @@ public final class KingbaseStringType extends StringType {
                     try {
                         return UUIDUtil.fromString(strVal);
                     } catch (IllegalArgumentException e) {
-                        // UUID 格式无效时返回 null，避免抛出异常
+                        // UUID FormatNoneTimeBack null，Avoid ThrowingError
                         return null;
                     }
                 case POINT:
@@ -143,9 +143,9 @@ public final class KingbaseStringType extends StringType {
                 case CHAR:
                 case BPCHAR:
                 case NAME:
-                    // 标准字符串类型，直接返回
+                    // Standard StringType，DirectBack
                     return val;
-                // 以下类型需要用 PGobject 包装
+                // BelowTypeI need it.PGobject Packaging
                 case JSON:
                 case JSONB:
                 case GEOMETRY:
@@ -177,19 +177,19 @@ public final class KingbaseStringType extends StringType {
     }
 
     /**
-     * 将值转换为 PostgreSQL bit 类型（PGobject 包装）。
-     * 支持 Integer、Boolean、Number、String 等输入，统一转换为 bit 字符串。
+     * WillValueConvertYesPostgreSQL bit Type（PGobject Packaging).
+     * SupportInteger、Boolean、Number、String Waiting for input.ConvertYesbit String.
      */
     private Object convertToBit(Object val) {
         String bitStr;
         if (val instanceof Boolean) {
             bitStr = ((Boolean) val) ? "1" : "0";
         } else if (val instanceof Number) {
-            // Integer、Short、Long 等：非 0 为 "1"，0 为 "0"
+            // Integer、Short、Long etc.: non0 Yes"1"，0 Yes"0"
             bitStr = ((Number) val).intValue() != 0 ? "1" : "0";
         } else if (val instanceof String) {
             String s = (String) val;
-            // 字符串 "true"/"1" 等转为 "1"，其他转为 "0"
+            // String"true"/"1" Change to"1"，OtherConvert to"0"
             if ("true".equalsIgnoreCase(s) || "1".equals(s) || "t".equalsIgnoreCase(s)) {
                 bitStr = "1";
             } else {

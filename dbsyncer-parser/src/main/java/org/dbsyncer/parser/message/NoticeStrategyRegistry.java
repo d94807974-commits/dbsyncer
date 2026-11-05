@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 事件类型与策略一对一注册表。
+ * EventTypeandStrategy one-on-one registration form.
  *
  * @author wuji
  * @version 1.0.0
@@ -34,7 +34,7 @@ public final class NoticeStrategyRegistry {
     }
 
     /**
-     * 按通知类型匹配唯一策略；未配置返回 {@code null}。
+     * By NotificationTypematching only policy;noConfigureBack {@code null}。
      */
     public NoticeStrategy match(NoticeTypeEnum noticeType) {
         if (noticeType == null) {

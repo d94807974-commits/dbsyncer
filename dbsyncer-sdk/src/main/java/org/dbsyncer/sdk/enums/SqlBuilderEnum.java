@@ -20,53 +20,53 @@ import org.dbsyncer.sdk.constant.ConnectorConstant;
 public enum SqlBuilderEnum {
 
     /**
-     * 插入SQL生成器
+     * InsertSQLGenerateDevice
      */
     INSERT(ConnectorConstant.OPERTION_INSERT, new SqlBuilderInsert()),
     /**
-     * 修改SQL生成器
+     * UpdateSQLGenerateDevice
      */
     UPDATE(ConnectorConstant.OPERTION_UPDATE, new SqlBuilderUpdate()),
     /**
-     * 删除SQL生成器
+     * DeleteSQLGenerateDevice
      */
     DELETE(ConnectorConstant.OPERTION_DELETE, new SqlBuilderDelete()),
     /**
-     * 查询SQL生成器
+     * QuestionSQLGenerateDevice
      */
     QUERY(ConnectorConstant.OPERTION_QUERY, new SqlBuilderQuery()),
 
     /**
-     * 查询目标 SQL生成器
+     * QuestionObjective Combined SQLGenerateDevice
      */
     QUERY_TARGET(ConnectorConstant.OPERTION_QUERY_TARGET, new SqlBuilderQuery()),
 
     /**
-     * 查询源表游标SQL生成器
+     * QuestionSource tableCursorSQLGenerateDevice
      */
     QUERY_CURSOR(ConnectorConstant.OPERTION_QUERY_CURSOR, new SqlBuilderQueryCursor()),
 
     /**
-     * 查询目标表游标SQL生成器
+     * QuestionTarget tableCursorSQLGenerateDevice
      */
     QUERY_TARGET_CURSOR(ConnectorConstant.OPERTION_QUERY_TARGET_CURSOR, new SqlBuilderQueryCursor()),
 
     /**
-     * 查询总数
+     * QuestionTotal
      */
     QUERY_COUNT(ConnectorConstant.OPERTION_QUERY_COUNT, new SqlBuilderQueryCount()),
     /**
-     * 查询目标总数
+     * QuestionObjective CombinedTotal
      */
     TARGET_QUERY_COUNT(ConnectorConstant.TARGET_QUERY_COUNT, new SqlBuilderQueryCount());
 
     /**
-     * SQL构造器名称
+     * SQLConstructorName
      */
     private final String name;
 
     /**
-     * SQL构造器
+     * SQLConstructor
      */
     private final SqlBuilder sqlBuilder;
 

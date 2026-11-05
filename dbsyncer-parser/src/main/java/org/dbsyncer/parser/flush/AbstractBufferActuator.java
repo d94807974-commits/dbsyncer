@@ -29,9 +29,9 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * 任务缓存执行器
- * <p>1. 任务优先进入缓存队列
- * <p>2. 将任务分区合并，批量执行
+ * TasksCache Executor
+ * <p>1. TasksPriority for Cache Queue
+ * <p>2. WillTasksminArea consolidation, bulk execution
  *
  * @author AE86
  * @version 1.0.0
@@ -65,20 +65,20 @@ public abstract class AbstractBufferActuator<Request extends BufferRequest, Resp
             aClass = aClass.getSuperclass();
             level--;
         }
-        Assert.notNull(responseClazz, String.format("%s的父类%s泛型参数Response为空.", getClass().getName(), AbstractBufferActuator.class.getName()));
+        Assert.notNull(responseClazz, String.format("%s' parent %s pane Response is empty.", getClass().getName(), AbstractBufferActuator.class.getName()));
     }
 
     /**
-     * 初始化配置
+     * InitializeConfigure
      */
     protected void buildConfig() {
-        Assert.notNull(config, "请先配置缓存执行器，setConfig(BufferActuatorConfig config)");
+        Assert.notNull(config, "Please configure the cache implementer, setConfig (BufferActuatorConfig config)");
         buildQueueConfig();
         scheduledTaskService.start(config.getBufferPeriodMillisecond(), this);
     }
 
     /**
-     * 初始化缓存队列配置
+     * InitializeCache Que InstitutionConfigure
      */
     protected void buildQueueConfig() {
         taskLock = new ReentrantLock();
@@ -86,17 +86,17 @@ public abstract class AbstractBufferActuator<Request extends BufferRequest, Resp
     }
 
     /**
-     * 生成分区key
+     * GenerateminSector Entitieskey
      */
     protected abstract String getPartitionKey(Request request);
 
     /**
-     * 分区
+     * minSector Entities
      */
     protected abstract void partition(Request request, Response response);
 
     /**
-     * 同步任务是否运行中
+     * Sync taskYesNoRunning
      */
     public boolean isRunning(BufferRequest request) {
         Meta meta = taskMetaProfile.getMeta(request.getTaskId());
@@ -104,19 +104,19 @@ public abstract class AbstractBufferActuator<Request extends BufferRequest, Resp
     }
 
     /**
-     * 是否跳过分区处理
+     * YesNoSkip ActionsminArea processing
      */
     protected boolean skipPartition(Request nextRequest, Response response) {
         return false;
     }
 
     /**
-     * 批处理
+     * Batch
      */
     public abstract void pull(Response response);
 
     /**
-     * 批量处理分区数据
+     * Batch processingminArea data
      */
     protected void process(Map<String, Response> map) {
         map.forEach((key, response) -> {
@@ -127,19 +127,19 @@ public abstract class AbstractBufferActuator<Request extends BufferRequest, Resp
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             } finally {
-                // 及时清空列表引用，便于 GC 回收，减轻 parser 侧 LinkedList 保留内存
+                // TimelyClearListReference, EasyGC Recovery, mitigationparser SideLinkedList ReservationsMemory
                 response.clearDataList();
             }
         });
     }
 
     /**
-     * 提交任务失败
+     * SubmitTasksFailed
      */
     protected abstract void offerFailed(BlockingQueue<Request> queue, Request request);
 
     /**
-     * 统计消费 TPS
+     * Statistical consumptionTPS
      */
     protected void meter(TimeRegistry timeRegistry, long count) {
 
@@ -183,10 +183,10 @@ public abstract class AbstractBufferActuator<Request extends BufferRequest, Resp
     }
 
     /**
-     * 队列为空且当前未持有消费锁（无 in-flight submit/process）时视为空闲。
-     * <p>DDL 入队栅栏应等待空闲，而不仅是 queue.isEmpty()。
+     * Team is empty and currently does not hold a consumption lock.None in-flight submit/process）ConsiderFree。
+     * <p>DDL The entry fence should wait.Free，And not only.Yes queue.isEmpty()。
      *
-     * @return 空闲返回 true
+     * @return FreeBack true
      */
     public boolean isIdle() {
         if (queue != null && !queue.isEmpty()) {

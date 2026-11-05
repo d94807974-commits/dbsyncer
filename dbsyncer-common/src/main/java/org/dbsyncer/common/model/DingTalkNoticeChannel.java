@@ -4,7 +4,7 @@
 package org.dbsyncer.common.model;
 
 /**
- * 钉钉告警配置
+ * Nail.Police!Configure
  *
  * @author AE86
  * @version 1.0.0

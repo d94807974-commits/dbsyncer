@@ -14,9 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 加密工具类测试
+ * Encryption Tool ClassTest
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  */
 public class CryptoUtilTest {
@@ -25,29 +25,29 @@ public class CryptoUtilTest {
 
     @Before
     public void setUp() {
-        // 生成RSA密钥对
+        // Generate RSA KeyYeah.
         Map<String, Object> testData = new HashMap<>();
-        testData.put("name", "测试数据");
+        testData.put("name", "Test Data");
         testData.put("value", 12345);
         testData.put("timestamp", System.currentTimeMillis());
-        logger.info("测试数据: {}", testData);
+        logger.info("Test data: {", testData);
     }
 
     @Test
     public void testGenerateAESKey() {
-        logger.info("=== 测试生成AES密钥 ===");
+        logger.info("== sync, corrected by elderman ==");
         String aesKey = CryptoUtil.generateAESKeyPair();
-        Assert.assertNotNull("AES密钥不应为空", aesKey);
-        logger.info("生成的AES密钥: {}", aesKey);
+        Assert.assertNotNull("AES keys should not be empty", aesKey);
+        logger.info("Generated AES key: }", aesKey);
     }
 
     @Test
     public void testLargeDataEncryption() {
-        logger.info("=== 测试大数据加密 ===");
-        // 生成较大的测试数据（约100KB）
+        logger.info("== sync, corrected by elderman ==");
+        // GenerateLargeTest Data（Approximately100KB）
         StringBuilder largeData = new StringBuilder();
         for (int i = 0; i < 10000; i++) {
-            largeData.append("这是测试数据").append(i).append(",");
+            largeData.append("Here's the test data.").append(i).append(",");
         }
         String largeDataStr = largeData.toString();
 
@@ -61,7 +61,7 @@ public class CryptoUtilTest {
         String decryptedData = CryptoUtil.decryptData(encryptedResult.getEncryptedData(), encryptedResult.getIv(), aesKey);
         long decryptTime = System.currentTimeMillis() - startTime;
 
-        Assert.assertEquals("大数据解密后应相同", largeDataStr, decryptedData);
-        logger.info("大数据加密耗时 - 加密: {}ms, 解密: {}ms", encryptTime, decryptTime);
+        Assert.assertEquals("Big data decryption should be identical.", largeDataStr, decryptedData);
+        logger.info("Big Data Encryption Time - Encryption: {ms, Decrypt: {ms", encryptTime, decryptTime);
     }
 }

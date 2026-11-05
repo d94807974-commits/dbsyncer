@@ -73,7 +73,7 @@ public class PluginController {
                     String filename = fileName(file.getOriginalFilename());
                     pluginService.checkFileSuffix(filename);
                     if (!PluginFile.isSafeName(filename)) {
-                        throw new BizException("插件文件名不合法，仅支持字母、数字、点、下划线和短横线");
+                        throw new BizException("Invalid plugin filename; only letters, digits, dots, underscores and hyphens are allowed");
                     }
                     pluginService.unload(filename);
                     File dest = new File(filePath, filename);
@@ -109,9 +109,9 @@ public class PluginController {
             clusterService.removePlugin(name);
             return RestResult.restSuccess("ok");
         } catch (Exception e) {
-            // 本机已卸载，集群失败单独提示，避免重试时变成「文件不存在」
+            // This is offloaded, cluster.FailedAlone.Notice，AvoidTry againTime becomes「Documentationdoes not exist」
             logger.error(e.getLocalizedMessage(), e);
-            return RestResult.restFail("本机已删除。" + e.getMessage());
+            return RestResult.restFail("This machine has been deleted." + e.getMessage());
         }
     }
 
@@ -155,7 +155,7 @@ public class PluginController {
     }
 
     /**
-     * 响应
+     * Response
      *
      * @param response
      * @param result

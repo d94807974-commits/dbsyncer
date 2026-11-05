@@ -10,7 +10,7 @@ import org.dbsyncer.sdk.filter.Query;
 import java.util.List;
 
 /**
- * 资源 ACL 读写。
+ * Resource ACL Read and write.
  *
  * @author wuji
  * @version 1.0.0
@@ -23,7 +23,7 @@ public interface ResourceAclProfile {
     List<ResourceAcl> listAll();
 
     /**
-     * 分页查询资源授权（条件由 {@link Query} 携带）。
+     * minPageQuestionResource authorization（ConditionBy{@link Query} Carry.
      */
     Paging query(Query query);
 
@@ -38,12 +38,12 @@ public interface ResourceAclProfile {
     void remove(String id);
 
     /**
-     * 按资源类型 + 资源 ID 批量删除（资源被删除时收尾）。
+     * PressResource type + Resource ID BatchDelete（ResourceByDeleteEnd of story.
      */
     void removeByResource(String resourceType, String resourceId);
 
     /**
-     * 按主体类型 + 主体 ID 批量删除（用户/角色被删除时收尾）。
+     * By SubjectType + SubjectID BatchDelete（User/roleByDeleteEnd of story.
      */
     void removeBySubject(int subjectType, String subjectId);
 }

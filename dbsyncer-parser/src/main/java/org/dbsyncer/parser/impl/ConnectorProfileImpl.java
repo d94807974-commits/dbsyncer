@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * {@link ConnectorProfile} 实现。
+ * {@link ConnectorProfile} Achieved.
  *
  * @author wuji
  * @version 1.0.0
@@ -140,7 +140,7 @@ public class ConnectorProfileImpl extends AbstractConfigModelProfile<Connector> 
             query.addFilter(ConfigConstant.CONNECTOR_IS_TARGET, 1);
         }
         if (!CollectionUtils.isEmpty(ids)) {
-            // InFilter 需要与 IN 占位一一对应的绑定值，不能再包一层 singletonList
+            // InFilter Yes.and IN The one-to-one binding.Value，I can't afford another one.singletonList
             query.getBooleanFilter().add(new InFilter(ConfigConstant.CONFIG_MODEL_ID, new ArrayList<>(ids)));
         }
         query.addOrderBy(ConfigConstant.CONFIG_MODEL_UPDATE_TIME, SortEnum.DESC);

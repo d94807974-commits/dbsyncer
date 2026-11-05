@@ -22,9 +22,9 @@ public class UserConfigChecker extends AbstractChecker {
     @Override
     public ConfigModel checkAddConfigModel(Map<String, String> params) {
         UserConfig config = new UserConfig();
-        config.setName("用户配置");
+        config.setName("User Configuration");
 
-        // 修改基本配置
+        // UpdateBasicConfigure
         this.modifyConfigModel(config, params);
         return config;
     }

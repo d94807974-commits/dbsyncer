@@ -4,7 +4,7 @@ import org.dbsyncer.common.util.StringUtil;
 import org.dbsyncer.parser.convert.AbstractHandler;
 
 /**
- * 去掉尾字符
+ * Remove End Character
  *
  * @author AE86
  * @version 1.0.0

@@ -10,7 +10,7 @@ import java.text.ParseException;
 import java.time.format.DateTimeFormatter;
 
 /**
- * 字符串转日期自定义格式
+ * String rotationCustomFormat
  *
  * @author wuji
  */

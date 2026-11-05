@@ -12,9 +12,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 达梦双精度浮点（含 FLOAT / DOUBLE PRECISION）
+ * D'Artagnan.Outlook saluteInteriorFLOAT / DOUBLE PRECISION）
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-07-18
  */

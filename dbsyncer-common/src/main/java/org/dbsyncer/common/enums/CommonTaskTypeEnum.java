@@ -7,36 +7,36 @@ import org.dbsyncer.common.model.ConfigModel;
 import org.dbsyncer.common.util.StringUtil;
 
 /**
- * 任务类型枚举
+ * Task TypeEnumeration
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-03-22 19:52
  */
 public enum CommonTaskTypeEnum {
 
     /**
-     * 同步任务类型
+     * Sync taskType
      */
     MAPPING("mapping", "org.dbsyncer.parser.model.Mapping"),
 
     /**
-     * 订正校验
+     * Data validation
      */
     VALIDATE_SYNC("validateSync", "org.dbsyncer.sdk.model.ValidateSyncTask"),
 
     /**
-     * 整库迁移
+     * Database migration
      */
     DATABASE_SYNC("databaseSync", "org.dbsyncer.sdk.model.DatabaseSyncTask");
 
     /**
-     * 配置类型 code（与 {@code ConfigModel#type} / 存储 TYPE 列一致）
+     * ConfigureType code（and {@code ConfigModel#type} / StorageTYPE Columns aligned)
      */
     private final String code;
 
     /**
-     * 对应 ConfigModel 实现类
+     * CorrespondConfigModel Achieved class
      */
     private final Class<? extends ConfigModel> clazz;
 
@@ -46,10 +46,10 @@ public enum CommonTaskTypeEnum {
     }
 
     /**
-     * 按名称或 code 解析任务类型。
+     * PressNameorcode ParsingTask Type。
      *
-     * @param typeStr 任务类型字符串（枚举名或驼峰 code）
-     * @return 任务类型枚举；无法识别返回 null
+     * @param typeStr Task TypeString (number of names or camels)code）
+     * @return Task Type(a) Enumeration;NoneLegal RecognitionBack null
      */
     public static CommonTaskTypeEnum parse(String typeStr) {
         if (StringUtil.isBlank(typeStr)) {
@@ -64,10 +64,10 @@ public enum CommonTaskTypeEnum {
     }
 
     /**
-     * 导入配置包专用：将历史大写 TYPE 规范为当前 code；运行时路径勿依赖。
+     * Import ConfigurationSpecial: historical capitalTYPE Code as Currentcode；Run-time path does not depend on.
      *
-     * @param typeStr 导入包中的 type
-     * @return 规范后的 code；空白原样返回
+     * @param typeStr ImportPackagetype
+     * @return After regulationcode；SpaceBack
      */
     public static String normalizeImportType(String typeStr) {
         if (StringUtil.isBlank(typeStr)) {
@@ -87,7 +87,7 @@ public enum CommonTaskTypeEnum {
         try {
             return (Class<? extends ConfigModel>) Class.forName(className);
         } catch (ClassNotFoundException e) {
-            throw new IllegalStateException("任务类型实现类不存在: " + className, e);
+            throw new IllegalStateException("No task type realization category exists: " + className, e);
         }
     }
 

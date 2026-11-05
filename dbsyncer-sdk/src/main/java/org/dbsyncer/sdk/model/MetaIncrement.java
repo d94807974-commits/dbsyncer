@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Meta 计数原子增量参数
+ * Meta Count Atoms/29IncrementalParameter
  *
  * @author wuji
  * @version 1.0.0
@@ -19,27 +19,27 @@ import java.util.Map;
 public class MetaIncrement {
 
     /**
-     * 元数据ID
+     * MetadataID
      */
     private String taskId;
     /**
-     * 总量增量
+     * TotalIncremental
      */
     private long totalDelta;
     /**
-     * 成功数量增量
+     * SuccessesVolumeIncremental
      */
     private long successDelta;
     /**
-     * 失败数量增量
+     * FailuresVolumeIncremental
      */
     private long failDelta;
     /**
-     * 差异数量增量
+     * DiffsVolumeIncremental
      */
     private long diffDelta;
     /**
-     * 修复数量增量
+     * Number of repairsIncremental
      */
     private long fixedDelta;
 
@@ -123,9 +123,9 @@ public class MetaIncrement {
     }
 
     /**
-     * 转为存储增量 Map：key 与 {@link ConfigConstant} Meta 列名一致（total/success/fail/diff/fixed），值为 0 的项不入表。
+     * Convert to StorageIncremental Map：key and {@link ConfigConstant} Meta Unanimously listed (total/success/fail/diff/fixed），ValueYes0 item is not included in the table.
      *
-     * @return 非空增量；全为 0 时返回空 Map
+     * @return Non-emptyIncremental；For All0 TimeBackEmptyMap
      */
     public Map<String, Long> toDeltaMap() {
         Map<String, Long> deltas = new HashMap<>(5);

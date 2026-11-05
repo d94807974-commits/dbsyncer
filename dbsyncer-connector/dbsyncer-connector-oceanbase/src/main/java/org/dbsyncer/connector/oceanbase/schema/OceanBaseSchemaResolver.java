@@ -25,16 +25,16 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * OceanBase标准数据类型解析器
+ * OceanBaseStandard ContextTypeParser
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-04 00:20
  */
 public final class OceanBaseSchemaResolver extends AbstractDatabaseSchemaResolver {
 
     /**
-     * 规范化类型名：转大写
+     * NormativeTypeName: Capitalise
      */
     public static String normalizeTypeName(String typeName) {
         return typeName.trim().toUpperCase(Locale.ROOT);

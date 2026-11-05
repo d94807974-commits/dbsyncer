@@ -12,7 +12,7 @@ import org.dbsyncer.sdk.connector.database.AbstractDatabaseConnector;
 import java.util.Map;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-06 18:30
  */

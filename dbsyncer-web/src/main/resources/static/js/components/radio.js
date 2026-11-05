@@ -1,45 +1,45 @@
 /**
- * Radio Group 美化的圆形单选组件
- * 保持传统圆形 radio 外观，但更精致优雅
- * 使用方式：$('.radio-group').radioGroup(options)
+ * Radio Group Beautiful.Round Single Component
+ * Keep the traditional circle.radio Appearance, but more elegant.
+ * Usage:$('.radio-group').radioGroup(options)
  * 
- * @param {Object} options - 配置选项
- *   - theme: 主题色 ('primary', 'success', 'warning', 'danger', 'info')，默认 'primary'
- *   - size: 尺寸 ('sm', 'md', 'lg')，默认 'md'
- *   - layout: 布局方式 ('horizontal', 'vertical', 'inline')，默认 'horizontal'
- *   - bordered: 是否显示边框样式，默认 false
- *   - onChange: 选中项变化时的回调函数，参数为 (value, label)
+ * @param {Object} options - ConfigureOptions
+ *   - theme: Theme Colour('primary', 'success', 'warning', 'danger', 'info')，Default'primary'
+ *   - size: Dimensions('sm', 'md', 'lg')，Default'md'
+ *   - layout: Layout('horizontal', 'vertical', 'inline')，Default'horizontal'
+ *   - bordered: YesNoShow border style, defaultfalse
+ *   - onChange: Echo on selected changesFunctions，ParameterYes(value, label)
  * 
  * @example
- * // 基本用法
+ * // Basic use
  * const radioGroup = $('#myRadioGroup').radioGroup({
  *     theme: 'success',
  *     size: 'lg',
  *     bordered: true,
  *     onChange: function(value, label) {
- *         console.log('选中:', value, label);
+ *         console.log('Organisation', value, label);
  *     }
  * });
- * // 获取当前值
+ * // Get CurrentValue
  * const value = radioGroup.getValue();
- * // 设置值
+ * // SettingsValue
  * radioGroup.setValue('full');
  * 
  * @example
- * // HTML 结构
+ * // HTML Structure
  * <div class="radio-group" id="myRadioGroup">
  *     <input type="radio" name="mode" value="full" checked />
- *     <label>全量</label>
+ *     <label>Full</label>
  *     <input type="radio" name="mode" value="increment" />
- *     <label>增量</label>
+ *     <label>Incremental</label>
  *     <input type="radio" name="mode" value="fullToIncrement" disabled />
- *     <label>全量+增量</label>
+ *     <label>Full + incremental</label>
  * </div>
  */
 (function($) {
     'use strict';
     
-    // HTML转义函数（如果全局没有定义，则使用本地定义）
+    // HTMLConversionFunctions（If not defined globally, use local definition)
     function escapeHtml(text) {
         if (typeof window.escapeHtml === 'function') {
             return window.escapeHtml(text);
@@ -52,7 +52,7 @@
     $.fn.radioGroup = function(options) {
         options = options || {};
         
-        // 默认配置
+        // DefaultConfigure
         const config = $.extend({
             theme: 'primary',
             size: 'md',
@@ -61,11 +61,11 @@
             onChange: null
         }, options);
         
-        // 如果只有一个元素，直接返回 API 实例
+        // If there's only one element, direct.Back API Examples
         if (this.length === 1) {
             const $container = $(this[0]);
             
-            // 防止重复初始化，直接返回已有的 API 实例
+            // Prevention of duplicate initialization, directBackExistingAPI Examples
             if ($container.data('radioGroupInitialized')) {
                 return $container.data('radioGroup');
             }
@@ -74,11 +74,11 @@
             return initRadioGroup($container, config);
         }
         
-        // 多个元素，返回 jQuery 对象（向后兼容）
+        // Multiple elements,Back jQuery Object (reverse compatibility)
         return this.each(function() {
             const $container = $(this);
             
-            // 防止重复初始化
+            // Prevention of duplicate initialization
             if ($container.data('radioGroupInitialized')) {
                 return;
             }
@@ -88,9 +88,9 @@
         });
     };
     
-    // 初始化 radioGroup 的内部函数
+    // InitializeradioGroup InternalFunctions
     function initRadioGroup($container, config) {
-        // 添加主题和尺寸类
+        // AddTheme and Size Category
         if (config.theme && config.theme !== 'primary') {
             $container.addClass('radio-group-' + config.theme);
         }
@@ -98,48 +98,48 @@
             $container.addClass('radio-group-' + config.size);
         }
         
-        // 添加布局类
+        // AddLayout Class
         if (config.layout === 'vertical') {
             $container.addClass('radio-group-vertical');
         } else if (config.layout === 'inline') {
             $container.addClass('radio-group-inline');
         }
         
-        // 添加边框样式
+        // AddBorder Styles
         if (config.bordered) {
             $container.addClass('radio-group-bordered');
         }
         
-        // 获取所有 radio 和对应的 label
+        // Get Allradio And the corresponding.label
         const $radios = $container.find('input[type="radio"]');
         if ($radios.length === 0) {
             return null;
         }
         
-        // 包装每个 radio 和 label
+        // Pack them all.radio andlabel
         $radios.each(function() {
             const $radio = $(this);
             const $label = $radio.next('label');
             
-            // 创建包装元素
+            // Create packing elements
             const $item = $('<div class="radio-group-item"></div>');
             
-            // 添加禁用状态
+            // AddDisableStatus
             if ($radio.prop('disabled')) {
                 $item.addClass('disabled');
             }
             
-            // 添加选中状态
+            // AddSelectStatus
             const isChecked = $radio.prop('checked');
             if (isChecked) {
                 $item.addClass('active');
             }
             
-            // 创建标签内容
+            // Create label content
             const labelText = $label.length ? $label.text() : $radio.val();
             const $itemLabel = $('<span class="radio-group-item-label">' + escapeHtml(labelText) + '</span>');
             
-            // 将 radio 和标签移入包装元素
+            // Willradio and labels into packaging elements
             $item.append($radio);
             $item.append($itemLabel);
             
@@ -148,11 +148,11 @@
                 $label.remove();
             }
             
-            // 将包装元素插入容器
+            // Insert packaging elements into the container
             $container.append($item);
         });
         
-        // 确保初始选中状态正确应用
+        // Ensure Initial SelectionStatus54
         setTimeout(function() {
             const $checked = $container.find('input[type="radio"]:checked');
             if ($checked.length) {
@@ -165,23 +165,23 @@
         $container.on('click', '.radio-group-item:not(.disabled)', function() {
             const $item = $(this);
             const $radio = $item.find('input[type="radio"]');
-            // 取消所有选中状态
+            // CancelAll SelectedStatus
             $container.find('.radio-group-item').removeClass('active');
-            // 设置当前项为选中
+            // SettingsCurrent item is selected
             $item.addClass('active');
             $radio.prop('checked', true).trigger('change');
         });
         
-        // 监听 radio 变化事件（支持外部程序直接操作 radio）
+        // Listenradio ChangeEvent（Support external processes directlyActions radio）
         $container.on('change', 'input[type="radio"]', function() {
             const $radio = $(this);
             const $item = $radio.closest('.radio-group-item');
             
-            // 更新所有项的选中状态
+            // Update selection of all itemsStatus
             $container.find('.radio-group-item').removeClass('active');
             $item.addClass('active');
             
-            // 触发回调
+            // Trigger echo
             if (config.onChange && typeof config.onChange === 'function') {
                 const value = $radio.val();
                 const label = $item.find('.radio-group-item-label').text();
@@ -189,20 +189,20 @@
             }
         });
         
-        // 键盘导航支持
+        // Keyboard Navigation Support
         $container.on('keydown', 'input[type="radio"]', function(e) {
             const $current = $(this).closest('.radio-group-item');
             let $target = null;
             
             if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-                // 下一项
+                // Next
                 $target = $current.nextAll('.radio-group-item:not(.disabled)').first();
                 if (!$target.length) {
                     $target = $container.find('.radio-group-item:not(.disabled)').first();
                 }
                 e.preventDefault();
             } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-                // 上一项
+                // Previous Contact
                 $target = $current.prevAll('.radio-group-item:not(.disabled)').first();
                 if (!$target.length) {
                     $target = $container.find('.radio-group-item:not(.disabled)').last();
@@ -215,7 +215,7 @@
             }
         });
         
-        // API 方法
+        // API Methodology
         const api = {
             getValue: function() {
                 return $container.find('input[type="radio"]:checked').val();
@@ -229,11 +229,11 @@
             },
             disable: function(value) {
                 if (value === undefined) {
-                    // 禁用所有
+                    // DisableAll
                     $container.find('.radio-group-item').addClass('disabled');
                     $container.find('input[type="radio"]').prop('disabled', true);
                 } else {
-                    // 禁用指定值
+                    // DisableAssignValue
                     const $radio = $container.find('input[type="radio"][value="' + value + '"]');
                     $radio.prop('disabled', true);
                     $radio.closest('.radio-group-item').addClass('disabled');
@@ -242,11 +242,11 @@
             },
             enable: function(value) {
                 if (value === undefined) {
-                    // 启用所有
+                    // EnableAll
                     $container.find('.radio-group-item').removeClass('disabled');
                     $container.find('input[type="radio"]').prop('disabled', false);
                 } else {
-                    // 启用指定值
+                    // EnableAssignValue
                     const $radio = $container.find('input[type="radio"][value="' + value + '"]');
                     $radio.prop('disabled', false);
                     $radio.closest('.radio-group-item').removeClass('disabled');
@@ -271,7 +271,7 @@
             }
         };
         
-        // 保存 API 到 data
+        // Save API Present.data
         $container.data('radioGroup', api);
         
         return api;

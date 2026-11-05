@@ -27,7 +27,7 @@ import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 /**
- * 异步写入表映射（匹配相似表或自定义 tableGroups），完成后提交 MappingCountTask。
+ * Step-by-Script MapMatch similar tablesorCustom tableGroups），FinishBackSubmit MappingCountTask。
  *
  * @author AE86
  * @version 1.0.0
@@ -41,7 +41,7 @@ public final class MappingMatchTableTask extends AbstractDispatchTask {
     private String mappingId;
 
     /**
-     * 非空时按自定义文本映射；为空时按源/目标同名表自动匹配。
+     * Press non-timeCustomtext map;by source/when emptyObjective CombinedAutomatically match the same name list.
      */
     private String tableGroups;
 
@@ -77,10 +77,10 @@ public final class MappingMatchTableTask extends AbstractDispatchTask {
         int added;
         if (StringUtil.isNotBlank(tableGroups)) {
             added = matchCustomizedTableGroups(mapping, tableGroups);
-            logger.info("自定义表映射完成:{}, 新增{}张表映射", mapping.getName(), added);
+            logger.info("Custom Jointly Map complete: {}, add {} Table Map", mapping.getName(), added);
         } else {
             added = matchSimilarTableGroups(mapping);
-            logger.info("自动匹配完成:{}, 新增{}张表映射", mapping.getName(), added);
+            logger.info("Automatically match completed: {}, add a new {}sheet map", mapping.getName(), added);
         }
 
         MappingCountTask task = (MappingCountTask) mappingCountTask.clone();
@@ -89,9 +89,9 @@ public final class MappingMatchTableTask extends AbstractDispatchTask {
     }
 
     /**
-     * 批量写入相似表映射，不逐表提交 CountTask。
+     * Batch Writing Similar Map, Not Table by TableSubmit CountTask。
      *
-     * @return 实际新增条数
+     * @return ActualInsertNumber of bars
      */
     private int matchSimilarTableGroups(Mapping mapping) {
         List<Table> sourceTables = mapping.getSourceTable();
@@ -127,7 +127,7 @@ public final class MappingMatchTableTask extends AbstractDispatchTask {
     }
 
     /**
-     * 按自定义文本批量落库（每行可含独立 fieldMappings）。
+     * PressCustomText BatchLibrary（Each line contains independencefieldMappings）。
      */
     private int matchCustomizedTableGroups(Mapping mapping, String tableGroupsText) {
         List<Table> sourceTables = mapping.getSourceTable();
@@ -137,7 +137,7 @@ public final class MappingMatchTableTask extends AbstractDispatchTask {
         }
         String[] lines = StringUtil.split(tableGroupsText, StringUtil.BREAK_LINE);
         List<Map<String, String>> paramsList = new ArrayList<>();
-        // 数据源表|目标源表=源表字段A1*|目标字段A2*
+        // Source table|Target table=Source fieldsA1*|Target fieldsA2*
         for (String line : lines) {
             if (StringUtil.isBlank(line)) {
                 continue;

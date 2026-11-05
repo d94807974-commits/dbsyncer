@@ -20,14 +20,14 @@ public class ScheduledScanManager {
     private List<ScheduledScanService> scheduledScanServices;
 
     /**
-     * 启动连接器健康检查定时任务（幂等）。
+     * StartConnectorHealth screeningScheduledTasks（I'm sorry.
      */
     public void start() {
         scheduledScanServices.forEach(ScheduledScanService::start);
     }
 
     /**
-     * 停止连接器健康检查定时任务（幂等）。
+     * StopConnectorHealth screeningScheduledTasks（I'm sorry.
      */
     public void stop() {
         scheduledScanServices.forEach(ScheduledScanService::stop);

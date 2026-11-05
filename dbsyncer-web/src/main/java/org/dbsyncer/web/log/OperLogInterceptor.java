@@ -23,7 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * 读取方法上 {@link OperLog}，按模块类型写入操作日志。
+ * Read Method{@link OperLog}，PressModuleTypeWritingOperation logs。
  *
  * @author wuji
  * @version 1.0.0
@@ -51,7 +51,7 @@ public class OperLogInterceptor implements HandlerInterceptor {
         try {
             writeLog(request, response, ann);
         } catch (Exception ignore) {
-            // 写日志失败不影响主流程
+            // WriteLogFailedWithout prejudice to main process
         }
     }
 

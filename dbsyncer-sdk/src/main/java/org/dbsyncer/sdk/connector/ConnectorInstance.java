@@ -6,10 +6,10 @@ package org.dbsyncer.sdk.connector;
 import org.dbsyncer.sdk.model.ConnectorConfig;
 
 /**
- * 连接器实例，管理连接生命周期
+ * ConnectorExamples, managementConnectLife cycle
  *
- * @param <K> 配置
- * @param <V> 实例
+ * @param <K> Configure
+ * @param <V> Examples
  * @author AE86
  * @version 1.0.0
  * @date 2022/3/20 23:00
@@ -17,28 +17,28 @@ import org.dbsyncer.sdk.model.ConnectorConfig;
 public interface ConnectorInstance<K extends ConnectorConfig, V> extends Cloneable {
 
     /**
-     * 获取服务地址
+     * Access to service addresses
      *
      * @return
      */
     String getServiceUrl();
 
     /**
-     * 获取连接配置
+     * AccessConnectConfigure
      *
      * @return
      */
     K getConfig();
 
     /**
-     * 设置
+     * Settings
      *
      * @param k
      */
     void setConfig(K k);
 
     /**
-     * 获取连接通道实例
+     * AccessConnectChannel Examples
      *
      * @return
      * @throws Exception
@@ -46,12 +46,12 @@ public interface ConnectorInstance<K extends ConnectorConfig, V> extends Cloneab
     V getConnection() throws Exception;
 
     /**
-     * 关闭连接器
+     * CloseConnector
      */
     void close();
 
     /**
-     * 浅拷贝连接器
+     * Light copyConnector
      *
      * @return
      * @throws CloneNotSupportedException

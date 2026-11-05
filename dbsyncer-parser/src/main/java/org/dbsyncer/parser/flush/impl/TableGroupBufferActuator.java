@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 import java.util.concurrent.Executor;
 
 /**
- * 表执行器（根据表消费数据，多线程批量写，按序执行）
+ * Table-group actuator（Table consumption data, ConcertedThreadsBulk, sequenced)
  *
  * @Version 1.0.0
  * @Author AE86
@@ -56,7 +56,7 @@ public class TableGroupBufferActuator extends GeneralBufferActuator implements T
     }
 
     /**
-     * 启动表/管道执行器（clone 后调用）。
+     * StartTable / Corporate Executer stoleclone Called later.
      */
     public void start() {
         buildConfig();

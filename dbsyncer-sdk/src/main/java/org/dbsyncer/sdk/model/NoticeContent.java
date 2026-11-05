@@ -7,7 +7,7 @@ package org.dbsyncer.sdk.model;
 import org.dbsyncer.sdk.enums.NoticeTypeEnum;
 
 /**
- * 通知消息
+ * Organisation
  *
  * @Author AE86
  * @Version 1.0.0
@@ -20,12 +20,12 @@ public abstract class NoticeContent {
     private String title;
 
     /**
-     * 资源类型（如 mapping），用于解析 @ 覆盖规则
+     * Resource type（Likemapping），For parsing@ OverwriteRule
      */
     private String resourceType;
 
     /**
-     * 资源 ID（如同步任务 ID）
+     * Resource ID（LikeSync task ID）
      */
     private String resourceId;
 

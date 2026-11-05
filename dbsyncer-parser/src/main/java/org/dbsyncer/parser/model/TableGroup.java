@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 表映射关系(dbsyncer_table_group)。
- * <p>关联信息落拆分列；字段映射/command/filter 等进 JSON。
+ * Map relation(dbsyncer_table_group)。
+ * <p>AssociationInfoDropminColumns;Field mapping/command/filter Wait in.JSON。
  *
  * @author AE86
  * @version 1.0.0
@@ -28,12 +28,12 @@ public class TableGroup extends AbstractConfigModel {
     }
 
     /**
-     * 排序号(SORT_INDEX)
+     * Sort Number(SORT_INDEX)
      */
     private int index;
 
     /**
-     * 任务ID
+     * Task ID
      */
     private String taskId;
 
@@ -45,12 +45,12 @@ public class TableGroup extends AbstractConfigModel {
     private String targetSchema;
 
     /**
-     * 数据源表(配置态完整 Table；名称同步到 SOURCE_TABLE 列)
+     * Data FactSource table(ConfigureComplete stateTable；NameSync ActualSOURCE_TABLE Columns)
      */
     private Table sourceTable;
 
     /**
-     * 目标源表(配置态完整 Table；名称同步到 TARGET_TABLE 列)
+     * Target table(ConfigureComplete stateTable；NameSync ActualTARGET_TABLE Columns)
      */
     private Table targetTable;
 
@@ -79,7 +79,7 @@ public class TableGroup extends AbstractConfigModel {
     }
 
     /**
-     * 库维度聚合键：源/目标连接器 + 库 + schema（不含表名）。
+     * LibraryWidth 7-11 Key: Source/Target ConnectionDevice+ Library + schema（does not containTableName.
      */
     public String buildDatabaseMappingKey() {
         return String.join("|",

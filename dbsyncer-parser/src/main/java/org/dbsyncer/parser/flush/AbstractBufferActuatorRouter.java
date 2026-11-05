@@ -25,7 +25,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 增量缓存执行器路由基类：共用 trace、DDL 入队与监控快照组装。
+ * IncrementalCache Executioner Route Subcategory:TotalUsetrace、DDL Incoming!andMonitorQuick-shot assembly.
  *
  * @author wuji
  * @version 1.0.0
@@ -42,9 +42,9 @@ public abstract class AbstractBufferActuatorRouter implements BufferActuatorRout
     protected GeneralBufferActuator generalBufferActuator;
 
     /**
-     * 打印增量 trace。
+     * PrintIncremental trace。
      *
-     * @param event 变更事件
+     * @param event ChangeEvent
      */
     protected void printTraceInfo(ChangedEvent event) {
         SystemConfig systemConfig = systemConfigProfile.getSystemConfig();
@@ -56,11 +56,11 @@ public abstract class AbstractBufferActuatorRouter implements BufferActuatorRout
     }
 
     /**
-     * 投递到指定执行器；DDL 会等待目标执行器空闲（队列空且无 in-flight process）后再入队。
-     * <p>等待被中断时恢复中断标记并仍尝试入队，避免 DDL 丢失。
+     * (a) The delivery to had been made to 41.DDL I'll wait.Objective CombinedExecut MOUFree（Queue empty andNone in-flight process）We'll be back in line.
+     * <p>Waiting for the break mark to be restored and still trying to join, avoidDDL Lost.
      *
-     * @param actuator 目标执行器
-     * @param event    变更事件
+     * @param actuator Objective CombinedExecut MOU
+     * @param event    ChangeEvent
      */
     protected void offer(AbstractBufferActuator actuator, ChangedEvent event) {
         if (ChangedEventTypeEnum.isDDL(event.getType())) {
@@ -81,11 +81,11 @@ public abstract class AbstractBufferActuatorRouter implements BufferActuatorRout
     }
 
     /**
-     * 组装单个执行器监控快照。
+     * Compile Single ExecutorMonitorSc 49.
      *
-     * @param name     展示名
-     * @param actuator 执行器
-     * @return 快照
+     * @param name     Presentation Name
+     * @param actuator Execut MOU
+     * @return Photo
      */
     protected BufferActuatorMetric toMetric(String taskId, String name, AbstractBufferActuator actuator) {
         BufferActuatorMetric metric = new BufferActuatorMetric();
@@ -109,9 +109,9 @@ public abstract class AbstractBufferActuatorRouter implements BufferActuatorRout
     }
 
     /**
-     * 停止表/管道执行器。
+     * StopTable/pipe implementer.
      *
-     * @param actuator 执行器
+     * @param actuator Execut MOU
      */
     protected void stopActuator(TableGroupBufferActuator actuator) {
         if (actuator != null) {

@@ -11,9 +11,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 达梦短整型（含 MySQL 无符号小整型别名）
+ * Tamang is short.MySQL None)
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-07-18
  */

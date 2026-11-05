@@ -1,15 +1,15 @@
 /**
- * 通用分页管理器
- * @param {Object} options 配置选项
- *   - requestUrl: 请求地址（必需）
- *   - tableBodySelector: 表格体的选择器（必需）
- *   - paginationSelector: 分页区域的选择器（可选，不提供时会自动在 table 后面创建）
- *   - countSelector: 总数显示元素的选择器（可选，默认：.totalCount）
- *   - currentPageSelector: 当前页显示元素的选择器（可选，默认：.currentPage）
- *   - totalPagesSelector: 总页数显示元素的选择器（可选，默认：.totalPages）
- *   - renderRow: 自定义行渲染函数(item, index)（必需）
- *   - emptyHtml: 无数据时的HTML（可选）
- *   - storageKey: localStorage 缓存键，持久化 pageNum、pageSize（可选）
+ * Shared pagination manager
+ * @param {Object} options ConfigureOptions
+ *   - requestUrl: Address requested (required)
+ *   - tableBodySelector: Table Body Selector (required)
+ *   - paginationSelector: minPageArea Selector (optional, automatically in case not provided)table Create later)
+ *   - countSelector: TotalNumber of elements selected (optional, default:.totalCount）
+ *   - currentPageSelector: CurrentPageDisplays the Continuous Selector of Elements (optional, default:.currentPage）
+ *   - totalPagesSelector: TotalPageNumber of elements selected (optional, default:.totalPages）
+ *   - renderRow: CustomLine RenderFunctions(item, index)（77)
+ *   - emptyHtml: NoneData-timeHTML（Optional)
+ *   - storageKey: localStorage Cache key,Enduring pageNum、pageSize（Optional)
  */
 (function(window, $) {
     'use strict';
@@ -26,7 +26,7 @@
                 return JSON.parse(raw);
             }
         } catch (e) {
-            console.warn('[PaginationManager] 读取分页缓存失败', e);
+            console.warn('[PaginationManager] Reading page cache failed', e);
         }
         return null;
     }
@@ -41,17 +41,17 @@
                 pageSize: pageSize
             }));
         } catch (e) {
-            console.warn('[PaginationManager] 保存分页缓存失败', e);
+            console.warn('[PaginationManager] Save page cache failed', e);
         }
     }
     
-    // 依赖检查
+    // Reliance on checking
     if (typeof window.doPoster !== 'function') {
-        console.error('[PaginationManager] 依赖 doPoster 函数未找到');
+        console.error('[PaginationManager] relies on the doPoster function not found');
         return;
     }
     if (typeof window.bootGrowl !== 'function') {
-        console.error('[PaginationManager] 依赖 bootGrowl 函数未找到');
+        console.error('[PaginationManager] relies on the BootGrowl function not found');
         return;
     }
     
@@ -119,30 +119,30 @@
             savePaginationState(config.storageKey, pageNum, config.pageSize);
         };
 
-        // 自动创建分页容器和结构
+        // AutocreateminPageContainers and structures
         this.initPaginationStructure = function() {
             let $pagination = config.paginationSelector ? $(config.paginationSelector) : $();
             let paginationId = '';
             
-            // 如果分页容器不存在，自动在 table 后面创建
+            // IfminPageThe Supervision System does not exist.table Create later
             if ($pagination.length === 0) {
                 const $table = $(config.tableBodySelector).closest('table');
                 if ($table.length === 0) {
-                    console.error('[PaginationManager] 无法找到表格元素:', config.tableBodySelector);
+                    console.error('[PaginationManager] Could not find table elements:', config.tableBodySelector);
                     return;
                 }
                 
-                // 创建分页容器并插入到 table 后面
+                // CreateminPageContainer and insert totable Back
                 paginationId = config.paginationSelector 
                     ? config.paginationSelector.replace('#', '') 
                     : 'pagination_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                 $pagination = $('<div id="' + paginationId + '"></div>');
                 $table.after($pagination);
                 
-                // 更新配置中的选择器
+                // UpdateConfigureSelector in
                 config.paginationSelector = '#' + paginationId;
             } else {
-                // 如果容器已存在，获取其 ID，如果没有则生成一个
+                // If the container already exists, get itID，If not,GenerateOne.
                 paginationId = $pagination.attr('id');
                 if (!paginationId) {
                     paginationId = 'pagination_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -151,34 +151,34 @@
                 }
             }
 
-            // 生成唯一的选择器前缀（基于分页容器 ID）
+            // GenerateOnly Selector Prefix (based onminPagePlansID）
             const selectorPrefix = '#' + paginationId + ' ';
             
-            // 如果没有指定自定义选择器，使用基于分页容器的唯一选择器
+            //              If not specifiedCustomSelector, use based onminPageThe only choice for the container.
             config.countSelector = config.countSelector || selectorPrefix + '.totalCount';
             config.currentPageSelector = config.currentPageSelector || selectorPrefix + '.currentPage';
             config.totalPagesSelector = config.totalPagesSelector || selectorPrefix + '.totalPages';
 
-            // 检查是否已有分页按钮容器，如果没有则自动创建完整结构
+            // InspectionYesNoExistingminPageButton container, if not, automatically create the complete structure
             const $paginationBar = $pagination.find('.pagination-bar');
             if ($paginationBar.length === 0) {
-                // 如果没有样式类，添加默认样式
+                // No style class,AddDefault Styles
                 if (!$pagination.hasClass('p-5')) {
                     $pagination.addClass('p-5 border-t border-gray-100 flex items-center justify-between');
                 }
                 
-                // 检查是否已有分页信息文本
+                // InspectionYesNoExistingminPageInfoText
                 const $paginationInfo = $pagination.find('.pagination-info');
                 if ($paginationInfo.length === 0) {
-                    // 创建分页信息文本
+                    // CreateminPageInfoText
                     $pagination.prepend(`
                         <p class="text-sm text-gray-500 pagination-info">
-                            共 <span class="totalCount">0</span> 条，第 <span class="currentPage">1</span> / <span class="totalPages">1</span> 页
+                            Total <span class="totalCount">0</span> , page  <span class="currentPage">1</span> / <span class="totalPages">1</span> Page
                         </p>
                     `);
                 }
                 
-                // 创建分页按钮容器
+                // CreateminPageButton Container
                 $pagination.append('<div class="pagination-bar flex items-center"></div>');
             }
         };
@@ -194,7 +194,7 @@
                 if (data.success === true) {
                     pagination.refreshPagination(data, searchParams);
                 } else {
-                    window.bootGrowl('搜索异常，请重试', 'danger');
+                    window.bootGrowl('Search abnormal. Try again.', 'danger');
                 }
             });
         };
@@ -206,35 +206,35 @@
             const pageNum = result.pageNum || config.pageIndex;
             const totalPages = Math.ceil(total / config.pageSize) || 1;
 
-            // 当前页超出有效范围时（如第 2 页删光数据），自动回到最后一页
+            // CurrentPageWhen beyond the scope of validity2 PageDelete Data) Autoback to LastPage
             if (pageNum > totalPages) {
                 this.doSearch(params, Math.max(1, totalPages));
                 return;
             }
 
-            // 更新分页管理器状态
+            // UpdateminPageManagerStatus
             this.currentPage = pageNum;
             config.pageIndex = pageNum;
             this.total = total;
             persistState(pageNum);
-            // 渲染表格
+            // Render Table
             this.renderTable(items);
-            // 更新分页信息
+            // UpdateminPageInfo
             this.updateInfo(total, pageNum);
 
-            // 渲染分页按钮
+            // RenderminPagebutton
             this.renderPagination(pageNum, totalPages, (nextPage) => {
                 this.doSearch(params, nextPage);
             });
 
-            // 显示/隐藏分页区域
+            // Show / HideminPageRegional
             this.togglePagination(items.length > 0);
 
-            // 刷新完成
+            // RefreshFinish
             config.refreshCompleted();
         };
 
-        // 渲染表格数据
+        // Render Table Data
         this.renderTable = function(data) {
             const tbody = $(config.tableBodySelector);
             tbody.empty();
@@ -250,7 +250,7 @@
             applyProgressFillWidths(tbody);
         };
 
-        // 渲染分页按钮
+        // RenderminPagebutton
         this.renderPagination = function(currentPage, totalPages, onPageChange) {
             const pagination = $(config.paginationSelector);
             const paginationBar = $(config.paginationSelector).find(".pagination-bar");
@@ -259,16 +259,16 @@
 
             let $this = this;
             if (config.customPageSize) {
-                // 检查下拉框是否已存在，如果存在则更新选中状态，不存在则创建
+                // Check the frameYesNoExists, update selection if availableStatus，Create without
                 let $sizeSelect = paginationBar.find('.page-size-select');
                 if ($sizeSelect.length === 0) {
-                    // 定义可选的每页条数
+                    // Defines each optional optionPageNumber of bars
                     const currentSize = config.pageSize;
-                    // 创建下拉框 HTML
+                    // Create Down FrameHTML
                     let selectHtml = '<select class="page-size-select ml-2 mr-2 form-control-md">';
                     config.customPageSizeItems.forEach(size => {
                         const selected = size === currentSize ? 'selected' : '';
-                        selectHtml += `<option value="${size}" ${selected}>${size}条/页</option>`;
+                        selectHtml += `<option value="${size}" ${selected}>${size}Article/Page</option>`;
                     });
                     selectHtml += '</select>';
                     const $sizeSelect = $(selectHtml);
@@ -279,16 +279,16 @@
                             const selectedValue = values && values.length > 0 ? values[0] : '';
                             if (!isBlank(selectedValue)) {
                                 const newSize = parseInt(selectedValue);
-                                // 更新配置中的 pageSize
+                                // UpdateConfigureMediumpageSize
                                 config.pageSize = newSize;
                                 persistState(1);
-                                // 重置到第一页并重新搜索
+                                // ResetTo number one.Page♪ And again ♪Search
                                 $this.doSearch({}, 1);
                             }
                         }
                     });
                 } else {
-                    // 定时刷新时仅同步显示，不可触发 onSelect（否则会 doSearch 死循环并重置到第 1 页）
+                    // ScheduledRefreshShow only sync, not triggeronSelect（NoThen I will.doSearch Dead cycle andResetUntil the end.1 Page）
                     const pageSizeApi = $sizeSelect.data('dbSelect');
                     const nextVal = String(config.pageSize);
                     const currentVal = pageSizeApi && typeof pageSizeApi.getValues === 'function'
@@ -305,24 +305,24 @@
             }
 
             if (config.showBoundaryButtons) {
-                // 首页按钮
+                // First pagebutton
                 paginationBar.append(createPaginationNavBtn(
-                    '首页',
+                    'Home',
                     'fa-angle-double-left',
                     currentPage === 1,
                     () => onPageChange(1)
                 ));
             }
 
-            // 上一页按钮
+            // Previousbutton
             paginationBar.append(createPaginationNavBtn(
-                '上一页',
+                'Previous',
                 'fa-angle-left',
                 currentPage === 1,
                 () => onPageChange(currentPage - 1)
             ));
 
-            // 页码按钮：总页数 > 3 时固定展示 3 个，否则展示全部
+            // PageCode button: TotalPageNumber> 3 Fixed presentation3 Yeah.NoShowAll
             const pageWindow = getPageWindow(currentPage, totalPages, 3);
             for (let i = pageWindow.start; i <= pageWindow.end; i++) {
                 const pageBtn = $(`<button type="button" class="pagination-page-btn ${i === currentPage ? 'active' : ''}">${i}</button>`);
@@ -334,18 +334,18 @@
                 paginationBar.append(pageBtn);
             }
 
-            // 下一页按钮
+            // Nextbutton
             paginationBar.append(createPaginationNavBtn(
-                '下一页',
+                'Next',
                 'fa-angle-right',
                 currentPage === totalPages,
                 () => onPageChange(currentPage + 1)
             ));
 
             if (config.showBoundaryButtons) {
-                // 末页按钮
+                // Last pagebutton
                 paginationBar.append(createPaginationNavBtn(
-                    '末页',
+                    'Last page',
                     'fa-angle-double-right',
                     currentPage === totalPages,
                     () => onPageChange(totalPages)
@@ -353,7 +353,7 @@
             }
         };
 
-        // 更新分页信息
+        // UpdateminPageInfo
         this.updateInfo = function(total, pageNo) {
             const totalPages = Math.ceil(total / config.pageSize) || 1;
             $(config.countSelector).text(total);
@@ -362,24 +362,24 @@
             return totalPages;
         };
 
-        // 显示/隐藏分页区域
+        // Show / HideminPageRegional
         this.togglePagination = function(show) {
             $(config.paginationSelector).toggle(show);
         };
 
-        // 初始化状态
+        // InitializeStatus
         this.currentPage = config.pageIndex;
         this.total = 0;
         this.lastSearchParams = $.extend({}, config.params || {});
         
-        // 初始化分页结构
+        // InitializeminPageStructure
         this.initPaginationStructure();
         
-        // 开始加载数据
+        // Start loading data
         this.doSearch(config.params, this.currentPage);
     }
     
-    // 导出到全局
+    // ExportTo Global Text
     window.PaginationManager = PaginationManager;
     
 })(window, jQuery);

@@ -1,18 +1,18 @@
-// ******************* 初始化 *****************************
+// ******************* Initialize*****************************
 const $location = (window.location + '').split('/');
 const $path = document.location.pathname;
 const $basePath = $location[0] + '//' + $location[2] + $path.substr(0, $path.substr(1).indexOf("/") + 1);
 const $mainContent = $('#mainContent');
 
-// 工具函数
+// ToolsFunctions
 function showLoading() {
-    $mainContent.html('<div class="loading"><div class="loading-spinner"></div>加载中...</div>');
+    $mainContent.html('<div class="loading"><div class="loading-spinner"></div>Loading...</div>');
 }
 function hideLoading() {
     $mainContent.find('.loading').remove();
 }
 
-// HTML转义
+// HTMLConversion
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
@@ -32,9 +32,9 @@ function formatDate(time) {
 }
 
 /**
- * 计算相对时间文本
- * @param {string|number} time - 时间字符串或时间戳
- * @returns {string} 相对时间文本，如：30秒前、1分钟前、2小时前、昨天、2天前、3个月前、N个月前
+ * Calculate relativeTimeText
+ * @param {string|number} time - TimeString orTimePoke
+ * @returns {string} RelativeTimeText such as:30Second、1A minute ago.、2Hour ago、Yesterday.、2Day before、3Months ago Peoples、NMonths ago Peoples
  */
 function formatRelativeTime(time) {
     if (!time) {
@@ -44,7 +44,7 @@ function formatRelativeTime(time) {
     const now = new Date();
     const targetTime = new Date(time);
     
-    // 如果时间无效，返回空字符串
+    // IfTimeNoneEffectBackEmpty String
     if (isNaN(targetTime.getTime())) {
         return '';
     }
@@ -55,51 +55,51 @@ function formatRelativeTime(time) {
     const diffHours = Math.floor(diffMinutes / 60);
     const diffDays = Math.floor(diffHours / 24);
     
-    // 小于1分钟：显示秒数
+    // less than1minutes：ShowsecondsNumber
     if (diffSeconds < 60) {
-        return diffSeconds <= 0 ? '刚刚' : diffSeconds + '秒前';
+        return diffSeconds <= 0 ? 'Just Excise.' : diffSeconds + 'Second';
     }
     
-    // 小于1小时：显示分钟数
+    // less than1hours：ShowminutesNumber
     if (diffMinutes < 60) {
-        return diffMinutes + '分钟前';
+        return diffMinutes + 'A minute ago.';
     }
     
-    // 小于24小时：显示小时数
+    // less than24hours：ShowhoursNumber
     if (diffHours < 24) {
-        return diffHours + '小时前';
+        return diffHours + 'Hour ago';
     }
     
-    // 判断是否是昨天（同一天）
+    // Judgement ConfirmationYesNoYesYesterday.（The same.days）
     const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const targetDate = new Date(targetTime.getFullYear(), targetTime.getMonth(), targetTime.getDate());
     const daysDiff = Math.floor((nowDate.getTime() - targetDate.getTime()) / (1000 * 60 * 60 * 24));
     
-    // 昨天
+    // Yesterday.
     if (daysDiff === 1) {
-        return '昨天';
+        return 'Yesterday.';
     }
     
-    // 小于30天：显示天数
+    // less than30days：ShowdaysNumber
     if (diffDays < 30) {
-        return diffDays + '天前';
+        return diffDays + 'Day before';
     }
     
-    // 计算月份差
+    // Calculate month differential
     const monthsDiff = (now.getFullYear() - targetTime.getFullYear()) * 12 + (now.getMonth() - targetTime.getMonth());
     
-    // 小于12个月：显示月数
+    // less than12Months: Number of months shown
     if (monthsDiff < 12) {
-        return monthsDiff + '个月前';
+        return monthsDiff + 'Months ago Peoples';
     }
     
-    // 大于等于12个月：显示年数
+    // greater than or equal to12Months: years shown
     const yearsDiff = Math.floor(monthsDiff / 12);
-    return yearsDiff + '年前';
+    return yearsDiff + 'Years ago';
 }
 
 /**
- * 判断字符串是否为空串
+ * CriterionYesNoEmpty string
  * @eg undefined true
  * @eg null true
  * @eg '' true
@@ -111,29 +111,29 @@ function isBlank(str) {
     return str === undefined || str === null || str === false || str.length === 0;
 }
 
-// ******************* 水印 ***************************
+// ******************* Watermark ***************************
 window.onresize = function () {
     watermark();
 }
 window.onscroll = function () {
     watermark();
 }
-//水印样式默认设置
+//WatermarkStyle DefaultSettings
 const settings = {
     watermark_txt: "",
-    watermark_x: 50,//水印起始位置x轴坐标
-    watermark_y: 55,//水印起始位置Y轴坐标
-    watermark_rows: 2000,//水印行数
-    watermark_cols: 2000,//水印列数
-    watermark_x_space: 70,//水印x轴间隔
-    watermark_y_space: 30,//水印y轴间隔
-    watermark_color: '#aaaaaa',//水印字体颜色
-    watermark_alpha: 0.2,//水印透明度
-    watermark_fontsize: '15px',//水印字体大小
-    watermark_font: '微软雅黑',//水印字体
-    watermark_width: 210,//水印宽度
-    watermark_height: 80,//水印长度
-    watermark_angle: 15//水印倾斜度数
+    watermark_x: 50,//WatermarkOrganisation retrievexAxis Coordinates
+    watermark_y: 55,//WatermarkOrganisation retrieveYAxis Coordinates
+    watermark_rows: 2000,//WatermarkLines
+    watermark_cols: 2000,//WatermarkColumns
+    watermark_x_space: 70,//WatermarkxAxis interval
+    watermark_y_space: 30,//WatermarkyAxis interval
+    watermark_color: '#aaaaaa',//WatermarkFont Colour
+    watermark_alpha: 0.2,//WatermarkTransparency
+    watermark_fontsize: '15px',//WatermarkFont Size
+    watermark_font: '. .',//WatermarkFonts
+    watermark_width: 210,//WatermarkWidth
+    watermark_height: 80,//WatermarkLength
+    watermark_angle: 15//WatermarkInclination
 };
 let timestampWatermark;
 
@@ -149,11 +149,11 @@ function watermark() {
     $(".dbsyncer_mask").remove();
 
     const water = document.body;
-    //获取页面最大宽度
+    //AccessPageMaximum width of face
     const page_width = Math.max(water.scrollWidth, water.clientWidth);
-    //获取页面最大高度
+    //AccessPageMaximum face height
     const page_height = Math.max(water.scrollHeight, water.clientHeight);
-    //水印数量自适应元素区域尺寸
+    //WatermarkQuantities from the range of adaptation elements
     settings.watermark_cols = Math.ceil(page_width / (settings.watermark_x_space + settings.watermark_width));
     settings.watermark_rows = Math.ceil(page_height / (settings.watermark_y_space + settings.watermark_height));
     let x;
@@ -188,7 +188,7 @@ function watermark() {
     }
 }
 
-// ******************* 扩展JS表单方法 ***************************
+// ******************* ExtensionJSForm Method***************************
 $.fn.serializeJson = function () {
     var o = {};
     var a = this.serializeArray();
@@ -212,13 +212,13 @@ function validateForm($form) {
     $form.find('.form-error-msg').remove();
     $form.find('.is-invalid').removeClass('is-invalid');
 
-    // 查找所有带有 required 属性且非隐藏状态的字段
+    // Find All withrequired Properties and Not HiddenStatusYes.Field
     $form.find('[required]:not([type="hidden"])').each(function(){
         var $field = $(this);
 
-        // 额外检查是否被隐藏 (例如通过 hidden 属性或 CSS display)
+        // Extra checkYesNoAuthorization(Like throughhidden Properties orCSS display)
         if ($field.is(':hidden')) {
-            return; // 跳过本次循环，继续验证下一个元素
+            return; // Skip this cycle and continue to verify the next element
         }
 
         if ($field.is(':disabled')) {
@@ -229,13 +229,13 @@ function validateForm($form) {
         var invalid = false;
 
         if ($field.is(':checkbox') || $field.is(':radio')) {
-            // 对于复选框和单选按钮，检查是否被选中
+            // Check for check boxes and single buttonsYesNoSelected
             invalid = !$field.is(':checked');
         } else if ($field.is('select')) {
-            // 对于下拉选择框，检查值是否为空
+            // For drop-down selection box, checkValueYesNoEmpty
             invalid = value === '' || value === null;
         } else {
-            // 对于其他输入框（文本、数字等），检查值长度
+            // Yeah.OtherInput box (text, numbers, etc.), checkValueLength
             invalid = value.length === 0;
         }
 
@@ -254,13 +254,13 @@ function validateForm($form) {
             } else if ($field.attr('placeholder')) {
                 labelText = $field.attr('placeholder');
             } else {
-                labelText = '该字段';
+                labelText = 'Field';
             }
 
-            // 标记字段为无效，并添加错误信息
+            // Tag           FieldYesNoneEffect, andAddErrorInfo
             $field.addClass('is-invalid');
             if ($container.length) {
-                $('<div class="form-error-msg"><i class="fa fa-exclamation-circle"></i> ' + labelText + '不能为空</div>').appendTo($container);
+                $('<div class="form-error-msg"><i class="fa fa-exclamation-circle"></i> ' + labelText + 'Can\'t be empty.</div>').appendTo($container);
             }
         }
     });
@@ -268,42 +268,42 @@ function validateForm($form) {
     return isValid;
 }
 
-// ******************* 复制到剪贴板 ***************************
+// ******************* CopyTo Clipboard***************************
 /**
- * 复制文本到剪贴板（公共方法）
- * @param {string} text - 要复制的文本内容
- * @param {Object} options - 配置选项
- * @param {string|jQuery|HTMLElement} options.button - 按钮元素（jQuery对象、选择器或DOM元素），用于显示复制状态反馈
- * @param {string} options.successMessage - 复制成功提示消息，默认："复制成功！"
- * @param {string} options.errorMessage - 复制失败提示消息，默认："复制失败，请手动复制"
- * @param {string} options.successIcon - 复制成功时按钮显示的图标，默认："fa-check"
- * @param {string} options.originalIcon - 按钮原始图标，默认："fa-copy"
- * @param {string} options.originalText - 按钮原始文本，默认："复制"
- * @param {number} options.resetDelay - 按钮状态重置延迟时间（毫秒），默认：2000
- * @param {string} options.copiedClass - 复制成功时添加到按钮的CSS类，默认："copied"
+ * CopyText to Clipboard (public)Totalmethodology)
+ * @param {string} text - Yes.Copytext
+ * @param {Object} options - ConfigureOptions
+ * @param {string|jQuery|HTMLElement} options.button - But (17%)jQueryObject, Selector orDOMElement) for displayCopyStatusFeedback
+ * @param {string} options.successMessage - Copied successfullyNoticeMessage, default:"Copy Teachers!"
+ * @param {string} options.errorMessage - Copy FailedNoticeMessage, default:"Copy failed, please copy manually"
+ * @param {string} options.successIcon - Copied successfully, by default:"fa-check"
+ * @param {string} options.originalIcon - button, default:"fa-copy"
+ * @param {string} options.originalText - button, default:"Copy"
+ * @param {number} options.resetDelay - buttonStatusResetDelayTime（ms），Default:2000
+ * @param {string} options.copiedClass - Copied successfullyTimeAddTo the buttonCSSClass, default:"copied"
  */
 function copyToClipboard(text, options) {
     if (!text) {
-        const errorMsg = (options && options.errorMessage) || '复制失败，请手动复制';
+        const errorMsg = (options && options.errorMessage) || 'Copy failed, please copy manually';
         if (typeof bootGrowl === 'function') {
             bootGrowl(errorMsg, "danger");
         }
-        return Promise.reject(new Error('文本内容为空'));
+        return Promise.reject(new Error('Text content is empty'));
     }
 
-    // 默认配置
+    // DefaultConfigure
     const config = {
-        successMessage: '复制成功！',
-        errorMessage: '复制失败，请手动复制',
+        successMessage: 'Copy Teachers!',
+        errorMessage: 'Copy failed, please copy manually',
         successIcon: 'fa-check',
         originalIcon: 'fa-copy',
-        originalText: '复制',
+        originalText: 'Copy',
         resetDelay: 2000,
         copiedClass: 'copied',
         ...options
     };
 
-    // 获取按钮元素（支持jQuery对象、选择器字符串或DOM元素）
+    // Get button elements (support)jQueryObject, Selector String orDOMElements)
     let $button = null;
     if (config.button) {
         if (typeof config.button === 'string') {
@@ -315,14 +315,14 @@ function copyToClipboard(text, options) {
         }
     }
 
-    // 如果按钮存在，检查是否正在复制中（防止快速多次点击）
+    // If buttons exist, checkYesNoOngoingCopyMedium (prevent rapid multiple hits)
     if ($button && $button.length) {
         const isCopying = $button.data('copying');
         if (isCopying) {
-            // 如果正在复制中，忽略本次请求
+            // If it isCopy, ignore this request
             return Promise.resolve();
         }
-        // 清除之前的重置定时器（如果存在）
+        // ClearBefore.ResetScheduledInstrument (if any)
         const resetTimerId = $button.data('resetTimerId');
         if (resetTimerId) {
             clearTimeout(resetTimerId);
@@ -330,44 +330,44 @@ function copyToClipboard(text, options) {
         }
     }
 
-    // 保存按钮原始内容
+    // Savethe original content of the button
     let originalButtonHtml = '';
     if ($button && $button.length) {
         originalButtonHtml = $button.html();
-        // 标记为正在复制中
+        // Mark as ongoingCopyMedium
         $button.data('copying', true);
     }
 
-    // 更新按钮状态为"已复制"
+    // Update buttonStatusYes"Copyed"
     function updateButtonToCopied() {
         if ($button && $button.length) {
-            const successText = config.originalText === '复制' ? '已复制' : config.originalText;
+            const successText = config.originalText === 'Copy' ? 'Copyed' : config.originalText;
             $button.html(`<i class="fa ${config.successIcon}"></i> ${successText}`);
             $button.addClass(config.copiedClass);
         }
     }
 
-    // 恢复按钮原始状态
+    // Restore button originalStatus
     function resetButton() {
         if ($button && $button.length) {
             $button.html(originalButtonHtml || `<i class="fa ${config.originalIcon}"></i> ${config.originalText}`);
             $button.removeClass(config.copiedClass);
-            // 清除复制中标记和定时器ID
+            // ClearCopyto mark andScheduledDeviceID
             $button.removeData('copying');
             $button.removeData('resetTimerId');
         }
     }
 
-    // 使用现代浏览器的 Clipboard API
+    // Using Modern BrowserClipboard API
     let copyPromise;
     if (navigator.clipboard && window.isSecureContext) {
         copyPromise = navigator.clipboard.writeText(text).then(function() {
-            // 复制成功
+            // Copied successfully
             if (typeof bootGrowl === 'function') {
                 bootGrowl(config.successMessage, "success");
             }
             updateButtonToCopied();
-            // 保存定时器ID，以便后续清除
+            // SaveScheduledDeviceID，For follow-upClear
             const resetTimerId = setTimeout(function() {
                 resetButton();
             }, config.resetDelay);
@@ -376,22 +376,22 @@ function copyToClipboard(text, options) {
             }
             return Promise.resolve();
         }).catch(function(err) {
-            console.error('复制失败', err);
-            // 复制失败时也要清除复制中标记
+            console.error('Copy Failed', err);
+            // Copy FailedI'll have to.ClearCopyMiddle Tag
             if ($button && $button.length) {
                 $button.removeData('copying');
             }
-            // 降级到传统方法
+            // Downgrade to traditional methods
             return fallbackCopyText(text, config, updateButtonToCopied, resetButton, $button);
         });
     } else {
-        // 降级到传统方法
+        // Downgrade to traditional methods
         copyPromise = fallbackCopyText(text, config, updateButtonToCopied, resetButton, $button);
     }
     copyPromise.catch(function(err) {
-        // 错误已在内部处理（通过 bootGrowl 提示），这里仅用于消除未处理的 Promise rejection 警告
-        console.error('复制操作失败:', err);
-        // 复制失败时也要清除复制中标记
+        // ErrorImplemented internally (adopted)bootGrowl Notice），It's only for disposal.Promise rejection Warning
+        console.error('Copy operation failed:', err);
+        // Copy FailedI'll have to.ClearCopyMiddle Tag
         if ($button && $button.length) {
             $button.removeData('copying');
         }
@@ -399,7 +399,7 @@ function copyToClipboard(text, options) {
 }
 
 /**
- * 降级复制方案（兼容旧浏览器）
+ * DowngradeCopyScheme (old browser compatible)
  * @private
  */
 function fallbackCopyText(text, config, updateButtonToCopied, resetButton, $button) {
@@ -425,7 +425,7 @@ function fallbackCopyText(text, config, updateButtonToCopied, resetButton, $butt
                 }
                 if (updateButtonToCopied) {
                     updateButtonToCopied();
-                    // 保存定时器ID，以便后续清除
+                    // SaveScheduledDeviceID，For follow-upClear
                     const resetTimerId = setTimeout(function() {
                         resetButton();
                     }, config.resetDelay);
@@ -439,11 +439,11 @@ function fallbackCopyText(text, config, updateButtonToCopied, resetButton, $butt
             }
         } catch (err) {
             document.body.removeChild(textArea);
-            console.error('复制失败', err);
+            console.error('Copy Failed', err);
             if (typeof bootGrowl === 'function') {
                 bootGrowl(config.errorMessage, "danger");
             }
-            // 复制失败时也要清除复制中标记
+            // Copy FailedI'll have to.ClearCopyMiddle Tag
             if ($button && $button.length) {
                 $button.removeData('copying');
             }
@@ -452,18 +452,18 @@ function fallbackCopyText(text, config, updateButtonToCopied, resetButton, $butt
     });
 }
 
-// ******************* 全局定时刷新管理器 ***************************
+// ******************* GlobalScheduledRefreshManager***************************
 /**
- * 全局定时刷新管理器
- * 全局只启动一个定时任务，间隔固定5秒执行一次
- * 每个页面可以注册自己的刷新函数，只刷新当前显示页面的内容
+ * GlobalScheduledRefreshManager
+ * Global onlyStartOne.ScheduledTasks，Fixed interval5secondsRun once
+ * EachPageNoodles can register themselves.RefreshFunctions，OnlyRefreshCurrent DisplayPageNoodle content
  */
 const PageRefreshManager = (function() {
     let refreshTimer = null;
     let currentRefreshFn = null;
-    const REFRESH_INTERVAL = 5000; // 5秒
+    const REFRESH_INTERVAL = 5000; // 5seconds
 
-    // 启动定时器
+    // StartScheduledDevice
     function startTimer() {
         if (refreshTimer === null) {
             refreshTimer = setInterval(function() {
@@ -471,14 +471,14 @@ const PageRefreshManager = (function() {
                     try {
                         currentRefreshFn();
                     } catch (e) {
-                        console.error('页面刷新函数执行错误:', e);
+                        console.error('Page refreshing function executed error:', e);
                     }
                 }
             }, REFRESH_INTERVAL);
         }
     }
 
-    // 停止定时器
+    // StopScheduledDevice
     function stopTimer() {
         if (refreshTimer !== null) {
             clearInterval(refreshTimer);
@@ -488,8 +488,8 @@ const PageRefreshManager = (function() {
 
     return {
         /**
-         * 注册当前页面的刷新函数
-         * @param {Function} refreshFn - 刷新函数
+         * Register CurrentPageNoodles.RefreshFunctions
+         * @param {Function} refreshFn - RefreshFunctions
          */
         register: function(refreshFn) {
             currentRefreshFn = refreshFn;
@@ -497,14 +497,14 @@ const PageRefreshManager = (function() {
         },
         
         /**
-         * 取消注册当前页面的刷新函数
+         * CancelRegister CurrentPageNoodles.RefreshFunctions
          */
         unregister: function() {
             currentRefreshFn = null;
         },
         
         /**
-         * 停止定时器（通常不需要手动调用）
+         * StopScheduledDevice (normally no manual call required)
          */
         stop: function() {
             stopTimer();
@@ -513,14 +513,14 @@ const PageRefreshManager = (function() {
     };
 })();
 
-// 全局加载页面
+// Global LoadPageNoodles.
 function doLoader(url) {
-    // 使用统一的内容区域
+    // Use unified content area
     if ($mainContent.length) {
-        // 清除之前页面的刷新函数注册
+        // ClearBeforePageNoodles.RefreshFunctionsRegistration
         PageRefreshManager.unregister();
 
-        // 销毁当前内容区 dbSelect，避免页面切换后滚动监听访问已移除的 DOM
+        // Destroy Current Content AreadbSelect，AvoidPageScroll access removed after face switchingDOM
         if (typeof window.destroyDbSelectsIn === 'function') {
             window.destroyDbSelectsIn($mainContent);
         }
@@ -529,14 +529,14 @@ function doLoader(url) {
             window.syncSidebarActive(url);
         }
 
-        // 显示加载状态
+        // Show LoadingStatus
         showLoading();
 
-        // 加载页面内容
+        // LoadPageFace
         $mainContent.load($basePath + url, function (response, status, xhr) {
             hideLoading();
             if (status !== 'success') {
-                bootGrowl('页面加载失败，请稍后重试', "danger");
+                bootGrowl('Page loading failed, please try again later', "danger");
             } else if (window.DBSPermission && DBSPermission.isLoaded()) {
                 DBSPermission.apply($mainContent);
             }
@@ -544,12 +544,12 @@ function doLoader(url) {
     }
 }
 
-// 异常请求
+// ErrorRequest
 function doRequest(action, data) {
     hideLoading();
-    // 异常请求：302
+    // ErrorRequests:302
     if (!(data instanceof Object)) {
-        bootGrowl("会话过期, 3秒后将访问登录主页...", "danger");
+        bootGrowl("Session expires, access login home page in 3 seconds...", "danger");
         setTimeout(function () {
             location.href = $basePath;
         }, 3000);
@@ -558,13 +558,13 @@ function doRequest(action, data) {
     }
 }
 
-// 异常响应
+// ErrorResponse
 function doErrorResponse(xhr, status, info) {
     hideLoading();
-    bootGrowl("访问异常，请刷新或重试.", "danger");
+    bootGrowl("Access abnormal, please refresh or try again.", "danger");
 }
 
-// 全局Ajax post
+// GlobalAjax post
 function doPoster(url, params, action) {
     $.post($basePath + url, params, function (data) {
         doRequest(action, data);
@@ -573,7 +573,7 @@ function doPoster(url, params, action) {
     });
 }
 
-// 全局Ajax get
+// GlobalAjax get
 function doGetter(url, params, action) {
     $.get($basePath + url, params, function (data) {
         doRequest(action, data);
@@ -591,7 +591,7 @@ function initSearch(searchWrapperId, callback) {
         return null;
     }
 
-    // 更新搜索状态（显示/隐藏清除按钮）
+    // UpdateSearchStatus（Show / HideClearbutton)
     function updateSearchState(keyword) {
         if (keyword && keyword.trim() !== '') {
             searchClear.classList.add('active');
@@ -600,7 +600,7 @@ function initSearch(searchWrapperId, callback) {
         }
     }
 
-    // 清除搜索的内部实现
+    // ClearSearchInternal realization
     function clearSearch() {
         searchInput.value = '';
         searchInput.focus();
@@ -610,17 +610,17 @@ function initSearch(searchWrapperId, callback) {
         }
     }
 
-    // 绑定事件
+    // TieEvent
     searchInput.addEventListener('input', function(e) {
         const value = e.target.value;
-        // 立即更新清除按钮显示状态
+        // Update immediatelyClearShow administer buttonsStatus
         updateSearchState(value);
     });
 
-    // 清除搜索
+    // ClearSearch
     searchClear.addEventListener('click', clearSearch);
 
-    // 回车键搜索
+    // Back to car keysSearch
     searchInput.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -631,21 +631,21 @@ function initSearch(searchWrapperId, callback) {
         }
     });
 
-    // 避免重复绑定
+    // Avoid duplication of bindings
     searchInput.dataset.selectBound = 'true';
 
-    // 初始化状态
+    // InitializeStatus
     updateSearchState(searchInput.value || '');
 
-    // 返回包含 input 实例和方法的对象
+    // BackOrganisationinput Subject of example and methodology
     return {
-        // input 元素实例
+        // input Example of element
         input: searchInput,
-        // 模拟点击清除按钮
+        // Simulate ClickClearbutton
         clear: function() {
             clearSearch();
         },
-        // 设置搜索值
+        // SettingsSearchValue
         setValue: function(value) {
             searchInput.value = value || '';
             updateSearchState(searchInput.value);
@@ -653,11 +653,11 @@ function initSearch(searchWrapperId, callback) {
                 callback(searchInput.value);
             }
         },
-        // 获取搜索值
+        // AccessSearchValue
         getValue: function() {
             return searchInput.value;
         },
-        // 触发搜索（模拟回车）
+        // TriggerSearch（Simulation back)
         search: function() {
             updateSearchState(searchInput.value);
             if (callback) {
@@ -689,12 +689,12 @@ function initSwitch(dbSwitch, callback) {
     }
 }
 
-// 注销
+// Logout
 function logout() {
-    // 基础用法
+    // Basic use
     showConfirm({
-        title: '确定要注销？',
-        message: '确定后将跳转至登录页面',
+        title: 'Are you sure you want to write it off?',
+        message: 'Go to login page after confirmation Noodles.',
         icon: 'info',
         size: 'large',
         confirmType: 'info',
@@ -706,7 +706,7 @@ function logout() {
     });
 }
 
-// 刷新登录人信息（含功能权限码，驱动菜单/按钮显隐）
+// RefreshLoginPeople commented:Info（HamFunctional PermissionsI don't know.DriverMenu/Button Visible)
 function refreshLoginUser() {
     doGetter("/user/getUserInfo.json", {}, function (response) {
         if (response.success) {
@@ -723,7 +723,7 @@ function refreshLoginUser() {
     });
 }
 
-// 刷新授权信息（顶部 header 许可状态）
+// RefreshAuthorizationInfo（Topheader AllowStatus）
 function refreshLicense() {
     doGetter("/license/query.json", {}, function (response) {
         if (response.success !== true) {
@@ -749,18 +749,18 @@ function refreshLicense() {
         const edition = licenseInfo.edition;
         $licenseInfo.show();
         if (edition === "community") {
-            $editionName.text("社区版");
+            $editionName.text("Community");
             return;
         }
 
-        $editionName.text(licenseInfo.editionName || "专业版");
+        $editionName.text(licenseInfo.editionName || "Professional");
         const editionStatus = licenseInfo.editionStatus;
         const products = licenseInfo.products || [];
 
-        // 未激活：专业版已部署，但尚无任何产品授权
+        // Not activated：ProfessionalDeployment 1965aNoneAny productAuthorization
         if (editionStatus === "inactive" || (!editionStatus && products.length === 0)) {
             $("#licenseWarning").removeClass("hidden");
-            $attention.removeClass("hidden").addClass("license-attention-error").text("未激活");
+            $attention.removeClass("hidden").addClass("license-attention-error").text("Not activated");
             $arrow.removeClass("hidden");
             return;
         }
@@ -774,13 +774,13 @@ function refreshLicense() {
             }
         } else if (editionStatus === "expired") {
             $("#licenseWarning").removeClass("hidden");
-            $attention.removeClass("hidden").addClass("license-attention-error").text("全部功能已过期");
+            $attention.removeClass("hidden").addClass("license-attention-error").text("All functions expired");
         }
 
         const attentionCount = Number(licenseInfo.attentionCount) || 0;
         if (editionStatus !== "expired" && attentionCount > 0 && licenseInfo.attentionSummary) {
             $attention.removeClass("hidden");
-            $attention.addClass(licenseInfo.attentionSummary.indexOf("已过期") >= 0
+            $attention.addClass(licenseInfo.attentionSummary.indexOf("Expired") >= 0
                 ? "license-attention-error"
                 : "license-attention-warning");
             $attention.text(licenseInfo.attentionSummary);
@@ -797,15 +797,15 @@ function refreshLicense() {
 
 function renderLicenseProductList($dropdownMenu, $productDivider, products) {
     const statusConfig = {
-        normal: { icon: "fa-check-circle", badge: "badge-success", label: "正常" },
-        expiring: { icon: "fa-exclamation-triangle", badge: "badge-warning", label: "即将过期" },
-        expired: { icon: "fa-times-circle", badge: "badge-error", label: "已过期" }
+        normal: { icon: "fa-check-circle", badge: "badge-success", label: "Normal" },
+        expiring: { icon: "fa-exclamation-triangle", badge: "badge-warning", label: "Expiring soon" },
+        expired: { icon: "fa-times-circle", badge: "badge-error", label: "Expired" }
     };
 
     products.forEach(function (product) {
         const config = statusConfig[product.status] || statusConfig.normal;
         const effectiveTime = Number(product.effectiveTime) || 0;
-        const timeText = effectiveTime > 0 ? formatDate(effectiveTime) : "未激活";
+        const timeText = effectiveTime > 0 ? formatDate(effectiveTime) : "Not activated";
         $productDivider.before(
             '<li class="license-product-item">'
             + '<div class="license-product-main">'
@@ -819,50 +819,50 @@ function renderLicenseProductList($dropdownMenu, $productDivider, products) {
     $productDivider.removeClass("hidden");
 }
 
-// ******************* 同步任务表格展示内容 ***************************
+// ******************* Sync taskTable Presentation***************************
 
 function getStateConfig(mappingId) {
     return {
-        0: { // 未运行
+        0: { // Not running
             icon: 'fa-play',
-            title: '启动',
-            onclick: `changeMappingState('${mappingId}', '/mapping/start', '启动')`,
+            title: 'Start',
+            onclick: `changeMappingState('${mappingId}', '/mapping/start', 'Start')`,
             disabled: false,
             class: 'badge-info',
-            text: '未运行'
+            text: 'Not running'
         },
-        1: { // 运行中
+        1: { // Running
             icon: 'fa-pause',
-            title: '停止',
-            onclick: `changeMappingState('${mappingId}', '/mapping/stop', '停止')`,
+            title: 'Stop',
+            onclick: `changeMappingState('${mappingId}', '/mapping/stop', 'Stop')`,
             disabled: false,
             class: 'badge-success',
-            text: '运行中'
+            text: 'Running'
         },
-        2: { // 停止中
+        2: { // Stopping
             icon: 'fa-spinner fa-spin',
-            title: '停止中',
-            text: ' 停止中',
+            title: 'Stopping',
+            text: ' Stopping',
             disabled: true,
             class: 'badge-warning'
         }
     };
 }
 
-// 格式化百分比（保留2位小数）
+// Format SeemsminRatio (reserved)2decimal places)
 function formatPercent(value, maxFractionDigits) {
     if (value == null || isNaN(value)) return '0%';
     const percent = value * 100;
     return percent.toFixed(maxFractionDigits || 2) + '%';
 }
 
-// 格式化整数（千分位）
+// Format the integer number (thousands)minBits)
 function formatCount(value) {
     const num = Number(value) || 0;
-    return num.toLocaleString('zh-CN');
+    return num.toLocaleString('en-US');
 }
 
-// 追加耗时信息
+// Additional time-consumingInfo
 function formatElapsedDuration(startTime, endTime) {
     const begin = Number(startTime);
     const end = Number(endTime);
@@ -871,20 +871,20 @@ function formatElapsedDuration(startTime, endTime) {
     }
     const seconds = Math.floor((end - begin) / 1000);
     if (seconds < 60) {
-        return seconds + '秒';
+        return seconds + 'seconds';
     }
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     if (minutes < 60) {
-        return minutes + '分' + remainingSeconds + '秒';
+        return minutes + 'min' + remainingSeconds + 'seconds';
     }
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
-    return hours + '小时' + remainingMinutes + '分';
+    return hours + 'hours' + remainingMinutes + 'min';
 }
 
 function appendElapsedTime(content, meta) {
-    // 运行中/停止中 updateTime 往往未随计数刷新，用前端当前时间算实时耗时
+    // Running/Stopping updateTime Often not counted.Refresh，Use front-end currentTimeReal time.
     const RUNNING = 1;
     const STOPPING = 2;
     const endTime = (meta.state === RUNNING || meta.state === STOPPING)
@@ -894,10 +894,10 @@ function appendElapsedTime(content, meta) {
     if (!text) {
         return;
     }
-    content.push(`<div class="text-tertiary">耗时: ${text}</div>`);
+    content.push(`<div class="text-tertiary">Time-consuming: ${text}</div>`);
 }
 
-// 迷你进度条
+// Mini progress bar
 function renderMiniProgressBar(current, total) {
     const safeTotal = Number(total) || 0;
     const safeCurrent = Number(current) || 0;
@@ -907,7 +907,7 @@ function renderMiniProgressBar(current, total) {
     </div>`;
 }
 
-// 解析全量+增量当前阶段：full / increment / idle
+// ParsingFull + incrementalCurrent Involvement:full / increment / idle
 function resolveFullIncrementPhase(meta) {
     const RUNNING = 1;
     const STOPPING = 2;
@@ -916,14 +916,14 @@ function resolveFullIncrementPhase(meta) {
     const isActive = meta.state === RUNNING || meta.state === STOPPING;
 
     if (!isActive) {
-        // 停止后仍保留阶段语义，避免已完成全量却展示成全量进度条样式
+        // StopRetain the semantics of the period and avoid them.CompletedFullIt's a show.FullProgress Bar Style
         if (phaseCode === 'increment') {
             return 'increment';
         }
         return 'idle';
     }
 
-    // 以后端 snapshot 阶段为准（增量阶段 success 常小于全量 total，不能再用 processed < total 推断）
+    // Backendsnapshot Phase to be determinedIncrementalPhasesuccess Often less thanFull total，I can't use it anymore.processed < total Infer)
     if (phaseCode === 'increment') {
         return 'increment';
     }
@@ -936,14 +936,14 @@ function resolveFullIncrementPhase(meta) {
         if (meta.counting || isFullPhaseInProgress(meta, snapshot)) {
             return 'full';
         }
-        // 全量已标记为 full 但尚未统计出 total，仍按全量阶段展示
+        // FullMarked asfull But not yet countedtotal，Press stillFullPhase Presentation
         if ((Number(meta.total) || 0) === 0) {
             return 'full';
         }
         return 'increment';
     }
 
-    // 兼容旧数据：无 fullIncrementPhase 时回退到进度启发式
+    // Compatibility of old data: Socio-economicNone fullIncrementPhase Back to progress inspiration
     return isFullPhaseInProgress(meta, snapshot) ? 'full' : 'increment';
 }
 
@@ -959,34 +959,34 @@ function isFullPhaseInProgress(meta, snapshot) {
     return fullCursorActive && (total === 0 || processed <= total);
 }
 
-// 全量同步进度展示（全量 / 全量+增量全量阶段共用）
+// Full syncPresentation of progress (Full / Full + incrementalFullPhaseTotalUsed
 function renderFullPhaseSyncResult(meta) {
     const total = Number(meta.total) || 0;
     const success = Number(meta.success) || 0;
     const processed = success + (Number(meta.fail) || 0);
-    // 有总数即展示进度条（含完成后 100%），仅 total=0 时提示等待启动
+    // Yes.TotalShows progress barFinishBack100%），Onlytotal=0 TimeNoticeWaitStart
     const showProgress = total > 0;
     const content = [];
 
     content.push('<div class="sync-result text-xs">');
     if (meta.counting) {
-        content.push(`<div class="text-tertiary">正在统计表总数...</div>`);
+        content.push(`<div class="text-tertiary">Statistics in progressTotal...</div>`);
     } else {
-        content.push(`<div>总数: ${formatCount(total)}</div>`);
+        content.push(`<div>Total: ${formatCount(total)}</div>`);
         if (showProgress) {
             content.push(renderMiniProgressBar(processed, total));
-            content.push(`<div>全量进度: ${formatCount(processed)} / ${formatCount(total)} (${formatPercent(processed / total, 1)})</div>`);
+            content.push(`<div>FullProgress: ${formatCount(processed)} / ${formatCount(total)} (${formatPercent(processed / total, 1)})</div>`);
         } else {
-            content.push(`<div class="text-tertiary">等待全量任务启动...</div>`);
+            content.push(`<div class="text-tertiary">WaitFullTasksStart...</div>`);
         }
     }
     appendElapsedTime(content, meta);
-    content.push(`<div>成功: ${formatCount(success)}</div>`);
+    content.push(`<div>Success: ${formatCount(success)}</div>`);
     content.push('</div>');
     return content.join('');
 }
 
-// 全量+增量：结果列展示
+// Full + incremental：ResultColumn Presentation
 function renderFullIncrementSyncResult(meta) {
     const phase = resolveFullIncrementPhase(meta);
     const total = Number(meta.total) || 0;
@@ -998,33 +998,33 @@ function renderFullIncrementSyncResult(meta) {
     }
     content.push('<div class="sync-result text-xs">');
     if (phase === 'increment') {
-        content.push(`<div>成功: ${formatCount(success)}</div>`);
+        content.push(`<div>Success: ${formatCount(success)}</div>`);
     } else {
         if (total > 0) {
-            content.push(`<div>全量总数: ${formatCount(total)}</div>`);
+            content.push(`<div>FullTotal: ${formatCount(total)}</div>`);
         }
-        content.push(`<div>成功: ${formatCount(success)}</div>`);
+        content.push(`<div>Success: ${formatCount(success)}</div>`);
     }
 
     content.push('</div>');
     return content.join('');
 }
 
-// 全量模式：结果列展示
+// FullMode:ResultColumn Presentation
 function renderFullSyncResult(meta) {
     return renderFullPhaseSyncResult(meta);
 }
 
-// 同步失败行
+// Sync failedOkay.
 function renderMappingFailLine(meta, mappingId) {
     if (!meta.fail || meta.fail <= 0) {
         return '';
     }
     const id = mappingId || '';
-    return `<div class="text-xs mt-1">失败: <span class="text-error">${formatCount(meta.fail)}</span> <span class="hover-underline cursor-pointer text-error" title='查看失败详情' onclick="doLoader('/mapping/page/detail?id=${id}&detailStatus=fail')">查看详情</span></div>`;
+    return `<div class="text-xs mt-1">Failed: <span class="text-error">${formatCount(meta.fail)}</span> <span class="hover-underline cursor-pointer text-error" title='View failed details' onclick="doLoader('/mapping/page/detail?id=${id}&detailStatus=fail')">View details</span></div>`;
 }
 
-// 根据同步结果生成内容
+// By SyncResultGenerateContents
 function renderSyncResult(mapping) {
     const meta = mapping.meta;
     if (!meta) return '';
@@ -1037,40 +1037,40 @@ function renderSyncResult(mapping) {
     if (mapping.model === 'full') {
         content.push(renderFullSyncResult(meta));
     } else {
-        content.push(`<div class="text-xs">成功: ${formatCount(meta.success || 0)}</div>`);
+        content.push(`<div class="text-xs">Success: ${formatCount(meta.success || 0)}</div>`);
     }
     content.push(renderMappingFailLine(meta, mapping.id));
     return content.join('');
 }
 
-// 根据任务类型生成内容
+// Based onTask TypeGenerateContents
 function renderModelText(model) {
     const modelState = {
-        'full': { // 全量
+        'full': { // Full
             class: 'badge-primary',
-            text: '全量同步',
+            text: 'Full sync',
         },
-        'increment': { // 增量
+        'increment': { // Incremental
             class: 'badge-info',
-            text: '增量同步',
+            text: 'Incremental sync',
         },
         'fullIncrement': {
             class: 'badge-info',
-            text: '全量+增量',
+            text: 'Full + incremental',
         }
     };
-    const config = modelState[model] || { class: 'badge-secondary', text: model || '未知' };
+    const config = modelState[model] || { class: 'badge-secondary', text: model || 'Unknown' };
     return `<span class="badge ${config.class}">${config.text}</span>`;
 }
 
-// 根据状态生成内容
+// Based onStatusGenerateContents
 function renderStateText(state) {
     const stateConfig = getStateConfig();
     const config = stateConfig[state] || stateConfig[0];
     return `<span class="badge ${config.class}">${config.text}</span>`;
 }
 
-// 根据状态生成操作按钮
+// Based onStatusGenerateActionsbutton
 function renderStateButton(state, mappingId) {
     const stateConfig = getStateConfig(mappingId);
     const config = stateConfig[state] || stateConfig[0];
@@ -1086,10 +1086,10 @@ function renderStateButton(state, mappingId) {
         </button>
     `);
     }
-    // 未运行才显示删除按钮
+    // Not runningShow onlyDeletebutton
     if (state === 0 && canEdit) {
         stateBtn.push(`
-            <button class="table-action-btn delete" title="删除" onclick="deleteMapping('${mappingId}')">
+            <button class="table-action-btn delete" title="Delete" onclick="deleteMapping('${mappingId}')">
                 <i class="fa fa-trash"></i>
             </button>
         `);
@@ -1098,7 +1098,7 @@ function renderStateButton(state, mappingId) {
 }
 
 /**
- * 侧栏：分组展开、收缩、按 url 高亮
+ * Sidebar:GroupExpand, shrink, pressurl Highlight
  */
 (function (window, $) {
     'use strict';
@@ -1120,7 +1120,7 @@ function renderStateButton(state, mappingId) {
         closeAllFlyouts();
         const $btn = $('#sidebarToggle');
         if ($btn.length) {
-            $btn.attr('title', collapsed ? '展开侧栏' : '收起侧栏');
+            $btn.attr('title', collapsed ? 'Expand Sidebar' : 'Collapse sidebar');
         }
     }
 
@@ -1222,7 +1222,7 @@ function renderStateButton(state, mappingId) {
         if (!$item || !$item.length) {
             return;
         }
-        // 展开整条祖先链（支持系统管理 → 日志管理）
+        // Expand whole ancestral chain (support Strategies)System management → Log management）
         $item.parents('.sidebar-group').addClass('open').addClass('has-active');
         saveOpenGroups();
     }
@@ -1241,7 +1241,7 @@ function renderStateButton(state, mappingId) {
     }
 
     function syncSidebarGroupVisibility() {
-        // 自内向外：先处理嵌套分组，再处理外层
+        // From the inside: handle the nest firstGroup，Reprocess the outer layer.
         const $groups = $('.sidebar-group').toArray().reverse();
         $groups.forEach(function (el) {
             const $group = $(el);
@@ -1286,7 +1286,7 @@ function renderStateButton(state, mappingId) {
         $(document).on('click', '.sidebar-group-title', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            // 收缩态靠悬停弹出二级菜单，点击分组标题不切换
+            // Shrink by suspending pop-up secondary menu, clickGroupTitle does not switch
             if (isCollapsed()) {
                 return;
             }
@@ -1294,7 +1294,7 @@ function renderStateButton(state, mappingId) {
             saveOpenGroups();
         });
 
-        // 收缩态：悬停分组弹出二级（兼容移入浮层）
+        // Shrink: SuspendedGroupPopup Level 2 (compatible migration to float)
         $(document).on('mouseenter', '.sidebar-group', function () {
             if (!isCollapsed()) {
                 return;
@@ -1321,7 +1321,7 @@ function renderStateButton(state, mappingId) {
 })(window, jQuery);
 
 $(function () {
-    // 定义返回函数，子页面返回
+    // DefinitionsBackFunctions，SonPageNoodles.Back
     window.backIndexPage = function () {
         doLoader('/index');
     };
@@ -1333,33 +1333,33 @@ $(function () {
 
     refreshLoginUser();
     refreshLicense();
-    // 初始化版权信息
+    // Initialize copyrightInfo
     doGetter("/index/version.json", {}, function (response) {
         if (response.success === true) {
-            // 获取底部版权信息
+            // Get bottom copyrightsInfo
             $("#copyRight").html(response.data.appCopyRight);
             settings.watermark_txt = response.data.watermark;
             watermark();
         }
     });
 
-    // 下拉菜单
+    // Dropdown Menu
     const $dropdown = $(".dropdown");
     const $dropdownBtn = $(".dropdown button");
     const $dropdownMenu = $(".dropdown .dropdown-menu");
     $dropdownBtn.on('click', function (){
         event.stopPropagation();
-        // 只切换当前下拉菜单，不影响其他下拉菜单
+        // Toggle only the current dropdown menu, without prejudiceOtherDropdown Menu
         const $currentDropdown = $(this).closest('.dropdown');
         const $currentMenu = $currentDropdown.find('.dropdown-menu');
-        // 关闭其他下拉菜单
+        // CloseOtherDropdown Menu
         $dropdown.not($currentDropdown).removeClass("open");
         $dropdownMenu.not($currentMenu).addClass("hidden");
-        // 切换当前下拉菜单
+        // Toggle the current dropdown menu
         $currentDropdown.toggleClass("open");
         $currentMenu.toggleClass("hidden");
     });
-    // 只有点击下拉菜单按钮或菜单项外才关闭
+    // Only if you click the drop-down menu button or menu entryClose
     $(document).on('click', function(event) {
         if (!$(event.target).closest('.dropdown').length) {
             $dropdown.removeClass("open");
@@ -1368,7 +1368,7 @@ $(function () {
     });
 });
 /**
- * 连接器分页 → dbSelect 选项
+ * ConnectorminPage → dbSelect Options
  */
 function convertConnectorPagingToSelectData(paging, preferredType) {
     const rows = paging && Array.isArray(paging.data) ? paging.data : [];
@@ -1393,7 +1393,7 @@ function convertConnectorPagingToSelectData(paging, preferredType) {
 }
 
 /**
- * 构建远程连接器 dbSelect 配置（库侧分页）。
+ * Build RemoteConnector dbSelect Configure（LibraryIt's the other way.minPage）。
  * @param {Object} extra defaultValue/defaultLabel/defaultType/relationOnly/preferredType/role/pageSize/disabled/onSelect
  */
 function buildRemoteConnectorSelectOptions(extra) {
@@ -1436,7 +1436,7 @@ function buildRemoteConnectorSelectOptions(extra) {
                         data: convertConnectorPagingToSelectData(paging, extra.preferredType)
                     });
                 } else {
-                    bootGrowl(res.message || '加载连接器失败', 'danger');
+                    bootGrowl(res.message || 'Failed to load connector', 'danger');
                     if (typeof onError === 'function') {
                         onError();
                     }
@@ -1448,7 +1448,7 @@ function buildRemoteConnectorSelectOptions(extra) {
 }
 
 /**
- * 从 dbSelect 选中项解析连接器类型（优先 data.connectorType）。
+ * Resolve connector type from dbSelect (prefer data.connectorType).
  */
 function resolveConnectorTypeFromSelect($connector, connectorId) {
     const api = $connector && $connector.data ? $connector.data('dbSelect') : null;
@@ -1469,7 +1469,7 @@ function resolveConnectorTypeFromSelect($connector, connectorId) {
 }
 
 /**
- * 通用远程分页下拉（ConfigModel 风格：id + name）。
+ * Shared remote page drawer config model (id + name).
  * @param {Object} extra url/defaultValue/defaultLabel/pageSize/onSelect/convertRow/params
  */
 function buildRemotePagingSelectOptions(extra) {
@@ -1517,7 +1517,7 @@ function buildRemotePagingSelectOptions(extra) {
                         data: data
                     });
                 } else {
-                    bootGrowl(res.message || '加载失败', 'danger');
+                    bootGrowl(res.message || 'Loading failed', 'danger');
                     if (typeof onError === 'function') {
                         onError();
                     }

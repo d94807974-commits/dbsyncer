@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 /**
- * 全量同步表级进度
+ * Full syncTable of progress
  *
  * @author wuji
  * @version 1.0.0
@@ -37,11 +37,11 @@ public abstract class FullTableProgressUtil {
     }
 
     /**
-     * 解析表级 Meta。
+     * Parsing Table LevelsMeta。
      *
-     * @param taskMetaProfile Meta 服务
-     * @param tableGroupId    表映射 ID
-     * @return 明细 Meta，可能为 null
+     * @param taskMetaProfile Meta Services
+     * @param tableGroupId    MapID
+     * @return DetailsMeta，Maybe.null
      */
     public static Meta resolve(TaskMetaProfile taskMetaProfile, String tableGroupId) {
         if (taskMetaProfile == null || StringUtil.isBlank(tableGroupId)) {
@@ -51,11 +51,11 @@ public abstract class FullTableProgressUtil {
     }
 
     /**
-     * 表是否已完成
+     * TableYesNoCompleted
      *
-     * @param taskMetaProfile Meta 服务
-     * @param tableGroupId    表映射 ID
-     * @return true 已完成
+     * @param taskMetaProfile Meta Services
+     * @param tableGroupId    MapID
+     * @return true Completed
      */
     public static boolean isDone(TaskMetaProfile taskMetaProfile, String tableGroupId) {
         Meta meta = resolve(taskMetaProfile, tableGroupId);
@@ -70,11 +70,11 @@ public abstract class FullTableProgressUtil {
     }
 
     /**
-     * 读取或初始化单表进度（不写库）。
+     * Read or initialize table progress (do not write)Library）。
      *
-     * @param taskMetaProfile Meta 服务
-     * @param tableGroupId    表映射 ID
-     * @return 进度，不会为 null
+     * @param taskMetaProfile Meta Services
+     * @param tableGroupId    MapID
+     * @return Progress.null
      */
     public static CommonTaskSnapshot getOrInit(TaskMetaProfile taskMetaProfile, String tableGroupId) {
         Meta meta = resolve(taskMetaProfile, tableGroupId);
@@ -88,12 +88,12 @@ public abstract class FullTableProgressUtil {
     }
 
     /**
-     * 覆盖写单表进度到明细 Meta（无则创建）。
-     * <p>已存在时经 {@link TaskMetaProfile#updateMetaProgress} 写前重载，避免覆盖原子计数。
+     * OverwriteWrite Form to DetailsMeta（Noneis created.
+     * <p>Period Existing{@link TaskMetaProfile#updateMetaProgress} Reload Before Writing, AvoidOverwriteExclusive Refer POLICY Continuity Accommodation Moratorium
      *
-     * @param taskMetaProfile Meta 服务
-     * @param tableGroupId    表映射 ID
-     * @param snapshot        表级快照；null 表示清空快照且 state=READY
+     * @param taskMetaProfile Meta Services
+     * @param tableGroupId    MapID
+     * @param snapshot        Table snapshots;null OrganisationClearQuick!state=READY
      */
     public static void save(TaskMetaProfile taskMetaProfile, String tableGroupId, CommonTaskSnapshot snapshot) {
         if (taskMetaProfile == null || StringUtil.isBlank(tableGroupId)) {
@@ -120,11 +120,11 @@ public abstract class FullTableProgressUtil {
     }
 
     /**
-     * 按页清空任务下全部表明细进度（快照清空、state=READY；保留 success/fail 等计数）。
+     * PressPageClearTasksconcludeAllShow details.Clear、state=READY；Reservationssuccess/fail I Appeal Articles Democracy Issues
      *
-     * @param taskMetaProfile   Meta 服务
-     * @param tableGroupProfile 表映射服务
-     * @param taskId            任务 ID
+     * @param taskMetaProfile   Meta Services
+     * @param tableGroupProfile Map Service
+     * @param taskId            Tasks ID
      */
     public static void clearAll(TaskMetaProfile taskMetaProfile, TableGroupProfile tableGroupProfile, String taskId) {
         if (taskMetaProfile == null || tableGroupProfile == null || StringUtil.isBlank(taskId)) {
@@ -135,10 +135,10 @@ public abstract class FullTableProgressUtil {
     }
 
     /**
-     * 清空给定表映射的明细进度（快照清空、state=READY；保留 success/fail 等计数）。
+     * ClearDetailed progress for given map (scatter)Clear、state=READY；Reservationssuccess/fail I Appeal Articles Democracy Issues
      *
-     * @param taskMetaProfile Meta 服务
-     * @param tableGroupIds   本批表映射 ID
+     * @param taskMetaProfile Meta Services
+     * @param tableGroupIds   This batch mapID
      */
     public static void clearAll(TaskMetaProfile taskMetaProfile, List<String> tableGroupIds) {
         if (taskMetaProfile == null || CollectionUtils.isEmpty(tableGroupIds)) {
@@ -153,8 +153,8 @@ public abstract class FullTableProgressUtil {
     }
 
     /**
-     * 重置任务下全部表明细 Meta：行保留；state=READY、快照清空、计数归零；缺失则创建。
-     * <p>批量 {@link TaskMetaProfile#getDetailMetaMap} 读取；缺失批量 ADD，已存在逐条 UPDATE。
+     * ResetTasksconcludeAllShow fineMeta：Reservations;state=READY、PhotoClear、Count Enhancement is zero; missing is created.
+     * <p>Batch{@link TaskMetaProfile#getDetailMetaMap} reading;missing batchesADD，Exists article by articleUPDATE。
      */
     public static void resetAll(TaskMetaProfile taskMetaProfile, List<String> tableGroupIds) {
         if (taskMetaProfile == null || CollectionUtils.isEmpty(tableGroupIds)) {
@@ -196,12 +196,12 @@ public abstract class FullTableProgressUtil {
     }
 
     /**
-     * 任务下是否存在未完成的表进度（按页扫描，不一次装入全部表映射）。
+     * TasksconcludeYesNoExistingFinishTable of progress (byPageScan, load Thirty-one.AllThe map.
      *
-     * @param taskMetaProfile   Meta 服务
-     * @param tableGroupProfile 表映射服务
-     * @param taskId            任务 ID
-     * @return true 存在未完成进度
+     * @param taskMetaProfile   Meta Services
+     * @param tableGroupProfile Map Service
+     * @param taskId            Tasks ID
+     * @return true ExistingFinishProgress
      */
     public static boolean hasIncomplete(TaskMetaProfile taskMetaProfile, TableGroupProfile tableGroupProfile, String taskId) {
         if (taskMetaProfile == null || tableGroupProfile == null || StringUtil.isBlank(taskId)) {
@@ -221,11 +221,11 @@ public abstract class FullTableProgressUtil {
     }
 
     /**
-     * 是否存在未完成的表进度（有快照且非 DONE，或 state 为运行中/停止中）。
+     * YesNoExistingFinish. . . . .DONE，orstate YesRunning/Stopping）。
      *
-     * @param taskMetaProfile Meta 服务
-     * @param tableGroupIds   本批表映射 ID
-     * @return true 存在未完成进度
+     * @param taskMetaProfile Meta Services
+     * @param tableGroupIds   This batch mapID
+     * @return true ExistingFinishProgress
      */
     public static boolean hasIncomplete(TaskMetaProfile taskMetaProfile, List<String> tableGroupIds) {
         if (taskMetaProfile == null || CollectionUtils.isEmpty(tableGroupIds)) {
@@ -256,11 +256,11 @@ public abstract class FullTableProgressUtil {
     }
 
     /**
-     * 构造运行中快照。
+     * ConstructRunningSc 49.
      *
-     * @param pageIndex 页码
-     * @param cursor    游标
-     * @return 快照
+     * @param pageIndex PageCode
+     * @param cursor    Cursor
+     * @return Photo
      */
     public static CommonTaskSnapshot runningSnapshot(int pageIndex, String cursor) {
         CommonTaskSnapshot snap = new CommonTaskSnapshot();
@@ -271,9 +271,9 @@ public abstract class FullTableProgressUtil {
     }
 
     /**
-     * 构造已完成快照。
+     * ConstructCompletedSc 49.
      *
-     * @return 快照
+     * @return Photo
      */
     public static CommonTaskSnapshot doneSnapshot() {
         CommonTaskSnapshot snap = new CommonTaskSnapshot();
@@ -284,10 +284,10 @@ public abstract class FullTableProgressUtil {
     }
 
     /**
-     * 表级写锁（与 FlushStrategyImpl 表明细计数增量共用同一键）。
+     * TableLevelWriteLock（and FlushStrategyImpl Show countIncrementalTotalUse the same key.
      *
-     * @param tableGroupId 表映射 ID
-     * @return 锁对象
+     * @param tableGroupId MapID
+     * @return Lock 15:00
      */
     public static Object tableLock(String tableGroupId) {
         String id = StringUtil.isBlank(tableGroupId) ? StringUtil.EMPTY : tableGroupId;

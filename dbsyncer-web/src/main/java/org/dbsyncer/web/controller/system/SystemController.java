@@ -41,7 +41,7 @@ public class SystemController extends BaseController {
         return "system/list";
     }
 
-    @OperLog(type = OperLogType.SYSTEM_INFO, message = "修改系统配置")
+    @OperLog(type = OperLogType.SYSTEM_INFO, message = "Modify System Configuration")
     @PostMapping("/edit")
     @ResponseBody
     public RestResult edit(HttpServletRequest request) {
@@ -55,7 +55,7 @@ public class SystemController extends BaseController {
         }
     }
 
-    @OperLog(type = OperLogType.SYSTEM_INFO, message = "生成RSA密钥")
+    @OperLog(type = OperLogType.SYSTEM_INFO, message = "Generate RSA Key")
     @PostMapping("/generateRSA")
     @ResponseBody
     public RestResult generateRSA(HttpServletRequest request, @RequestParam(value = "keyLength") int keyLength) {
@@ -69,9 +69,9 @@ public class SystemController extends BaseController {
     }
 
     /**
-     * 生成 API 密钥（OpenAPI 登录凭证）
+     * Generate API KeyOpenAPI Login)
      */
-    @OperLog(type = OperLogType.SYSTEM_INFO, message = "生成API密钥")
+    @OperLog(type = OperLogType.SYSTEM_INFO, message = "Gene Subject")
     @PostMapping("/generateApiSecret")
     @ResponseBody
     public RestResult generateApiSecret(HttpServletRequest request) {

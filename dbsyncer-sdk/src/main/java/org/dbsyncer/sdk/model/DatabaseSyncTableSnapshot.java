@@ -6,7 +6,7 @@ package org.dbsyncer.sdk.model;
 import java.io.Serializable;
 
 /**
- * 表级迁移快照（按表映射 index 索引）。
+ * Table migration snapshot (maps by table)index Index）。
  *
  * @author wuji
  * @version 1.0.0

@@ -7,7 +7,7 @@ import org.dbsyncer.sdk.enums.ModelEnum;
 import org.dbsyncer.sdk.plugin.AbstractPluginContext;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2024-12-05 01:07
  */

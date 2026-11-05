@@ -11,9 +11,9 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * 几何数据类型值转换
+ * Geometric DataTypeValueConvert
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-01-18 13:03
  */
@@ -28,16 +28,16 @@ public class SqlServerGeometryData extends CustomData {
         List<Object> args = new ArrayList<>();
         Object value = getValue();
 
-        // SQL 只需要 2 个参数！
-        // 参数1: WKT（NULLIF 的第一个参数）
-        // 参数2: SRID
+        // SQL Just...2 individualParameter！
+        // Parameter1: WKT（NULLIF FirstParameter）
+        // Parameter2: SRID
         if (value == null || value.toString().trim().isEmpty()) {
             args.add("");
             args.add(0);
             return args;
         }
 
-        // 解析 WKT 和 SRID
+        // ParsingWKT andSRID
         GeometryData data = parseGeometry(String.valueOf(value));
         if (StringUtil.isBlank(data.wkt)) {
             args.add("");
@@ -50,8 +50,8 @@ public class SqlServerGeometryData extends CustomData {
     }
 
     /**
-     * 解析包含 SRID 的 WKT 字符串
-     * 格式: "SRID=4326;POINT(133.4 38.5)" 或 "POINT(133.4 38.5) | 4326"
+     * Pars empowerSRID Yes.WKT String
+     * Format: "SRID=4326;POINT(133.4 38.5)" or"POINT(133.4 38.5) | 4326"
      */
     private GeometryData parseGeometry(String input) {
         GeometryData data = new GeometryData();
@@ -62,13 +62,13 @@ public class SqlServerGeometryData extends CustomData {
         input = input.trim();
 
         try {
-            // 格式: "POINT (133.4 38.5) | 4326"
+            // Format: "POINT (133.4 38.5) | 4326"
             if (input.contains("|")) {
                 String[] parts = input.split("\\|");
                 data.wkt = parts[0].trim();
                 data.srid = Integer.parseInt(parts[1].trim());
             }
-            // 格式: "SRID=4326;POINT(133.4 38.5)"
+            // Format: "SRID=4326;POINT(133.4 38.5)"
             else if (input.toUpperCase().startsWith("SRID=")) {
                 int semicolonIdx = input.indexOf(';');
                 if (semicolonIdx > 0) {
@@ -77,13 +77,13 @@ public class SqlServerGeometryData extends CustomData {
                     data.srid = Integer.parseInt(sridPart.replaceAll("[^0-9]", ""));
                 }
             }
-            // 格式: 纯 WKT
+            // Format: PureWKT
             else {
                 data.wkt = input;
                 data.srid = 0;
             }
         } catch (Exception e) {
-            // 解析失败，返回空
+            // ParsingFailed，BackEmpty
             data.wkt = "";
             data.srid = 0;
         }

@@ -6,7 +6,7 @@ package org.dbsyncer.connector.gaussdb.schema;
 import org.dbsyncer.connector.postgresql.schema.PostgreSQLSchemaResolver;
 
 /**
- * GaussDB 标准数据类型解析器
+ * GaussDB Standard ContextTypeParser
  *
  * @author wuji
  * @version 1.0.0

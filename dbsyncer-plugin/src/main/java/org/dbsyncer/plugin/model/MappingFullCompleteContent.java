@@ -8,7 +8,7 @@ import org.dbsyncer.sdk.enums.NoticeTypeEnum;
 import org.dbsyncer.sdk.model.NoticeContent;
 
 /**
- * 全量同步完成通知
+ * Full SyncAnnouncements
  *
  * @author wuji
  * @version 1.0.0

@@ -4,31 +4,31 @@
 package org.dbsyncer.common.enums;
 
 /**
- * 通用任务状态（任务运行态与快照/进度态统一）：
- * 0-未运行；1-运行中；2-停止中；3-已完成。
+ * UniversalTasksStatus（TasksRun StateandSnapshots/conformity of progress:
+ * 0-Not running；1-Running；2-Stopping；3-Completed。
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2025-10-18 19:52
  */
 public enum CommonTaskStatusEnum {
 
     /**
-     * 未运行 / 未执行
+     * Not running / Not implemented
      */
-    READY(0, "未运行"),
+    READY(0, "Not running"),
     /**
-     * 运行中
+     * Running
      */
-    RUNNING(1, "运行中"),
+    RUNNING(1, "Running"),
     /**
-     * 停止中
+     * Stopping
      */
-    STOPPING(2, "停止中"),
+    STOPPING(2, "Stopping"),
     /**
-     * 已完成
+     * Completed
      */
-    DONE(3, "已完成");
+    DONE(3, "Completed");
 
     private final int code;
     private final String message;
@@ -47,7 +47,7 @@ public enum CommonTaskStatusEnum {
     }
 
     /**
-     * 运行中或停止中（尚未回到未运行/已完成）
+     * RunningorStopping（Not back yetNot running/Completed）
      */
     public static boolean isRunning(int status) {
         return status == RUNNING.code || status == STOPPING.code;

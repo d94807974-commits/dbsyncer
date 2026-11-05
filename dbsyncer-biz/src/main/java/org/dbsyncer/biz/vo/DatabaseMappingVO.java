@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 库映射业务视图：库维字段继承 {@link DatabaseMapping}，表映射仅用于接口入参/回显。
+ * LibraryMap business view:LibraryVFieldSuccession{@link DatabaseMapping}，Maps only forInterfaceReference/Reference.
  *
  * @author wuji
  * @version 1.0.0
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public final class DatabaseMappingVO extends DatabaseMapping {
 
     /**
-     * 表映射（源表 -&gt; 目标表），对应 dbsyncer_table_group，不写入 task.JSON
+     * TableMapSource table -&gt; Target table），Corresponddbsyncer_table_group，Do Not Writetask.JSON
      */
     private List<TableMapping> tableMappings = new ArrayList<>();
 
@@ -36,7 +36,7 @@ public final class DatabaseMappingVO extends DatabaseMapping {
     }
 
     /**
-     * 按 index 升序返回表映射列表（副本）。
+     * Pressindex RaiseBackMapList（Copy that.
      */
     public List<TableMapping> getSortedTableMappings() {
         if (tableMappings == null || tableMappings.isEmpty()) {
@@ -48,7 +48,7 @@ public final class DatabaseMappingVO extends DatabaseMapping {
     }
 
     /**
-     * 从库映射领域模型复制库维字段。
+     * FromLibraryMap Field ModelCopyLibraryVField。
      */
     public static DatabaseMappingVO from(DatabaseMapping mapping) {
         DatabaseMappingVO vo = new DatabaseMappingVO();
@@ -59,7 +59,7 @@ public final class DatabaseMappingVO extends DatabaseMapping {
     }
 
     /**
-     * 转为可持久化的库映射（不含表）。
+     * Convert to AvailableEnduringYes.LibraryMap (excluding tables). Nonetheless, there are no tables.
      */
     public DatabaseMapping toDatabaseMapping() {
         DatabaseMapping mapping = new DatabaseMapping();

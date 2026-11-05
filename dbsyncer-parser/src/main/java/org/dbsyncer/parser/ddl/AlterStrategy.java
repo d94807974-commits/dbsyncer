@@ -10,7 +10,7 @@ import net.sf.jsqlparser.statement.alter.AlterExpression;
 import net.sf.jsqlparser.statement.alter.AlterExpression;
 
 /**
- * Alter策略
+ * AlterPolicy
  *
  * @version 1.0.0
  * @Author life
@@ -19,7 +19,7 @@ import net.sf.jsqlparser.statement.alter.AlterExpression;
 public interface AlterStrategy {
 
     /**
-     * 解析DDLConfig
+     * ParsingDDLConfig
      *
      * @param expression
      * @param ddlConfig

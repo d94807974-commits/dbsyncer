@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * DuckDB 标准数据类型解析器
+ * DuckDB Standard ContextTypeParser
  *
  * @author wuji
  * @version 1.0.0
@@ -34,7 +34,7 @@ import java.util.stream.Stream;
 public final class DuckDBSchemaResolver extends AbstractDatabaseSchemaResolver {
 
     /**
-     * 剥离精度/标度后缀，如 DECIMAL(10,2) → DECIMAL。
+     * StripOutlook salute/Punctuation suffix, ifDECIMAL(10,2) → DECIMAL。
      */
     public static String normalizeTypeName(String typeName) {
         if (typeName == null) {

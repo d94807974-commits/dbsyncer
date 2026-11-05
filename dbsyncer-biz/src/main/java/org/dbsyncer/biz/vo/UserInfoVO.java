@@ -13,27 +13,27 @@ import java.util.List;
 public class UserInfoVO extends UserInfo {
 
     /**
-     * 主角色 ID（dbsyncer_user_role）
+     * LordRole ID（dbsyncer_user_role）
      */
     private String roleId;
 
     /**
-     * 角色名称
+     * Role Name
      */
     private String roleName;
 
     /**
-     * 是否超管（username=admin）
+     * YesNoSuper Physicalusername=admin）
      */
     private boolean admin;
 
     /**
-     * 功能权限码列表（如 mapping:operate）
+     * Functional PermissionsCodeList（Likemapping:operate）
      */
     private List<String> permissions = new ArrayList<>();
 
     /**
-     * 是否因登录失败被临时锁定（进程内状态，不持久化）
+     * YesNoBecauseLogin failedTemporary locked (in process)Status，Oh, no.Enduring）
      */
     private boolean locked;
 

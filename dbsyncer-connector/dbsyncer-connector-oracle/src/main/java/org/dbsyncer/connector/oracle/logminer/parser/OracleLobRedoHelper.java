@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * LogMiner redo 中 LOB 占位识别（大字段常以 EMPTY_BLOB/EMPTY_CLOB 出现在 SQL_REDO）。
+ * LogMiner redo MediumLOB Place recognition (large)FieldAlways.EMPTY_BLOB/EMPTY_CLOB PresentSQL_REDO）。
  *
  * @author wuji
  * @version 1.0.0
@@ -25,7 +25,7 @@ public final class OracleLobRedoHelper {
     }
 
     /**
-     * 行中需按主键回查覆盖的下标：LOB 列且值为 EMPTY_BLOB()/EMPTY_CLOB() 占位（INSERT/UPDATE 大字段常见）。
+     * Press in linePrimary keyCheck back.OverwriteSubscript:LOB CRC Committee on the Rights of the ChildValueYesEMPTY_BLOB()/EMPTY_CLOB() PositionINSERT/UPDATE LargeFieldCommon).
      */
     public static List<Integer> findEmptyLobPlaceholderIndexes(List<Field> fields, List<Object> data) {
         List<Integer> indexes = new ArrayList<>();

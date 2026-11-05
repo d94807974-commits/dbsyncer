@@ -21,9 +21,9 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Base64;
 
 /**
- * 加密工具类
- * 支持AES-GCM加密和RSA密钥交换
- * 支持公网/内网场景的签名算法
+ * Encryption Tool Class
+ * SupportAES-GCMEncrypt andRSAKey Exchange
+ * Takes note of the signing algorithm that supports the public/intranet scene
  *
  * @author AE86
  * @version 2.0.0
@@ -32,7 +32,7 @@ public final class CryptoUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(CryptoUtil.class);
 
-    // AES-GCM配置
+    // AES-GCMConfigure
     private static final String AES_ALGORITHM = "AES/GCM/NoPadding";
     private static final String KEY_ALGORITHM = "AES";
     private static final int AES_KEY_SIZE = 256;
@@ -40,7 +40,7 @@ public final class CryptoUtil {
     private static final int GCM_IV_LENGTH = 12;
 
     /**
-     * 生成AES密钥对
+     * GenerateAESKey pair
      */
     public static String generateAESKeyPair() {
         try {
@@ -50,13 +50,13 @@ public final class CryptoUtil {
 
             return Base64.getEncoder().encodeToString(secretKey.getEncoded());
         } catch (Exception e) {
-            logger.error("生成AES密钥失败", e);
-            throw new RuntimeException("生成AES密钥失败", e);
+            logger.error("Failed to generate AES keys", e);
+            throw new RuntimeException("Failed to generate AES keys", e);
         }
     }
 
     /**
-     * AES-GCM加密数据
+     * AES-GCMEncrypt data
      */
     public static AesData encryptData(String data, String aesKey) {
         try {
@@ -78,13 +78,13 @@ public final class CryptoUtil {
 
             return aesData;
         } catch (Exception e) {
-            logger.error("AES加密数据失败", e);
-            throw new RuntimeException("AES加密数据失败", e);
+            logger.error("Failed to encrypt AES data", e);
+            throw new RuntimeException("Failed to encrypt AES data", e);
         }
     }
 
     /**
-     * AES-GCM解密数据
+     * AES-GCMDecrypt Data
      */
     public static String decryptData(String encryptedData, String iv, String aesKey) {
         try {
@@ -97,31 +97,31 @@ public final class CryptoUtil {
             byte[] decryptedData = cipher.doFinal(Base64.getDecoder().decode(encryptedData));
             return new String(decryptedData, StandardCharsets.UTF_8);
         } catch (Exception e) {
-            logger.error("AES解密数据失败", e);
-            throw new RuntimeException("AES解密数据失败", e);
+            logger.error("Could not close temporary folder: %s", e);
+            throw new RuntimeException("Could not close temporary folder: %s", e);
         }
     }
 
     /**
-     * 构建加密传输请求
+     * Build Encrypted Transfer Request
      *
-     * @param data            要加密的数据
-     * @param privateKey      私钥
+     * @param data            Data to Encrypt
+     * @param privateKey      Private Combined Key
      * @param hmacSecret      HMAC密钥（用于签名，内网场景必需）
-     * @param isPublicNetwork 是否为公网场景（true-公网使用RSA-SHA256签名，false-内网使用HMAC-SHA256签名）
-     * @return 加密后的请求JSON字符串
+     * @param isPublicNetwork YesNoIt's a public view.true-Internet useRSA-SHA256Signature,false-Intranet useHMAC-SHA256English
+     * @return Encrypted RequestJSONString
      */
     public static OpenApiData encryptResponse(String data, RSAPrivateKey privateKey, String hmacSecret, boolean isPublicNetwork) {
-        // 1. 生成临时AES密钥
+        // 1. GenerateTemporaryAESKey
         String aesKey = generateAESKeyPair();
 
-        // 2. AES加密数据
+        // 2. AESEncrypt data
         AesData aesData = encryptData(data, aesKey);
 
-        // 3. RSA加密AES密钥
+        // 3. RSAEncryptionAESKey
         String encryptedAESKey = RSAUtil.privateEncrypt(aesKey, privateKey);
 
-        // 4. 构建传输结构
+        // 4. Build Transfer Structure
         OpenApiData request = new OpenApiData();
         request.setTimestamp(System.currentTimeMillis());
         request.setNonce(CryptoUtil.generateNonce());
@@ -129,57 +129,57 @@ public final class CryptoUtil {
         request.setEncryptedData(aesData.getEncryptedData());
         request.setIv(aesData.getIv());
 
-        // 5. 生成签名（根据场景选择不同算法）
+        // 5. GenerateSignature (selection of algorithms according to scene)
         String dataToSign = buildUnifiedSignData(request.getEncryptedData(), request.getTimestamp(), request.getNonce());
         String signature = isPublicNetwork ? RSAUtil.signSHA256(dataToSign, privateKey) : hmacSha256Sign(dataToSign, hmacSecret);
-        logger.info("签名:{}", signature);
+        logger.info("Signature:", signature);
         request.setSignature(signature);
         return request;
     }
 
     /**
-     * 解析加密传输请求 - 服务端使用
+     * Parsing Encrypted Transfer Request - Service User
      *
-     * @param data            加密数据
-     * @param publicKey       公钥
-     * @param hmacSecret      HMAC密钥（用于验证签名，内网场景必需）
-     * @param isPublicNetwork 是否为公网场景
-     * @return 解密数据
+     * @param data            Encrypt data
+     * @param publicKey       Public Key
+     * @param hmacSecret      HMACKeys (for authentication of signatures, internal content required)
+     * @param isPublicNetwork YesNoTo the public view.
+     * @return Decrypt Data
      */
     public static String decryptRequest(OpenApiData data, RSAPublicKey publicKey, String hmacSecret, boolean isPublicNetwork) {
         String signature = data.getSignature();
         if (signature == null || signature.isEmpty()) {
-            throw new RuntimeException("签名不能为空");
+            throw new RuntimeException("Signature cannot be empty");
         }
 
-        // 1. 验证签名
+        // 1. Authenticate signature
         String dataToVerify = buildUnifiedSignData(data.getEncryptedData(), data.getTimestamp(), data.getNonce());
         boolean verifySignature = isPublicNetwork ? RSAUtil.verifySHA256(dataToVerify, signature, publicKey) : signature.equals(hmacSha256Sign(dataToVerify, hmacSecret));
         if (!verifySignature) {
-            throw new RuntimeException("签名验证失败");
+            throw new RuntimeException("Signature authentication failed");
         }
 
         String iv = data.getIv();
         if (iv == null || iv.isEmpty()) {
-            throw new RuntimeException("IV不能为空");
+            throw new RuntimeException("IV cannot be empty.");
         }
-        // 2. RSA解密AES密钥
+        // 2. RSADecryptAESKey
         String aesKey = RSAUtil.publicDecrypt(data.getEncryptedKey(), publicKey);
 
-        // 3. AES解密数据
+        // 3. AESDecrypt Data
         return decryptData(data.getEncryptedData(), iv, aesKey);
     }
 
     /**
-     * 统一的签名字符串构建方法
-     * 加密和解鉴必须使用同一个方法
+     * Uniform signature string construction method
+     * Encryption and reconciliation must use the same method.
      */
     private static String buildUnifiedSignData(String encryptedData, long timestamp, String nonce) {
         return String.format("%s|%d|%s", encryptedData, timestamp, nonce);
     }
 
     /**
-     * 生成随机nonce
+     * GenerateRandomnonce
      */
     private static String generateNonce() {
         SecureRandom random = new SecureRandom();
@@ -189,7 +189,7 @@ public final class CryptoUtil {
     }
 
     /**
-     * HMAC-SHA256签名（内网场景）
+     * HMAC-SHA256Signature (inline scene)
      */
     private static String hmacSha256Sign(String data, String secret) {
         try {
@@ -199,8 +199,8 @@ public final class CryptoUtil {
             byte[] hash = mac.doFinal(data.getBytes(StandardCharsets.UTF_8));
             return Base64.getEncoder().encodeToString(hash);
         } catch (Exception e) {
-            logger.error("HMAC-SHA256签名失败", e);
-            throw new RuntimeException("HMAC-SHA256签名失败", e);
+            logger.error("HMAC-SHA256 signature failed", e);
+            throw new RuntimeException("HMAC-SHA256 signature failed", e);
         }
     }
 

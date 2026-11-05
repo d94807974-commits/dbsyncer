@@ -1,95 +1,95 @@
-## 介绍
+## Introduction
 
 ![logo](https://gitee.com/ghi/dbsyncer/raw/master/dbsyncer-web/src/main/resources/static/img/logo.png)
 
-[DBSyncer](https://dbsyncer.cn)（英[dbsɪŋkɜː(r)]，美[dbsɪŋkɜː(r)
-简称dbs）是一款开源的数据同步中间件，提供MySQL、Oracle、SqlServer、PostgreSQL、Elasticsearch(ES)
-、Kafka、File、SQL等同步场景。支持上传插件自定义同步转换业务，提供监控全量和增量数据统计图、应用性能预警等。
+[DBSyncer](https://dbsyncer.cn) (pronounced [dbsɪŋkɜː(r)], short for **dbs**) is an open-source data synchronization middleware. It covers sync scenarios for MySQL, Oracle, SQL Server, PostgreSQL, Elasticsearch (ES), Kafka, File, SQL, and more. You can upload plugins to customize transform logic, and monitor full/incremental stats with application performance alerts.
 
-> 特点
+> Features
 
-* 组合驱动，自定义库同步到库组合，关系型数据库与非关系型之间组合，任意搭配表同步映射关系
-* 实时监控，驱动全量或增量实时同步运行状态、结果、同步日志和系统日志
-* 开发插件，自定义转化同步逻辑
+* Flexible drivers — combine relational and non-relational sources/targets with arbitrary table mappings
+* Real-time monitoring — full or incremental sync status, results, sync logs, and system logs
+* Plugin SDK — customize transform and sync logic
 
-> 项目地址
+> Upstream repositories
 
-* [Gitee](https://gitee.com/ghi/dbsyncer "https://gitee.com/ghi/dbsyncer")
-* [GitHub](https://github.com/86dbs/dbsyncer "https://github.com/86dbs/dbsyncer")
+* [Gitee](https://gitee.com/ghi/dbsyncer)
+* [GitHub](https://github.com/86dbs/dbsyncer)
 
 [![star](https://gitee.com/ghi/dbsyncer/badge/star.svg?theme=dark)](https://gitee.com/ghi/dbsyncer/stargazers)
 [![fork](https://gitee.com/ghi/dbsyncer/badge/fork.svg?theme=dark)](https://gitee.com/ghi/dbsyncer/members)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://gitee.com/ghi/dbsyncer/blob/master/LICENSE)
 
-> 官网地址
+> Website
 
 https://dbsyncer.cn
 
-## 🌈应用场景
+> This fork
 
-| 连接器             | 数据源 | 目标源 | 支持版本(包含以下)                          |
-|-----------------|-----|-----|-------------------------------------|
-| ClickHouse      | ✔   | ✔   | 22.x+                               |
-| Dameng          | ✔   | ✔   | DM8                                 |
-| Doris           | ✔   | ✔   | 1.2.x以上                             |
-| DuckDB          | ✔   | ✔   | 1.5.x                               |
-| Elasticsearch   | ✔   | ✔   | 6.0.0-8.15.3                        |
-| File            | ✔   | ✔   | *.txt, *.unl                        |
-| H2              | ✔   | ✔   | 2.2.x                               |
-| Http            | ✔   | ✔   | HTTP/1.1                            |
-| Kafka           | ✔   | ✔   | 2.10-0.9.0.0以上                      |
-| Kingbase        | ✔   | ✔   | V8                                  |
-| MongoDB         | ✔   | ✔   | 4.2以上                               |
-| MySQL           | ✔   | ✔   | 5.7.19以上                            |
-| OceanBase       | ✔   | ✔   | 3.x以上                               |
-| OceanBaseOracle | ✔   | ✔   | 3.x以上                               |
-| Oracle          | ✔   | ✔   | 10g-19c                             |
-| PostgreSQL      | ✔   | ✔   | 9.5.25以上                            |
-| Redis           | ✔   | ✔   | 作为源（增量CDC）5.x ~ 7.x; <br/>作为目标 2.6+ |
-| RocketMQ        | ✔   | ✔   | 4.9.x以上                             |
-| Sqlite          | ✔   | ✔   | 2以上                                 |
-| SqlServer       | ✔   | ✔   | 2008以上                              |
-| StarRocks       | ✔   | ✔   | 2.5以上                               |
-| TiDB            | ✔   | ✔   | 5.x以上                               |
-| SQL             | ✔   |     | 支持以上关系型数据库                          |
+* English UI / messages / logs branch: `i18n-english`
+* Chinese README: [README.zh-CN.md](./README.zh-CN.md)
+* Upstream: https://github.com/86dbs/dbsyncer
 
-## ✨预览
+## Application scenarios
 
-![仪表盘](https://foruda.gitee.com/images/1769953561917318680/775e6928_376718.png "仪表盘")
+| Connector       | Source | Target | Supported versions                          |
+|-----------------|--------|--------|---------------------------------------------|
+| ClickHouse      | ✔      | ✔      | 22.x+                                       |
+| Dameng          | ✔      | ✔      | DM8                                         |
+| Doris           | ✔      | ✔      | 1.2.x+                                      |
+| DuckDB          | ✔      | ✔      | 1.5.x                                       |
+| Elasticsearch   | ✔      | ✔      | 6.0.0–8.15.3                                |
+| File            | ✔      | ✔      | *.txt, *.unl                                |
+| H2              | ✔      | ✔      | 2.2.x                                       |
+| Http            | ✔      | ✔      | HTTP/1.1                                    |
+| Kafka           | ✔      | ✔      | 2.10-0.9.0.0+                               |
+| Kingbase        | ✔      | ✔      | V8                                          |
+| MongoDB         | ✔      | ✔      | 4.2+                                        |
+| MySQL           | ✔      | ✔      | 5.7.19+                                     |
+| OceanBase       | ✔      | ✔      | 3.x+                                        |
+| OceanBaseOracle | ✔      | ✔      | 3.x+                                        |
+| Oracle          | ✔      | ✔      | 10g–19c                                     |
+| PostgreSQL      | ✔      | ✔      | 9.5.25+                                     |
+| Redis           | ✔      | ✔      | Source (incremental CDC) 5.x–7.x; target 2.6+ |
+| RocketMQ        | ✔      | ✔      | 4.9.x+                                      |
+| Sqlite          | ✔      | ✔      | 2+                                          |
+| SqlServer       | ✔      | ✔      | 2008+                                       |
+| StarRocks       | ✔      | ✔      | 2.5+                                        |
+| TiDB            | ✔      | ✔      | 5.x+                                        |
+| SQL             | ✔      |        | Relational databases listed above           |
 
-![监控](https://foruda.gitee.com/images/1769953915949399025/fc16d35b_376718.png "监控")
+## Preview
 
-## 📚[使用手册 Wiki](https://gitee.com/ghi/dbsyncer/wikis "https://gitee.com/ghi/dbsyncer/wikis")
+![Dashboard](https://foruda.gitee.com/images/1769953561917318680/775e6928_376718.png "Dashboard")
 
-## 📦安装配置
+![Monitor](https://foruda.gitee.com/images/1769953915949399025/fc16d35b_376718.png "Monitor")
 
--
-dbsyncer-x.x.x.zip [社区版安装教程](https://gitee.com/ghi/dbsyncer/wikis/%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/%E7%A4%BE%E5%8C%BA%E7%89%88%E5%AE%89%E8%A3%85)
--
-dbsyncer-enterprise-x.x.x.zip [专业版安装教程](https://gitee.com/ghi/dbsyncer/wikis/%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/%E4%B8%93%E4%B8%9A%E7%89%88%E5%AE%89%E8%A3%85)
+## User manual (Wiki)
 
-#### 方式一 下载安装包
+https://gitee.com/ghi/dbsyncer/wikis
 
-1. 安装[JDK 1.8](https://www.oracle.com/java/technologies/jdk8-downloads.html)（省略详细）
-2. 下载安装包[dbsyncer-x.x.x.zip](https://gitee.com/ghi/dbsyncer/releases)（也可手动编译）
-3. 解压安装包，Window执行bin/startup.bat，Linux执行bin/startup.sh
-4. 打开浏览器访问：http://127.0.0.1:18686
-5. 账号和密码：admin/admin
+## Install
 
-#### 方式二 🐳 docker
+- dbsyncer-x.x.x.zip — [Community install guide](https://gitee.com/ghi/dbsyncer/wikis)
+- dbsyncer-enterprise-x.x.x.zip — [Professional install guide](https://gitee.com/ghi/dbsyncer/wikis)
 
-* 阿里云镜像
+#### Option 1 — Download package
+
+1. Install [JDK 1.8+](https://www.oracle.com/java/technologies/jdk8-downloads.html)
+2. Download [dbsyncer-x.x.x.zip](https://gitee.com/ghi/dbsyncer/releases) (or build from source)
+3. Unzip; on Windows run `bin/startup.bat`, on Linux run `bin/startup.sh`
+4. Open http://127.0.0.1:18686
+5. Default account: `admin` / `admin`
+
+#### Option 2 — Docker
 
 ```shell
-# 社区版
+# Community
 docker pull images.dbsyncer.cn/xhtb-dbs/dbsyncer:latest
 docker pull images.dbsyncer.cn/xhtb-dbs/dbsyncer:2.1.5
-# 专业版
+# Professional
 docker pull images.dbsyncer.cn/xhtb-dbs/dbsyncer-enterprise:latest
 docker pull images.dbsyncer.cn/xhtb-dbs/dbsyncer-enterprise:2.1.5
 ```
-
-* 运行命令
 
 ```shell
 docker run -d \
@@ -106,89 +106,58 @@ docker run -d \
   --log-opt max-size=100m \
   --log-opt max-file=7 \
   images.dbsyncer.cn/xhtb-dbs/dbsyncer:latest
-
 ```
 
-```shell
-# 本地日志
-ls -la /opt/dbsyncer/logs
+## Build from source
 
-# 容器日志
-docker logs --tail 20 dbsyncer
-# 容器实时日志（Ctrl+C退出）
-docker logs -f dbsyncer
-# 进入容器内部
-docker exec -it dbsyncer /bin/bash
-# 查看容器日志
-ls -la /app/dbsyncer/logs
-
-# 停止容器
-docker stop dbsyncer
-# 启动容器
-docker start dbsyncer
-# 重启容器
-docker restart dbsyncer
-# 删除容器（需先停止）
-docker rm dbsyncer
-```
-
-## ⚙️手动编译
-
-> 先确保环境已安装JDK和Maven
+Requires JDK and Maven:
 
 ```bash
-$ git clone https://gitee.com/ghi/dbsyncer.git
-$ cd dbsyncer
-$ chmod u+x build.sh
-$ ./build.sh
+git clone https://github.com/d94807974-commits/dbsyncer.git
+cd dbsyncer
+git checkout i18n-english
+chmod u+x build.sh
+./build.sh
 ```
 
-## 🏆[性能测试](https://gitee.com/ghi/dbsyncer/wikis/%E5%BF%AB%E9%80%9F%E4%BA%86%E8%A7%A3/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95)
+Or:
 
-#### 全量同步
+```bash
+mvn -DskipTests package
+```
 
-| 系统      | 机器配置                                        | 数据量 | 耗时     |
-|---------|---------------------------------------------|-----|--------|
-| Mac     | Apple M3 Pro 12核心 内存18GB                    | 1亿条 | 31分50秒 |
-| Linux   | Intel(R) Xeon(R) CPU E5-2696 v3B 8核心 内存48GB | 1亿条 | 37分52秒 |
-| Windows | AMD Ryzen 7 5800x 8核心 12GB                  | 1亿条 | 57分43秒 |
+## Performance tests
 
-#### 增量同步
+See upstream wiki: https://gitee.com/ghi/dbsyncer/wikis
 
-| 系统      | 机器配置                                        | 分配内存 | TPS    | 峰值      |
-|---------|---------------------------------------------|------|--------|---------|
-| Mac     | Apple M3 Pro 12核心 内存18GB                    | 4GB  | 8112/秒 | 11000/秒 |
-| Linux   | Intel(R) Xeon(R) CPU E5-2696 v3B 8核心 内存48GB | 4GB  | 8000/秒 | 10000/秒 |
-| Windows | AMD Ryzen 7 5800x 8核心 12GB                  | 4GB  | 7553/秒 | 9000/秒  |
+#### Full sync
 
-<img src="https://foruda.gitee.com/images/1722860668272963387/7110f00f_376718.png" />
+| OS      | Hardware                                      | Rows      | Duration   |
+|---------|-----------------------------------------------|-----------|------------|
+| Mac     | Apple M3 Pro 12-core, 18GB RAM                | 100M      | 31m 50s    |
+| Linux   | Intel Xeon E5-2696 v3B 8-core, 48GB RAM       | 100M      | 37m 52s    |
+| Windows | AMD Ryzen 7 5800x 8-core, 12GB RAM            | 100M      | 57m 43s    |
 
-<img src="https://foruda.gitee.com/images/1732952268144233045/b607609e_376718.png" />
+#### Incremental sync
 
-[专业版介绍](https://gitee.com/ghi/dbsyncer/wikis/DBSyncer%E4%B8%93%E4%B8%9A%E7%89%88)
+| OS      | Hardware                                      | Heap | TPS     | Peak     |
+|---------|-----------------------------------------------|------|---------|----------|
+| Mac     | Apple M3 Pro 12-core, 18GB RAM                | 4GB  | 8112/s  | 11000/s  |
+| Linux   | Intel Xeon E5-2696 v3B 8-core, 48GB RAM       | 4GB  | 8000/s  | 10000/s  |
+| Windows | AMD Ryzen 7 5800x 8-core, 12GB RAM            | 4GB  | 7553/s  | 9000/s   |
 
-## 🐞[常见问题](https://gitee.com/ghi/dbsyncer/wikis/%E5%92%A8%E8%AF%A2%E9%97%AE%E9%A2%98/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)
+## FAQ
 
-*
-MySQL无法连接。默认使用的驱动版本为8.0.21，如果为mysql5.x需要手动替换驱动 [mysql-connector-java-5.1.40.jar](https://gitee.com/ghi/dbsyncer/attach_files)
-*
-SQLServer无法连接。案例：[驱动程序无法通过使用安全套接字层(SSL)加密与 SQL Server 建立安全连接。错误:“The server selected protocol version TLS10 is not accepted by client preferences [TLS12]”](https://gitee.com/ghi/dbsyncer/issues/I4PL46?from=project-issue)
-*
-同步数据乱码。案例：[mysql8表导入sqlserver2008R2后，sqlserver表nvarchar字段内容为乱码](https://gitee.com/ghi/dbsyncer/issues/I4JXY0)
-* [如何开启远程debug模式？](https://gitee.com/ghi/dbsyncer/issues/I63F6R)
+* MySQL connection issues: default driver is 8.0.21; for MySQL 5.x replace with [mysql-connector-java-5.1.40.jar](https://gitee.com/ghi/dbsyncer/attach_files)
+* SQL Server SSL/TLS issues: see upstream issues
+* Garbled sync data / remote debug: see upstream wiki FAQ
 
-## 🤝贡献支持
+## Credits
 
-* DBS团队目标：**坚持开源，让每一个用户都能轻松完成数据同步！**
-* QQ群讨论: **875519623**
-*
-欢迎大家提需求和建议[【新建issuses】](https://gitee.com/ghi/dbsyncer/issues/new?issue%5Bassignee_id%5D=0&issue%5Bmilestone_id%5D=0)!
-（详细描述你的原始需求，我们会帮你提供一些方案，节约大家的成本）
+* Upstream project and authors: [86dbs/dbsyncer](https://github.com/86dbs/dbsyncer) (Apache-2.0)
+* Original Gitee project: https://gitee.com/ghi/dbsyncer
+* This English localization is a community fork contribution and is not an official upstream release
 
-1) **内推项目** 如您觉得项目不错，可推荐到公司，建立长期稳定的商业合作，提供更专业的技术服务。（入群联系群主）
-2) **参与开发** 项目成员有不同专业的大佬，相信一定能找到您比较感兴趣的方向，欢迎加入团队！（入群联系群主）
-3) 开源不易，感谢粉丝朋友们的支持！[【捐赠者名单】](https://gitee.com/ghi/dbsyncer/issues/I4HL3C)
+## License
 
-<p>
-<img src="https://foruda.gitee.com/images/1736348493470674811/5761f9e8_13999669.png "二维码_01.png"" title="微信扫码" width="258px" height="283.8px" /><img src="https://foruda.gitee.com/images/1736348568894927308/12fe6e2d_13999669.png "二维码_02.png"" title="微信扫码" width="258px" height="283.8px" /><img src="https://foruda.gitee.com/images/1738991478241390049/8f566d69_13999669.png "哔站二维码.png"" title="微信扫码" width="258px" height="283.8px" />
-<p>
+Apache License 2.0 — see [LICENSE](./LICENSE)

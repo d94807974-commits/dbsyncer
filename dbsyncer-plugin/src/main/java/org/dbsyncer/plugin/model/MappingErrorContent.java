@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * 驱动异常信息
+ * MappingOrganisation
  *
  * @Author AE86
  * @Version 1.0.0

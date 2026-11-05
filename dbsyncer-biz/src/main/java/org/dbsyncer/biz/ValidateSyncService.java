@@ -14,40 +14,40 @@ import java.util.Map;
 public interface ValidateSyncService {
 
     /**
-     * 获取任务
+     * AccessTasks
      */
     ValidateSyncTaskVO get(String id);
 
     /**
-     * 添加任务
+     * AddTasks
      */
     String add(Map<String, String> params);
 
     /**
-     * 修改任务
+     * UpdateTasks
      */
     String edit(Map<String, String> params);
 
     /**
-     * 复制任务
+     * CopyTasks
      *
-     * @param id       源任务 ID
-     * @param username 操作者用户名（用于授予新资源 ACL）
+     * @param id       SourceTasks ID
+     * @param username ActionsWhoUsername（For awarding newResource ACL）
      */
     String copy(String id, String username);
 
     /**
-     * 删除任务
+     * DeleteTasks
      */
     String delete(String id);
 
     /**
-     * 启动任务
+     * StartTasks
      */
     String start(String id);
 
     /**
-     * 停止任务
+     * StopTasks
      */
     String stop(String id);
 
@@ -57,60 +57,60 @@ public interface ValidateSyncService {
     Paging<ValidateSyncListVO> search(Map<String, String> params);
 
     /**
-     * 搜索表关系
+     * SearchTable relation
      */
     Paging<TableGroup> searchTableGroup(Map<String, String> params);
 
     /**
-     * 分页搜索校验任务表（用于下拉框远程搜索）
+     * minPageSearchVerify INTRODUCTIONTasksTable (for bottom frame remote)Search）
      */
     Paging<Table> searchTables(Map<String, String> params);
 
     /**
-     * 获取结果
+     * AccessResult
      */
     Object result(String id);
 
     /**
-     * 刷新表列表
+     * Refresh tablesList
      */
     String refreshTables(String id);
 
     /**
-     * 刷新表字段
+     * Refresh tablesField
      */
     String refreshFields(String id);
 
     /**
-     * 分页查询校验结果明细
+     * minPageQuery VerificationResultDetails
      *
-     * @param params 包含 taskId、pageNum、pageSize；可选 lite=true 列表不查 CONTENT
-     * @return 分页结果
+     * @param params OrganisationtaskId、pageNum、pageSize；Optionallite=true ListNo, no, no.CONTENT
+     * @return minPageResult
      */
     Paging searchResult(Map<String, String> params);
 
     /**
-     * 按明细主键查询单条（含完整 CONTENT）。
+     * By DetailsPrimary keyQuery lines (including complete)CONTENT）。
      *
-     * @param taskId 校验任务ID(明细分表定位)
-     * @param id     明细 ID
-     * @return 单条 Map，不存在返回 null
+     * @param taskId Verify INTRODUCTIONTask ID(DetailsminTable location)
+     * @param id     DetailsID
+     * @return SingleMap，does not existBack null
      */
     Object getValidateResultDetail(String taskId, String id);
 
     /**
-     * 对单条校验明细中尚未订正的差异执行手动订正。
+     * Not (1985) yetRevisedYes.VarianceManualRevised。
      *
-     * @param taskId   校验任务ID(明细分表定位)
-     * @param detailId 明细主键
-     * @return 更新后的明细
+     * @param taskId   Verify INTRODUCTIONTask ID(DetailsminTable location)
+     * @param detailId DetailsPrimary key
+     * @return Updated Details
      */
     Object manualReviseDetail(String taskId, String detailId);
 
     String addTableGroup(Map<String, String> params);
 
     /**
-     * 批量新增表映射；遇重复跳过；收尾只对齐一次明细（匹配相似表等场景）。
+     * BatchInsertMap;jumping in case of repetition; closing only once in detail (Match similar tablesWait for the scene.
      */
     void addTableGroupBatch(Map<String, String> params);
 

@@ -14,19 +14,19 @@ import java.util.Map;
 
 public abstract class AbstractConfigModel extends ConfigModel {
 
-    // 全局参数
+    // GlobalParameter
     private Map<String, String> params = new HashMap<>();
 
-    // 过滤条件
+    // Filter Conditions
     private List<Filter> filter = new ArrayList<>();
 
-    // 转换配置
+    // Convert Configuration
     private List<Convert> convert = new ArrayList<>();
 
-    // 插件配置
+    // Plugin Configuration
     private Plugin plugin;
 
-    // 插件参数
+    // PluginParameter
     private String pluginExtInfo;
 
     public Map<String, String> getParams() {

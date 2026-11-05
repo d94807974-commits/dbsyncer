@@ -8,53 +8,53 @@ import org.dbsyncer.sdk.model.ConnectorConfig;
 /**
  * @author AE86
  * @ClassName: DatabaseConfig
- * @Description: 数据库连接配置
- * @date: 2017年7月20日 下午3:40:59
+ * @Description: Data FactLibraryConnectConfigure
+ * @date: 2017Year7Intern20p.m.3:40:59
  */
 public class DatabaseConfig extends ConnectorConfig {
 
     /**
-     * 驱动
+     * Mapping
      */
     private String driverClassName;
 
     /**
-     * 主机
+     * Host
      */
     private String host;
 
     /**
-     * 端口
+     * Port
      */
     private int port;
 
     /**
-     * 帐号
+     * Account number
      */
     private String username;
 
     /**
-     * 密码
+     * Password
      */
     private String password;
 
     /**
-     * 最大连接数
+     * Max connections
      */
     private int maxActive = 64;
 
     /**
-     * 连接有效期(ms)
+     * ConnectValid until(ms)
      */
     private long keepAlive = 60000;
 
     /**
-     * 数据库名(PGSQL、MySQL)
+     * Data FactLibraryFirst Name(PGSQL、MySQL)
      */
     private String database;
 
     /**
-     * 服务名称(Oracle)
+     * Name of service(Oracle)
      */
     private String serviceName;
 

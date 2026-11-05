@@ -17,70 +17,70 @@ import java.util.Map;
 public interface ConnectorConfigService {
 
     /**
-     * 新增连接器
+     * InsertConnector
      */
     String add(Map<String, String> params);
 
     /**
-     * 复制连接器
+     * CopyConnector
      *
-     * @param id       源连接器 ID
-     * @param username 操作者用户名（用于授予新资源 ACL）
+     * @param id       SourceConnector ID
+     * @param username ActionsWhoUsername（For awarding newResource ACL）
      */
     String copy(String id, String username);
 
     /**
-     * 修改连接器
+     * Modify ConnectionDevice
      */
     String edit(Map<String, String> params);
 
     /**
-     * 删除连接器
+     * DeleteConnector
      */
     String remove(String id);
 
     /**
-     * 获取连接器
+     * AccessConnector
      */
     Connector getConnector(String id);
 
     /**
-     * 获取数据库信息
+     * Getting dataLibraryInfo
      */
     List<String> getDatabase(String id);
 
     /**
-     * 获取Schema信息
+     * AccessSchemaInfo
      */
     List<String> getSchema(String id, String catalog);
 
     /**
-     * 获取所有连接器
+     * Get AllConnector
      */
     List<Connector> getConnectorAll();
 
     /**
-     * 搜索连接器
+     * SearchConnector
      */
     Paging<Connector> search(Map<String, String> params);
 
     /**
-     * 获取所有支持的连接器类型
+     * Get All SupportedConnectorType
      */
     List<String> getConnectorTypeAll();
 
     /**
-     * 检查连接器状态
+     * InspectionConnectorStatus
      */
     void refreshHealth();
 
     /**
-     * 连接器是否可用
+     * ConnectorYesNoAvailable Lawyers
      */
     boolean isAlive(String id);
 
     /**
-     * 获取位点信息
+     * Get BitsInfo
      */
     Object getPosition(String params);
 }

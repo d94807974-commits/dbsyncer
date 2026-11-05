@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2024-11-26 22:59
  */
@@ -32,7 +32,7 @@ public final class MySQLTimestampType extends TimestampType {
 
     @Override
     protected Timestamp merge(Object val, Field field) {
-        // 兼容 MySQL 8.0 驱动返回的 LocalDateTime / LocalDate，以及时间字符串
+        // CompatibilityMySQL 8.0 MappingBackYes.LocalDateTime / LocalDate，andTimeString
         if (val instanceof java.util.Date) {
             java.util.Date date = (java.util.Date) val;
             return new Timestamp(date.getTime());
@@ -67,7 +67,7 @@ public final class MySQLTimestampType extends TimestampType {
     }
 
     /**
-     * 解析 DATETIME 小数秒精度
+     * ParsingDATETIME DecimalsecondsOutlook salute
      */
     private int resolveFractionalSeconds(Field field) {
         int ratio = field.getRatio();

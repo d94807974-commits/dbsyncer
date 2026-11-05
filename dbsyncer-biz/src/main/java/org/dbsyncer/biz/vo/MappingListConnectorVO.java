@@ -4,7 +4,7 @@
 package org.dbsyncer.biz.vo;
 
 /**
- * 同步任务列表：源/目标连接器摘要。
+ * Sync taskList：Source/Target Connectioninstrument summary.
  *
  * @author wuji
  * @version 1.0.0

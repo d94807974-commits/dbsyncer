@@ -1,12 +1,12 @@
 CREATE TABLE `dbsyncer_connector` (
-  `ID` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '唯一ID',
-  `CREATE_TIME` bigint NOT NULL COMMENT '创建时间',
-  `UPDATE_TIME` bigint NOT NULL COMMENT '修改时间',
-  `NAME` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '连接器名称',
-  `TYPE` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '连接类型',
-  `IS_SOURCE` tinyint NOT NULL DEFAULT 1 COMMENT '作为源标识, 0-否 1-是',
-  `IS_TARGET` tinyint NOT NULL DEFAULT 1 COMMENT '作为目标标识, 0-否 1-是',
-  `STATUS` tinyint NOT NULL DEFAULT 1 COMMENT '连接状态, 0-离线 1-在线',
-  `JSON` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '配置信息',
+  `ID` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'Unique ID',
+  `CREATE_TIME` bigint NOT NULL COMMENT 'Created at',
+  `UPDATE_TIME` bigint NOT NULL COMMENT 'Updated at',
+  `NAME` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'Analysis',
+  `TYPE` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'Connection Type',
+  `IS_SOURCE` Tinyint NOT NULL DEFAULT 1 COMMENT ' as source identifier, 0-No 1-Yes ',
+  `IS_TARGET` Tinyint NOT NULL DEFAULT 1 COMMENT 'as target identifier, 0-No 1-Yes ',
+  `STATUS` tinyint NOT NULL DEFAULT 1 COMMENT 'Connect, 0-offline 1-Online ',
+  `JSON` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT 'Configuration',
   PRIMARY KEY (`ID`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '连接配置表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = 'Connection Profile' ROW_FORMAT = Dynamic;

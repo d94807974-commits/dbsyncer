@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * H2 存储兼容升级（临时，随 StorageDataMigrator 一并可删）。
+ * H2 Storage compatibility upgrade (temporary, withStorageDataMigrator One can be deleted.
  *
  * @author wuji
  * @version 1.0.0

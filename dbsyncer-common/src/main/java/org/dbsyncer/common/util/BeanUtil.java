@@ -47,14 +47,14 @@ public abstract class BeanUtil {
             return null;
         }
 
-        // 如果类型已经匹配，直接返回
+        // IfTypeImpact match. Direct.Back
         if (fType.isInstance(value)) {
             return value;
         }
 
         String targetTypeName = fType.getName();
 
-        // 字符串转数字和布尔
+        // String to Number and Boolean
         if (value instanceof String) {
             String strValue = (String) value;
             if (StringUtil.isBlank(strValue)) {
@@ -122,17 +122,17 @@ public abstract class BeanUtil {
             }
         }
 
-        // 数字转字符串
+        // Numeric spin string
         if (value instanceof Number && String.class.equals(fType)) {
             return String.valueOf(value);
         }
 
-        // 布尔转字符串
+        // and then the
         if (value instanceof Boolean && String.class.equals(fType)) {
             return String.valueOf(value);
         }
 
-        // 数字类型之间的转换
+        // NumbersTypeBetweenConvert
         if (value instanceof Number) {
             Number num = (Number) value;
 
@@ -167,7 +167,7 @@ public abstract class BeanUtil {
             }
         }
 
-        // 布尔类型之间的转换
+        // BooleanTypeBetweenConvert
         if (value instanceof Boolean) {
             if (Boolean.class.getName().equals(targetTypeName) || boolean.class.getName().equals(targetTypeName)) {
                 return value;
@@ -178,7 +178,7 @@ public abstract class BeanUtil {
     }
 
     /**
-     * 获取基本类型的默认值
+     * Access BasicTypeYes.Default value
      */
     private static Object getDefaultValue(Class<?> type) {
         if (type.isPrimitive()) {

@@ -15,7 +15,7 @@ import org.springframework.util.Assert;
 import java.util.Map;
 
 /**
- * OceanBase 连接配置校验
+ * OceanBase ConnectConfigureVerify INTRODUCTION
  */
 public class OceanBaseConfigValidator extends AbstractDataBaseConfigValidator {
 
@@ -31,7 +31,7 @@ public class OceanBaseConfigValidator extends AbstractDataBaseConfigValidator {
         String binlogPort = params.get("binlogPort");
         if (StringUtil.isNotBlank(binlogPort)) {
             int port = NumberUtil.toInt(binlogPort.trim());
-            Assert.isTrue(port > 0, "Binlog 端口无效");
+            Assert.isTrue(port > 0, "Binlog port is invalid");
             connectorConfig.getExtInfo().setProperty(OceanBaseBinlogConfig.BINLOG_PORT, String.valueOf(port));
         }
     }

@@ -50,9 +50,9 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * Http连接器实现
+ * HttpConnectorAchieved
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-02-02 00:01
  */
@@ -181,13 +181,13 @@ public class HttpConnector implements ConnectorService<HttpConnectorInstance, Ht
         Result result = new Result();
         try {
             RequestBuilder builder = genRequestBuilder(connectorInstance, context.getTargetTable());
-            // 解析请求体模板为 JSON 对象
+            // Parsing the requested template asJSON Object
             Object dataObj = encryptData(connectorInstance, context, data);
             builder.setBodyAsJsonString(JSON.toJSONString(dataObj));
             builder.execute();
             result.addSuccessData(data);
         } catch (Exception e) {
-            // 记录错误数据
+            // RecordsErrorData Fact
             result.addFailData(data);
             result.getError().append(e.getMessage()).append(System.lineSeparator());
             logger.error(e.getMessage());
@@ -263,14 +263,14 @@ public class HttpConnector implements ConnectorService<HttpConnectorInstance, Ht
         String params = targetTable.getExtInfo().getProperty(HttpConstant.PARAMS);
         if (StringUtil.isNotBlank(params)) {
             Object rootJSON = JSON.parse(params);
-            // 将 data 转换为 JSONArray
+            // Willdata ConvertYesJSONArray
             JSONArray dataArray = JSON.parseArray(JSON.toJSONString(data));
             if (rootJSON instanceof JSONArray) {
-                // 特殊处理：如果模板是数组
+                // Special handling: if templateYesArray
                 ((JSONArray) rootJSON).clear();
                 ((JSONArray) rootJSON).addAll(dataArray);
             } else {
-                // 一般情况：使用 JSONPath.set 通过 writePath 路径设置值, 如 $.data，用于定位要替换的位置
+                // General: useJSONPath.set Pass.writePath PathSettingsValue, Like$.data，For positioning requirementsReplaceLocation
                 String writePath = targetTable.getExtInfo().getProperty(HttpConstant.WRITE_PATH);
                 Assert.hasText(writePath, "writePath can not be empty.");
                 JSONPath.set(rootJSON, writePath, dataArray);
@@ -294,7 +294,7 @@ public class HttpConnector implements ConnectorService<HttpConnectorInstance, Ht
         Assert.notNull(httpMethod, "method can not be null");
         RequestBuilder builder = new RequestBuilder(connectorInstance.getConnection(), url, httpMethod);
 
-        // 获取连接参数
+        // AccessConnection parameters
         HttpConfig config = connectorInstance.getConfig();
         if (config != null && config.getProperties() != null) {
             Properties props = config.getProperties();
@@ -313,8 +313,8 @@ public class HttpConnector implements ConnectorService<HttpConnectorInstance, Ht
     }
 
     /**
-     * 统一增量参数替换。从 context 的 command 中读取静态变量（时间/日期），
-     * 与 pageIndex、pageSize、cursors 一起做一次占位符替换。
+     * HarmonizationIncrementalParameterReplace。Fromcontext Yes.command Centre to read static variables (Time/This post is part of our special coverage Syria Protests 2011.
+     * and pageIndex、pageSize、cursors Do a placeholder together.Replace。
      */
     private Map<String, Object> getParams(ReaderContext context) {
         Properties extInfo = context.getSourceTable().getExtInfo();
@@ -361,7 +361,7 @@ public class HttpConnector implements ConnectorService<HttpConnectorInstance, Ht
         return result;
     }
 
-    /** 供 getCount 等无 ReaderContext 场景使用 */
+    /** ForgetCount Wait.None ReaderContext Site Use*/
     private Map<String, Object> getCountParams(Properties extInfo) {
         String paramsTemplate = extInfo.getProperty(HttpConstant.PARAMS);
         if (StringUtil.isBlank(paramsTemplate)) {

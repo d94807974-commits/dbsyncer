@@ -4,9 +4,9 @@
 package org.dbsyncer.web.controller.openapi;
 
 /**
- * OpenAPI 统一错误码常量
+ * OpenAPI HarmonizationErrorCode Constant
  *
- * @author 穿云
+ * @author The clouds.
  * @version 2.0.0
  */
 public final class OpenApiErrorCode {
@@ -14,24 +14,24 @@ public final class OpenApiErrorCode {
     private OpenApiErrorCode() {
     }
 
-    /** 请求参数错误（如参数缺失、格式错误、时间戳/Nonce 校验失败等） */
+    /** Request parametersError（LikeParameterMissing, FormattingError、TimeStab/Nonce Verify INTRODUCTIONFailedWait.*/
     public static final int BAD_REQUEST = 400;
 
-    /** 未授权（如 Token 为空、无效、过期，或 secret 错误） */
+    /** NotAuthorization（LikeToken Is empty,NoneExpiry, expiry, orsecret Error） */
     public static final int UNAUTHORIZED = 401;
 
-    /** 禁止访问（如 IP 不在白名单） */
+    /** Access is prohibited (e.g.IP Not White List)*/
     public static final int FORBIDDEN = 403;
 
-    /** 资源或能力未开放（如未开放 API） */
+    /** Resourceor capacity not open (e.g.API） */
     public static final int NOT_FOUND = 404;
 
-    /** 请求方法不允许（如用 POST 请求仅支持 GET 的接口） */
+    /** Method of request not permitted (if used)POST Request only supportedGET Yes.Interface） */
     public static final int METHOD_NOT_ALLOWED = 405;
 
-    /** 服务内部错误（如登录/刷新/处理异常） */
+    /** In Truly ServiceError（LikeLogin/Refresh/ProcessingError） */
     public static final int INTERNAL_ERROR = 500;
 
-    /** 服务暂不可用（如预加载未完成） */
+    /** Service not available for the time being（If preloadedFinish） */
     public static final int SERVICE_UNAVAILABLE = 503;
 }

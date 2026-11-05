@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 连接离线信息
+ * Connect OfflineInfo
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-03-07 19:00
  */

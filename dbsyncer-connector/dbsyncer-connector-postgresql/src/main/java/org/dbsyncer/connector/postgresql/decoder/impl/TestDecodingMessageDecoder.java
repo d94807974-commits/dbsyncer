@@ -70,7 +70,7 @@ public class TestDecodingMessageDecoder extends AbstractMessageDecoder {
         while (lexer.hasNext()) {
             String name = parseName(lexer);
             if ("(no-tuple-data)".equals(name)) {
-                // 删除时,无主键,不能同步
+                // DeleteTime,NonePrimary key,Oh, no.Yes.Sync
                 return null;
             }
             String type = parseType(lexer);

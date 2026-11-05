@@ -6,7 +6,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 /**
- * 时间戳转日期
+ * TimeTurn Date
  *
  * @author AE86
  * @version 1.0.0

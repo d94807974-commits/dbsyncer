@@ -27,7 +27,7 @@ import java.util.Base64;
 import java.util.List;
 
 /**
- * {@link SystemConfigProfile} 实现。
+ * {@link SystemConfigProfile} Achieved.
  *
  * @author wuji
  * @version 1.0.0

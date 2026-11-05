@@ -4,7 +4,7 @@
 package org.dbsyncer.biz.vo;
 
 /**
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2025-12-20 21:41
  */

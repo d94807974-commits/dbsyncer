@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * 同步任务 Meta 日汇总：由 {@link ScheduledScanService} 启停，集群仅 Leader 执行。
+ * Sync task Meta Day summary: by{@link ScheduledScanService} Break, cluster onlyLeader Implementation.
  *
  * @author wuji
  * @version 1.0.0
@@ -41,12 +41,12 @@ public class MetaAggCollector implements ScheduledScanService, ScheduledTaskJob,
     private static final String SCHEDULE_KEY = "meta.daily.collector";
 
     /**
-     * 30 分钟
+     * 30 minutes
      */
     private static final long PERIOD_MS = 30L * 60L * 1000L;
 
     /**
-     * 保留天数（含今天）
+     * ReservationsdaysNumberdays）
      */
     private static final int RETAIN_DAYS = 30;
 
@@ -73,7 +73,7 @@ public class MetaAggCollector implements ScheduledScanService, ScheduledTaskJob,
         }
         scheduledTaskService.start(SCHEDULE_KEY, PERIOD_MS, this);
         started = true;
-        // 启动立即跑一轮，避免首页历史为空
+        // StartRun the round now, avoid it.First pageHistory is empty.
         run();
     }
 

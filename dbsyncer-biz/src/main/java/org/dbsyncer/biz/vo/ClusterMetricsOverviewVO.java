@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 集群节点指标总览。
+ * ClusterNodesOverview of indicators.
  *
  * @author wuji
  * @version 1.0.0

@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 /**
- * Oracle BLOB 写入绑定（须使用连接创建 LOB，MERGE 场景 setObject(byte[]) 会报 17004 无效的列类型）。
+ * Oracle BLOB Write binding (must use)ConnectTermsLOB，MERGE scenesetObject(byte[]) Report.17004 NoneActive ColumnsType）。
  *
  * @author wuji
  * @version 1.0.0

@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * H2 字符串类型
+ * H2 StringType
  */
 public final class H2StringType extends StringType {
 

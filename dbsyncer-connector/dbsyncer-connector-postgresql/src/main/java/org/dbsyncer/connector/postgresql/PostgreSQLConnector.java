@@ -38,7 +38,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * PostgreSQL连接器实现
+ * PostgreSQLConnectorAchieved
  *
  * @author AE86
  * @version 1.0.0
@@ -50,8 +50,8 @@ public class PostgreSQLConnector extends AbstractDatabaseConnector {
     private final String QUERY_SCHEMA = "SELECT schema_name FROM information_schema.schemata WHERE schema_name NOT LIKE 'pg_%' AND schema_name NOT IN ('information_schema') ORDER BY schema_name";
 
     /**
-     * 列出普通表/分区主表/视图/物化视图；排除子分区，避免与主表重复映射。
-     * 分区主表类型归一为 TABLE，兼容现有 TableTypeEnum 与增量过滤逻辑。
+     * List normal tables/minSector EntitiesMain Table/view/materialize view;exclusionminArea, avoidandMain TableRepeat map.
+     * minSector EntitiesMain TableTypeUnitTABLE，Compatible with existingTableTypeEnum andIncrementalFilter logic.
      */
     private static final String QUERY_TABLE = "SELECT c.relname AS table_name, "
             + "CASE c.relkind WHEN 'v' THEN 'VIEW' WHEN 'm' THEN 'MATERIALIZED VIEW' ELSE 'TABLE' END AS table_type "
@@ -152,8 +152,8 @@ public class PostgreSQLConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * schema 非 public 时生成 CREATE SCHEMA；否则创建数据库。
-     * 整库迁移会分两步调用：先建库（schema 为空），再连目标库建 schema。
+     * schema Notpublic TimeGenerate CREATE SCHEMA；NoCreate DataLibrary。
+     * Database migrationYes.minTwo-step call: build firstLibrary（schema It's empty!Target databaseConstructionschema。
      */
     @Override
     public String buildCreateDatabaseSql(String databaseName, String schemaName) {
@@ -167,8 +167,8 @@ public class PostgreSQLConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * 仅校验库：schema 为空或 public 时只查 pg_database；
-     * 校验 schema：调用方须已连接到目标库，再查当前库的 pg_namespace。
+     * Verify onlyLibrary：schema is empty orpublic Time only.pg_database；
+     * Verifyschema：Caller must haveConnectPresent.Target database，CASELibraryYes.pg_namespace。
      */
     @Override
     public boolean databaseExists(DatabaseConnectorInstance connectorInstance, String databaseName, String schemaName) {
@@ -247,7 +247,7 @@ public class PostgreSQLConnector extends AbstractDatabaseConnector {
     @Override
     public String getPageSql(PageSql config) {
         StringBuilder sql = new StringBuilder(config.getQuerySql());
-        // 使用基类方法添加ORDER BY（按主键排序，保证分页一致性）
+        // Use of the base category methodAddORDER BY（PressPrimary keySort, promiseminPage)
         appendOrderByPrimaryKeys(sql, config);
         sql.append(DatabaseConstant.POSTGRESQL_PAGE_SQL);
         return sql.toString();
@@ -262,13 +262,13 @@ public class PostgreSQLConnector extends AbstractDatabaseConnector {
 
     @Override
     public String getPageCursorSql(PageSql config) {
-        // 不支持游标查询
+        // Cursor query not supported
         if (!PrimaryKeyUtil.isSupportedCursor(config.getFields())) {
             return StringUtil.EMPTY;
         }
 
         StringBuilder sql = new StringBuilder(config.getQuerySql());
-        // 使用基类的公共方法构建WHERE条件和ORDER BY
+        // Use of base category publicTotalMethod BuildWHEREConditionandORDER BY
         buildCursorConditionAndOrderBy(sql, config);
         sql.append(DatabaseConstant.POSTGRESQL_PAGE_SQL);
         return sql.toString();
@@ -281,13 +281,13 @@ public class PostgreSQLConnector extends AbstractDatabaseConnector {
         if (null == cursors || cursors.length == 0) {
             return new Object[]{pageSize, 0};
         }
-        // 使用基类的公共方法构建游标条件参数
+        // Use of base category publicTotalMethod to Build CursorConditionParameter
         Object[] cursorArgs = buildCursorArgs(cursors);
         if (cursorArgs == null) {
             return new Object[]{pageSize, 0};
         }
 
-        // PostgreSQL使用 LIMIT ? OFFSET ?，参数顺序为 [游标参数..., pageSize, 0]
+        // PostgreSQLUseLIMIT ? OFFSET ?，ParameterOrder is[CursorParameter..., pageSize, 0]
         Object[] newCursors = new Object[cursorArgs.length + 2];
         System.arraycopy(cursorArgs, 0, newCursors, 0, cursorArgs.length);
         newCursors[cursorArgs.length] = pageSize; // LIMIT
@@ -350,14 +350,14 @@ public class PostgreSQLConnector extends AbstractDatabaseConnector {
 
     @Override
     public String buildInsertSql(SqlBuilderConfig config) {
-        // PostgreSQL 使用 ON CONFLICT DO NOTHING 实现 INSERT IGNORE 效果
+        // PostgreSQL UseON CONFLICT DO NOTHING AchievedINSERT IGNORE Effects
         UpsertContext context = buildUpsertContext(config);
         StringBuilder sql = new StringBuilder(config.getDatabase().generateUniqueCode());
 
-        // 构建 INSERT INTO ... VALUES (...)
+        // BuildINSERT INTO ... VALUES (...)
         buildInsertIntoClause(sql, config, context);
 
-        // 构建 ON CONFLICT (...) DO NOTHING
+        // BuildON CONFLICT (...) DO NOTHING
         buildOnConflictClause(sql, context);
         sql.append(" DO NOTHING");
 
@@ -369,10 +369,10 @@ public class PostgreSQLConnector extends AbstractDatabaseConnector {
         UpsertContext context = buildUpsertContext(config);
         StringBuilder sql = new StringBuilder(config.getDatabase().generateUniqueCode());
 
-        // 构建 INSERT INTO ... VALUES (...)
+        // BuildINSERT INTO ... VALUES (...)
         buildInsertIntoClause(sql, config, context);
 
-        // 构建 ON CONFLICT (...) DO UPDATE SET
+        // BuildON CONFLICT (...) DO UPDATE SET
         buildOnConflictClause(sql, context);
         sql.append(" DO UPDATE SET ");
         sql.append(StringUtil.join(context.updateSets, StringUtil.COMMA));
@@ -381,7 +381,7 @@ public class PostgreSQLConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * 构建 INSERT INTO ... VALUES (...) 子句
+     * BuildINSERT INTO ... VALUES (...) Sub sentences
      */
     private void buildInsertIntoClause(StringBuilder sql, SqlBuilderConfig config, UpsertContext context) {
         sql.append("INSERT INTO ").append(config.getSchema());
@@ -391,7 +391,7 @@ public class PostgreSQLConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * 构建 ON CONFLICT (...) 子句
+     * BuildON CONFLICT (...) Sub sentences
      */
     private void buildOnConflictClause(StringBuilder sql, UpsertContext context) {
         sql.append(" ON CONFLICT (");
@@ -402,13 +402,13 @@ public class PostgreSQLConnector extends AbstractDatabaseConnector {
     private String buildUsingExpr(String col, String type) {
         String normalizedType = StringUtil.trim(type).toUpperCase(Locale.ROOT);
         if (isIntegerType(normalizedType)) {
-            // 非整数字符串置为NULL，避免 timestamp/text -> int 直接报错中断整批DDL
+            // Non-integer string set toNULL，Avoidtimestamp/text -> int Direct error interrupted whole batchDDL
             return String.format(Locale.ROOT,
                     "CASE WHEN %1$s IS NULL THEN NULL WHEN (%1$s)::text ~ '^-?[0-9]+$' THEN (%1$s)::text::%2$s ELSE NULL END",
                     col, type);
         }
         if (isDecimalType(normalizedType)) {
-            // 小数目标类型同样做安全转换，无法解析时置为NULL
+            // DecimalObjective CombinedTypeSame safe.Convert，NoneMethod Resolution As FacilitatingNULL
             return String.format(Locale.ROOT,
                     "CASE WHEN %1$s IS NULL THEN NULL WHEN (%1$s)::text ~ '^-?[0-9]+(\\.[0-9]+)?$' THEN (%1$s)::text::%2$s ELSE NULL END",
                     col, type);
@@ -444,7 +444,7 @@ public class PostgreSQLConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * ALTER TYPE 不能使用 SERIAL 伪类型，映射为底层整数类型。
+     * ALTER TYPE Unable to useSERIAL FalseType，Map to Bottom IntegerType。
      */
     private static String mapPostgreSqlSerialToInteger(String t) {
         if ("SERIAL".equals(t)) {
@@ -467,7 +467,7 @@ public class PostgreSQLConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * FLOAT4/8 等与基类带精度拼接冲突时，改为 DDL 中的规范名称。
+     * FLOAT4/8 Wait.andBasebandOutlook saluteIn ADOPTION OF CONFLICT, replaceDDL Norms inName。
      */
     private static String mapPostgreSqlFloatAliases(String t) {
         if ("FLOAT4".equals(t) || "REAL".equals(t)) {
@@ -480,7 +480,7 @@ public class PostgreSQLConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * 构建 UPSERT 上下文（字段、主键等信息）
+     * BuildUPSERT ContextField、Primary keyWait.Info）
      */
     private UpsertContext buildUpsertContext(SqlBuilderConfig config) {
         Database database = config.getDatabase();
@@ -490,10 +490,10 @@ public class PostgreSQLConnector extends AbstractDatabaseConnector {
             String fieldName = database.buildWithQuotation(f.getName());
             context.fieldNames.add(fieldName);
 
-            // 构建 VALUES 占位符
+            // BuildVALUES Placeholder
             List<String> fieldVs = new ArrayList<>();
             if (database.buildCustomValue(fieldVs, f)) {
-                // 自定义值表达式（如 geometry 类型）
+                // CustomValueOrganisationgeometry Type）
                 context.valuePlaceholders.add(fieldVs.get(0));
             } else {
                 context.valuePlaceholders.add("?");
@@ -511,7 +511,7 @@ public class PostgreSQLConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * UPSERT 语句构建上下文
+     * UPSERT ContextWow.
      */
     private static class UpsertContext {
 

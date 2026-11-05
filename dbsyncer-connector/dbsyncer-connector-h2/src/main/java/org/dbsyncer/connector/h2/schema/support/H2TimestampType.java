@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * H2 时间戳类型
+ * H2 TimePokeType
  */
 public final class H2TimestampType extends TimestampType {
 

@@ -10,7 +10,7 @@ import org.dbsyncer.sdk.spi.ConnectorService;
 import java.util.Map;
 
 /**
- * 连接器配置校验器
+ * ConnectorConfigureVerifyer
  *
  * @Author AE86
  * @Version 1.0.0
@@ -19,7 +19,7 @@ import java.util.Map;
 public interface ConfigValidator<S extends ConnectorService, C extends ConnectorConfig> {
 
     /**
-     * 修改配置
+     * UpdateConfigure
      *
      * @param connectorService
      * @param connectorConfig
@@ -29,7 +29,7 @@ public interface ConfigValidator<S extends ConnectorService, C extends Connector
     void modify(S connectorService, C connectorConfig, Map<String, String> params);
 
     /**
-     * 修改扩展表配置
+     * UpdateExtension TableConfigure
      *
      * @param connectorService
      * @param params

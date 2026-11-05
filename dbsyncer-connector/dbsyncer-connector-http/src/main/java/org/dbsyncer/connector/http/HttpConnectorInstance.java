@@ -26,9 +26,9 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Http连接器实例
+ * HttpConnectorExamples
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-02-02 00:01
  */
@@ -37,32 +37,32 @@ public final class HttpConnectorInstance implements ConnectorInstance<HttpConfig
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
-     * 连接池管理器
+     * ConnectPool Manager
      */
     private PoolingHttpClientConnectionManager connectionManager;
 
     /**
-     * Http 客户端
+     * Http Client
      */
     private CloseableHttpClient httpClient;
 
     /**
-     * 默认连接超时时间（毫秒）
+     * DefaultConnectTimeoutTime（ms）
      */
     private final int DEFAULT_CONNECTION_TIMEOUT = 30000;
 
     /**
-     * 默认读取超时时间（毫秒）
+     * Default Read TimeoutTime（ms）
      */
     private final int DEFAULT_SO_TIMEOUT = 30000;
 
     /**
-     * 默认每个路由最大连接数
+     * Default for each routeMax connections
      */
     private final int DEFAULT_MAX_PER_ROUTE = 50;
 
     /**
-     * 默认最大总连接数
+     * Default Max totalConnectNumber
      */
     private final int DEFAULT_MAX_TOTAL = 500;
 
@@ -78,35 +78,35 @@ public final class HttpConnectorInstance implements ConnectorInstance<HttpConfig
     }
 
     /**
-     * 初始化 HttpClient
+     * InitializeHttpClient
      */
     private void initHttpClient() throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
         if (httpClient == null) {
-            // 创建连接池管理器
-            // 1. 创建 SSL 上下文和 Socket 工厂
+            // CreateConnectPool Manager
+            // 1. TermsSSL Context andSocket Plant
             SSLContextBuilder builder = new SSLContextBuilder();
-            // 信任所有证书
+            // Trust all certificates
             builder.loadTrustMaterial(null, (TrustStrategy) (x509Certificates, s) -> true);
             SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(builder.build(), NoopHostnameVerifier.INSTANCE);
 
-            // 2. 注册 HTTP 和 HTTPS 协议处理器
+            // 2. RegistrationHTTP andHTTPS Protocol Processor
             Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
                     .register("http", new PlainConnectionSocketFactory())
                     .register("https", sslConnectionSocketFactory)
                     .build();
             connectionManager = new PoolingHttpClientConnectionManager(registry);
 
-            // 配置连接池
+            // ConfigureConnectJi.
             connectionManager.setMaxTotal(DEFAULT_MAX_TOTAL);
             connectionManager.setDefaultMaxPerRoute(DEFAULT_MAX_PER_ROUTE);
 
-            // 配置连接参数
+            // ConfigureConnection parameters
             RequestConfig.Builder requestConfigBuilder = RequestConfig.custom()
                     .setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT)
                     .setSocketTimeout(DEFAULT_SO_TIMEOUT)
                     .setConnectionRequestTimeout(DEFAULT_CONNECTION_TIMEOUT);
 
-            // 构建 HttpClient
+            // BuildHttpClient
             HttpClientBuilder httpClientBuilder = HttpClients.custom()
                     .setConnectionManager(connectionManager)
                     .setDefaultRequestConfig(requestConfigBuilder.build());
@@ -136,7 +136,7 @@ public final class HttpConnectorInstance implements ConnectorInstance<HttpConfig
     }
 
     /**
-     * 关闭 HttpClient
+     * Close HttpClient
      */
     @Override
     public void close() {

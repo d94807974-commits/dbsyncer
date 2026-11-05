@@ -1,28 +1,28 @@
 /**
- * 确认对话框组件
- * @param {Object} options - 配置选项
- *   - title: 对话框标题（与 titleHtml 二选一，或同时提供时 title 作为纯文本标题）
- *   - titleHtml: 自定义标题 HTML（不转义，替代默认 h3 标题）
- *   - titleExtra: 标题下方扩展 HTML（不转义，如统计摘要等）
- *   - message: 对话框内容信息
- *   - body: 对话框主体HTML内容（可选）
- *   - icon: 图标类型（info/warning/error/success，默认 info）
- *   - confirmText: 确认按钮文本（默认 '确定'）
- *   - cancelText: 取消按钮文本（默认 '取消'）
- *   - confirmType: 确认按钮类型（primary/success/warning/danger/info，默认 primary）
- *   - size: 对话框大小（normal/large/xlarge/max，默认 normal）
- *   - position: 弹窗位置（top/center，默认 center）
- *   - showConfirm: 是否显示确认按钮（默认 true）
- *   - showCancel: 是否显示取消按钮（默认 true）
- *   - closeOnConfirm: 点击确认后是否关闭（默认 true）
- *   - closeOnCancel: 点击取消后是否关闭（默认 true）
- *   - onConfirm: 确认回调函数
- *   - onCancel: 取消回调函数（可选）
+ * ConfirmDialogue Component
+ * @param {Object} options - ConfigureOptions
+ *   - title: dialogue box title(s)and titleHtml Two or one, or both.title as plain text title)
+ *   - titleHtml: CustomTitleHTML（No conversion, replace defaulth3 Title)
+ *   - titleExtra: Expand Below HeaderHTML（No conversion, e.g. statistical abstract)
+ *   - message: dialogue box contentsInfo
+ *   - body: dialogue box mainHTMLContent (optional)
+ *   - icon: IconType（info/warning/error/success，Defaultinfo）
+ *   - confirmText: ConfirmButton Text（Default'OK'）
+ *   - cancelText: CancelButton Text（Default'Cancel'）
+ *   - confirmType: ConfirmbuttonType（primary/success/warning/danger/info，Defaultprimary）
+ *   - size: Dialog Size (normal/large/xlarge/max，Defaultnormal）
+ *   - position: Position of the bullet windowtop/center，Defaultcenter）
+ *   - showConfirm: YesNoShowConfirmButton (default)true）
+ *   - showCancel: YesNoShowCancelButton (default)true）
+ *   - closeOnConfirm: ClickConfirmBackYesNoClose（Defaulttrue）
+ *   - closeOnCancel: ClickCancelBackYesNoClose（Defaulttrue）
+ *   - onConfirm: ConfirmRewindFunctions
+ *   - onCancel: CancelRewindFunctions（Optional)
  */
 (function(window) {
     'use strict';
     
-    // HTML转义函数
+    // HTMLConversionFunctions
     function escapeHtml(text) {
         if (typeof window.escapeHtml === 'function') {
             return window.escapeHtml(text);
@@ -35,13 +35,13 @@
     function showConfirm(options) {
         options = options || {};
         
-        // 参数验证
+        // ParameterAuthentication
         if (!options.title && !options.titleHtml) {
-            console.warn('[showConfirm] 缺少必要参数: title 或 titleHtml');
+            console.warn('[showConfilm] Missing necessary parameters: type or typeHtml');
             return;
         }
 
-        // 默认配置
+        // DefaultConfigure
         const config = {
             title: options.title || '',
             titleHtml: options.titleHtml || '',
@@ -49,8 +49,8 @@
             message: options.message || '',
             body: options.body || '',
             icon: options.icon || 'info',
-            confirmText: options.confirmText || '确定',
-            cancelText: options.cancelText || '取消',
+            confirmText: options.confirmText || 'OK',
+            cancelText: options.cancelText || 'Cancel',
             confirmType: options.confirmType || 'primary',
             size: options.size || 'normal',
             position: options.position || 'center',
@@ -62,13 +62,13 @@
             onCancel: options.onCancel || function() {}
         };
 
-        // 验证icon类型
+        // AuthenticationiconType
         const validIcons = ['info', 'warning', 'error', 'success'];
         if (validIcons.indexOf(config.icon) === -1) {
             config.icon = 'info';
         }
 
-        // 验证size
+        // Authenticationsize
         const validSizes = ['normal', 'large', 'xlarge', 'max'];
         if (validSizes.indexOf(config.size) === -1) {
             config.size = 'normal';
@@ -79,13 +79,13 @@
             config.position = 'center';
         }
 
-        // 验证确认按钮类型
+        // AuthenticationConfirmbuttonType
         const validTypes = ['primary', 'success', 'warning', 'danger', 'info'];
         if (validTypes.indexOf(config.confirmType) === -1) {
             config.confirmType = 'primary';
         }
 
-        // 获取icon HTML
+        // Accessicon HTML
         function getIconHTML() {
             const iconMap = {
                 'info': '<i class="fa fa-info-circle"></i>',
@@ -96,7 +96,7 @@
             return iconMap[config.icon] || iconMap['info'];
         }
 
-        // 创建HTML
+        // CreateHTML
         const overlayId = 'confirm-overlay-' + Date.now();
         const dialogId = 'confirm-dialog-' + Date.now();
         
@@ -108,7 +108,7 @@
         dialog.id = dialogId;
         dialog.className = 'confirm-dialog size-' + config.size;
 
-        // 构建头部HTML
+        // Build headHTML
         let headerHTML = '';
         if (config.title || config.titleHtml || config.message || config.titleExtra) {
             let titleHTML = '';
@@ -131,7 +131,7 @@
             `;
         }
 
-        // 构建主体HTML
+        // Build bodyHTML
         let bodyHTML = '';
         if (config.body) {
             bodyHTML = `<div class="confirm-body">${config.body}</div>`;
@@ -158,7 +158,7 @@
         overlay.appendChild(dialog);
         document.body.appendChild(overlay);
 
-        // 获取按钮
+        // Signature button
         const confirmBtn = dialog.querySelector('.confirm-btn-confirm');
         const cancelBtn = dialog.querySelector('.confirm-btn-cancel');
 
@@ -168,7 +168,7 @@
             document.removeEventListener('keydown', handleKeydown, true);
         }
 
-        // 关闭对话框
+        // Closedialogue box
         function closeConfirm() {
             if (closed) {
                 return;
@@ -202,7 +202,7 @@
             }
         }
 
-        // 确认按钮事件
+        // ConfirmbuttonEvent
         if (confirmBtn) {
             confirmBtn.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -211,7 +211,7 @@
             });
         }
 
-        // 取消按钮事件
+        // CancelbuttonEvent
         if (cancelBtn) {
             cancelBtn.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -220,7 +220,7 @@
             });
         }
 
-        // 点击非对话框区域关闭
+        // Click non-dialog areaClose
         overlay.addEventListener('click', function(e) {
             if (e.target === overlay) {
                 e.preventDefault();
@@ -228,7 +228,7 @@
             }
         });
 
-        // Enter 确认、Esc 取消（捕获阶段，避免触发底层按钮的默认行为）
+        // Enter Confirm、Esc Cancel（capture phase, avoid default behaviour Entry of bottom buttons)
         function handleKeydown(e) {
             if (e.key === 'Enter') {
                 if (e.isComposing) {
@@ -251,7 +251,7 @@
         }
         document.addEventListener('keydown', handleKeydown, true);
 
-        // 避免回车再次触发打开弹窗的按钮（如删除）
+        // Avoid returning the button that opens the bullet window again (e.g.Delete）
         if (document.activeElement && typeof document.activeElement.blur === 'function') {
             document.activeElement.blur();
         }
@@ -268,7 +268,7 @@
         };
     }
     
-    // 导出到全局
+    // ExportTo Global Text
     window.showConfirm = showConfirm;
     
 })(window);

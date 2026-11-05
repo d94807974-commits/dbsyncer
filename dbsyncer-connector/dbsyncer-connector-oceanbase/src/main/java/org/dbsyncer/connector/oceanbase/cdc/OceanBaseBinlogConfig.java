@@ -8,7 +8,7 @@ import org.dbsyncer.common.util.StringUtil;
 import org.dbsyncer.sdk.config.DatabaseConfig;
 
 /**
- * OceanBase Binlog 服务连接配置（MySQL Binlog V4 协议）
+ * OceanBase Binlog ServicesConnectConfigure（MySQL Binlog V4 )
  */
 public final class OceanBaseBinlogConfig {
 

@@ -44,7 +44,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Oracle连接器实现
+ * OracleConnectorAchieved
  *
  * @Author AE86
  * @Version 1.0.0
@@ -89,7 +89,7 @@ public class OracleConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * Oracle 以 schema（用户）为迁移命名空间；优先 {@code schemaName}，兼容仅填 {@code databaseName} 的旧数据。
+     * Oracle Here.schema（User）Namespace for migration; priority{@code schemaName}，Compatible Only{@code databaseName} The old data.
      */
     @Override
     public String buildCreateDatabaseSql(String databaseName, String schemaName) {
@@ -107,7 +107,7 @@ public class OracleConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * 判断 schema（用户）是否存在；优先 {@code schemaName}，兼容仅填 {@code databaseName} 的旧数据。
+     * Decisionschema（User）YesNoExist IMPLEMENTATION; priority{@code schemaName}，Compatible Only{@code databaseName} The old data.
      */
     @Override
     public boolean databaseExists(DatabaseConnectorInstance connectorInstance, String databaseName, String schemaName) {
@@ -215,7 +215,7 @@ public class OracleConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * schema.table 均加双引号并保留表名大小写，与整库迁移建表 DDL 一致。
+     * schema.table Double quotes and retentionTable nameCase,andDatabase migrationFormDDL Unanimously.
      */
     private String qualifyTableName(String owner, String tableName) {
         String quotedTable = buildWithQuotation(escapeForExecuteImmediate(tableName));
@@ -248,7 +248,7 @@ public class OracleConnector extends AbstractDatabaseConnector {
     public Result writerDDL(DatabaseConnectorInstance connectorInstance, DDLConfig config) {
         Result result = new Result();
         try {
-            Assert.hasText(config.getSql(), "执行SQL语句不能为空.");
+            Assert.hasText(config.getSql(), "Executing SQL cannot be empty.");
             connectorInstance.execute(databaseTemplate -> {
                 applySessionSchema(databaseTemplate, connectorInstance.getSchema());
                 databaseTemplate.execute(DatabaseConstant.DBS_UNIQUE_CODE.concat(config.getSql()));
@@ -258,7 +258,7 @@ public class OracleConnector extends AbstractDatabaseConnector {
             successMap.put(ConfigConstant.BINLOG_DATA, config.getSql());
             result.addSuccessData(Collections.singletonList(successMap));
         } catch (Exception e) {
-            result.getError().append(String.format("执行ddl: %s, 异常：%s", config.getSql(), e.getMessage()));
+            result.getError().append(String.format("Execute ddl: %s, anomaly: %s", config.getSql(), e.getMessage()));
         }
         return result;
     }
@@ -267,8 +267,8 @@ public class OracleConnector extends AbstractDatabaseConnector {
     public String getQueryCountSql(SqlBuilderConfig config) {
         Database database = config.getDatabase();
         String queryFilter = config.getQueryFilter();
-        // PARALLEL hint 利用多核 CPU 并行处理，提升性能但不影响准确性
-        // 让 Oracle 优化器自动选择最佳访问路径（索引扫描或全表扫描）
+        // PARALLEL hint Use multi-nucleusCPU Parallel processing, enhanced performance without compromising accuracy
+        // Jean.Oracle Optimizer automatically selects the optimal access path (IndexScan or full table scan)
         String query = "SELECT /*+ PARALLEL(t, 8) */ COUNT(*) FROM %s%s t %s";
 
         return String.format(query, config.getSchema(), database.buildWithQuotation(config.getTableName()), queryFilter);
@@ -276,11 +276,11 @@ public class OracleConnector extends AbstractDatabaseConnector {
 
     @Override
     public String getPageSql(PageSql config) {
-        // 使用三层嵌套查询：SELECT * FROM (SELECT A.*, ROWNUM RN FROM (...) A WHERE ROWNUM <= ?) WHERE RN > ?
+        // Use a three-layer nested query:SELECT * FROM (SELECT A.*, ROWNUM RN FROM (...) A WHERE ROWNUM <= ?) WHERE RN > ?
         StringBuilder sql = new StringBuilder();
         sql.append(DatabaseConstant.ORACLE_PAGE_SQL_START);
         sql.append(config.getQuerySql());
-        // 使用基类方法添加ORDER BY（按主键排序，保证分页一致性）
+        // Use of the base category methodAddORDER BY（PressPrimary keySort, promiseminPage)
         appendOrderByPrimaryKeys(sql, config);
         sql.append(DatabaseConstant.ORACLE_PAGE_SQL_END);
         return sql.toString();
@@ -295,7 +295,7 @@ public class OracleConnector extends AbstractDatabaseConnector {
 
     @Override
     public String getPageCursorSql(PageSql config) {
-        // 不支持游标查询
+        // Cursor query not supported
         if (!PrimaryKeyUtil.isSupportedCursor(config.getFields())) {
             return StringUtil.EMPTY;
         }
@@ -303,7 +303,7 @@ public class OracleConnector extends AbstractDatabaseConnector {
         StringBuilder sql = new StringBuilder();
         sql.append(DatabaseConstant.ORACLE_PAGE_CURSOR_SQL_START);
         sql.append(config.getQuerySql());
-        // 使用基类的公共方法构建WHERE条件和ORDER BY
+        // Use of base category publicTotalMethod BuildWHEREConditionandORDER BY
         buildCursorConditionAndOrderBy(sql, config);
         sql.append(DatabaseConstant.ORACLE_PAGE_CURSOR_SQL_END);
         return sql.toString();
@@ -316,13 +316,13 @@ public class OracleConnector extends AbstractDatabaseConnector {
         if (null == cursors || cursors.length == 0) {
             return new Object[]{pageSize};
         }
-        // 使用基类的公共方法构建游标条件参数
+        // Use of base category publicTotalMethod to Build CursorConditionParameter
         Object[] cursorArgs = buildCursorArgs(cursors);
         if (cursorArgs == null) {
             return new Object[]{pageSize};
         }
 
-        // Oracle不需要OFFSET，只需要添加pageSize参数
+        // OracleNo need.OFFSET，Just...AddpageSizeParameter
         Object[] newCursors = new Object[cursorArgs.length + 1];
         System.arraycopy(cursorArgs, 0, newCursors, 0, cursorArgs.length);
         newCursors[cursorArgs.length] = pageSize;
@@ -351,7 +351,7 @@ public class OracleConnector extends AbstractDatabaseConnector {
             if (isUnsupportedOnlineModifyType(type)) {
                 continue;
             }
-            // 单列 MODIFY：多列写在一个 MODIFY(...) 中易触发 ORA-22859；writerDDL 仅一次 execute，故用 PL/SQL 批量 EXECUTE IMMEDIATE
+            // Single ColumnMODIFY：Write multiple columns in oneMODIFY(...) Easy to triggerORA-22859；writerDDL Once Programmingexecute，For this reasonPL/SQL BatchEXECUTE IMMEDIATE
             alterStatements.add(String.format(Locale.ROOT, "ALTER TABLE %s MODIFY (%s %s)", qualifiedTable, col, type));
         }
         if (alterStatements.isEmpty()) {
@@ -372,7 +372,7 @@ public class OracleConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * 将动态 SQL 嵌入 EXECUTE IMMEDIATE 的单引号字面量时，单引号需加倍转义。
+     * To DynamicSQL EmbeddedEXECUTE IMMEDIATE , the single quotation marks shall be doubled.
      */
     private static String escapeForExecuteImmediate(String sql) {
         if (sql == null) {
@@ -382,7 +382,7 @@ public class OracleConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * Oracle LONG/LONG RAW 到 LOB 的转换不能通过 MODIFY 修改
+     * Oracle LONG/LONG RAW Present.LOB Yes.ConvertI can't pass.MODIFY Update
      */
     private boolean isUnsupportedOnlineModifyType(String type) {
         if (StringUtil.isBlank(type)) {
@@ -435,13 +435,13 @@ public class OracleConnector extends AbstractDatabaseConnector {
         url.append("jdbc:oracle:thin:@").append(config.getHost()).append(":").append(config.getPort());
         String serviceName = config.getServiceName();
         if (StringUtil.isNotBlank(serviceName)) {
-            // 使用Service Name
+            // UseService Name
             url.append("/").append(serviceName);
         } else if (StringUtil.isNotBlank(database)) {
-            // 使用SID (传统方式)
+            // UseSID (Traditional approaches)
             url.append(":").append(database);
         } else {
-            throw new IllegalArgumentException("Oracle需要指定serviceName或database(SID)");
+            throw new IllegalArgumentException("Oracle needs to specify serviceName or database");
         }
 
         return url.toString();
@@ -449,14 +449,14 @@ public class OracleConnector extends AbstractDatabaseConnector {
 
     @Override
     public String buildInsertSql(SqlBuilderConfig config) {
-        // Oracle 使用 MERGE 实现 INSERT IGNORE 效果（主键冲突时忽略）
+        // Oracle UseMERGE AchievedINSERT IGNORE EffectsPrimary keyIgnored during conflict)
         MergeContext context = buildMergeContext(config);
 
         StringBuilder sql = new StringBuilder(config.getDatabase().generateUniqueCode());
-        // 构建 MERGE 头部
+        // BuildMERGE Head
         buildMergeHeader(sql, config, context);
 
-        // 只有 WHEN NOT MATCHED 子句，主键冲突时什么都不做（INSERT IGNORE 行为）
+        // 64.WHEN NOT MATCHED The sentence,Primary keyNothing in conflict.INSERT IGNORE behaviour)
         buildInsertClause(sql, context);
 
         return sql.toString();
@@ -467,21 +467,21 @@ public class OracleConnector extends AbstractDatabaseConnector {
         MergeContext context = buildMergeContext(config);
 
         StringBuilder sql = new StringBuilder(config.getDatabase().generateUniqueCode());
-        // 构建 MERGE 头部
+        // BuildMERGE Head
         buildMergeHeader(sql, config, context);
 
-        // WHEN MATCHED 子句 - 更新非主键字段
+        // WHEN MATCHED Sub sentences - Update NotPrimary keyField
         sql.append("WHEN MATCHED THEN UPDATE SET ");
         sql.append(StringUtil.join(context.updateSets, StringUtil.COMMA)).append(" ");
 
-        // WHEN NOT MATCHED 子句 - 插入
+        // WHEN NOT MATCHED Sub sentences - Insert
         buildInsertClause(sql, context);
 
         return sql.toString();
     }
 
     /**
-     * 构建 MERGE 上下文（字段、主键等信息）
+     * BuildMERGE ContextField、Primary keyWait.Info）
      */
     private MergeContext buildMergeContext(SqlBuilderConfig config) {
         Database database = config.getDatabase();
@@ -491,7 +491,7 @@ public class OracleConnector extends AbstractDatabaseConnector {
             String fieldName = database.buildWithQuotation(f.getName());
             context.fieldNames.add(fieldName);
 
-            // 构建 SELECT 部分的字段别名
+            // BuildSELECT DepartmentminYes.FieldAlias
             List<String> fieldVs = new ArrayList<>();
             if (database.buildCustomValue(fieldVs, f)) {
                 context.selectFields.add(fieldVs.get(0) + " AS " + fieldName);
@@ -510,7 +510,7 @@ public class OracleConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * 构建 MERGE 语句头部（MERGE INTO ... USING ... ON ...）
+     * BuildMERGE Efforts:MERGE INTO ... USING ... ON ...）
      */
     private void buildMergeHeader(StringBuilder sql, SqlBuilderConfig config, MergeContext context) {
         Database database = config.getDatabase();
@@ -518,12 +518,12 @@ public class OracleConnector extends AbstractDatabaseConnector {
         sql.append("MERGE INTO ").append(config.getSchema());
         sql.append(database.buildWithQuotation(config.getTableName())).append(" t ");
 
-        // Oracle 使用 DUAL 表构造数据源
+        // Oracle UseDUAL Table constructionSource
         sql.append("USING (SELECT ");
         sql.append(StringUtil.join(context.selectFields, StringUtil.COMMA));
         sql.append(" FROM DUAL) s ");
 
-        // 构建 ON 条件：t.pk = s.pk AND ...
+        // BuildON Condition：t.pk = s.pk AND ...
         sql.append("ON (");
         for (int i = 0; i < context.pkFieldNames.size(); i++) {
             if (i > 0) {
@@ -536,13 +536,13 @@ public class OracleConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * 构建 INSERT 子句（WHEN NOT MATCHED THEN INSERT ...）
+     * BuildINSERT Sub-statementWHEN NOT MATCHED THEN INSERT ...）
      */
     private void buildInsertClause(StringBuilder sql, MergeContext context) {
         sql.append("WHEN NOT MATCHED THEN INSERT (");
         sql.append(StringUtil.join(context.fieldNames, StringUtil.COMMA)).append(") VALUES (");
 
-        // VALUES 子句使用 s.fieldName
+        // VALUES Subword Uses.fieldName
         List<String> sFieldNames = new ArrayList<>();
         context.fieldNames.forEach(f -> sFieldNames.add("s." + f));
         sql.append(StringUtil.join(sFieldNames, StringUtil.COMMA)).append(")");
@@ -563,7 +563,7 @@ public class OracleConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * MODIFY 子句中 BINARY_FLOAT/DOUBLE、TIMESTAMP、RAW 与基类默认不兼容。
+     * MODIFY SubstatementBINARY_FLOAT/DOUBLE、TIMESTAMP、RAW andBase class default is not compatible.
      */
     private static String mapOracleSpecialNumericAndTemporal(String t, Field sourceDefinition) {
         if ("BINARY_FLOAT".equals(t) || t.startsWith("BINARY_FLOAT(")) {
@@ -576,7 +576,7 @@ public class OracleConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * 二进制列显式绑参：BLOB 走连接创建的 LOB，避免 MERGE 下 setObject(byte[]) 报 17004。
+     * Binary column visible binding:BLOB Come on.ConnectCreatedLOB，AvoidMERGE DownsetObject(byte[]) Report17004。
      */
     @Override
     protected Object wrapBindParameter(Field field, Object val) {
@@ -586,7 +586,7 @@ public class OracleConnector extends AbstractDatabaseConnector {
         String type = field == null || StringUtil.isBlank(field.getTypeName())
                 ? StringUtil.EMPTY
                 : field.getTypeName().trim().toUpperCase(Locale.ROOT);
-        // SQL NULL → setNull(Types.BLOB)，避免 TYPE_UNKNOWN 绑参异常或落成空 BLOB
+        // SQL NULL → setNull(Types.BLOB)，AvoidTYPE_UNKNOWN Tie-in.ErrorOr it's over.BLOB
         if (val == null && isBlobType(type)) {
             return new OracleBlobParameter(null);
         }
@@ -606,7 +606,7 @@ public class OracleConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * MERGE 语句构建上下文
+     * MERGE ContextWow.
      */
     private static class MergeContext {
 

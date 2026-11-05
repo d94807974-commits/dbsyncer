@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 整库迁移列表进度汇总：表明细快照 + 各表已同步行 / 源表总行（与快照同序）。
+ * Database migrationListSummary of progress: showing fine snapshots+ Watches are walking together /Source tableTotal (%)andQuick in order.
  *
  * @author wuji
  * @version 1.0.0
@@ -17,13 +17,13 @@ import java.util.List;
  */
 public class TableProgressBundle {
 
-    /** 各表明细 Meta 快照（与表 ID 列表顺序对齐，可含 null） */
+    /** It's all very specific.Meta SnapshotandTableID ListAlign the order.null） */
     private final List<CommonTaskSnapshot> snapshots = new ArrayList<>();
 
-    /** 各表已同步行（success+fail，与 snapshots 同序） */
+    /** Watches are on foot.success+fail，and snapshots tried)*/
     private final List<Long> syncedRowsPerTable = new ArrayList<>();
 
-    /** 各表源端总行（无缓存为 0，与 snapshots 同序） */
+    /** TablesSourceTotal (%)NoneCache As0，and snapshots tried)*/
     private final List<Long> sourceTotalPerTable = new ArrayList<>();
 
     public List<CommonTaskSnapshot> getSnapshots() {
@@ -39,7 +39,7 @@ public class TableProgressBundle {
     }
 
     /**
-     * 追加一张表的进度样本（三列表须同序追加）。
+     * Add a table of progress samples (III)ListIt should be added in consecutive order).
      */
     public void addTable(CommonTaskSnapshot snapshot, long syncedRows, long sourceTotal) {
         snapshots.add(snapshot);

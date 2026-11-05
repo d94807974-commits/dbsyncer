@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * H2 浮点型
+ * H2 Floating Point Type
  */
 public final class H2DoubleType extends DoubleType {
 

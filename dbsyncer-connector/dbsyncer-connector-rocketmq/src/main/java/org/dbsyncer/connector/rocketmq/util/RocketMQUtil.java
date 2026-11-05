@@ -15,7 +15,7 @@ import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import java.util.Properties;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-07 01:00
  */

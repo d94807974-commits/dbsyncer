@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * {@link NoticeRuleService} 实现。
+ * {@link NoticeRuleService} Achieved.
  *
  * @author wuji
  * @version 1.0.0
@@ -45,14 +45,14 @@ public class NoticeRuleServiceImpl implements NoticeRuleService {
 
     @Override
     public synchronized String save(Map<String, String> params) {
-        Assert.notNull(params, "参数不能为空");
+        Assert.notNull(params, "Parameter cannot be empty");
         String scopeType = StringUtil.trim(params.get("scopeType"));
         String scopeId = StringUtil.trim(params.get("scopeId"));
-        Assert.hasText(scopeType, "作用域类型不能为空");
-        Assert.hasText(scopeId, "须选择分组或同步任务");
+        Assert.hasText(scopeType, "Field type cannot be empty");
+        Assert.hasText(scopeId, "Select Tasks to Group or Sync");
         Assert.isTrue(StringUtil.equals(ConfigConstant.GROUP, scopeType)
                         || StringUtil.equals(ConfigConstant.MAPPING, scopeType),
-                "作用域仅支持分组或同步任务");
+                "The field only supports grouping or synchronization tasks");
         assertScopeExists(scopeType, scopeId);
 
         boolean atAll = BooleanUtil.toBoolean(params.get("atAll"));
@@ -60,16 +60,16 @@ public class NoticeRuleServiceImpl implements NoticeRuleService {
         String emails = StringUtil.trim(params.get("emails"));
         if (!atAll) {
             Assert.isTrue(StringUtil.isNotBlank(atPhones) || StringUtil.isNotBlank(emails),
-                    "未开启@所有人时须填写手机号或邮件");
+                    "Unopened@owner by filling in cell number or email");
         }
 
         String id = StringUtil.trim(params.get("id"));
         NoticeRule conflict = noticeRuleProfile.getByScope(scopeType, scopeId);
         if (StringUtil.isNotBlank(id)) {
             NoticeRule existing = noticeRuleProfile.get(id);
-            Assert.notNull(existing, "通知规则不存在");
+            Assert.notNull(existing, "Notification rule does not exist");
             Assert.isTrue(conflict == null || StringUtil.equals(conflict.getId(), id),
-                    "同一分组/任务只能配置一条通知规则");
+                    "Only one notification rule for the same subgroup/task");
             existing.setScopeType(scopeType);
             existing.setScopeId(scopeId);
             existing.setAtAll(atAll ? 1 : 0);
@@ -79,7 +79,7 @@ public class NoticeRuleServiceImpl implements NoticeRuleService {
             return noticeRuleProfile.update(existing);
         }
 
-        Assert.isTrue(conflict == null, "同一分组/任务只能配置一条通知规则");
+        Assert.isTrue(conflict == null, "Only one notification rule for the same subgroup/task");
         long now = System.currentTimeMillis();
         NoticeRule rule = new NoticeRule();
         rule.setScopeType(scopeType);
@@ -94,11 +94,11 @@ public class NoticeRuleServiceImpl implements NoticeRuleService {
 
     @Override
     public synchronized String remove(Map<String, String> params) {
-        Assert.notNull(params, "参数不能为空");
+        Assert.notNull(params, "Parameter cannot be empty");
         String id = StringUtil.trim(params.get("id"));
-        Assert.hasText(id, "规则ID不能为空");
+        Assert.hasText(id, "Rule ID cannot be empty.");
         NoticeRule existing = noticeRuleProfile.get(id);
-        Assert.notNull(existing, "通知规则不存在");
+        Assert.notNull(existing, "Notification rule does not exist");
         noticeRuleProfile.remove(id);
         return id;
     }
@@ -106,11 +106,11 @@ public class NoticeRuleServiceImpl implements NoticeRuleService {
     private void assertScopeExists(String scopeType, String scopeId) {
         if (StringUtil.equals(ConfigConstant.GROUP, scopeType)) {
             Group group = groupProfile.getGroup(scopeId);
-            Assert.notNull(group, "分组不存在");
+            Assert.notNull(group, "Group does not exist");
             return;
         }
         Mapping mapping = mappingProfile.get(scopeId);
-        Assert.notNull(mapping, "同步任务不存在");
-        Assert.isTrue(StringUtil.equals(ConfigConstant.MAPPING, mapping.getType()), "同步任务不存在");
+        Assert.notNull(mapping, "Sync task does not exist");
+        Assert.isTrue(StringUtil.equals(ConfigConstant.MAPPING, mapping.getType()), "Sync task does not exist");
     }
 }

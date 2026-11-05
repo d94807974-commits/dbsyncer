@@ -22,7 +22,7 @@ public class SqlBuilderQuery extends AbstractSqlBuilder {
 
     @Override
     public String buildSql(SqlBuilderConfig config) {
-        // 分页语句
+        // minPageStatement
         List<String> primaryKeys = config.getPrimaryKeys();
         String queryFilter = config.getQueryFilter();
         List<Field> fields = config.getFields();
@@ -35,12 +35,12 @@ public class SqlBuilderQuery extends AbstractSqlBuilder {
         Database database = config.getDatabase();
         List<String> fs = new ArrayList<>();
         for (Field f : config.getFields()) {
-            // 使用了别名
+            // An alias was used.
             if (StringUtil.isNotBlank(f.getLabelName())) {
                 fs.add(database.buildWithQuotation(f.getName()) + " AS " + f.getLabelName());
                 continue;
             }
-            // 处理特殊类型
+            // Deal with specialType
             if (database.buildCustom(fs, f)) {
                 continue;
             }

@@ -4,7 +4,7 @@
 package org.dbsyncer.sdk.util;
 
 /**
- * JDBC 连接工具
+ * JDBC ConnectTools
  */
 public final class ConnectionUtil {
 
@@ -12,7 +12,7 @@ public final class ConnectionUtil {
     }
 
     /**
-     * 判断是否为连接断开类异常（不应回收到连接池）
+     * Judgement ConfirmationYesNoYesConnectDisconnect CategoryError（Should not be recoveredConnectClosed meeting
      */
     public static boolean isBrokenConnection(Throwable throwable) {
         Throwable current = throwable;

@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 钉钉通知服务实现
+ * Nail.Notification of service realization
  *
  * @author AE86
  * @version 1.0.0
@@ -38,11 +38,11 @@ public final class DingTalkNoticeService extends AbstractWebHookNoticeService {
         MessageContent params = new MessageContent();
         params.setMsgType("text");
         At at = new At();
-        // @所有人
+        // @everyone
         if (dingTalk.isAtAll()) {
             at.setAtAll(true);
         } else {
-            // @某个人手机号
+            // @Someone.Cell phone number
             String atMobiles = dingTalk.getAtMobiles();
             if (StringUtil.isNotBlank(atMobiles)) {
                 at.setAtMobiles(StringUtil.split(atMobiles, StringUtil.COMMA));
@@ -63,7 +63,7 @@ public final class DingTalkNoticeService extends AbstractWebHookNoticeService {
         private Object content;
 
         /**
-         * @用户配置
+         * @User Configuration
          */
         private At at;
 
@@ -95,13 +95,13 @@ public final class DingTalkNoticeService extends AbstractWebHookNoticeService {
     static final class At {
 
         /**
-         * At手机号列表
+         * AtCell phone numberList
          */
         @JSONField(name = "atMobiles")
         private String[] atMobiles;
 
         /**
-         * At所有人
+         * AtEveryone.
          */
         @JSONField(name = "isAtAll")
         private boolean isAtAll;

@@ -8,7 +8,7 @@ import org.dbsyncer.common.util.StringUtil;
 import java.util.Locale;
 
 /**
- * 资源 ACL 动作（调用方使用；鉴权内部映射到权限档位）。
+ * Resource ACL Actions (call Compensationer Usage; Securs Internal Map toPermissions(Pilot).
  *
  * @author wuji
  * @version 1.0.0
@@ -16,19 +16,19 @@ import java.util.Locale;
 public enum ResourceAclActionEnum {
 
     /**
-     * 查看
+     * View
      */
-    READ("read", "查看"),
+    READ("read", "View"),
 
     /**
-     * 编辑
+     * Edit
      */
-    WRITE("write", "编辑"),
+    WRITE("write", "Edit"),
 
     /**
-     * 启停/执行等运行时操作
+     * onActions
      */
-    OPERATE("operate", "操作");
+    OPERATE("operate", "Actions");
 
     private final String code;
     private final String name;
@@ -39,7 +39,7 @@ public enum ResourceAclActionEnum {
     }
 
     /**
-     * 按编码解析（大小写不敏感）；未知返回 {@code null}。
+     * Coding (case insensitive);UnknownBack {@code null}。
      */
     public static ResourceAclActionEnum get(String code) {
         if (StringUtil.isBlank(code)) {
@@ -55,7 +55,7 @@ public enum ResourceAclActionEnum {
     }
 
     /**
-     * 是否支持的动作编码。
+     * YesNoSupported action encoding.
      */
     public static boolean isSupported(String code) {
         return get(code) != null;

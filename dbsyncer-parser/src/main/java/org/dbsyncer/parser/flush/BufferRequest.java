@@ -4,8 +4,8 @@
 package org.dbsyncer.parser.flush;
 
 /**
- * 缓冲请求。
- * <p>对明细分表写入场景，{@link #getTaskId()} 实际返回任务分片键（任务 ID），不是 Meta 主键。
+ * Buffer request.
+ * <p>Yes.minThis post is part of our special coverage Global Voices 2011.{@link #getTaskId()} ActualBackTasksminSnippetsTasks ID），Oh, no.Yes Meta Primary key。
  *
  * @author AE86
  * @version 1.0.0
@@ -14,9 +14,9 @@ package org.dbsyncer.parser.flush;
 public interface BufferRequest {
 
     /**
-     * 分区键。明细分表场景为任务 ID（分片键）。
+     * minkey. DetailsminThe view is:Tasks ID（minSnippets.
      *
-     * @return 分区键
+     * @return minKeys
      */
     String getTaskId();
 }

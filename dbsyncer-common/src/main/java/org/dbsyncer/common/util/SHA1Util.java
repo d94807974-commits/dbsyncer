@@ -29,7 +29,7 @@ public abstract class SHA1Util {
         if (null == sha1) {
             return null;
         }
-        // base64加密
+        // base64Encryption
         return Base64.getEncoder().encodeToString(sha1);
     }
 

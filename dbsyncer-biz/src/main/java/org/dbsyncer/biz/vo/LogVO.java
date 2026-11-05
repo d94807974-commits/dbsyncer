@@ -1,25 +1,25 @@
 package org.dbsyncer.biz.vo;
 
 /**
- * 日志列表/详情视图。
+ * LogList/DetailsView.
  */
 public class LogVO {
 
     private String id;
     private String type;
     /**
-     * 模块名（由 type 解析）
+     * ModuleName (by)type Parsing)
      */
     private String typeName;
     private String username;
     private String ip;
     /**
-     * 0失败 1成功
+     * 0Failed 1Success
      */
     private Integer status;
     private String json;
     /**
-     * 列表摘要（优先 JSON.message，否则原文）
+     * ListSummary (priority)JSON.message，NoOriginal language
      */
     private String message;
     private String requestUri;

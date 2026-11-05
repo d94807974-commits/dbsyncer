@@ -81,12 +81,12 @@ public class TableGroupChecker extends AbstractChecker {
         Mapping mapping = mappingProfile.get(mappingId);
         Assert.notNull(mapping, "mapping can not be null.");
 
-        // 检查是否存在重复映射关系（批量新增可由 Service 预检后跳过）
+        // InspectionYesNoDuplicationMapping（BatchInsertMay beService Skipped after pre-checking)
         if (!StringUtil.equals(params.get("skipRepeatedCheck"), Boolean.TRUE.toString())) {
             checkRepeatedTable(mappingId, sourceTable, targetTable);
         }
 
-        // 获取连接器信息
+        // AccessConnectorInfo
         TableGroup tableGroup = new TableGroup();
         tableGroup.setTaskId(mappingId);
         Table source = findTable(mapping.getSourceTable(), sourceTable, sourceType);
@@ -94,17 +94,17 @@ public class TableGroupChecker extends AbstractChecker {
         tableGroup.setSourceTable(updateTableColumn(mapping, ConnectorInstanceUtil.SOURCE_SUFFIX, sourceTablePK, source));
         tableGroup.setTargetTable(updateTableColumn(mapping, ConnectorInstanceUtil.TARGET_SUFFIX, targetTablePK, target));
 
-        // 修改基本配置
+        // UpdateBasicConfigure
         this.modifyConfigModel(tableGroup, params);
 
-        // 匹配相似字段映射关系
+        // Match SimilarFieldMapping
         if (StringUtil.isNotBlank(fieldMappings)) {
             matchFieldMapping(tableGroup, fieldMappings);
         } else {
             matchFieldMapping(tableGroup);
         }
 
-        // 合并配置
+        // MergeConfigure
         mergeConfig(mapping, tableGroup);
 
         return tableGroup;
@@ -122,16 +122,16 @@ public class TableGroupChecker extends AbstractChecker {
         String fieldMappingJson = params.get("fieldMapping");
         Assert.hasText(fieldMappingJson, "TableGroupChecker check params fieldMapping is empty");
 
-        // 修改基本配置
+        // UpdateBasicConfigure
         this.modifyConfigModel(tableGroup, params);
 
-        // 修改高级配置：过滤条件/转换配置/插件配置
+        // UpdateAdvanced settings：Filter Conditions/Convert Configuration/Plugin Configuration
         this.modifySuperConfigModel(tableGroup, params);
 
-        // 字段映射关系
+        // FieldMapping
         setFieldMapping(tableGroup, fieldMappingJson);
 
-        // 合并配置
+        // MergeConfigure
         mergeConfig(mapping, tableGroup);
 
         return tableGroup;
@@ -148,7 +148,7 @@ public class TableGroupChecker extends AbstractChecker {
     }
 
     /**
-     * 刷新表字段
+     * Refresh tablesField
      */
     public void refreshTableFields(TableGroup tableGroup) {
         Mapping mapping = mappingProfile.get(tableGroup.getTaskId());
@@ -163,17 +163,17 @@ public class TableGroupChecker extends AbstractChecker {
     }
 
     public void mergeConfig(Mapping mapping, TableGroup tableGroup) {
-        // 合并高级配置
+        // MergeAdvanced settings
         TableGroup group = PickerUtil.mergeTableGroupConfig(mapping, tableGroup);
         Map<String, String> command = parserComponent.getCommand(mapping, group);
         tableGroup.setCommand(command);
     }
 
     /**
-     * 订正校验任务：合并任务级过滤等与表组配置后
+     * Revised verification tasks：MergeTasksLevel filter etc.andTable groupsConfigureBack
      *
-     * @param task       订正校验任务
-     * @param tableGroup 已持久化的表组
+     * @param task       Revised verification tasks
+     * @param tableGroup AlreadyEnduringTable Group
      */
     public void mergeConfig(ValidateSyncTask task, TableGroup tableGroup) {
         TableGroup group = PickerUtil.mergeTableGroupConfig(task, tableGroup);
@@ -192,8 +192,8 @@ public class TableGroupChecker extends AbstractChecker {
         context.addTablePattern(table);
         List<MetaInfo> metaInfos = parserComponent.getMetaInfo(context);
         MetaInfo metaInfo = CollectionUtils.isEmpty(metaInfos) ? null : metaInfos.get(0);
-        Assert.notNull(metaInfo, "无法获取连接器表信息");
-        // 自定义主键
+        Assert.notNull(metaInfo, "Could not close temporary folder: %s");
+        // CustomPrimary key
         if (StringUtil.isNotBlank(primaryKeyStr) && !CollectionUtils.isEmpty(metaInfo.getColumn())) {
             String[] pks = StringUtil.split(primaryKeyStr, StringUtil.COMMA);
             Arrays.stream(pks).forEach(pk-> {
@@ -211,7 +211,7 @@ public class TableGroupChecker extends AbstractChecker {
 
     public void checkRepeatedTable(String mappingId, String sourceTable, String targetTable) {
         if (tableGroupProfile.existTableGroup(mappingId, sourceTable, targetTable)) {
-            final String error = String.format("映射关系已存在.%s > %s", sourceTable, targetTable);
+            final String error = String.format("Map relationship already 256. %s > %s", sourceTable, targetTable);
             logger.error(error);
             throw new RepeatedTableGroupException(error);
         }
@@ -229,7 +229,7 @@ public class TableGroupChecker extends AbstractChecker {
         shuffleColumn(sCol, m1);
         shuffleColumn(tCol, m2);
 
-        // 模糊匹配相似字段
+        // Fuzzy matches are similarField
         AtomicBoolean existSourcePKFieldMapping = new AtomicBoolean();
         AtomicBoolean existTargetPKFieldMapping = new AtomicBoolean();
         m1.forEach((s, f1)->m2.computeIfPresent(s, (t, f2)-> {
@@ -243,11 +243,11 @@ public class TableGroupChecker extends AbstractChecker {
             return f2;
         }));
 
-        // 沒有主键映射关系，取第一个主键作为映射关系
+        // Nothing.Primary keyMapping，FirstPrimary keyAsMapping
         if (!existSourcePKFieldMapping.get() || !existTargetPKFieldMapping.get()) {
             List<String> sourceTablePrimaryKeys = PrimaryKeyUtil.findTablePrimaryKeys(tableGroup.getSourceTable());
             List<String> targetTablePrimaryKeys = PrimaryKeyUtil.findTablePrimaryKeys(tableGroup.getTargetTable());
-            Assert.isTrue(!CollectionUtils.isEmpty(sourceTablePrimaryKeys) && !CollectionUtils.isEmpty(targetTablePrimaryKeys), "数据源表和目标源表必须包含主键.");
+            Assert.isTrue(!CollectionUtils.isEmpty(sourceTablePrimaryKeys) && !CollectionUtils.isEmpty(targetTablePrimaryKeys), "Data source and target source tables must contain primary keys.");
             String sPK = sourceTablePrimaryKeys.stream().findFirst().get().toUpperCase();
             String tPK = targetTablePrimaryKeys.stream().findFirst().get().toUpperCase();
             tableGroup.getFieldMapping().add(new FieldMapping(m1.get(sPK), m2.get(tPK)));
@@ -309,7 +309,7 @@ public class TableGroupChecker extends AbstractChecker {
     }
 
     /**
-     * 解析映射关系
+     * ParsingMapping
      *
      * @param tableGroup
      * @param json       [{"source":"id","target":"id"}]
@@ -318,7 +318,7 @@ public class TableGroupChecker extends AbstractChecker {
     public void setFieldMapping(TableGroup tableGroup, String json) {
         List<Map> mappings = JsonUtil.parseList(json);
         if (null == mappings) {
-            throw new BizException("映射关系不能为空");
+            throw new BizException("Mapping cannot be empty");
         }
 
         final Map<String, Field> sMap = PickerUtil.convert2Map(tableGroup.getSourceTable().getColumn());

@@ -9,7 +9,7 @@ import org.dbsyncer.sdk.model.Table;
 import java.util.List;
 
 /**
- * 驱动映射关系
+ * MappingMapping
  *
  * @author AE86
  * @version 1.0.0
@@ -21,61 +21,61 @@ public class Mapping extends AbstractConfigModel {
         super.setType(ConfigConstant.MAPPING);
     }
 
-    // 数据源连接器ID
+    // SourceConnectorID
     private String sourceConnectorId;
 
-    // 数据源库名称
+    // SourceLibraryName
     private String sourceDatabase;
 
-    // 数据源库构架名
+    // SourceLibraryFrame Name
     private String sourceSchema;
 
-    // 数据源库表列表
+    // SourceLibraryTableList
     private List<Table> sourceTable;
 
-    // 数据源字段(公共字段)
+    // Source fields(MaleTotalField)
     private List<Field> sourceColumn;
 
-    // 目标源连接器ID
+    // TargetConnectorID
     private String targetConnectorId;
 
-    // 目标源库名称
+    // TargetLibraryName
     private String targetDatabase;
 
-    // 目标源库构架名
+    // TargetLibraryFrame Name
     private String targetSchema;
 
-    // 目标源库表列表
+    // TargetLibraryTableList
     private List<Table> targetTable;
 
-    // 目标源字段(公共字段)
+    // Target source field(MaleTotalField)
     private List<Field> targetColumn;
 
     /**
-     * 同步方式
+     * Synchronisation Method
      *
      * @see ModelEnum
      */
     private String model;
 
-    // 监听配置
+    // ListenConfigure
     private ListenerConfig listener;
 
-    // 批量读取
+    // Batch read
     private int readNum = 10000;
 
-    // 单次写入
+    // Single write
     private int batchNum = 1000;
 
-    // 表并发线程数（全量多表并行；单表内写串行；请按源/目标连接池大小调整）
+    // Table and distributionThreads（FullMultiple tables parallel; line in single table; please click source/Target ConnectionResize pool)
     private int threadNum = 10;
 
     /**
-     * 执行器数
+     * Executors
      */
     private int channelSize = 8;
 
-    // 覆盖写入
+    // OverwriteWriting
     private boolean forceUpdate = true;
 
     public String getSourceConnectorId() {

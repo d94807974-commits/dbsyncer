@@ -75,7 +75,7 @@ public class MappingChecker extends AbstractChecker {
     public Mapping checkAddConfigModel(Map<String, String> params) {
         logger.info("params:{}", params);
         String name = params.get(ConfigConstant.CONFIG_MODEL_NAME);
-        Assert.hasText(name, "驱动名称不能为空");
+        Assert.hasText(name, "Driver name cannot be empty");
 
         Mapping mapping = new Mapping();
         mapping.setName(name);
@@ -83,13 +83,13 @@ public class MappingChecker extends AbstractChecker {
         mapping.setListener(new ListenerConfig(ListenerTypeEnum.LOG.getType()));
         mapping.setParams(new HashMap<>());
 
-        // 修改基本配置
+        // UpdateBasicConfigure
         this.modifyConfigModel(mapping, params);
 
-        // 修改连接配置
+        // Modify ConnectionConfigure
         updateConnector(params, mapping);
 
-        // 创建meta
+        // Createmeta
         addMeta(mapping);
 
         return mapping;
@@ -103,21 +103,21 @@ public class MappingChecker extends AbstractChecker {
         Mapping mapping = mappingProfile.get(id);
         Assert.notNull(mapping, "Can not find mapping.");
 
-        // 修改基本配置
+        // UpdateBasicConfigure
         this.modifyConfigModel(mapping, params);
 
-        // 同步方式(仅支持全量或增量同步方式)
+        // Synchronisation Method(Only supportFullorIncremental syncModalities)
         String model = params.get("model");
         mapping.setModel(ModelEnum.getModelEnum(model).getCode());
 
-        // 全量配置
+        // FullConfigure
         mapping.setReadNum(NumberUtil.toInt(params.get("readNum"), mapping.getReadNum()));
         mapping.setBatchNum(NumberUtil.toInt(params.get("batchNum"), mapping.getBatchNum()));
         mapping.setThreadNum(NumberUtil.toInt(params.get("threadNum"), mapping.getThreadNum()));
         mapping.setForceUpdate(StringUtil.isNotBlank(params.get("forceUpdate")));
         applyChannelSize(mapping, params);
 
-        // 增量配置(日志/定时)
+        // IncrementalConfigure(Log/Scheduled)
         String incrementStrategy = params.get("incrementStrategy");
         Assert.hasText(incrementStrategy, "MappingChecker check params incrementStrategy is empty");
         String type = StringUtil.toLowerCaseFirstOne(incrementStrategy).concat("ConfigChecker");
@@ -125,25 +125,25 @@ public class MappingChecker extends AbstractChecker {
         Assert.notNull(checker, "Checker can not be null.");
         checker.modify(mapping, params);
 
-        // 自定义监听事件配置
+        // CustomListenEventConfigure
         updateListenerConfig(mapping.getListener(), params);
 
-        // 修改高级配置：过滤条件/转换配置/插件配置
+        // UpdateAdvanced settings：Filter Conditions/Convert Configuration/Plugin Configuration
         this.modifySuperConfigModel(mapping, params);
-        // 修改连接配置
+        // Modify ConnectionConfigure
         updateConnector(params, mapping);
 
-        // 合并关联的映射关系配置
+        // Merge AssociatedMappingConfigure
         batchMergeConfig(mapping, params);
 
         return mapping;
     }
 
     /**
-     * 执行器数配置
+     * ExecutorsConfigure
      *
-     * @param mapping 驱动
-     * @param params  请求参数
+     * @param mapping Mapping
+     * @param params  Request parameters
      */
     private void applyChannelSize(Mapping mapping, Map<String, String> params) {
         if (licenseService.getEditionEnum() == EditionEnum.COMMUNITY) {
@@ -160,17 +160,17 @@ public class MappingChecker extends AbstractChecker {
         String targetConnectorId = params.get("targetConnectorId");
         String targetDatabase = params.get("targetDatabase");
         String targetSchema = params.get("targetSchema");
-        Assert.hasText(sourceConnectorId, "数据源不能为空.");
-        Assert.hasText(targetConnectorId, "目标源不能为空.");
+        Assert.hasText(sourceConnectorId, "Data sources cannot be empty.");
+        Assert.hasText(targetConnectorId, "Target source cannot be empty.");
 
-        // 如果连接发生变更, 释放源库连接资源
+        // IfConnectChanges occurring, ReleaseSource databaseConnectResource
         String sId = mapping.getSourceConnectorId();
         if (StringUtil.isNotBlank(sId) && !StringUtil.equals(sId, sourceConnectorId)) {
             String sourceInstanceId = ConnectorInstanceUtil.buildConnectorInstanceId(mapping.getId(), sId, ConnectorInstanceUtil.SOURCE_SUFFIX);
             connectorFactory.disconnect(sourceInstanceId);
         }
 
-        // 如果连接发生变更, 释放目标库连接资源
+        // IfConnectChanges occurring, ReleaseTarget databaseConnectResource
         String tId = mapping.getTargetConnectorId();
         if (StringUtil.isNotBlank(tId) && !StringUtil.equals(tId, targetConnectorId)) {
             String targetInstanceId = ConnectorInstanceUtil.buildConnectorInstanceId(mapping.getId(), tId, ConnectorInstanceUtil.TARGET_SUFFIX);
@@ -188,7 +188,7 @@ public class MappingChecker extends AbstractChecker {
 
     public void addMeta(Mapping mapping) {
         Meta meta = new Meta();
-        // 任务级 Meta：taskId=任务ID，isTaskDetail=0；主键由 modifyConfigModel 生成雪花；明细分片靠 taskId
+        // TasksAdministrationMeta：taskId=Task ID，isTaskDetail=0；Primary keyBymodifyConfigModel GenerateSnowflake; detailminShit.taskId
         meta.setTaskId(mapping.getId());
         meta.setIsTaskDetail(TaskLevelEnum.TASK.getCode());
         this.modifyConfigModel(meta, new HashMap<>());
@@ -196,7 +196,7 @@ public class MappingChecker extends AbstractChecker {
     }
 
     /**
-     * 修改监听器配置
+     * UpdateListenerConfigure
      *
      * @param listener
      * @param params
@@ -213,7 +213,7 @@ public class MappingChecker extends AbstractChecker {
     private void batchMergeConfig(Mapping mapping, Map<String, String> params) {
         String sortedIds = params == null ? null : params.get("sortedTableGroupIds");
         if (StringUtil.isNotBlank(sortedIds)) {
-            // 手动排序需要全集才能重排 index
+            // Manual sorting requires a full set to reorderindex
             List<TableGroup> groupAll = new ArrayList<>();
             tableGroupProfile.pageScanTableGroups(mapping.getId(), ConfigConstant.PAGE_SIZE, groupAll::addAll);
             if (CollectionUtils.isEmpty(groupAll)) {
@@ -237,7 +237,7 @@ public class MappingChecker extends AbstractChecker {
             tableGroupProfile.editTableGroupBatch(dirty);
             return;
         }
-        // 无排序：按页合并，避免整表进内存；command 未变则跳过 UPDATE；有变更则按页批量写回
+        // NoneSort: Press AccordinglyPageMerge, avoid whole-watchMemory；command Unchanged SkipUPDATE；If you change, pressPageBatchback
         tableGroupProfile.pageScanTableGroups(mapping.getId(), ConfigConstant.PAGE_SIZE, page -> {
             if (CollectionUtils.isEmpty(page)) {
                 return;
@@ -300,7 +300,7 @@ public class MappingChecker extends AbstractChecker {
     }
 
     public void sortTableGroup(List<TableGroup> groupAll, Map<String, String> params) {
-        // 手动排序
+        // Sort Manually
         String[] sortedTableGroupIds = StringUtil.split(params.get("sortedTableGroupIds"), StringUtil.VERTICAL_LINE);
         if (null != sortedTableGroupIds && sortedTableGroupIds.length > 0) {
             Map<String, TableGroup> tableGroupMap = groupAll.stream().collect(Collectors.toMap(TableGroup::getId, f -> f, (k1, k2) -> k1));

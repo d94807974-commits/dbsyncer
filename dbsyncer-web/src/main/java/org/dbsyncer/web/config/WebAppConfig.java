@@ -58,17 +58,17 @@ public class WebAppConfig extends WebSecurityConfigurerAdapter implements Authen
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
-     * 认证地址
+     * Authentication Address
      */
     private static final String LOGIN = "/login";
 
     /**
-     * 认证页面
+     * MigrantPageNoodles.
      */
     public static final String LOGIN_PAGE = "/login.html";
 
     /**
-     * 每个帐号允许同时登录会话数, 默认同一个帐号只能在一个地方登录
+     * Each account allows simultaneousLoginSessions, Default the same account number only in one placeLogin
      */
     private static final int MAXIMUM_SESSIONS = 1;
 
@@ -85,12 +85,12 @@ public class WebAppConfig extends WebSecurityConfigurerAdapter implements Authen
     private LogService logService;
 
     /**
-     * 是否重置管理员密码
+     * YesNoResetAdministratorPassword
      */
     private boolean resetPwd;
 
     /**
-     * 登录失败
+     * Login failed
      */
     @Bean
     public AuthenticationFailureHandler loginFailHandler() {
@@ -103,7 +103,7 @@ public class WebAppConfig extends WebSecurityConfigurerAdapter implements Authen
     }
 
     /**
-     * 登录成功
+     * Login succeeded
      */
     @Bean
     public SavedRequestAwareAuthenticationSuccessHandler loginSuccessHandler() {
@@ -112,7 +112,7 @@ public class WebAppConfig extends WebSecurityConfigurerAdapter implements Authen
             @Override
             public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
                 String username = String.valueOf(authentication.getPrincipal());
-                String msg = String.format("%s 登录成功!", username);
+                String msg = String.format("%s logged in successfully", username);
                 logService.log(LogType.LoginLog.SUCCESS, username, RequestUtil.getClientIp(request),
                         StatusEnum.SUCCESS.getCode(), LogType.LoginLog.SUCCESS.getMessage());
                 write(response, RestResult.restSuccess(msg));
@@ -125,12 +125,12 @@ public class WebAppConfig extends WebSecurityConfigurerAdapter implements Authen
     public LogoutSuccessHandler logoutHandler() {
         return (request, response, authentication) -> {
             try {
-                String msg = String.format("%s 注销成功!", authentication.getPrincipal());
+                String msg = String.format("%s signed out successfully", authentication.getPrincipal());
                 write(response, RestResult.restSuccess(msg));
                 logger.info(msg);
             } catch (Exception e) {
                 write(response, RestResult.restFail(e.getMessage(), 403));
-                logger.info("注销失败: {}", e.getMessage());
+                logger.info("Cancel failed: }", e.getMessage());
             }
         };
     }
@@ -154,7 +154,7 @@ public class WebAppConfig extends WebSecurityConfigurerAdapter implements Authen
     }
 
     /**
-     * 仅挂入 Spring Security 链，避免 Servlet 容器再注册一份过滤器。
+     * Hanging onlySpring Security Chain, avoid.Servlet The container registers another filter.
      */
     @Bean
     public ClusterInternalAuthFilter clusterInternalAuthFilter() {
@@ -171,9 +171,9 @@ public class WebAppConfig extends WebSecurityConfigurerAdapter implements Authen
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        // 获取表单用户名
+        // Get FormUsername
         String username = (String) authentication.getPrincipal();
-        // 获取表单用户填写的密码
+        // Get FormUserFilled inPassword
         String password = (String) authentication.getCredentials();
         password = SHA1Util.b64_sha1(password);
 
@@ -182,12 +182,12 @@ public class WebAppConfig extends WebSecurityConfigurerAdapter implements Authen
         }
 
         UserInfo userInfo = userConfigService.getUserInfo(username);
-        // 重置密码
+        // ResetPassword
         if (resetPwd && userInfo != null) {
             UserInfo defUser = userConfigService.getDefaultUser();
             if (StringUtil.equals(defUser.getUsername(), username) && StringUtil.equals(defUser.getPassword(), password)) {
                 userInfo.setPassword(password);
-                logger.info("重置[{}]密码成功!", username);
+                logger.info("Reset password successfully!", username);
             }
         }
         if (null == userInfo || !StringUtil.equals(userInfo.getPassword(), password)) {
@@ -210,16 +210,16 @@ public class WebAppConfig extends WebSecurityConfigurerAdapter implements Authen
 
     @Override
     public void sessionCreated(HttpSessionEvent se) {
-        logger.info("创建会话:{}, maxInactiveInterval={}", se.getSession().getId(), se.getSession().getMaxInactiveInterval());
+        logger.info("Create Session: }, maxInactive Interval=}", se.getSession().getId(), se.getSession().getMaxInactiveInterval());
     }
 
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
-        logger.info("销毁会话:{}", se.getSession().getId());
+        logger.info("Organisation Migrant", se.getSession().getId());
     }
 
     /**
-     * 响应
+     * Response
      */
     private void write(HttpServletResponse response, RestResult result) {
         PrintWriter out = null;

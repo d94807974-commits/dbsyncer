@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2024-12-25 00:03
  */
@@ -61,12 +61,12 @@ public final class OracleDateType extends DateType {
         }
         if (val instanceof String) {
             String s = (String) val;
-            // 先尝试解析为 Timestamp（支持带时间的字符串）
+            // Try Approximate AsTimestamp（Support tapeTimestring)
             Timestamp timestamp = DateFormatUtil.stringToTimestamp(s);
             if (timestamp != null) {
                 return new Date(timestamp.getTime());
             }
-            // 再尝试直接解析为 Date（仅日期格式）
+            // Try to resolve directly toDate（AI only)
             return DateFormatUtil.stringToDate(s);
         }
         return throwUnsupportedException(val, field);

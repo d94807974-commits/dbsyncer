@@ -6,7 +6,7 @@ package org.dbsyncer.biz.vo;
 import org.dbsyncer.parser.model.ResourceAcl;
 
 /**
- * 资源授权展示。
+ * Resource authorizationShow.
  *
  * @author wuji
  * @version 1.0.0

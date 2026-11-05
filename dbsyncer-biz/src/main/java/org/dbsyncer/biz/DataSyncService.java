@@ -12,22 +12,22 @@ import java.util.Map;
 public interface DataSyncService {
 
     /**
-     * 获取同步数据
+     * AccessSync data
      */
     MessageVO getMessageVo(String taskId, String messageId);
 
     /**
-     * 获取Binlog
+     * AccessBinlog
      */
     Map getBinlogData(Map row, boolean prettyBytes) throws InvalidProtocolBufferException;
 
     /**
-     * 手动同步数据
+     * ManualSync data
      */
     String sync(Map<String, String> params) throws InvalidProtocolBufferException;
 
     /**
-     * 批量同步数据
+     * BatchSync data
      */
     void syncBatch(DataSyncRequest request);
 

@@ -12,7 +12,7 @@ import org.dbsyncer.sdk.constant.ConnectorConstant;
 import java.util.Properties;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-06 21:00
  */
@@ -42,7 +42,7 @@ public final class DorisConstant {
         putIfAbsent(properties, "useUnicode", "true");
         putIfAbsent(properties, "characterEncoding", "UTF-8");
         putIfAbsent(properties, "useSSL", "false");
-        // 与 StarRocks/MySQL 默认一致，避免 DATETIME/TIMESTAMP 经 JDBC 绑参时出现 ±8 小时偏移
+        // and StarRocks/MySQL Default Unanimous, AvoidDATETIME/TIMESTAMP Yes.JDBC He showed up when he was tied up.±8 hoursOffset
         putIfAbsent(properties, "serverTimezone", "Asia/Shanghai");
     }
 

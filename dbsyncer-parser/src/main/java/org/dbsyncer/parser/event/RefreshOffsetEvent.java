@@ -6,7 +6,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ApplicationContextEvent;
 
 /**
- * 刷新偏移量事件
+ * RefreshOffsetEvent
  *
  * @version 1.0.0
  * @Author AE86

@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-07 03:00
  */
@@ -41,14 +41,14 @@ public final class StarRocksStringType extends StringType {
             return (String) val;
         }
         if (val instanceof byte[]) {
-            // 目标为字符串列时，byte[] 转 Base64，避免 new String(bytes) 乱码或 "[B@..."
+            // Objective CombinedWhen it is a string column,byte[] TurnBase64，Avoidnew String(bytes) Sp 1(b) or"[B@..."
             return Base64.getEncoder().encodeToString((byte[]) val);
         }
         return JsonUtil.objToJsonSafe(val);
     }
 
     /**
-     * 写入前转换：STRING/VARCHAR 等目标列收到 byte[] 时转 Base64，禁止 Object.toString 变成 "[B@xxxx]"。
+     * Before writingConvert：STRING/VARCHAR Wait.Objective CombinedLiner, copy.byte[] ClockBase64，Ban SustainObject.toString ♪ Turn into ♪"[B@xxxx]"。
      */
     @Override
     protected Object convert(Object val, Field field) {

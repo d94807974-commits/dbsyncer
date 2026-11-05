@@ -4,7 +4,7 @@
 package org.dbsyncer.common.model;
 
 /**
- * 邮件告警配置
+ * EmailPolice!Configure
  *
  * @Author AE86
  * @Version 1.0.0
@@ -13,12 +13,12 @@ package org.dbsyncer.common.model;
 public final class MailNoticeChannel extends NoticeChannel {
 
     /**
-     * 邮件账号
+     * EmailAccount
      */
     private String account;
 
     /**
-     * 发邮件的Code,不是邮箱密码
+     * Fire!EmailYes.Code,Oh, no.YesMailboxPassword
      */
     private String code;
 

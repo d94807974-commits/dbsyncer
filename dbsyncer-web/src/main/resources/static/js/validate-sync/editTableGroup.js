@@ -1,14 +1,14 @@
 $(function() {
-    // 缓存常用选择器
+    // Cache Common Selector
     const $fieldMappingList = () => $("#fieldMappingList");
     const $fieldCheckboxes = () => $('.fieldCheckbox');
     const $fieldCheckboxAll = () => $('.fieldCheckboxAll');
     const $fieldDelBtn = () => $('#fieldDelBtn');
     const $fieldMapping = () => $("#fieldMapping");
 
-    // 初始化映射关系参数
+    // InitializeMappingParameter
     function initFieldMappingParams(){
-        // 生成JSON参数
+        // GenerateJSONParameter
         let row = [];
         const $list = $fieldMappingList();
         $list.find("tr").each(function(k,v){
@@ -19,7 +19,7 @@ $(function() {
             });
         });
 
-        // 根据是否有数据来显示/隐藏表格（通过tbody的父元素table）
+        // Based onYesNoTables maintains data 165tbodyFather elementtable）
         const $table = $list.closest('table');
         if (row.length === 0) {
             $table.addClass("hidden");
@@ -37,10 +37,10 @@ $(function() {
                     onChange(data);
                 }
             },
-            defaultValue: [],// 默认选中
-            customButtons: [ // 最多2个自定义按钮
+            defaultValue: [],// Default Selection
+            customButtons: [ // Up to 2 custom buttons
                 {
-                    text: '刷新字段',
+                    text: 'Refresh Fields',
                     callback: function(values) {
                         bindRefreshTableFieldsClick();
                     }
@@ -49,19 +49,19 @@ $(function() {
         });
     }
 
-    // 绑定表格拖拽事件（使用原生 HTML5 拖拽 API）
+    // Tie Form DragEvent（Use originalHTML5 DragAPI）
     function bindFieldMappingDrop() {
         const $list = $fieldMappingList();
         const rows = $list.find("tr");
 
-        // 先移除旧的事件监听器，避免重复绑定
+        // Remove the old one first.EventListening devices.
         rows.off('dragstart dragend dragover dragleave drop');
         rows.each(function() {
             const row = this;
             row.setAttribute('draggable', 'true');
         });
 
-        // 使用事件委托，避免重复绑定
+        // UseEventCommissioning, avoiding duplication.
         $list.on('dragstart', 'tr', function(e) {
             e.originalEvent.dataTransfer.effectAllowed = 'move';
             e.originalEvent.dataTransfer.setData('text/html', this.innerHTML);
@@ -71,7 +71,7 @@ $(function() {
         $list.on('dragend', 'tr', function(e) {
             $(this).removeClass('dragging');
             $list.find('tr').removeClass('drag-over');
-            // 更新行号
+            // Update Line Number
             updateRowNumbers();
             initFieldMappingParams();
         });
@@ -108,20 +108,20 @@ $(function() {
         });
     }
 
-    // 更新表格行号
+    // Update Table Line Numbers
     function updateRowNumbers() {
         $fieldMappingList().find("tr").each(function(index) {
             $(this).find("td:eq(0)").text(index + 1);
         });
     }
 
-    // 绑定复选框多选或单选事件
+    // Multicheck or single-check binding check boxesEvent
     function bindFieldMappingCheckbox() {
         const $checkboxAll = $fieldCheckboxAll();
         const $delBtn = $fieldDelBtn();
         let isUpdatingSelectAll = false;
 
-        // 更新全选复选框状态
+        // UpdateSelect AllCheckboxStatus
         function updateSelectAllState() {
             if (isUpdatingSelectAll) return;
             isUpdatingSelectAll = true;
@@ -139,21 +139,21 @@ $(function() {
             }, 0);
         }
 
-        // 更新删除按钮状态
+        // UpdateDeletebuttonStatus
         function updateDeleteButtonState() {
             $delBtn.prop('disabled', $fieldCheckboxes().filter(':checked').length === 0);
         }
 
-        // 先移除旧的事件绑定，避免重复绑定
+        // Remove the old one first.EventTie it up.
         $checkboxAll.off('change');
         $fieldCheckboxes().off('change');
 
-        // 初始化全选复选框
+        // InitializeSelect AllCheckbox
         $checkboxAll.checkboxGroup({
             theme: 'danger',
             size: 'md',
             onChange: function(values) {
-                // 全选/取消全选时，同步所有单个复选框
+                // Select All/CancelSelect All, sync all single check boxes
                 const isChecked = values.length > 0;
                 $fieldCheckboxes().each(function() {
                     const api = $(this).data('checkboxGroup');
@@ -165,7 +165,7 @@ $(function() {
             }
         });
 
-        // 为已存在的复选框初始化
+        // Initialize an existing check box
         $fieldCheckboxes().each(function() {
             if (!$(this).data('checkboxGroup')) {
                 $(this).checkboxGroup({
@@ -180,12 +180,12 @@ $(function() {
         });
     }
 
-    // 绑定刷新表字段事件
+    // TieRefresh tablesFieldEvent
     function bindRefreshTableFieldsClick() {
         let id = $("#tableGroupId").val();
         doPoster("/validate-sync/refreshFields", {'id': id}, function (data) {
             if (data.success === true) {
-                bootGrowl("刷新字段成功!", "success");
+                bootGrowl("Refresh Corporation succeeded!", "success");
                 doLoader('/validate-sync/page/editTableGroup?id=' + id);
             } else {
                 bootGrowl(data.message, "danger");
@@ -193,30 +193,30 @@ $(function() {
         });
     }
 
-    // 绑定字段映射表格点击事件
+    // TieField mappingTable ClickEvent
     function bindFieldMappingListClick(){
-        // 使用事件委托，支持动态添加的行
+        // UseEventCommissioning, supporting dynamicsAddLine
         const $list = $fieldMappingList();
         $list.off("dblclick", "tr").on('dblclick', 'tr', function () {
             const $pk = $(this).find("td:eq(3)");
-            // 更新为新的图标样式
-            $pk.html($pk.find("i").length > 0 ? '' : '<i title="主键" class="fa fa-key text-warning"></i>');
+            // Update to New Icon Style
+            $pk.html($pk.find("i").length > 0 ? '' : '<i title="Primary key" class="fa fa-key text-warning"></i>');
             initFieldMappingParams();
         });
     }
 
-    // 绑定添加字段映射点击事件
+    // TieAddField mappingClickEvent
     function bindFieldMappingAddClick(sourceSelector, targetSelector){
         $("#fieldAddBtn").unbind("click").bind('click', function(){
             let sValues = sourceSelector.getValues();
             let tValues = targetSelector.getValues();
-            // 非空检查
+            // Non 159
             if(sValues.length < 1 && tValues.length < 1){
-                bootGrowl("至少有一个字段.", "danger");
+                bootGrowl("At least one field.", "danger");
                 return;
             }
 
-            // 检查重复字段
+            // Check RepeatField
             let sField = sValues[0];
             let tField = tValues[0];
             sField = sField == null ? "" : sField;
@@ -229,20 +229,20 @@ $(function() {
                 let tf = $(this).find("td:eq(2)").text();
                 if (sField === sf && tField === tf) {
                     repeated = true;
-                    return false; // 跳出循环
+                    return false; // Jump out of cycle
                 }
             });
             if (repeated) {
-                bootGrowl("字段映射已存在.", "danger");
+                bootGrowl("Field map already exists.", "danger");
                 return;
             }
 
-            // 转义HTML防止XSS攻击
+            // ConversionHTMLPreventionXSSAttack!
             const escapedSField = escapeHtml(sField);
             const escapedTField = escapeHtml(tField);
             const rowIndex = $tr.length + 1;
 
-            $list.append(`<tr title='双击设置/取消主键 | 拖动排序'>
+            $list.append(`<tr title='Double-click to set/unset primary key | Drag to reorder'>
                     <td>${rowIndex}</td>
                     <td>${escapedSField}</td>
                     <td>${escapedTField}</td>
@@ -258,7 +258,7 @@ $(function() {
             bindFieldMappingCheckbox();
         });
     }
-    // 绑定删除字段映射点击事件
+    // TieDeleteField mappingClickEvent
     function bindFieldMappingDelClick(){
         $fieldDelBtn().unbind("click").bind('click', function () {
             const checkedRows = [];
@@ -266,54 +266,54 @@ $(function() {
                 checkedRows.push($(this).closest('tr'));
             });
             if (checkedRows.length > 0) {
-                // 删除选中的行
+                // DeleteSelected rows
                 checkedRows.forEach(function($row) {
                     $row.remove();
                 });
 
-                // 更新行号
+                // Update Line Number
                 updateRowNumbers();
-                // 更新映射参数（会自动显示/隐藏表格）
+                // Update MapParameter（Tables are automatically shown/hidden)
                 initFieldMappingParams();
-                // 更新删除按钮状态
+                // UpdateDeletebuttonStatus
                 $fieldDelBtn().prop('disabled', $fieldCheckboxes().filter(':checked').length === 0);
             }
         });
     }
 
-    // 定义返回函数，子页面返回
+    // DefinitionsBackFunctions，SonPageNoodles.Back
     let taskId = $("#taskId").val();
     window.backIndexPage = function () {
         doLoader("/validate-sync/page/edit?id=" + taskId);
     };
 
-    // 绑定下拉选择事件自动匹配相似字段事件
+    // Tie down the pull selectionEventAuto-match IllicitFieldEvent
     let targetTableSelect = bindFieldSelect($('#target_table_field'));
     let sourceTableSelect = bindFieldSelect($('#source_table_field'), function(data) {
         targetTableSelect.setValues(data);
     });
 
-    // 绑定表字段关系点击事件
+    // Tie TableFieldRelationship ClickEvent
     initFieldMappingParams();
-    // 绑定表格拖拽事件
+    // Tie Form DragEvent
     bindFieldMappingDrop();
-    // 绑定删除表字段映射事件
+    // TieDeleteTableField mappingEvent
     bindFieldMappingCheckbox();
-    // 绑定添加字段映射关系事件
+    // TieAddFieldMappingEvent
     bindFieldMappingAddClick(sourceTableSelect, targetTableSelect);
-    // 绑定删除字段映射关系事件
+    // TieDeleteFieldMappingEvent
     bindFieldMappingDelClick();
-    // 绑定字段关系点击事件
+    // TieFieldRelationship ClickEvent
     bindFieldMappingListClick();
 
-    //保存
+    //Save
     $("#tableGroupSubmitBtn").click(function () {
         let $form = $("#table_group_modify_form");
         if (validateForm($form)) {
-            //保存驱动配置
+            //SaveDriverConfigure
             doPoster("/validate-sync/editTableGroup", $form.serializeJson(), function (data) {
                 if (data.success === true) {
-                    bootGrowl("修改表字段映射成功!", "success");
+                    bootGrowl("Change table field map successfully!", "success");
                     backIndexPage();
                 } else {
                     bootGrowl(data.message, "danger");

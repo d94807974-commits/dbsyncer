@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * OceanBase Oracle 模式时间戳类型（类型名经 SchemaResolver 规范化后不含精度括号）
+ * OceanBase Oracle ModeTimePokeType（TypeNameSchemaResolver Without formalizationOutlook saluteparenthesis)
  *
  * @author wuji
  * @version 1.0.0

@@ -15,48 +15,48 @@ import java.util.List;
 public interface PluginService {
 
     /**
-     * 获取已安装插件列表（轻量，不含驱动关联信息）。
-     * 用于驱动/表映射编辑页下拉，避免扫描全部任务。
+     * Get installedPlugin List（Light, noMappingAssociationInfo）。
+     * ForMapping/MapEditPagePull Interregional.AllTasks。
      *
-     * @return 已安装插件
+     * @return Direction InstalledPlugin
      */
     List<PluginVO> listPlugins();
 
     /**
-     * 获取插件上传路径
+     * AccessPluginUploadPath
      *
      * @return
      */
     String getPluginPath();
 
     /**
-     * 获取开发包路径
+     * Get Development Package Path
      *
      * @return
      */
     String getLibraryPath();
 
     /**
-     * 加载插件
+     * LoadPlugin
      */
     void loadPlugins();
 
     /**
-     * 卸载已加载的上传插件（关 SPI/ClassLoader，不删文件）。覆盖上传前调用，避免 Windows 文件锁。
+     * Unmount loadedUploadPlugin（OffSPI/ClassLoader，No, no, no.Documentation）。OverwriteUploadForward call, avoidWindows DocumentationLock.
      *
-     * @param fileName 插件文件名
+     * @param fileName PluginFilename
      */
     void unload(String fileName);
 
     /**
-     * 删除已上传的插件 JAR（内置插件不可删）。
+     * DeleteAlreadyUploadYes.Plugin JAR（Inline PluginsI can't delete it.
      *
-     * @param fileName 插件文件名
+     * @param fileName PluginFilename
      */
     void delete(String fileName);
 
     /**
-     * 检查文件格式
+     * InspectionDocumentationFormat
      *
      * @param filename
      */

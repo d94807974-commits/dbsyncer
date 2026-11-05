@@ -1,23 +1,23 @@
 /**
- * jQuery Select 组件插件
- * @param {Object} options - 配置选项
- *   - type: 'single' 或 'multiple'（默认 'single'）
- *   - data: 选项数据数组 [{label: '', value: ''}, ...]
- *   - defaultValue: 默认选中值
- *   - disabled: 是否禁用
- *   - customButtons: 自定义按钮数组，最多2个
- *     [{text: '按钮文本', callback: function() {}}]
- *   - onSelect: 选择变化时的回调
- *   - onCustomButton: 自定义按钮点击时的回调
+ * jQuery Select ComponentPlugin
+ * @param {Object} options - ConfigureOptions
+ *   - type: 'single' or'multiple'（Default'single'）
+ *   - data: Options data array[{label: '', value: ''}, ...]
+ *   - defaultValue: Default SelectionValue
+ *   - disabled: YesNoDisable
+ *   - customButtons: Custombutton array, up to 2
+ *     [{text: 'Button Text', callback: function() {}}]
+ *   - onSelect: Select the echo of the change
+ *   - onCustomButton: CustomTurnback on button click
  */
 (function(window, $) {
     'use strict';
     
-    // 全局变量：跟踪当前打开的 dbSelect 实例
+    // Global Variable: Tracking Current OpeneddbSelect Examples
     window.dbSelectCurrentOpenInstance = null;
 
     /**
-     * 销毁容器内已初始化的 dbSelect（页面切换前调用，避免残留滚动监听）
+     * Destruction of initialized contents of containersdbSelect（PageToggle front-to-face to avoid residual rolling listening)
      */
     window.destroyDbSelectsIn = function(container) {
         const $container = container ? $(container) : $(document.body);
@@ -35,7 +35,7 @@
         });
     };
     
-    // HTML转义
+    // HTMLConversion
     function escapeHtml(text) {
         if (typeof window.escapeHtml === 'function') {
             return window.escapeHtml(text);
@@ -45,7 +45,7 @@
         return div.innerHTML;
     }
     
-    // 属性转义
+    // Properties Conversion
     function escapeAttr(text) {
         return String(text).replace(/[&<>"']/g, function(s) {
             return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[s];
@@ -58,16 +58,16 @@
         const $select = $(this);
         if (!$select.length) return null;
         
-        // 防止重复初始化，直接返回已有的 API 实例
+        // Prevention of duplicate initialization, directBackExistingAPI Examples
         if ($select.data('dbSelectInitialized')) {
             return $select.data('dbSelect');
         }
         $select.data('dbSelectInitialized', true);
 
-        // 默认配置
+        // DefaultConfigure
         let defaultValue = options.defaultValue || null;
 
-        // 如果没有设置 defaultValue，尝试从 HTML 中读取 option:selected 的值
+        // If notSettings defaultValue，Try FromHTML Medium Readoption:selected Yes.Value
         if (!defaultValue && $select.is('select')) {
             const $selectedOption = $select.find('option:selected');
             if ($selectedOption.length > 0) {
@@ -88,13 +88,13 @@
             pageSize: options.pageSize || 100,
             keywordDebounceMs: options.keywordDebounceMs || 300,
             loadOptions: options.loadOptions || null,
-            customButtons: (options.customButtons || []).slice(0, 2), // 最多2个
+            customButtons: (options.customButtons || []).slice(0, 2), // Up to 2
             onSelect: options.onSelect || function() {},
             onReady: options.onReady || function() {},
             onCustomButton: options.onCustomButton || function() {}
         };
 
-        // 从 HTML 中读取选项
+        // FromHTML Medium Read Options
         if ($select.is('select') && config.data.length === 0) {
             config.data = [];
             $select.find('option').each(function() {
@@ -105,18 +105,18 @@
                     disabled: $option.prop('disabled')
                 };
                 
-                // 读取所有 data-* 属性
+                // Read Alldata-* Properties
                 const dataAttrs = {};
                 $.each($option[0].attributes, function(i, attr) {
                     if (attr.name.startsWith('data-')) {
-                        // 将 data-type 转换为 type，data-custom-attr 转换为 customAttr
+                        // Willdata-type ConvertYestype，data-custom-attr ConvertYescustomAttr
                         const key = attr.name.replace(/^data-/, '').replace(/-([a-z])/g, function(g) {
                             return g[1].toUpperCase();
                         });
                         dataAttrs[key] = attr.value;
                     }
                 });
-                // 如果有 data 属性，则存储
+                // If there is Locateddata properties, store
                 if (Object.keys(dataAttrs).length > 0) {
                     item.data = dataAttrs;
                 }
@@ -125,7 +125,7 @@
             });
         }
 
-        // 创建 Select 组件 HTML（使用更唯一的 ID，避免快速重复初始化时冲突）
+        // TermsSelect PersonsHTML（Use More OnlyID，Avoid rapid repetition of initialization conflicts)
         const timestamp = Date.now();
         const random = Math.random().toString(36).substring(2, 9);
         const selectId = 'dbsyncer-select-' + timestamp + '-' + random;
@@ -139,7 +139,7 @@
             <div class="dbsyncer-select ${config.disabled ? 'disabled' : ''} ${miniClass}" id="${selectId}">
                 <div class="dbsyncer-select-trigger" data-toggle>
                     <div class="dbsyncer-select-trigger-content">
-                        <span class="dbsyncer-select-trigger-text">${config.type === 'single' ? '请选择' : '请选择'}</span>
+                        <span class="dbsyncer-select-trigger-text">${config.type === 'single' ? 'Please select ' : 'Please select '}</span>
                         <div class="dbsyncer-select-trigger-tags"></div>
                     </div>
                     <div class="dbsyncer-select-arrow">
@@ -150,19 +150,19 @@
                     <div class="dbsyncer-select-search-wrapper">
                         <div class="dbsyncer-select-search">
                             <i class="fa fa-search"></i>
-                            <input type="text" class="dbsyncer-select-search-input" placeholder="搜索...">
+                            <input type="text" class="dbsyncer-select-search-input" placeholder="Search...">
                             <div class="dbsyncer-select-search-clear"><i class="fa fa-times"></i></div>
                         </div>
                     </div>
                     <div class="dbsyncer-select-actions"></div>
                     <div class="dbsyncer-select-options"></div>
-                    <div class="dbsyncer-select-empty hidden">暂无数据</div>
+                    <div class="dbsyncer-select-empty hidden">Data not available</div>
                 </div>
             </div>
         `;
 
         $select.hide();
-        // 在原有元素后添加自定义组件
+        // After the original elementAddCustomComponent
         $select.after(selectHTML);
         const $component = $('#' + selectId);
         const $trigger = $component.find('.dbsyncer-select-trigger');
@@ -181,10 +181,10 @@
         let remoteKeyword = '';
         let keywordTimer = null;
 
-        // 已选值
+        // SelectedValue
         let selectedValues = config.defaultValue ? (Array.isArray(config.defaultValue) ? config.defaultValue : [config.defaultValue]) : [];
 
-        // 渲染选项
+        // Render Options
         function renderOptions(filterText = '') {
             $options.empty();
             const filterLower = filterText.toLowerCase();
@@ -209,7 +209,7 @@
                 const isSelected = selectedValues.indexOf(item.value) > -1;
                 const inputType = config.type === 'single' ? 'radio' : 'checkbox';
 
-                // 单选时隐藏复选框，多选时显示
+                // Hide check box when single, display when multiple selection
                 const checkboxClass = config.type === 'single' ? 'dbsyncer-select-option-checkbox hidden' : 'dbsyncer-select-option-checkbox';
 
                 const $option = $(`
@@ -236,25 +236,25 @@
             if (enableLimit && hasVisible && config.data.length > renderedCount) {
                 $options.append(
                     $('<div class="dbsyncer-select-option disabled"></div>')
-                        .text('数据较多，仅展示前 ' + renderedCount + ' 项，请输入关键字搜索')
+                        .text('More data, just before display ' + renderedCount + ' entry, enter keyword search')
                 );
             }
             if (config.remoteSearch && loadingRemote) {
                 $options.append(
                     $('<div class="dbsyncer-select-option disabled"></div>')
-                        .text('加载中...')
+                        .text('Loading...')
                 );
             }
             if (config.remoteSearch && !loadingRemote && !hasVisible) {
-                $empty.removeClass('hidden').text('暂无数据');
+                $empty.removeClass('hidden').text('Data not available');
             }
         }
 
         /**
-         * 合并远程结果并去重。
+         * Merge RemoteResultAnd go heavy.
          *
          * @param {Array} items
-         * @param {boolean} replace 是否覆盖现有数据
+         * @param {boolean} replace Overwrite?Available data
          */
         function mergeRemoteData(items, replace) {
             const source = Array.isArray(items) ? items : [];
@@ -276,11 +276,11 @@
         }
 
         /**
-         * 远程加载下拉选项。
+         * Remotely loads the drop-down option.
          *
-         * @param {number} pageNum 当前页
-         * @param {string} keyword 关键词
-         * @param {boolean} replace 是否替换现有数据
+         * @param {number} pageNum CurrentPage
+         * @param {string} keyword ,
+         * @param {boolean} replace YesNoReplaceAvailable data
          */
         function loadRemoteOptions(pageNum, keyword, replace) {
             if (!config.remoteSearch || typeof config.loadOptions !== 'function' || loadingRemote) {
@@ -313,7 +313,7 @@
             });
         }
 
-        // 处理选项变化
+        // Deal with options changes
         function handleOptionChange($option, value, label) {
             if (config.type === 'single') {
                 selectedValues = [value];
@@ -321,7 +321,7 @@
                 $options.find('input[type="radio"]').prop('checked', false);
                 $option.addClass('selected');
                 $option.find('input[type="radio"]').prop('checked', true);
-                // 单选时自动关闭下拉菜单
+                // Auto on singleCloseDropdown Menu
                 closeDropdown();
             } else {
                 const index = selectedValues.indexOf(value);
@@ -341,17 +341,17 @@
             triggerSelectEvent();
         }
 
-        // 同步原始 select 的 options
+        // Sync Originalselect Yes.options
         function syncSelectOptions() {
             if (!$select.is('select')) return;
             
-            // 获取当前 options（保留初始的 HTML options，避免重复添加）
+            // Get Currentoptions（Keep InitialHTML options，Avoidance of duplicationAdd）
             const existingOptions = {};
             $select.find('option').each(function() {
                 existingOptions[$(this).val()] = true;
             });
             
-            // 添加缺失的 options
+            // AddMissingoptions
             config.data.forEach(function(item) {
                 if (!existingOptions[item.value]) {
                     const $option = $('<option></option>')
@@ -365,16 +365,16 @@
             });
         }
 
-        // 更新显示
+        // Update Display
         function updateDisplay() {
-            // 更新原生 select
+            // updateselect
             if ($select.is('select')) {
-                // 确保原始 select 的 options 与 config.data 同步
+                // Make sure it's raw.select Yes.options and config.data Sync
                 syncSelectOptions();
                 $select.val(config.type === 'single' ? (selectedValues[0] || '') : selectedValues);
             }
 
-            // 更新标签显示
+            // Update tab display
             $tags.empty();
 
             if (selectedValues.length > 0) {
@@ -389,7 +389,7 @@
                 if (config.type === 'single') {
                     $text.text(selectedItems[0].label).show();
                 } else {
-                    // 多选：显示前3个标签 + 计数
+                    // Multiple selection: Before display3Tags+ Count
                     $text.hide();
                     const displayCount = 3;
                     if (selectedItems.length <= displayCount) {
@@ -428,25 +428,25 @@
                     }
                 }
             } else {
-                // 没有选中任何值时显示提示文字
-                $text.text('请选择').show();
+                // No selectionValueShow timeNoticeText
+                $text.text('Please select ').show();
             }
         }
 
-        // 触发选择事件
+        // Trigger SelectionEvent
         function triggerSelectEvent() {
-            // 回调函数
+            // RewindFunctions
             if (typeof config.onSelect === 'function') {
                 config.onSelect(selectedValues, config.type);
             }
-            // 触发自定义事件
+            // TriggerCustomEvent
             $component.trigger('dbselect:change', [selectedValues]);
         }
 
-        // 打开下拉菜单
+        // Open Dropdown Menu
         function openDropdown() {
             if (!config.disabled) {
-                // 先关闭其他已打开的 dbSelect 实例
+                // FirstCloseOtherOpendbSelect Examples
                 if (window.dbSelectCurrentOpenInstance && window.dbSelectCurrentOpenInstance !== api) {
                     window.dbSelectCurrentOpenInstance.close();
                 }
@@ -454,12 +454,12 @@
                 $component.addClass('open');
                 $dropdown.removeClass('hidden');
                 
-                // 智能定位：检测是否需要向上展开
+                // Smart positioning: testingYesNoNeed to expand upwards
                 adjustDropdownPosition();
                 
                 $searchInput.focus();
                 if (config.remoteSearch) {
-                    // 远程模式：首次打开加载；如果当前无数据也允许再次加载（例如上次精准查询为空导致下拉空白）
+                    // Remote mode: first open load; if currentNoneData is also allowed to be loaded again (e.g. the last precision query is empty, resulting in drop-down blanks)
                     if (!hasRenderedOnce || !config.data || config.data.length === 0) {
                         loadRemoteOptions(1, $searchInput.val() || '', true);
                         hasRenderedOnce = true;
@@ -469,7 +469,7 @@
                     hasRenderedOnce = true;
                 }
                 
-                // 更新全局当前打开的实例
+                // Update the current UNJSPF case
                 window.dbSelectCurrentOpenInstance = api;
             }
         }
@@ -484,7 +484,7 @@
             $(window).off('resize.dbSelect-' + selectId);
         }
 
-        // 调整下拉菜单位置（智能向上/向下展开）
+        // Adjust the dropdown menu position (smart up/ Units UNCLOS oppose)
         function adjustDropdownPosition() {
             if (!isComponentAttached()) {
                 return;
@@ -495,34 +495,34 @@
                 return;
             }
             const triggerRect = triggerEl.getBoundingClientRect();
-            const dropdownHeight = $dropdown.outerHeight() || 300; // 默认最大高度
+            const dropdownHeight = $dropdown.outerHeight() || 300; // Default Max height
             const viewportHeight = window.innerHeight;
             const spaceBelow = viewportHeight - triggerRect.bottom;
             const spaceAbove = triggerRect.top;
             
-            // 移除之前的定位类
+            // Remove Previous Positioning Situations
             $dropdown.removeClass('dbsyncer-select-dropdown-up');
             
-            // 如果下方空间不足，且上方空间足够，则向上展开
+            // If the lower space is insufficient and the upper space is sufficient, spread upward
             if (spaceBelow < dropdownHeight && spaceAbove > spaceBelow) {
                 $dropdown.addClass('dbsyncer-select-dropdown-up');
             }
         }
 
-        // 关闭下拉菜单
+        // CloseDropdown Menu
         function closeDropdown() {
             $component.removeClass('open');
             $dropdown.addClass('hidden');
             $searchInput.val('');
             $searchClear.removeClass('active');
             
-            // 如果当前实例就是打开的实例，清空全局变量
+            // If this is the case,YesAgricultural technology is not an option.ClearGlobal variables
             if (window.dbSelectCurrentOpenInstance === api) {
                 window.dbSelectCurrentOpenInstance = null;
             }
         }
 
-        // 监听窗口滚动和大小改变，重新调整下拉菜单位置
+        // Scroll and size changes in the listening window, repositioning the dropdown menu
         function handleWindowEvents() {
             if (!isComponentAttached()) {
                 closeDropdown();
@@ -534,20 +534,20 @@
             }
         }
 
-        // 绑定窗口事件（使用命名空间以便后续移除）
+        // Tie Specific WindowEvent（Frente 15 Apartments
         $(window).on('scroll.dbSelect-' + selectId, handleWindowEvents);
         $(window).on('resize.dbSelect-' + selectId, handleWindowEvents);
         
-        // 组件销毁时移除事件监听
+        // Remove component when destroyedEventListen
         $select.on('remove', function() {
             unbindWindowEvents();
         });
 
-        // 全选
+        // Select All
         function selectAll() {
             if (config.type === 'multiple') {
                 const filterText = $searchInput.val().toLowerCase();
-                // 如果有搜索过滤条件，只选中过滤后可见的选项
+                // If there is.SearchFilter Conditions，Select only filter visible options
                 if (filterText) {
                     config.data.forEach(function(item) {
                         const matches = item.label.toLowerCase().indexOf(filterText) > -1;
@@ -556,7 +556,7 @@
                         }
                     });
                 } else {
-                    // 没有过滤条件时，选中所有选项
+                    // Auditors Growth
                     config.data.forEach(function(item) {
                         if (!item.disabled && selectedValues.indexOf(item.value) === -1) {
                             selectedValues.push(item.value);
@@ -569,7 +569,7 @@
             }
         }
 
-        // 取消全选
+        // CancelSelect All
         function deselectAll() {
             selectedValues = [];
             updateDisplay();
@@ -577,7 +577,7 @@
             renderOptions($searchInput.val());
         }
 
-        // 绑定事件
+        // TieEvent
         $trigger.on('click.dbSelect-' + selectId, function(e) {
             e.stopPropagation();
             if ($dropdown.hasClass('hidden')) {
@@ -587,7 +587,7 @@
             }
         });
 
-        // 搜索
+        // Search
         $searchInput.on('input.dbSelect-' + selectId, function() {
             const text = $(this).val();
             $searchClear.toggleClass('active', text.length > 0);
@@ -604,7 +604,7 @@
             }
         });
 
-        // 清除搜索
+        // ClearSearch
         $searchClear.on('click.dbSelect-' + selectId, function(e) {
             e.stopPropagation();
             $searchInput.val('').focus();
@@ -616,7 +616,7 @@
             }
         });
 
-        // 下拉滚动触底加载下一页
+        // Scroll-down touch bottom loadNext
         $options.on('scroll.dbSelect-' + selectId, function() {
             if (!config.remoteSearch || loadingRemote || !remoteHasMore) {
                 return;
@@ -628,18 +628,18 @@
             }
         });
 
-        // 点击外部关闭
+        // Click NextClose
         $(document).on('click.dbselect_' + selectId, function(e) {
             if (!$component.is(e.target) && $component.has(e.target).length === 0) {
                 closeDropdown();
             }
         });
 
-        // 操作按钮
+        // Actionsbutton
         if (config.type === 'multiple') {
-            // 添加默认按钮
-            const $selectAllBtn = $(`<button class="dbsyncer-select-action-btn">全选</button>`);
-            const $deselectAllBtn = $(`<button class="dbsyncer-select-action-btn">取消全选</button>`);
+            // AddDefault button
+            const $selectAllBtn = $(`<button class="dbsyncer-select-action-btn">Select All</button>`);
+            const $deselectAllBtn = $(`<button class="dbsyncer-select-action-btn">CancelSelect All</button>`);
 
             $selectAllBtn.on('click.dbSelect-' + selectId, function(e) {
                 e.preventDefault();
@@ -656,7 +656,7 @@
             $actions.append($selectAllBtn).append($deselectAllBtn);
         }
 
-        // 添加自定义按钮
+        // AddCustombutton
         config.customButtons.forEach(function(btn, index) {
             const $btn = $(`<button class="dbsyncer-select-action-btn">${escapeHtml(btn.text)}</button>`);
             $btn.on('click.dbSelect-' + selectId, function(e) {
@@ -665,9 +665,9 @@
                 if (typeof btn.callback === 'function') {
                     btn.callback(selectedValues);
                 }
-                // 触发自定义事件
+                // TriggerCustomEvent
                 $component.trigger('dbselect:button', [index, selectedValues]);
-                // 调用全局回调
+                // Call Global Back
                 if (typeof config.onCustomButton === 'function') {
                     config.onCustomButton(index, selectedValues, btn.text);
                 }
@@ -675,12 +675,12 @@
             $actions.append($btn);
         });
 
-        // 初始化显示
+        // Initialise Display
         updateDisplay();
 
-        // 如果没有设置默认值，检查是否有 selected 属性或默认选中第一个
+        // If notSettingsDefault value，InspectionYesNoYes Notably.selected Includes:
         if (selectedValues.length === 0 && $select.is('select')) {
-            // 检查是否有 selected 属性的选项
+            // InspectionYesNoYes Notably.selected Properties Options
             const $selectedOptions = $select.find('option:selected');
             if ($selectedOptions.length > 0) {
                 selectedValues = [];
@@ -691,7 +691,7 @@
                     }
                 });
             } else {
-                // 没有 selected 属性，单选模式下默认选中第一个非空选项
+                // Nothing.selected Properties, select the first non-empty option by default in single mode
                 if (config.type === 'single') {
                     const $firstOption = $select.find('option').filter(function() {
                         return $(this).val() && $(this).val() !== '';
@@ -701,7 +701,7 @@
                     }
                 }
             }
-            // 重新更新显示
+            // Update Display
             if (selectedValues.length > 0) {
                 updateDisplay();
                 renderOptions('');
@@ -709,7 +709,7 @@
             }
         }
 
-        // 创建 API 对象
+        // TermsAPI Object
         const api = {
             $element: $select,
             $component: $component,
@@ -717,12 +717,12 @@
             setValues: function(values, silent) {
                 const inputValues = Array.isArray(values) ? values : [values];
                 if (config.remoteSearch) {
-                    // 远程模式下允许先选值，避免目标项未加载导致值丢失
+                    // Allow first selection in remote modeValue，AvoidObjective CombinedUnmounted/47%ValueLost
                     selectedValues = inputValues.filter(function(value) {
                         return value !== undefined && value !== null && value !== '';
                     });
                 } else {
-                    // 过滤掉无效值（只保留在 config.data 中存在的值）
+                    // Filter OutNoneEffectValue（Only inconfig.data ExistenceValue）
                     selectedValues = inputValues.filter(function(value) {
                         return config.data.some(function(item) {
                             return item.value === value;
@@ -730,7 +730,7 @@
                     });
                 }
                 updateDisplay();
-                // 无论下拉菜单是否打开，都更新选项状态
+                // NoneDraw MenuYesNoOpen, Update Options SIStatus
                 renderOptions($searchInput.val());
                 if (!silent) {
                     triggerSelectEvent();
@@ -738,11 +738,11 @@
                 return this;
             },
             setData: function(newData) {
-                // 更新选项数据
+                // Update Options Advancement Units
                 config.data = newData || [];
                 const oldSelectedValues = (selectedValues || []).slice();
                 
-                // 如果是原始 select 元素，清空并重新填充 options
+                // IfYesOriginalselect Elements,Clearand refilloptions
                 if ($select.is('select')) {
                     $select.empty();
                     config.data.forEach(function(item) {
@@ -756,24 +756,24 @@
                     });
                 }
                 
-                // 清空搜索框
+                // ClearSearchExpenses Extended
                 $searchInput.val('');
                 remoteKeyword = '';
                 remotePageNum = 1;
                 remoteHasMore = false;
-                // 远程模式保留已有选中，避免重新搜索后丢失勾选
+                // Remote Mode is selected to avoid restartingSearchThen lost RESOLUTION
                 if (config.remoteSearch) {
                     selectedValues = oldSelectedValues.filter(function(value) {
                         return value !== undefined && value !== null && value !== '';
                     });
                 } else {
-                    // 非远程模式按本地数据重建选中值
+                    // Rebuild selected non-remote mode by local dataValue
                     selectedValues = oldSelectedValues.filter(function(value) {
                         return config.data.some(function(item) {
                             return item && item.value === value;
                         });
                     });
-                    // 重新初始化默认值
+                    // ReinitiateDefault value
                     if (selectedValues.length === 0 && config.defaultValue) {
                         selectedValues = Array.isArray(config.defaultValue) ? config.defaultValue : [config.defaultValue];
                     }
@@ -786,7 +786,7 @@
                         }
                     }
                 }
-                // 重新渲染
+                // Render
                 updateDisplay();
                 renderOptions('');
                 triggerSelectEvent();
@@ -795,7 +795,7 @@
             getData: function() {
                 return config.data;
             },
-            // 获取选中项的完整信息（包括 data 属性）
+            // Get the full selectionInfo（Includingdata Properties)
             getSelectedItems: function() {
                 return selectedValues.map(function(value) {
                     const item = config.data.find(d => d.value === value);
@@ -809,9 +809,9 @@
                     return { value: value, label: value, data: {} };
                 });
             },
-            // 获取指定选中项的指定属性值
+            // Fetch specified attributes for the selected itemValue
             getAttribute: function(attributeName, value) {
-                // 如果指定了 value，获取该值的属性；否则获取第一个选中项的属性
+                // If it's specified,value，Get thatValueproperties;NoFetches the properties of the first selected item
                 const targetValue = value !== undefined ? value : (selectedValues[0] || null);
                 if (!targetValue) return null;
                 
@@ -833,9 +833,9 @@
                 return this;
             },
             /**
-             * 远程模式下手动刷新数据（用于外部触发取消过滤/重载）。
+             * Manually in remote modeRefreshDatadoubt (for loved ones)Cancel Filter/Reload.
              *
-             * @param {string} keyword 搜索关键字，空串表示清空搜索
+             * @param {string} keyword SearchKeyword，Empty string meansClearSearch
              * @returns {*}
              */
             reloadRemote: function(keyword) {
@@ -850,38 +850,38 @@
                 return this;
             },
             destroy: function() {
-                // 先关闭下拉菜单
+                // FirstCloseDropdown Menu
                 closeDropdown();
                 
-                // 移除文档级别的事件监听
+                // Remove Document LevelEventListen
                 $(document).off('click.dbselect_' + selectId);
                 
-                // 移除窗口事件监听
+                // Remove WindowEventListen
                 unbindWindowEvents();
                 
-                // 移除组件内所有使用命名空间的事件监听（包括所有子元素）
+                // Remove all named spaces in the componentEventListening (including all sub-elements)
                 if ($component && $component.length) {
-                    // 清理组件及其所有子元素上的事件
-                    // 使用命名空间清理，确保只清理当前实例的事件
+                    // Clear the components and all their sub-elements.Event
+                    // Use namespace to clean up only current casesEvent
                     const namespace = '.dbSelect-' + selectId;
                     $component.off(namespace);
                     $component.find('*').off(namespace);
                 }
                 
-                // 移除组件 DOM（这会自动清理所有绑定的事件）
+                // Remove ComponentDOM（It's gonna clean up everything.Event）
                 if ($component && $component.length) {
                     $component.remove();
                 }
                 
-                // 显示原始 select 元素
+                // Show Originalselect Elements
                 if ($select && $select.length) {
                     $select.show();
                 }
                 
-                // 清理数据
+                // Hey 95! Clear Data
                 $select.removeData('dbSelectInitialized');
                 $select.removeData('dbSelect');
-                // 如果销毁的是当前打开的实例，清空全局变量
+                // If it's destroyedYesThe current example is open.ClearGlobal variables
                 if (window.dbSelectCurrentOpenInstance === this) {
                     window.dbSelectCurrentOpenInstance = null;
                 }
@@ -889,10 +889,10 @@
             }
         };
 
-        // 保存 API 到组件和原始元素
+        // Save API To Component and Original Elements
         $component.data('dbSelect', api);
         $select.data('dbSelect', api);
-        // 触发初始化完成事件
+        // Trigger InitializationFinishEvent
         config.onReady(selectedValues);
 
         return api;

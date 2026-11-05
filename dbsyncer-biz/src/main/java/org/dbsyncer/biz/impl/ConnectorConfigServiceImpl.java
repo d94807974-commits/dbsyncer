@@ -108,7 +108,7 @@ public class ConnectorConfigServiceImpl extends BaseServiceImpl implements Conne
         Map params = JsonUtil.parseMap(config);
         params.put("properties", config.getPropertiesText());
         params.put("extInfo", JsonUtil.objToJson(config.getExtInfo()));
-        // 展平 extInfo，供各 ConfigValidator 按表单字段读取（如 pluginName）
+        // PingextInfo，For each individualConfigValidator By FormFieldReadpluginName）
         if (config.getExtInfo() != null) {
             for (String key : config.getExtInfo().stringPropertyNames()) {
                 String value = config.getExtInfo().getProperty(key);
@@ -117,8 +117,8 @@ public class ConnectorConfigServiceImpl extends BaseServiceImpl implements Conne
                 }
             }
         }
-        params.put(ConfigConstant.CONFIG_MODEL_NAME, connector.getName() + "(复制)");
-        // 与表单开关一致：有值表示开启；复制源开关，避免 checkAdd 缺参断言失败
+        params.put(ConfigConstant.CONFIG_MODEL_NAME, connector.getName() + "(Copy)");
+        // andForm SOLAS: YesValueOrganisationOn；CopySource Switches, AvoidcheckAdd The absence of reference.Failed
         if (connector.isSource()) {
             params.put(ConfigConstant.CONNECTOR_IS_SOURCE, "1");
         }
@@ -128,7 +128,7 @@ public class ConnectorConfigServiceImpl extends BaseServiceImpl implements Conne
         Connector model = connectorChecker.checkAddConfigModel(params);
 
         String newId = connectorProfile.addConnector(model);
-        //授权资源
+        //AuthorizationResource
         resourceAclService.grantOwner(username, ConfigConstant.CONNECTOR, newId);
         return newId;
     }
@@ -150,11 +150,11 @@ public class ConnectorConfigServiceImpl extends BaseServiceImpl implements Conne
             groupService.bind(null, ConfigConstant.CONNECTOR, id);
             resourceAclService.revokeAllForResource(ConfigConstant.CONNECTOR, id);
         }
-        return "删除连接器成功!";
+        return "DeleteConnectorSuccess!";
     }
 
     /**
-     * 删除前校验：同步任务、订正校验、整库迁移任务均不可仍引用该连接器。
+     * DeletePrevaluation:Sync task、Data validation、Library Migration TaskI can't still quote it.Connector。
      */
     private void assertConnectorNotInUse(String id) {
         mappingProfile.pageScanTasks(ConfigConstant.PAGE_SIZE, mappingAll -> {
@@ -166,7 +166,7 @@ public class ConnectorConfigServiceImpl extends BaseServiceImpl implements Conne
                     continue;
                 }
                 if (StringUtil.equals(mapping.getSourceConnectorId(), id) || StringUtil.equals(mapping.getTargetConnectorId(), id)) {
-                    String error = String.format("驱动“%s”正在使用，请先删除", mapping.getName());
+                    String error = String.format("Driver“%s”In use，Please.FirstDelete", mapping.getName());
                     logger.error(error);
                     throw new BizException(error);
                 }
@@ -181,7 +181,7 @@ public class ConnectorConfigServiceImpl extends BaseServiceImpl implements Conne
                     continue;
                 }
                 if (StringUtil.equals(task.getSourceConnectorId(), id) || StringUtil.equals(task.getTargetConnectorId(), id)) {
-                    String error = String.format("订正校验任务“%s”正在使用，请先删除", task.getName());
+                    String error = String.format("Revised verification tasks“%s”In use，Please.FirstDelete", task.getName());
                     logger.error(error);
                     throw new BizException(error);
                 }
@@ -200,7 +200,7 @@ public class ConnectorConfigServiceImpl extends BaseServiceImpl implements Conne
                         continue;
                     }
                     if (StringUtil.equals(mapping.getSourceConnectorId(), id) || StringUtil.equals(mapping.getTargetConnectorId(), id)) {
-                        String error = String.format("整库迁移任务“%s”正在使用，请先删除", task.getName());
+                        String error = String.format("Library Migration Task“%s”In use，Please.FirstDelete", task.getName());
                         logger.error(error);
                         throw new BizException(error);
                     }
@@ -248,7 +248,7 @@ public class ConnectorConfigServiceImpl extends BaseServiceImpl implements Conne
         int pageSize = NumberUtil.toInt(params.get("pageSize"), 10);
         int relationOnly = NumberUtil.toInt(params.get("relationOnly"), 0);
         String searchKey = params.get("searchKey");
-        // 过滤源库或目标库类型
+        // FilterSource databaseorTarget databaseType
         String role = params.get("role");
         GroupSearchFilter groupFilter = groupService.resolveSearchFilter(params.get(ConfigConstant.GROUP_REL_GROUP_ID), ConfigConstant.CONNECTOR);
         Set<String> allowedIds = resourceAclService.resolveAllowedIds(params.get(UserConfigService.CURRENT_USER_NAME), ConfigConstant.CONNECTOR, ResourceAclActionEnum.READ.getCode());
@@ -260,7 +260,7 @@ public class ConnectorConfigServiceImpl extends BaseServiceImpl implements Conne
         if (paging == null) {
             return null;
         }
-        // 整库迁移场景，暂仅支持关系性数据库
+        // Database migrationscene, only relationship data are supported for nowLibrary
         if (YesNoEnum.YES.getCode() == relationOnly && !CollectionUtils.isEmpty(paging.getData())) {
             paging.setData(paging.getData().stream().filter(this::isRelationalDatabaseConnector).collect(Collectors.toList()));
         }
@@ -283,7 +283,7 @@ public class ConnectorConfigServiceImpl extends BaseServiceImpl implements Conne
             }
             return;
         }
-        // 仅探测已缓存实例，避免集群下为健康检查全量建连
+        // Only detect caches and avoid health checks under clustersFullCompany
         Set<String> exist = new HashSet<>();
         for (Connector connector : list) {
             exist.add(connector.getId());
@@ -294,12 +294,12 @@ public class ConnectorConfigServiceImpl extends BaseServiceImpl implements Conne
             health.put(connector.getId(), alive);
             persistStatusIfChanged(connector, alive);
         }
-        // 移除已删除连接器的缓存
+        // RemoveDeletedConnectorCache
         health.keySet().removeIf(id -> !exist.contains(id));
     }
 
     /**
-     * 健康状态变化时回写连接器 {@code STATUS}（含 JSON），未变化则跳过，避免每拍写库。
+     * HealthStatusWrite Back on ChangeConnector {@code STATUS}（HamJSON），If you do not change, skip, avoid writing each timeLibrary。
      */
     private void persistStatusIfChanged(Connector connector, boolean alive) {
         YesNoEnum newStatus = YesNoEnum.of(alive);
@@ -311,7 +311,7 @@ public class ConnectorConfigServiceImpl extends BaseServiceImpl implements Conne
         try {
             connectorProfile.updateConnector(connector);
         } catch (Exception e) {
-            logger.warn("更新连接器状态失败, connectorId={}, status={}, err={}", connector.getId(), newStatus, e.getMessage());
+            logger.warn("UpdateConnectorStatusFailed, connectorId={}, status={}, err={}", connector.getId(), newStatus, e.getMessage());
         }
     }
 
@@ -349,7 +349,7 @@ public class ConnectorConfigServiceImpl extends BaseServiceImpl implements Conne
         String instanceId = ConnectorInstanceUtil.buildConnectorInstanceId(mapping.getId(), mapping.getSourceConnectorId(), ConnectorInstanceUtil.SOURCE_SUFFIX);
         ConnectorInstance connectorInstance;
         Connector connector = connectorProfile.getConnector(mapping.getSourceConnectorId());
-        Assert.notNull(connector, "源连接器不存在");
+        Assert.notNull(connector, "Source connector does not exist");
         connectorInstance = connectorFactory.connect(instanceId, connector.getConfig(), mapping.getSourceDatabase(), mapping.getSourceSchema());
         return connectorFactory.getPosition(connectorInstance);
     }
@@ -365,16 +365,16 @@ public class ConnectorConfigServiceImpl extends BaseServiceImpl implements Conne
     }
 
     /**
-     * 集群下若无运行任务占用该连接器，则断开配置级缓存。
+     * Under clusterNoneRunTasksTake that.Connector，Dis ExchangeConfigureClass Cache.
      *
-     * @param connectorId 连接器 ID
+     * @param connectorId Connector ID
      */
     private void releaseIdleConnector(String connectorId) {
         connectorFactory.disconnect(connectorId);
     }
 
     /**
-     * 仅保留关系型数据库连接器。
+     * Keep relationship data onlyLibraryConnector。
      */
     private boolean isRelationalDatabaseConnector(Connector connector) {
         if (connector == null || connector.getConfig() == null || StringUtil.isBlank(connector.getConfig().getConnectorType())) {
@@ -384,7 +384,7 @@ public class ConnectorConfigServiceImpl extends BaseServiceImpl implements Conne
             ConnectorService connectorService = connectorFactory.getConnectorService(connector.getConfig().getConnectorType());
             return connectorService instanceof AbstractDatabaseConnector;
         } catch (Exception e) {
-            logger.warn("过滤关系型连接器失败, connectorId={}, type={}", connector.getId(), connector.getConfig().getConnectorType(), e);
+            logger.warn("Filter Relationship Connector Failed, connectorId={}, type={}", connector.getId(), connector.getConfig().getConnectorType(), e);
             return false;
         }
     }

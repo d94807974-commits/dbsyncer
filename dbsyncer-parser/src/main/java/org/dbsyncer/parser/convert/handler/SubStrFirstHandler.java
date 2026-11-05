@@ -7,7 +7,7 @@ import org.dbsyncer.parser.convert.AbstractHandler;
 import org.springframework.util.Assert;
 
 /**
- * 从前面截取N个字符
+ * Remove N characters from front
  *
  * @author AE86
  * @version 1.0.0
@@ -17,7 +17,7 @@ public class SubStrFirstHandler extends AbstractHandler {
 
     @Override
     protected Object convert(String args, Object value) {
-        Assert.isTrue(NumberUtil.isCreatable(args), "参数必须为正整数.");
+        Assert.isTrue(NumberUtil.isCreatable(args), "Parameters must be positive.");
         String s = String.valueOf(value);
         int size = NumberUtil.toInt(args);
         return StringUtil.substring(s, 0, size);

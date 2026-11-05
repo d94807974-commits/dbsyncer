@@ -10,10 +10,10 @@ import java.io.InputStream;
 public abstract class AbstractHandler implements Handler {
 
     /**
-     * 交给实现handler
+     * Hand it over.handler
      *
-     * @param args  参数
-     * @param value 值
+     * @param args  Parameter
+     * @param value Value
      * @return
      */
     protected abstract Object convert(String args, Object value) throws Exception;

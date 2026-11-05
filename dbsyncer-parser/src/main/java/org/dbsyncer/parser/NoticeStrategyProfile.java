@@ -8,7 +8,7 @@ import org.dbsyncer.parser.model.NoticeStrategyConfig;
 import java.util.List;
 
 /**
- * 告警策略读写。
+ * Police strategy CorruptRead and write.
  *
  * @author wuji
  * @version 1.0.0
@@ -16,27 +16,27 @@ import java.util.List;
 public interface NoticeStrategyProfile {
 
     /**
-     * 全部策略。
+     * AllStrategy.
      */
     List<NoticeStrategyConfig> listAll();
 
     /**
-     * 按主键查询。
+     * PressPrimary keyquery.
      */
     NoticeStrategyConfig get(String id);
 
     /**
-     * 新增。
+     * Insert。
      */
     String add(NoticeStrategyConfig config);
 
     /**
-     * 更新。
+     * Update.
      */
     String update(NoticeStrategyConfig config);
 
     /**
-     * 按主键删除。
+     * PressPrimary keyDelete。
      */
     void remove(String id);
 }

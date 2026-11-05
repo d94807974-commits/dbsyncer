@@ -13,11 +13,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * ES 二进制类型
- * 支持: binary
- * ES 中 binary 类型以 Base64 编码存储
+ * ES BinaryType
+ * Support: binary
+ * ES Mediumbinary TypeHere.Base64 Encoding Storage
  *
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2026-01-11 22:21
  */
@@ -48,11 +48,11 @@ public final class ElasticsearchBytesType extends BytesType {
         if (val instanceof String) {
             // The binary type accepts a binary value as a Base64 encoded string. The field is not
             // stored by default and is not searchable.
-            // ES binary 类型以 Base64 编码存储
+            // ES binary TypeHere.Base64 Encoding Storage
             try {
                 return Base64.getDecoder().decode((String) val);
             } catch (IllegalArgumentException e) {
-                // 如果不是 Base64 编码，直接转为字节数组
+                // If not,Yes Base64 Encoding, directly to bytes Group
                 return ((String) val).getBytes(StandardCharsets.UTF_8);
             }
         }
@@ -63,7 +63,7 @@ public final class ElasticsearchBytesType extends BytesType {
     @Override
     protected Object convert(Object val, Field field) {
         if (val instanceof byte[]) {
-            // 转换为 Base64 编码的字符串，供 ES 存储
+            // ConvertYesBase64 Encoded Strings forES Storage
             return Base64.getEncoder().encodeToString((byte[]) val);
         }
         return super.convert(val, field);

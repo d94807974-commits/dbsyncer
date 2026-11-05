@@ -34,9 +34,9 @@ import java.time.Instant;
 import java.util.Map;
 
 /**
- * 抽象类统计同步任务总数任务
+ * Abstract classCount sync tasksTasks
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2025-06-25 01:00
  */
@@ -86,16 +86,16 @@ public abstract class AbstractCountTask extends AbstractDispatchTask {
         setRsaConfig(metaContext);
 
         long count = connectorService.getCount(connectorInstance, metaContext);
-        // SOURCE_TOTAL 列与 JSON 内 sourceTable.count 同步，供明细查询 / 任务 Meta 汇总
+        // SOURCE_TOTAL Columnsand JSON InternalsourceTable.count Sync, for detail /Tasks Meta Summary
         tableGroup.setSourceTotal(count);
         tableGroup.getSourceTable().setCount(count);
         tableGroupProfile.editTableGroup(tableGroup);
         syncTableDetailMetaTotal(tableGroup.getId(), count);
-        logger.info("{}表{}, 总数:{}, {}ms", mapping.getName(), tableGroup.getSourceTable().getName(), count, (Instant.now().toEpochMilli() - now));
+        logger.info("Table {}, Total: }, {ms", mapping.getName(), tableGroup.getSourceTable().getName(), count, (Instant.now().toEpochMilli() - now));
     }
 
     /**
-     * 将表级明细 Meta.TOTAL 对齐到源表统计值（原子增量，避免整行覆盖 success/fail）。
+     * ClassifyMeta.TOTAL Align toSource tableStatisticsValue（AtomIncremental，Avoid whole lineOverwrite success/fail）。
      */
     private void syncTableDetailMetaTotal(String tableGroupId, long count) {
         if (taskMetaProfile == null || StringUtil.isBlank(tableGroupId)) {
@@ -114,14 +114,14 @@ public abstract class AbstractCountTask extends AbstractDispatchTask {
     }
 
     protected boolean shouldStop(String mappingId) {
-        // 运行中
+        // Running
         if (isRunning()) {
             return false;
         }
 
         Mapping mapping = mappingProfile.get(mappingId);
         if (!ModelEnum.isFull(mapping.getModel())) {
-            logger.warn("同步任务被修改, 提前结束任务 ({},{})", mapping.getName(), mapping.getModel());
+            logger.warn("Sync Task modified, pre-termised ({,{)", mapping.getName(), mapping.getModel());
             return true;
         }
         return false;

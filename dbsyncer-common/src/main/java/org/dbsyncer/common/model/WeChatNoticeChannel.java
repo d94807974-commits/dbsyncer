@@ -4,7 +4,7 @@
 package org.dbsyncer.common.model;
 
 /**
- * 企业微信告警配置
+ * Corporate WisdomPolice!Configure
  *
  * @Author AE86
  * @Version 1.0.0

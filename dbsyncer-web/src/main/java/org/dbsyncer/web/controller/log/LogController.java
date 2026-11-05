@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
- * 登录日志 / 操作日志。
+ * Login logs / Operation logs。
  *
  * @author wuji
  * @version 1.0.0
@@ -89,7 +89,7 @@ public class LogController extends BaseController {
         }
     }
 
-    @OperLog(type = OperLogType.SYSTEM_INFO, message = "清空日志")
+    @OperLog(type = OperLogType.SYSTEM_INFO, message = "Empty Log")
     @PostMapping("/clear")
     @ResponseBody
     public RestResult clear() {

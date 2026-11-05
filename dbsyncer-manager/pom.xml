@@ -10,7 +10,7 @@
     <artifactId>dbsyncer-manager</artifactId>
 
     <dependencies>
-        <!-- Parser 解析器 -->
+        <!-- Parser Parser -->
         <dependency>
             <groupId>org.ghi</groupId>
             <artifactId>dbsyncer-parser</artifactId>

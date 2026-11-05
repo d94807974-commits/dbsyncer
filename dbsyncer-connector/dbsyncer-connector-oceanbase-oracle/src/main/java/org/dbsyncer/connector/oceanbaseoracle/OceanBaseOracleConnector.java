@@ -43,9 +43,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * OceanBase Oracle 兼容模式连接器。
- * <p>复用 Oracle 方言（双引号、MERGE、Schema 命名空间）；驱动与 URL 使用 oceanbase-client。
- * 第一期支持全量与定时增量，暂不支持 Log CDC。</p>
+ * OceanBase Oracle Compatibility ModeConnector。
+ * <p>ReuseOracle dialects (two quotation marks,MERGE、Schema Namespace;Mappingand URL Useoceanbase-client。
+ * First SupportFullandScheduledIncremental，Not supportedLog CDC。</p>
  *
  * @author wuji
  * @version 1.0.0
@@ -58,9 +58,9 @@ public final class OceanBaseOracleConnector extends OracleConnector {
     private static final String QUERY_SCHEMA = "SELECT USERNAME FROM ALL_USERS ORDER BY USERNAME";
 
     /**
-     * oceanbase-client 的 DatabaseMetaData#getTables 在 Oracle 模式下常返回空
-     * （tableNamePattern=null / 类型过滤不兼容），改为查数据字典。
-     * <p>整库迁移暂只列物理表；视图 SQL 备后用：
+     * oceanbase-client Yes.DatabaseMetaData#getTables Yes.Oracle Mode CommonBackEmpty
+     * （tableNamePattern=null / TypeIncreasing the number of filters is not compatible with the data dictionary.
+     * <p>Database migrationtemporary physical tables;viewsSQL For later use:
      * {@code SELECT VIEW_NAME ... FROM ALL_VIEWS WHERE OWNER = ?}
      * {@code SELECT MVIEW_NAME ... FROM ALL_MVIEWS WHERE OWNER = ?}
      */
@@ -102,9 +102,9 @@ public final class OceanBaseOracleConnector extends OracleConnector {
     }
 
     /**
-     * oceanbase-client 的 {@code Connection#setSchema} 会内部调用未实现的 {@code getSchema()}，
-     * 抛出 {@link AbstractMethodError}。此处不走 JDBC setSchema，schema 仅保存在实例上供 SQL OWNER 限定；
-     * 需要切换会话时由 {@code ALTER SESSION SET CURRENT_SCHEMA} 处理（如 DDL）。
+     * oceanbase-client Yes.{@code Connection#setSchema} Unrealised calls within{@code getSchema()}，
+     * Throw{@link AbstractMethodError}。Not here.JDBC setSchema，schema OnlySaveFor exampleSQL OWNER Qualifications;
+     * Toggle from{@code ALTER SESSION SET CURRENT_SCHEMA} Processing (e.g.,DDL）。
      */
     @Override
     public ConnectorInstance connect(DatabaseConfig config, ConnectorServiceContext context) {
@@ -121,7 +121,7 @@ public final class OceanBaseOracleConnector extends OracleConnector {
         if (ListenerTypeEnum.isTiming(listenerType)) {
             return new DatabaseQuartzListener();
         }
-        // Oracle 模式租户不适用 MySQL Binlog / Oracle LogMiner，首期不支持日志增量
+        // Oracle Model tenants not applicableMySQL Binlog / Oracle LogMiner，Initial not supportedLogIncremental
         if (ListenerTypeEnum.isLog(listenerType)) {
             return null;
         }
@@ -144,7 +144,7 @@ public final class OceanBaseOracleConnector extends OracleConnector {
                     : schemas.stream()
                     .filter(name -> name != null && !SYSTEM_SCHEMAS.contains(name.toUpperCase(Locale.ROOT)))
                     .collect(Collectors.toCollection(ArrayList::new));
-            // OceanBase Oracle 租户常用 SYS@tenant 登录；SYS 在系统名单中会被过滤，需始终保留当前登录用户
+            // OceanBase Oracle It's common for tenants.SYS@tenant Login；SYS Advances are filtered in the system list and keep the currentLoginUser
             ensureCurrentUserSchema(result, currentUser);
             if (result.isEmpty() && StringUtil.isNotBlank(currentUser)) {
                 result.add(currentUser);
@@ -154,8 +154,8 @@ public final class OceanBaseOracleConnector extends OracleConnector {
     }
 
     /**
-     * 按 Schema(OWNER) 列出物理表；不走 JDBC DatabaseMetaData，避免 oceanbase-client 空结果。
-     * <p>整库迁移暂时不返回视图 / 物化视图。
+     * PressSchema(OWNER) Listing physical tables; not leavingJDBC DatabaseMetaData，Avoidoceanbase-client EmptyResult。
+     * <p>Database migrationNot yet.BackView / Materialize view.
      */
     @Override
     public List<Table> getTable(DatabaseConnectorInstance connectorInstance, ConnectorServiceContext context) {
@@ -168,7 +168,7 @@ public final class OceanBaseOracleConnector extends OracleConnector {
         }
         final String owner = schema.trim().toUpperCase(Locale.ROOT);
         return connectorInstance.execute(databaseTemplate -> {
-            // 整库迁移暂不查 ALL_VIEWS / ALL_MVIEWS
+            // Database migrationNot Labor.ALL_VIEWS / ALL_MVIEWS
             List<Map<String, Object>> rows = databaseTemplate.queryForList(QUERY_TABLES, owner);
             if (CollectionUtils.isEmpty(rows)) {
                 return Collections.emptyList();
@@ -222,7 +222,7 @@ public final class OceanBaseOracleConnector extends OracleConnector {
     }
 
     /**
-     * 从连接用户名解析 Schema：{@code SYS@oracle_t1} → {@code SYS}。
+     * FromConnectUsernameParsingSchema：{@code SYS@oracle_t1} → {@code SYS}。
      */
     private static String resolveCurrentUser(DatabaseConnectorInstance connectorInstance) {
         if (connectorInstance == null || connectorInstance.getConfig() == null) {
@@ -250,7 +250,7 @@ public final class OceanBaseOracleConnector extends OracleConnector {
 
     @Override
     public String buildJdbcUrl(DatabaseConfig config, String database) {
-        // jdbc:oceanbase://127.0.0.1:2881  （租户写在用户名 SYS@tenant）
+        // jdbc:oceanbase://127.0.0.1:2881  （The tenant wroteUsername SYS@tenant）
         StringBuilder url = new StringBuilder();
         url.append("jdbc:oceanbase://").append(config.getHost()).append(":").append(config.getPort());
         if (StringUtil.isNotBlank(database)) {
@@ -260,7 +260,7 @@ public final class OceanBaseOracleConnector extends OracleConnector {
     }
 
     /**
-     * OceanBase Oracle 模式建用户：不支持 TEMPORARY TABLESPACE / QUOTA，仅 IDENTIFIED BY[+DEFAULT TABLESPACE]。
+     * OceanBase Oracle Model criminalizesUser：Not supportedTEMPORARY TABLESPACE / QUOTA，OnlyIDENTIFIED BY[+DEFAULT TABLESPACE]。
      */
     @Override
     public String buildCreateDatabaseSql(String databaseName, String schemaName) {
@@ -277,8 +277,8 @@ public final class OceanBaseOracleConnector extends OracleConnector {
     }
 
     /**
-     * 取源表 DDL：优先 DBMS_METADATA；失败时返回空串，由整库迁移按字段元数据拼建表语句。
-     * <p>oceanbase-client / OB Oracle 对 GET_DDL、CLOB 支持不稳定，不可像 Oracle 一样直接抛错中断结构迁移。
+     * RemoveSource table DDL：PriorityDBMS_METADATA；FailedTimeBackEmpty string, CitizensDatabase migrationPressFieldmetadata spelling statement.
+     * <p>oceanbase-client / OB Oracle Yeah.GET_DDL、CLOB Supporting instability, incomprehensible.Oracle The same goes for a direct interruption of structural migration.
      */
     @Override
     public String getSourceTableDDL(DatabaseConnectorInstance sourceInstance, String sourceTableName) {
@@ -364,7 +364,7 @@ public final class OceanBaseOracleConnector extends OracleConnector {
     }
 
     /**
-     * OceanBase 对 PARALLEL hint 支持有限，使用普通 COUNT 即可。
+     * OceanBase Yeah.PARALLEL hint Limited support, generalCOUNT It's okay.
      */
     @Override
     public String getQueryCountSql(SqlBuilderConfig config) {
@@ -375,7 +375,7 @@ public final class OceanBaseOracleConnector extends OracleConnector {
     }
 
     /**
-     * oceanbase-client 未实现 {@link java.sql.Connection#getSchema()}，不可回落到驱动方法。
+     * oceanbase-client Not achieved{@link java.sql.Connection#getSchema()}，Don't fall back.MappingMethodology. became the first step forward.
      */
     @Override
     protected String getSchema(String schema, java.sql.Connection connection) {
@@ -395,7 +395,7 @@ public final class OceanBaseOracleConnector extends OracleConnector {
     }
 
     /**
-     * 校验当前租户为 Oracle 兼容模式，避免误连 MySQL 租户导致后续元数据 SQL 失败。
+     * Verify the current tenant asOracle Compatible mode. Avoid error.MySQL Tenants cause a subsequent paymentData SQL Failed。
      */
     private void validateCompatibilityMode(DatabaseConnectorInstance connectorInstance) {
         String mode = resolveCompatibilityMode(connectorInstance);
@@ -404,8 +404,8 @@ public final class OceanBaseOracleConnector extends OracleConnector {
             return;
         }
         if (!EXPECTED_MODE.equalsIgnoreCase(mode.trim())) {
-            throw new SdkException("当前租户兼容模式为 " + mode + "，OceanBaseOracle 连接器仅支持 Oracle 模式。"
-                    + "请改用 OceanBase 连接器，或连接 ob_compatibility_mode=oracle 的租户。");
+            throw new SdkException("Current Tenant Compatibility Mode " + mode + ", OceanBaseOracle connector only supports Oracle mode."
+                    + "Please change to the OceanBase connector or connect to ob compatibility mode=oracle.");
         }
     }
 

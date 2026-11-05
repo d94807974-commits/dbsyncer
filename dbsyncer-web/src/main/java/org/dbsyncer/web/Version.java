@@ -4,14 +4,14 @@
 package org.dbsyncer.web;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2025-02-09 15:06
  */
 public class Version {
 
     /**
-     * 大版本-小版本-编号-年-月-日-序号
+     * LargeVersion-SmallVersion-Number-year-month-day-yearNo.
      */
     private final long version;
 

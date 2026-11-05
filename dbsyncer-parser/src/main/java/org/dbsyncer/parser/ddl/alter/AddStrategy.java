@@ -13,7 +13,7 @@ import net.sf.jsqlparser.statement.alter.AlterExpression;
 import net.sf.jsqlparser.statement.alter.AlterExpression;
 
 /**
- * 新增字段
+ * InsertField
  * <code>
  *     ALTER TABLE `test`.`test_user`
  * ADD COLUMN `aaa` varchar(255) NULL AFTER `create_date`,

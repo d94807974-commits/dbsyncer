@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * H2 长整型
+ * H2 Long
  */
 public final class H2LongType extends LongType {
 

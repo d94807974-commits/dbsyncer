@@ -16,24 +16,24 @@ public interface LogService {
     void log(LogType logType, String format, Object... args);
 
     /**
-     * 写入带操作人/IP/状态的日志（JSON 为摘要文案）。
+     * Writing tapeOperator/IP/StatusYes.Log（JSON It's a summary.
      *
-     * @param logType  日志类型
-     * @param username 操作人/登录账号
-     * @param ip       客户端 IP
-     * @param status   状态码，见 {@link org.dbsyncer.common.enums.StatusEnum}
-     * @param msg      摘要；空则用 logType.message
+     * @param logType  LogType
+     * @param username Operator/entry account
+     * @param ip       ClientIP
+     * @param status   StatusYeah, see you.{@link org.dbsyncer.common.enums.StatusEnum}
+     * @param msg      Summary; emptylogType.message
      */
     void log(LogType logType, String username, String ip, int status, String msg);
 
     /**
-     * 写入带操作人/IP/状态的结构化日志（detail 序列化进 JSON）。
+     * Writing tapeOperator/IP/StatusStructureLog（detail Sequence developmentJSON）。
      *
-     * @param logType  日志类型
-     * @param username 操作人/登录账号
-     * @param ip       客户端 IP
-     * @param status   状态码，见 {@link org.dbsyncer.common.enums.StatusEnum}
-     * @param detail   结构化内容（含 message / requestUri 等）
+     * @param logType  LogType
+     * @param username Operator/entry account
+     * @param ip       ClientIP
+     * @param status   StatusYeah, see you.{@link org.dbsyncer.common.enums.StatusEnum}
+     * @param detail   Structured contentmessage / requestUri Wait.
      */
     void log(LogType logType, String username, String ip, int status, Map<String, Object> detail);
 }

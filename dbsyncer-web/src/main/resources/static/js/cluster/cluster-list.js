@@ -1,5 +1,5 @@
 /**
- * 集群管理列表
+ * Cluster managementList
  */
 (function (window) {
     'use strict';
@@ -110,9 +110,9 @@
     }
 
     function initCharts() {
-        charts.queue = initLineChart('clusterQueueChart', '堆积', 'rgba(250, 173, 20, 1)', false);
+        charts.queue = initLineChart('clusterQueueChart', 'Backlog', 'rgba(250, 173, 20, 1)', false);
         charts.tps = initLineChart('clusterTpsChart', 'TPS', 'rgba(245, 108, 108, 1)', false);
-        charts.workItem = initLineChart('clusterWorkItemChart', '分片任务', 'rgba(24, 144, 255, 1)', true);
+        charts.workItem = initLineChart('clusterWorkItemChart', 'Shard task', 'rgba(24, 144, 255, 1)', true);
     }
 
     function updateLineChart(chart, labels, data) {
@@ -140,7 +140,7 @@
         if (overview.tps) {
             updateLineChart(charts.tps, overview.tps.name || [], toNumberList(overview.tps.value));
             var avg = Number(overview.tps.average) || 0;
-            $('#clusterTpsTitle').text(avg > 0 ? ('TPS, 平均:' + Math.floor(avg) + '/秒') : 'TPS');
+            $('#clusterTpsTitle').text(avg > 0 ? ('TPS, average:' + Math.floor(avg) + 'Second') : 'TPS');
         }
         if (overview.queue) {
             updateLineChart(charts.queue, overview.queue.name || [], toNumberList(overview.queue.value));
@@ -205,19 +205,19 @@
     }
 
     function formatMetric(m, getter) {
-        // 本机直采可能未带 reachable；local=true 时仍应展示
+        // I 61/1d it.reachable；local=true It should still be shown.
         if (!m || (!m.reachable && !m.local)) {
             return '-';
         }
         return getter(m);
     }
 
-    /** status: 0-离线；1-在线 */
+    /** status: 0-Offline；1-Online */
     function formatStatus(status) {
         if (Number(status) === 1) {
-            return '<span class="badge badge-success">在线</span>';
+            return '<span class="badge badge-success">Online</span>';
         }
-        return '<span class="badge badge-error">离线</span>';
+        return '<span class="badge badge-error">Offline</span>';
     }
 
     /** role: 0-Follower；1-Leader */
@@ -260,7 +260,7 @@
         return $basePath + '/sso/redirect?target=' + encodeURIComponent(target) + '&redirect=' + encodeURIComponent('/');
     }
 
-    /** 悬浮展示完整地址：优先 nodeId，否则 ip:port */
+    /** Suspended display full address: prioritynodeId，Nothenip:port */
     function resolveNodeEndpoint(item) {
         if (!item) {
             return '';
@@ -272,7 +272,7 @@
         return addr ? (addr.ip + ':' + addr.httpPort) : '';
     }
 
-    /** 多行单元格：标签 + 值 */
+    /** Multiline Cells: Tabs+ Value */
     function stackCell(lines) {
         if (!lines || !lines.length) {
             return '-';
@@ -290,7 +290,7 @@
     function renderClusterRow(item) {
         var nodeId = item.nodeId || '';
         var name = item.name || nodeId || '';
-        var localMark = item.local ? ' (本机)' : '';
+        var localMark = item.local ? ' (ON TV)' : '';
         var endpoint = resolveNodeEndpoint(item);
         var endpointTitle = endpoint ? ' title="' + escapeHtml(endpoint) + '"' : '';
         var m = metricOf(nodeId);
@@ -316,21 +316,21 @@
         if (clusterEnabled) {
             var editId = escapeHtml(nodeId);
             buttons.push(
-                '<button type="button" class="table-action-btn view" title="编辑名称" data-id="'
+                '== sync, corrected by elderman == @elder man'
                 + editId + '" data-action="edit"><i class="fa fa-pencil"></i></button>'
             );
-            // 仅离线节点可删（status: 0-离线；1-在线）
+            // OnlyOfflineNodesDeletedstatus: 0-Offline；1-Online）
             if (Number(item.status) === 0 && !item.local) {
                 buttons.push(
-                    '<button type="button" class="table-action-btn delete" title="删除节点" data-id="'
+                    '== sync, corrected by elderman == @elder man'
                     + editId + '" data-name="' + escapeHtml(name) + '" data-action="delete">'
                     + '<i class="fa fa-trash"></i></button>'
                 );
             }
-            // 保护期内：仅在本机 Leader 行显示「恢复」（调度只能由 Leader 执行）
+            // Protection period: on-site onlyLeader Line Display「Restore」（Schedule only byLeader Implementation)
             if (Number(item.gracePeriodSeconds) > 0) {
                 buttons.push(
-                    '<button type="button" class="table-action-btn play" title="跳过节点恢复" data-action="recover">'
+                    '<button type="button" class="table-action-btn play" title="Skip Node Restore" data-action="recover">'
                     + '<i class="fa fa-refresh"></i></button>'
                 );
             }
@@ -355,27 +355,27 @@
             + '<div>' + formatRole(item.role) + '</div>'
             + '<div class="mt-1">' + formatStatus(item.status) + '</div>';
         if (Number(item.gracePeriodSeconds) > 0) {
-            statusHtml += '<div class="mt-1 text-warning">等待节点恢复：' + Number(item.gracePeriodSeconds) + ' 秒</div>';
+            statusHtml += '<div class="mt-1 text-warning">'Grace period: ' + Number(item.gracePeriodSeconds) + ' sec refund</div>';
         }
         statusHtml += '</div>';
         var timeHtml = stackCell([
-            {label: '心跳', value: formatRelativeTime(item.heartbeatTime)},
-            {label: '启动', value: formatDate(item.startTime)}
+            {label: 'Heart rate.', value: formatRelativeTime(item.heartbeatTime)},
+            {label: 'Start', value: formatDate(item.startTime)}
         ]);
         var taskHtml = stackCell([
-            {label: '分片任务', value: escapeHtml(fullWorkItems)},
-            {label: '增量任务', value: escapeHtml(incremental)}
+            {label: 'Shard task', value: escapeHtml(fullWorkItems)},
+            {label: 'Incremental tasks', value: escapeHtml(incremental)}
         ]);
         var throughputHtml = stackCell([
             {label: 'TPS', value: escapeHtml(tps)},
-            {label: '堆积', value: escapeHtml(queueUp)},
-            {label: '持久化', value: escapeHtml(storageQueueUp)}
+            {label: 'Backlog', value: escapeHtml(queueUp)},
+            {label: 'Enduring', value: escapeHtml(storageQueueUp)}
         ]);
         var resourceHtml = stackCell([
             {label: 'CPU', value: escapeHtml(cpu)},
-            {label: '内存', value: escapeHtml(memory)},
-            {label: '线程', value: escapeHtml(threads)},
-            {label: '磁盘', value: escapeHtml(disk)}
+            {label: 'Memory', value: escapeHtml(memory)},
+            {label: 'Thread', value: escapeHtml(threads)},
+            {label: 'Disk', value: escapeHtml(disk)}
         ]);
         return '<tr>'
             + '<td>' + nameHtml + '</td>'
@@ -397,11 +397,11 @@
         var currentName = (metric && metric.name) ? metric.name : id;
         var inputId = 'clusterNodeNameInput';
         showConfirm({
-            title: '编辑节点',
+            title: 'Edit Node',
             icon: 'info',
-            confirmText: '保存',
+            confirmText: 'Save',
             body: '<div class="form-item mb-0">'
-                + '<label class="form-label" for="' + inputId + '">节点名称</label>'
+                + '<label class="form-label" for="' + inputId + '"\'The name of the node</label>'
                 + '<div class="form-control-area">'
                 + '<input type="text" id="' + inputId + '" class="form-control" maxlength="64"/>'
                 + '</div></div>',
@@ -409,15 +409,15 @@
                 var $input = $('#' + inputId);
                 var name = ($input.length ? $input.val() : '') || '';
                 if (!String(name).trim()) {
-                    bootGrowl('节点名称不能为空', 'warning');
+                    bootGrowl('Node name cannot be empty', 'warning');
                     return;
                 }
                 doPoster('/cluster/edit', {id: id, name: String(name).trim()}, function (res) {
                     if (res.success === true) {
-                        bootGrowl('已保存', 'success');
+                        bootGrowl('Saved', 'success');
                         loadNodeMetrics(false);
                     } else {
-                        bootGrowl(res.message || '保存失败', 'danger');
+                        bootGrowl(res.message || 'Save failed', 'danger');
                     }
                 });
             }
@@ -438,19 +438,19 @@
         }
         var tipName = displayName || id;
         showConfirm({
-            title: '确定要删除节点？',
+            title: 'Sure Replies',
             icon: 'warning',
             confirmType: 'danger',
-            confirmText: '删除',
-            body: '<p class="mb-0">将移除离线节点 <strong>' + escapeHtml(tipName)
-                + '</strong>，此操作不可恢复。</p>',
+            confirmText: 'Delete',
+            body: '<p class="mb-0">Remove offline nodes<strong>' + escapeHtml(tipName)
+                + '</strong>, this operation cannot be restored.</p>',
             onConfirm: function () {
                 doPoster('/cluster/remove', {id: id}, function (res) {
                     if (res.success === true) {
-                        bootGrowl(res.data || '删除成功', 'success');
+                        bootGrowl(res.data || 'Deleted successfully', 'success');
                         loadNodeMetrics(false);
                     } else {
-                        bootGrowl(res.message || '删除失败', 'danger');
+                        bootGrowl(res.message || 'Delete failed', 'danger');
                     }
                 });
             }
@@ -459,17 +459,17 @@
 
     function forceExpireLeaderGracePeriod() {
         showConfirm({
-            title: '跳过等待节点恢复？',
+            title: 'Skip waiting for node to recover?',
             icon: 'warning',
-            confirmText: '确认',
-            body: '<p class="mb-0">将重新分配离线节点任务到新节点</p>',
+            confirmText: 'Confirm',
+            body: '<p class="mb-0">Task Instead Reassigned Offline to New Node</p>',
             onConfirm: function () {
                 doPoster('/cluster/forceExpireGracePeriod', {}, function (res) {
                     if (res.success === true) {
-                        bootGrowl(res.data || '已跳过恢复', 'success');
+                        bootGrowl(res.data || 'Skip Recovery', 'success');
                         loadNodeMetrics(false);
                     } else {
-                        bootGrowl(res.message || '恢复失败', 'danger');
+                        bootGrowl(res.message || 'Restore Failed', 'danger');
                     }
                 });
             }
@@ -492,7 +492,7 @@
         doGetter('/cluster/metrics', {}, function (res) {
             if (res.success !== true) {
                 if (refreshTable) {
-                    bootGrowl(res.message || '加载节点指标失败', 'warning');
+                    bootGrowl(res.message || 'Failed to load node indicator', 'warning');
                 }
                 return;
             }
@@ -516,7 +516,7 @@
 
     window.initClusterList = initClusterList;
 
-    // 本脚本仅在 clusterEnabled 时由 list.html 引入，直接初始化
+    // This script is only availableclusterEnabled Timelist.html Introduction, Direct Initialization
     $(document).ready(function () {
         initClusterList({clusterEnabled: true});
     });

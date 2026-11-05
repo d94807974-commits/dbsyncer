@@ -45,8 +45,8 @@ public class TransactionalBuffer {
     }
 
     /**
-     * 获取缓冲区中最早的未提交事务的SCN
-     * @return 最小的firstScn，如果缓冲区为空返回null
+     * Get the earliest in the buffer zoneSubmitServiceSCN
+     * @return MinimumfirstScn，If the buffer zone is emptyBacknull
      */
     public Long getSmallestScn() {
         BigInteger smallest = calculateSmallestScn();
@@ -58,10 +58,10 @@ public class TransactionalBuffer {
             if (transaction == null) {
                 transaction = new Transaction(scn);
             }
-            // 检查操作是否已注册（防止重复查询导致的重复处理）
+            // InspectionActionsYesNoRegistered (prevention of duplicate processing resulting from repeated queries)
             if (transaction.registeredOperations.add(operationId)) {
                 transaction.commitCallbacks.add(callback);
-                // 更新事务的lastScn
+                // Update serviceslastScn
                 if (scn.compareTo(transaction.lastScn) > 0) {
                     transaction.lastScn = scn;
                 }
@@ -73,16 +73,16 @@ public class TransactionalBuffer {
     public boolean commit(String txId, BigInteger commitScn, long committedScn) {
         Transaction transaction = transactions.remove(txId);
         if (transaction == null) {
-            // 只有当TransactionalBuffer中没有该事务时，才检查是否已提交过
-            // 如果committedScn或lastCommittedScn大于当前commitScn，说明该事务可能已经处理过（重复查询导致）
+            // Only ifTransactionalBufferOnly when there is no such thing.YesNoAlreadySubmitPass.
+            // IfcommittedScnorlastCommittedScnMore than currentcommitScn，DescriptionThe matter may have been processed (resulting from Strategies)
             if (committedScn > commitScn.longValue() || lastCommittedScn.longValue() > commitScn.longValue()) {
                 logger.info("txId {} not found in buffer and already committed (committedScn={}, lastCommittedScn={}, commitScn={}), ignore.", txId, committedScn, lastCommittedScn, commitScn);
                 return false;
             }
-            // 没有该事务的DML记录，可能是以下正常情况：
-            // 1. 事务只修改了系统表或不在监听范围内的表，DML被查询条件过滤掉
-            // 2. 事务的DML在startScn之前已经被处理，只剩下COMMIT
-            // 3. 空事务（只有BEGIN/COMMIT，没有实际DML操作）
+            // There's no such thing.DMLRecords, maybe.YesBelowNormalSituation:
+            // 1. Business onlyUpdateIt's a system watch or a watch that's not in the listening range.DMLWithin QueryConditionFilter Out
+            // 2. ServiceDMLYes.startScnIt's been dealt with before.COMMIT
+            // 3. Empty services (only)BEGIN/COMMIT，No actualDMLActions）
             logger.debug("txId {} not found in TransactionalBuffer. Likely modified tables outside monitoring scope or system tables.", txId);
             return false;
         }

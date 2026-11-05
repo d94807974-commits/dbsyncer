@@ -4,7 +4,7 @@
 package org.dbsyncer.parser.enums;
 
 /**
- * 任务明细列表状态筛选指标，并携带该指标对应的默认排序。
+ * TasksDetailsListStatusFilter the indicator and carry the default sorting of the indicator.
  *
  * @author wuji
  * @version 1.0.0
@@ -13,12 +13,12 @@ package org.dbsyncer.parser.enums;
 public enum TaskDetailMetricEnum {
 
     /**
-     * 订正校验：按 DIFF（差异数）筛选与排序
+     * Data validation：PressDIFF（Diffs）FilterandSort
      */
     DIFF("dm.DIFF", "ORDER BY dm.DIFF DESC, d.UPDATE_TIME DESC "),
 
     /**
-     * 整库迁移：按 FAIL（失败数）筛选与排序
+     * Database migration：PressFAIL（Failures）FilterandSort
      */
     FAIL("dm.FAIL", "ORDER BY dm.FAIL DESC, d.UPDATE_TIME DESC ");
 
@@ -31,14 +31,14 @@ public enum TaskDetailMetricEnum {
     }
 
     /**
-     * SQL 列表达式（含表别名）。
+     * SQL ListAchievable ( all table aliases).
      */
     public String getColumn() {
         return column;
     }
 
     /**
-     * 该指标默认 ORDER BY 子句（含尾部空格）。
+     * Default for this indicatorORDER BY Substatement (with end spaces).
      */
     public String getOrderSql() {
         return orderSql;

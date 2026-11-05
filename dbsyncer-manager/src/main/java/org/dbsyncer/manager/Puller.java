@@ -9,17 +9,17 @@ public interface Puller {
     void start(Mapping mapping);
 
     /**
-     * 启动同步任务
+     * StartSync task
      *
-     * @param mapping      同步任务
-     * @param autoRecovery 是否为服务重启自动恢复（true 时对 CDC 监听启动失败按配置重试）
+     * @param mapping      Sync task
+     * @param autoRecovery YesNoRestart Autorestore for Servicetrue Right on time.CDC ListenStart FailedPressConfigureTry again）
      */
     void start(Mapping mapping, boolean autoRecovery);
 
     void close(String taskId);
 
     /**
-     * 获取所有运行中的任务id
+     * Get AllRunningYes.Tasksid
      */
     List<String> getTaskId();
 }

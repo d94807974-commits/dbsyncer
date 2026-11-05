@@ -14,8 +14,8 @@ import java.util.function.Consumer;
 import java.util.zip.ZipFile;
 
 /**
- * 任务域统一入口
- * 以及任务运行结果（Meta、TASK_DETAIL）的清理与重置。
+ * TasksDomain Unity Entry
+ * andTasksRunResult（Meta、TASK_DETAIL）CleaningandReset。
  *
  * @author wuji
  * @version 1.0.0
@@ -23,100 +23,100 @@ import java.util.zip.ZipFile;
 public interface TaskProfile {
 
     /**
-     * 按 id 查询一条任务配置。
+     * Pressid Query one.TasksConfigure。
      */
     <T extends ConfigModel> T getTask(String id, Class<T> clazz);
 
     /**
-     * 按模型类型分页查询任务，并按 ID IN 过滤。
+     * Press ModelTypeminPageQuestionTasks，and pressID IN Filter.
      *
-     * @param searchKey 可选；非空时对 {@code name} 做 LIKE
-     * @param ids       资源 ID 集合；空或 null 不加 ID 条件
+     * @param searchKey optional; non-empty time pair{@code name} Do it.LIKE
+     * @param ids       Resource ID collect; empty ornull Nope.ID Condition
      */
     <T extends ConfigModel> Paging<T> queryTasks(Class<T> clazz, int pageNum, int pageSize, String searchKey, List<String> ids);
 
     /**
-     * 按模型类型分页回调遍历全部任务。
+     * Press ModelTypeminPageAll over the clock.AllTasks。
      */
     <T extends ConfigModel> void pageScanTasks(Class<T> clazz, int pageSize, Consumer<List<T>> pageConsumer);
 
     /**
-     * 新增任务配置。
+     * InsertTasksConfigure。
      */
     String addTask(ConfigModel task);
 
     /**
-     * 修改任务配置。
+     * UpdateTasksConfigure。
      */
     String updateTask(ConfigModel task);
 
     /**
-     * 批量新增任务配置。
+     * BatchInsertTasksConfigure。
      */
     void addTaskBatch(List<? extends ConfigModel> tasks);
 
     /**
-     * 删除任务配置（仅删 task 表行）。
+     * DeleteTasksConfigure（Delete onlytask Table line).
      */
     void deleteTask(String id);
 
     /**
-     * 按 TYPE 统计任务数量。
+     * PressTYPE StatisticsTasksNumber.
      */
     int countTasks(String type);
 
     /**
-     * 全部任务行数。
+     * AllTasksLine number.
      */
     int countAllTasks();
 
     /**
-     * 导出用：全部任务配置 JSON（Map 形式）。
+     * ExportWith:AllTasksConfigure JSON（Map Form).
      */
     List<Map<String, Object>> listAllTaskJsonMaps();
 
     /**
-     * 配置包还原：写入任务行（保留 id；不经 TaskService.add，避免重复建 Meta）。
+     * ConfigureRevert: WriteTasksLine (Reservation)id；NoneTaskService.add，To avoid duplicationMeta）。
      */
     String importTask(ConfigModel task);
 
     /**
-     * 从 task.json / mapping.json 数组导入全类型任务；Mapping 批量落库，企业任务逐条 importTask。
+     * Fromtask.json / mapping.json ArrayImportAllTypeTasks；Mapping BatchdownLibrary，EnterpriseShh! EffectivenessTasksArticle by articleimportTask。
      */
     TaskImportResult importTasksFromJson(String json);
 
     /**
-     * 从 task_detail.json 预建空分表（仅结构，无行数据）。
+     * Fromtask_detail.json Pre-emptedminTable (structure only,NoneRow data）。
      */
     void importTaskDetailSchemasFromJson(String json);
 
     /**
-     * 从 ZIP 导入 task.json（兼容 mapping.json）。
+     * FromZIP Import task.json（Compatibilitymapping.json）。
      */
     TaskImportResult importTasksFromZip(ZipFile zip) throws IOException;
 
     /**
-     * 构建 task_detail.json 内容（仅 taskIds）。
+     * Buildtask_detail.json Content (only)taskIds）。
      */
     String exportTaskDetailSchemasJson(List<String> taskIds);
 
     /**
-     * 清空任务运行数据：重置表级 Meta（保留行）、清空 TASK_DETAIL 分表数据（编辑/重置用）。
+     * ClearTasksTransportRow data：ResetTableMeta（Keep rows,Clear TASK_DETAIL minTable dataEdit/ResetUse it.
      */
     void deleteRunData(String taskId);
 
     /**
-     * 仅重置表级明细 Meta（计数/快照归 READY），不 TRUNCATE 明细分表。
+     * OnlyResetDetailsMeta（Counting/quick returnREADY），Oh, no.TRUNCATE DetailsminTable.
      */
     void resetTableDetailMetas(String taskId);
 
     /**
-     * 删除任务运行数据：删表级 Meta，并物理 DROP 明细分表（不重建）。
+     * DeleteTasksTransportRow data：Delete Table LevelMeta，And physics.DROP DetailsminTable Vocational training.
      */
     void dropTaskDetailTable(String taskId);
     
     /**
-     * 批量预建运行明细分表（配置包导入）。
+     * Batch pre-run detailsminTableConfigurePackageImport）。
      */
     void createRunDetailTables(List<String> taskIds);
 

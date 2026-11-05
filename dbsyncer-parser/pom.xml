@@ -10,14 +10,14 @@
     <artifactId>dbsyncer-parser</artifactId>
 
     <dependencies>
-        <!-- Plugin 插件服务 -->
+        <!-- Plugin Plugin Service -->
         <dependency>
             <groupId>org.ghi</groupId>
             <artifactId>dbsyncer-plugin</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
-        <!-- Storage 存储服务 -->
+        <!-- Storage Storage Service -->
         <dependency>
             <groupId>org.ghi</groupId>
             <artifactId>dbsyncer-storage</artifactId>

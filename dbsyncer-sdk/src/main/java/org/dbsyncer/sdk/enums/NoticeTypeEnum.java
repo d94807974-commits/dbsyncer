@@ -4,7 +4,7 @@
 package org.dbsyncer.sdk.enums;
 
 /**
- * 通知类型枚举
+ * AnnouncementsTypeEnumeration
  *
  * @author AE86
  * @version 1.0.0
@@ -12,39 +12,39 @@ package org.dbsyncer.sdk.enums;
  */
 public enum NoticeTypeEnum {
     /**
-     * 测试消息
+     * CCPR Test Message
      */
     TEST_MESSAGE(0),
     /**
-     * 连接离线
+     * Connect Offline
      */
     CONNECTOR_OFFLINE(1),
     /**
-     * 同步任务存在失败记录
+     * Sync taskExistenceFailedRecords
      */
     MAPPING_ERROR(2),
     /**
-     * 手动停止同步任务
+     * Stop Sync Task Manually
      */
     MAPPING_STOP(3),
     /**
-     * 订正校验失败
+     * Revision verification failed
      */
     VALIDATE_SYNC_FAIL(4),
     /**
-     * 授权异常
+     * Authorization irregular.
      */
     LICENSE_EXCEPTION(5),
     /**
-     * 授权到期提醒
+     * Organisation
      */
     LICENSE_EXPIRE_REMIND(6),
     /**
-     * 授权已过期
+     * Mandate expired
      */
     LICENSE_EXPIRED(7),
     /**
-     * 全量同步完成
+     * Full Sync
      */
     MAPPING_FULL_COMPLETE(8);
 
@@ -59,7 +59,7 @@ public enum NoticeTypeEnum {
     }
 
     /**
-     * 按编码解析；未知返回 {@code null}。
+     * Parsing by code;UnknownBack {@code null}。
      */
     public static NoticeTypeEnum getByCode(int code) {
         for (NoticeTypeEnum type : values()) {

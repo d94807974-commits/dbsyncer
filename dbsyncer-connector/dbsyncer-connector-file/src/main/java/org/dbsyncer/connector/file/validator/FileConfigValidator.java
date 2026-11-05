@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 文件连接配置校验器实现
+ * DocumentationConnectConfigureVerifyer Achieved
  *
  * @Author AE86
  * @Version 1.0.0
@@ -29,7 +29,7 @@ public class FileConfigValidator implements ConfigValidator<FileConnector, FileC
     public void modify(FileConnector connectorService, FileConfig fileConfig, Map<String, String> params) {
         String fileDir = params.get("fileDir");
         Assert.hasText(fileDir, "fileDir is empty.");
-        Assert.isTrue(new File(fileDir).exists(), String.format("路径无效 '%s'", fileDir));
+        Assert.isTrue(new File(fileDir).exists(), String.format("Path invalid '%s'", fileDir));
         fileConfig.setFileDir(fileDir);
     }
 
@@ -41,9 +41,9 @@ public class FileConfigValidator implements ConfigValidator<FileConnector, FileC
         String separator = params.get("separator");
         Assert.hasText(tableName, "TableName is empty");
         Assert.hasText(columnList, "ColumnList is empty");
-        Assert.hasText(separator, "分割符不能为空");
+        Assert.hasText(separator, "Separator cannot be empty");
         List<Field> fields = JsonUtil.jsonToArray(columnList, Field.class);
-        Assert.notEmpty(fields, "字段不能为空.");
+        Assert.notEmpty(fields, "Field cannot be empty.");
         table.setName(tableName);
         table.setColumn(fields);
         table.setType(connectorService.getExtendedTableType().getCode());

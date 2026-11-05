@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Kafka连接器实现
+ * KafkaConnectorAchieved
  *
  * @Author AE86
  * @Version 1.0.0
@@ -138,7 +138,7 @@ public class KafkaConnector extends AbstractConnector implements ConnectorServic
 
     @Override
     public Result reader(KafkaConnectorInstance connectorInstance, ReaderContext context) {
-        throw new KafkaException("Kafka暂不支持全量读取");
+        throw new KafkaException("Kafka does not support full reading");
     }
 
     @Override

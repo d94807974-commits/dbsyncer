@@ -7,7 +7,7 @@ import org.dbsyncer.sdk.enums.StorageEnum;
 import org.dbsyncer.sdk.storage.Strategy;
 
 /**
- * 任务执行结果(meta)：单表存储
+ * Mandate performance(meta)：Form Storage
  *
  * @Author AE86
  * @Version 1.0.0

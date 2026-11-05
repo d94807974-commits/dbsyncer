@@ -9,7 +9,7 @@ import org.dbsyncer.sdk.model.Field;
 import java.lang.reflect.ParameterizedType;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2024-11-24 20:58
  */
@@ -22,24 +22,24 @@ public abstract class AbstractDataType<T> implements DataType {
     }
 
     /**
-     * 转换为标准数据类型
+     * ConvertAs Standard DataType
      */
     protected abstract T merge(Object val, Field field);
 
     /**
-     * 获取默认合并值
+     * Get Default MergeValue
      */
     protected T getDefaultMergedVal(Field field) {
         return null;
     }
 
     /**
-     * 转换为指定数据类型
+     * ConvertAssign DataType
      */
     protected abstract Object convert(Object val, Field field);
 
     /**
-     * 获取默认转换值
+     * 71. Get DefaultConvertValue
      */
     protected Object getDefaultConvertedVal(Field field) {
         return null;
@@ -50,11 +50,11 @@ public abstract class AbstractDataType<T> implements DataType {
         if (val == null) {
             return getDefaultMergedVal(field);
         }
-        // 数据类型匹配
+        // Data FactTypeMatch
         if (val.getClass().equals(parameterClazz)) {
             return val;
         }
-        // 异构数据类型转换
+        // Isomer DataTypeConvert
         return merge(val, field);
     }
 
@@ -63,7 +63,7 @@ public abstract class AbstractDataType<T> implements DataType {
         if (val == null) {
             return getDefaultConvertedVal(field);
         }
-        // 异构数据类型转换
+        // Isomer DataTypeConvert
         return convert(val, field);
     }
 

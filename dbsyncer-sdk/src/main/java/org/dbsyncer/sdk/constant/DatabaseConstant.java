@@ -3,40 +3,40 @@ package org.dbsyncer.sdk.constant;
 public class DatabaseConstant {
 
     /**
-     * dbs唯一标识码
+     * dbsUnique ID number
      */
     public static final String DBS_UNIQUE_CODE = "/*dbs*/";
 
     // *********************************** Mysql **************************************//
     /**
-     * Mysql分页语句
+     * MysqlminPageStatement
      */
     public static final String MYSQL_PAGE_SQL = " LIMIT ?,?";
 
     // *********************************** Oracle **************************************//
     /**
-     * Oracle分页语句开始
+     * OracleminPageOrganisation
      */
     public static final String ORACLE_PAGE_SQL_START = "SELECT * FROM (SELECT A.*, ROWNUM RN FROM (";
 
     /**
-     * Oracle分页语句开始
+     * OracleminPageOrganisation
      */
     public static final String ORACLE_PAGE_SQL_END = ") A WHERE ROWNUM <= ?) WHERE RN > ?";
 
     /**
-     * Oracle游标分页语句开始
+     * OracleCursorminPageOrganisation
      */
     public static final String ORACLE_PAGE_CURSOR_SQL_START = "SELECT * FROM (SELECT A.* FROM (";
 
     /**
-     * Oracle游标分页语句结束
+     * OracleCursorminPageEnd of statement
      */
     public static final String ORACLE_PAGE_CURSOR_SQL_END = ")A WHERE ROWNUM <= ?)";
 
     // *********************************** SqlServer **************************************//
     /**
-     * SqlServer分页语句(2008版本支持)
+     * SqlServerminPageStatement(2008VersionSupport)
      * <pre>
      *  select * from (
      *      select row_number() over(order by id) as sqlserver_row_id, * from (select * from my_user) s
@@ -47,19 +47,19 @@ public class DatabaseConstant {
 
     // *********************************** PostgreSQL **************************************//
     /**
-     * PostgreSQL分页语句
+     * PostgreSQLminPageStatement
      */
     public static final String POSTGRESQL_PAGE_SQL = " limit ? OFFSET ?";
 
     // *********************************** SQLite **************************************//
     /**
-     * SQLite分页语句
+     * SQLiteminPageStatement
      */
     public static final String SQLITE_PAGE_SQL = " limit ? OFFSET ?";
 
     // *********************************** ClickHouse **************************************//
     /**
-     * ClickHouse分页语句
+     * ClickHouseminPageStatement
      */
     public static final String CLICKHOUSE_PAGE_SQL = " LIMIT ? OFFSET ?";
 }

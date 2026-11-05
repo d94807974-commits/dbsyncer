@@ -14,9 +14,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 消息通知决策引擎：按策略匹配，立即发送或入队等待周期 flush。
+ * Message Notification Decision Engine: Strategicly matched, immediately sent or queued for waiting periodsflush。
  * <p>
- * 不依赖策略 Profile；装载由 {@link NoticeStrategyRuntimeBridge} / 业务 Service / 预加载完成。
+ * No reliance on strategyProfile；Load Substantive{@link NoticeStrategyRuntimeBridge} / OperationsService / PreloadFinish。
  *
  * @author wuji
  * @version 1.0.0

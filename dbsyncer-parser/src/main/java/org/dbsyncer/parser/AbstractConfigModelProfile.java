@@ -17,9 +17,9 @@ import javax.annotation.Resource;
 import java.lang.reflect.ParameterizedType;
 
 /**
- * 通用配置（负责缓存刷新维护）
+ * UniversalConfigure（CacheRefreshMaintenance)
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-09-22 21:01
  */
@@ -50,7 +50,7 @@ public abstract class AbstractConfigModelProfile<T extends ConfigModel> implemen
             aClass = aClass.getSuperclass();
             level--;
         }
-        Assert.notNull(responseClazz, String.format("%s的父类%s泛型参数Response为空.", getClass().getName(), AbstractConfigModelProfile.class.getName()));
+        Assert.notNull(responseClazz, String.format("%s' parent %s pane Response is empty.", getClass().getName(), AbstractConfigModelProfile.class.getName()));
         try {
             configModelType = responseClazz.newInstance().getType();
         } catch (InstantiationException | IllegalAccessException e) {
@@ -102,7 +102,7 @@ public abstract class AbstractConfigModelProfile<T extends ConfigModel> implemen
     }
 
     /**
-     * 数据缓存 key：有 id 用 type:id，无 id（如 SystemConfig）只用 type。
+     * Data FactC Facilitieskey：Yes Notably.id Usetype:id，None id（LikeSystemConfig）Onlytype。
      */
     protected String buildCacheKey(String id) {
         if (StringUtil.isBlank(id)) {

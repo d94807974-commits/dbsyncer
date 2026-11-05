@@ -4,7 +4,7 @@
 package org.dbsyncer.connector.clickhouse.constant;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-05-29 23:50
  */
@@ -14,12 +14,12 @@ public final class ClickHouseConfigConstant {
     }
 
     /**
-     * 增量轮询间隔（秒）
+     * IncrementalInterrogation interval (seconds）
      */
     public static final String POLL_INTERVAL_SECONDS = "pollIntervalSeconds";
 
     /**
-     * 增量批次大小
+     * IncrementalBatch Size
      */
     public static final String POLL_BATCH_SIZE = "pollBatchSize";
 }

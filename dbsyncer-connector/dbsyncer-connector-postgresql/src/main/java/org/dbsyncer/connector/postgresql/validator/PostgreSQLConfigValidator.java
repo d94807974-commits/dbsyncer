@@ -22,7 +22,7 @@ public class PostgreSQLConfigValidator extends AbstractDataBaseConfigValidator {
     public void modify(AbstractDatabaseConnector connectorService, DatabaseConfig connectorConfig, Map<String, String> params) {
         super.modify(connectorService, connectorConfig, params);
 
-        // 表单 checkbox：有键表示提交；复制展平可能带 "true"/"false"。缺键则保留 super 已还原的 extInfo
+        // Formcheckbox：KeysSubmit；CopyIt's possible."true"/"false"。Save the missing keysuper RevertedextInfo
         if (params.containsKey(PostgreSQLConfigConstant.DROP_SLOT_ON_CLOSE)) {
             String raw = params.get(PostgreSQLConfigConstant.DROP_SLOT_ON_CLOSE);
             boolean on = StringUtil.isNotBlank(raw)

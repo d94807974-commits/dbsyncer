@@ -9,7 +9,7 @@ import org.dbsyncer.common.model.MailNoticeChannel;
 import org.dbsyncer.common.model.WeChatNoticeChannel;
 
 /**
- * 通知配置
+ * AnnouncementsConfigure
  *
  * @Author AE86
  * @Version 1.0.0
@@ -23,23 +23,23 @@ public class NoticeConfig {
     private MailNoticeChannel mail = new MailNoticeChannel();
 
     /**
-     * 同步任务有失败数据
+     * Sync taskYes.FailuresAccording to
      */
     private boolean enableMappingError = true;
     /**
-     * 停止驱动
+     * StopMapping
      */
     private boolean enableMappingStop = true;
     /**
-     * 连接离线
+     * Connect Offline
      */
     private boolean enableConnectorOffline = true;
     /**
-     * 订正校验失败
+     * Revision verification failed
      */
     private boolean enableValidateSyncFail = true;
     /**
-     * 系统消息
+     * System Message
      */
     private boolean enableSystemMessage = true;
 

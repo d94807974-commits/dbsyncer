@@ -14,27 +14,27 @@ import java.util.List;
 public class AppReportMetric {
 
     /**
-     * 待处理数
+     * Pending
      */
     private long queueUp;
 
     /**
-     * 队列长度
+     * LineLength
      */
     private long queueCapacity;
 
     /**
-     * 持久化待处理数
+     * EnduringPending
      */
     private long storageQueueUp;
 
     /**
-     * 持久化队列长度
+     * EnduringLineLength
      */
     private long storageQueueCapacity;
 
     /**
-     * 统计执行器TPS
+     * StatisticsExecutor TPS
      */
     private TpsVO tps;
 

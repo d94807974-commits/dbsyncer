@@ -1,19 +1,19 @@
 /**
- * 整库迁移列表页
+ * Database migrationListPage
  */
 (function (window) {
     'use strict';
 
-    /** 与 CommonTaskStatusEnum.DONE 对齐：本轮业务已完成 */
+    /** and CommonTaskStatusEnum.DONE Alignment: current round of operationsCompleted */
     var META_STATE_DONE = 3;
 
     function databaseSyncStart(taskId) {
         doPoster('/database-sync/start', {id: taskId}, function (response) {
             if (response.success) {
-                bootGrowl(response.data || '启动成功', 'success');
+                bootGrowl(response.data || 'Started successfully', 'success');
                 refreshIndexList();
             } else {
-                bootGrowl(response.message || '启动失败', 'danger');
+                bootGrowl(response.message || 'Start Failed', 'danger');
             }
         });
     }
@@ -21,27 +21,27 @@
     function databaseSyncStop(taskId) {
         doPoster('/database-sync/stop', {id: taskId}, function (response) {
             if (response.success) {
-                bootGrowl(response.data || '停止成功', 'success');
+                bootGrowl(response.data || 'Stopped successfully', 'success');
                 refreshIndexList();
             } else {
-                bootGrowl(response.message || '停止失败', 'danger');
+                bootGrowl(response.message || 'Stop Failure', 'danger');
             }
         });
     }
 
     function databaseSyncRemove(taskId) {
         showConfirm({
-            title: '确定要删除该任务？',
+            title: 'Are you sure you want to delete the task?',
             icon: 'warning',
             size: 'large',
             confirmType: 'danger',
             onConfirm: function () {
                 doPoster('/database-sync/remove', {id: taskId}, function (response) {
                     if (response.success) {
-                        bootGrowl(response.data || '删除成功', 'success');
+                        bootGrowl(response.data || 'Deleted successfully', 'success');
                         refreshIndexList();
                     } else {
-                        bootGrowl(response.message || '删除失败', 'danger');
+                        bootGrowl(response.message || 'Delete failed', 'danger');
                     }
                 });
             }
@@ -52,34 +52,34 @@
         return {
             0: {
                 icon: 'fa-play',
-                title: '启动',
+                title: 'Start',
                 onclick: "databaseSyncStart('" + taskId + "')",
                 disabled: false,
                 class: 'badge-info',
-                text: '未运行'
+                text: 'Not running'
             },
             1: {
                 icon: 'fa-pause',
-                title: '停止',
+                title: 'Stop',
                 onclick: "databaseSyncStop('" + taskId + "')",
                 disabled: false,
                 class: 'badge-success',
-                text: '运行中'
+                text: 'Running'
             },
             2: {
                 icon: 'fa-spinner fa-spin',
-                title: '停止中',
-                text: '停止中',
+                title: 'Stopping',
+                text: 'Stopping',
                 disabled: true,
                 class: 'badge-warning'
             },
             3: {
                 icon: 'fa-play',
-                title: '启动',
+                title: 'Start',
                 onclick: "databaseSyncStart('" + taskId + "')",
                 disabled: false,
                 class: 'badge-primary',
-                text: '已完成'
+                text: 'Completed'
             }
         };
     }
@@ -98,7 +98,7 @@
         let html = '<button class="table-action-btn play" title="' + config.title + '"' + onclickAttr + disabledAttr + '>'
             + '<i class="fa ' + config.icon + '"></i></button>';
         if (state === 0 || state === 3) {
-            html += '<button class="table-action-btn delete" title="删除" onclick="databaseSyncRemove(\'' + taskId + '\')">'
+            html += '<button class= "table-action-btn delete" title= onclick="databaseSyncRemove(\ ♪ I\'m sorry ♪' + taskId + '\')">'
                 + '<i class="fa fa-trash"></i></button>';
         }
         return html;
@@ -109,14 +109,14 @@
             return '0';
         }
         try {
-            return Number(n).toLocaleString('zh-CN');
+            return Number(n).toLocaleString('en-US');
         } catch (e) {
             return String(n);
         }
     }
 
     /**
-     * 按组合模式与阶段展示：结构 a/b 或 数据 c/d行（分母未齐为「统计中」）。
+     * PressCompositeModeandPhase presentation: Structurea/b orData c/dSoldierminMother not all as「Statistics」）。
      */
     function renderProgressMetaText(task) {
         var isRunning = Number(task.metaState) === 1;
@@ -155,12 +155,12 @@
 
         if (!isRunning) {
             if (enableData && sourceTotal > 0) {
-                return '<span class="text-xs text-secondary whitespace-nowrap" title="已同步行 / 源端总行">'
-                    + formatCount(synced) + '/' + formatCount(sourceTotal) + '行</span>';
+                return '<span class="text-xs text-secondary whitespace-nowrap" title="Walked with / Source">'
+                    + formatCount(synced) + '/' + formatCount(sourceTotal) + 'Okay.</span>';
             }
             if (tableTotal > 0) {
-                return '<span class="text-xs text-secondary whitespace-nowrap" title="已完成表 / 总表">'
-                    + completed + '/' + tableTotal + '张表</span>';
+                return '<span class="text-xs text-secondary whitespace-nowrap" title="Completed tables/ summary tables">'
+                    + completed + '/' + tableTotal + 'Watch</span>';
             }
             return '';
         }
@@ -169,22 +169,22 @@
             if (tableTotal <= 0) {
                 return '';
             }
-            return '<span class="text-xs text-secondary whitespace-nowrap" title="结构完成表 / 总表">'
-                + '表结构 ' + schemaDone + '/' + tableTotal + '</span>';
+            return '<span class="text-xs text-secondary whitespace-nowrap" title="Structure completion table / summary statement">'
+                + 'Table structure ' + schemaDone + '/' + tableTotal + '</span>';
         }
 
         if (enableSchema && enableData && schemaDone < tableTotal) {
             if (tableTotal <= 0) {
                 return '';
             }
-            return '<span class="text-xs text-secondary whitespace-nowrap" title="结构完成表 / 总表">'
-                + '表结构 ' + schemaDone + '/' + tableTotal + '</span>';
+            return '<span class="text-xs text-secondary whitespace-nowrap" title="Structure completion table / summary statement">'
+                + 'Table structure ' + schemaDone + '/' + tableTotal + '</span>';
         }
 
         if (enableData) {
-            var totalText = sourceTotal > 0 ? formatCount(sourceTotal) : '统计中';
-            return '<span class="text-xs text-secondary whitespace-nowrap" title="已同步行 / 源端总行">'
-                + '数据 ' + formatCount(synced) + '/' + totalText + '</span>';
+            var totalText = sourceTotal > 0 ? formatCount(sourceTotal) : 'Statistics';
+            return '<span class="text-xs text-secondary whitespace-nowrap" title="Walked with / Source">'
+                + 'Data ' + formatCount(synced) + '/' + totalText + '</span>';
         }
 
         return '';
@@ -194,13 +194,13 @@
         var state = Number(task.metaState);
         var RUNNING = 1;
         var STOPPING = 2;
-        // 运行中/停止中 updateTime 往往未随进度刷新，用前端当前时间算实时耗时
+        // Running/Stopping updateTime Unity, often without progress.Refresh，Use front-end currentTimeReal time.
         var endTime = (state === RUNNING || state === STOPPING) ? Date.now() : task.updateTime;
         var durationText = formatElapsedDuration(task.startTime, endTime);
         if (!durationText) {
             return '';
         }
-        return '<span class="text-xs text-tertiary whitespace-nowrap">耗时：' + durationText + '</span>';
+        return '<span class="text-xs text-tertiary whitespace-nowrap">Time-consuming:' + durationText + '</span>';
     }
 
     function renderResultColumn(task) {
@@ -243,10 +243,10 @@
         }
 
         var left = (n > 0)
-            ? ('异常：<a href="javascript:void(0)" class="hover:underline cursor-pointer" title="查看失败迁移结果" '
+            ? ('Error：<a href="javascript:void(0)" class="hover:underline cursor-pointer" title="View failed migration results" '
                 + 'onclick="doLoader(\'/database-sync/page/detail?id=' + taskId + '&detailStatus=fail\'); return false;">'
                 + '<span class="badge badge-error">' + n + '</span></a>')
-            : '<span class="badge badge-success">正常</span>';
+            : '<span class="badge badge-success">Normal</span>';
         var tableProgressHtml = renderProgressMetaText(task);
         var durationHtml = renderTaskDurationText(task);
         var centerParts = [];
@@ -299,7 +299,7 @@
                     + '<tr>'
                     + '<td>' + index + '</td>'
                     + '<td>'
-                    + '<a href="javascript:void(0)" class="text-primary hover:underline cursor-pointer" title="点击查看迁移结果" '
+                    + '<a href="javascript:void(0)""class="text-primary hoover:underline cursor-pointer"title= "click to see the migration results" '
                     + 'onclick="doLoader(\'/database-sync/page/detail?id=' + taskId + '\')">'
                     + escapeHtml(task.name || '') + '</a>'
                     + '</td>'
@@ -308,7 +308,7 @@
                     + '<td>' + renderTaskStateText(task.metaState || 0) + '</td>'
                     + '<td>' + formatDate(task.updateTime || '') + '</td>'
                     + '<td><div class="flex items-center">'
-                    + '<button class="table-action-btn view" title="修改" onclick="doLoader(\'/database-sync/page/edit?id='
+                    + '=/database/page/edit? ='
                     + taskId + '\')">'
                     + '<i class="fa fa-edit"></i></button>'
                     + renderTaskStateButton(task.metaState || 0, task.id)
@@ -317,8 +317,8 @@
             },
             emptyHtml: '<td colspan="8" class="text-center">'
                 + '<i class="fa fa-database empty-icon"></i>'
-                + '<p class="empty-text">暂无任务</p>'
-                + '<p class="empty-description">点击「添加」创建第一个任务</p></td>',
+                + '<p class="empty-text">No assignment.</p>'
+                + '<p class="empty-description">Click Add to create the first task</p></td>',
             customPageSize: true
         });
 

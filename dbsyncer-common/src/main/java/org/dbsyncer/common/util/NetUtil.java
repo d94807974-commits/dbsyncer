@@ -4,7 +4,7 @@
 package org.dbsyncer.common.util;
 
 /**
- * 本机通告地址解析与节点 Web 根地址拼装。
+ * AddressandNodes Web Root/47.
  *
  * @author wuji
  * @version 1.0.0
@@ -16,13 +16,13 @@ public abstract class NetUtil {
     }
 
     /**
-     * 拼装节点 Web 根地址（无尾斜杠），可附带 {@code server.servlet.context-path}。
+     * CollapseNodes Web Root AddressNoneIt's a slash.{@code server.servlet.context-path}。
      *
      * @param ip          IP
-     * @param port        端口
-     * @param ssl         是否 HTTPS（对应 {@code server.ssl.enabled}）
-     * @param contextPath 访问上下文路径，如 {@code /}、{@code /dbsyncer}；空或 {@code /} 时不拼接
-     * @return 如 {@code http://ip:port/dbsyncer}；非法时为空
+     * @param port        Port
+     * @param ssl         YesNo HTTPS（Correspond{@code server.ssl.enabled}）
+     * @param contextPath Access context path, e. g.{@code /}、{@code /dbsyncer}；Empty or{@code /} Time does not spell
+     * @return Like{@code http://ip:port/dbsyncer}；Space at Illegal
      */
     public static String buildWebRootUrl(String ip, int port, boolean ssl, String contextPath) {
         if (StringUtil.isBlank(ip) || port <= 0) {
@@ -38,10 +38,10 @@ public abstract class NetUtil {
     }
 
     /**
-     * 规范化 context-path：空或 {@code /} 返回空串；否则保证以 {@code /} 开头且无尾斜杠。
+     * Normativecontext-path：Empty or{@code /} BackEmpty strings;NoI promise.{@code /} andNoneSlash.
      *
-     * @param contextPath 原始路径
-     * @return 规范化后的路径
+     * @param contextPath Original Path
+     * @return Path after Normalization
      */
     public static String normalizeContextPath(String contextPath) {
         if (StringUtil.isBlank(contextPath)) {
@@ -61,13 +61,13 @@ public abstract class NetUtil {
     }
 
     /**
-     * 将应用内相对路径拼到 context-path 后（用于 {@code sendRedirect}）。
+     * Scroll application relative paths tocontext-path After{@code sendRedirect}）。
      * <p>
-     * {@code sendRedirect("/x")} 相对容器根，不含 context-path；须显式拼接。
+     * {@code sendRedirect("/x")} relative packaging root, excludingcontext-path；Obvious fusion is required.
      *
      * @param contextPath {@link javax.servlet.http.HttpServletRequest#getContextPath()}
-     * @param path        应用内路径，如 {@code /login.html}、{@code /}
-     * @return 带 context-path 的路径
+     * @param path        Apply internal paths, e.g.{@code /login.html}、{@code /}
+     * @return And...context-path Path to
      */
     public static String joinContextPath(String contextPath, String path) {
         String ctx = normalizeContextPath(contextPath);

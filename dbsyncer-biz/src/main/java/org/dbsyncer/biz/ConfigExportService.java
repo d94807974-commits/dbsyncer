@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * 配置导出（流式 ZIP）。
+ * ConfigureExport（FluidZIP）。
  *
  * @author wuji
  * @version 1.0.0
@@ -18,18 +18,18 @@ import java.io.OutputStream;
 public interface ConfigExportService {
 
     /**
-     * 流式写出配置 ZIP 包到输出流（边查边写，不全量进内存）。
+     * Synchronising folderConfigure ZIP Package to output stream (check and write, no)FullIn.Memory）。
      *
-     * @param out         目标流（如 HttpServletResponse 输出流）
-     * @param versionInfo 版本头信息
-     * @throws IOException 写出失败
+     * @param out         Objective Combinedflow (e.g.)HttpServletResponse Output stream)
+     * @param versionInfo VersionHeadInfo
+     * @throws IOException WriteFailed
      */
     void exportZip(OutputStream out, VersionInfo versionInfo) throws IOException;
 
     /**
-     * 按行数粗估导出未压缩体积（字节），供列表页提示，避免全量序列化。
+     * DrugsExportuncompressed volume (bytes) forListPageNotice，Avoid AllVolumeSerialization.
      *
-     * @return 估算字节数
+     * @return Estimated bytes
      */
     long estimateExportSize();
 }

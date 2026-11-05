@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2026-01-11 22:21
  */
@@ -151,8 +151,8 @@ public final class SqlServerStringType extends StringType {
     }
 
     /**
-     * 将 SQL Server CDC Geometry 转换为标准 WKB
-     * 步骤: 提取坐标 -> 创建标准 WKB -> 使用 WKBReader 解析
+     * WillSQL Server CDC Geometry ConvertStandardWKB
+     * Steps: Extract coordinates -> Create StandardWKB -> UseWKBReader Parsing
      */
     public static String parseToWKTWithSRID(byte[] bytes) {
         try {
@@ -160,16 +160,16 @@ public final class SqlServerStringType extends StringType {
                 return null;
             }
 
-            // 解析 SRID
+            // ParsingSRID
             int srid = ((bytes[1] & 0xFF) << 8) | (bytes[0] & 0xFF);
 
-            // 解析坐标
+            // Parsing Coordinates
             ByteBuffer buffer = ByteBuffer.wrap(bytes, 6, 16);
             buffer.order(ByteOrder.LITTLE_ENDIAN);
             double x = buffer.getDouble();
             double y = buffer.getDouble();
 
-            // 使用 EWKB 创建 Geometry
+            // UseEWKB TermsGeometry
             byte[] ewkb = createEWKBPoint(x, y, srid);
             WKBReader reader = new WKBReader();
             Geometry geometry = reader.read(ewkb);
@@ -181,23 +181,23 @@ public final class SqlServerStringType extends StringType {
     }
 
     /**
-     * 创建 EWKB Point
+     * TermsEWKB Point
      */
     private static byte[] createEWKBPoint(double x, double y, int srid) {
-        // EWKB 结构: 字节顺序(1) + 类型(4) + SRID(4) + 坐标(16)
-        ByteBuffer buffer = ByteBuffer.allocate(1 + 4 + 4 + 8 + 8); // 25字节
+        // EWKB Structure: Byte Order(1) + Type(4) + SRID(4) + Coordinates(16)
+        ByteBuffer buffer = ByteBuffer.allocate(1 + 4 + 4 + 8 + 8); // 25Bytes
         buffer.order(ByteOrder.LITTLE_ENDIAN);
 
-        // 字节顺序标记
+        // Byte Order Tags
         buffer.put((byte) 1);
 
-        // 几何类型: Point with SRID flag (0x20000000)
+        // GeometryType: Point with SRID flag (0x20000000)
         buffer.putInt(1 | 0x20000000);
 
         // SRID
         buffer.putInt(srid);
 
-        // 坐标
+        // Coordinates
         buffer.putDouble(x);
         buffer.putDouble(y);
 

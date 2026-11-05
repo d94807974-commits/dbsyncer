@@ -71,7 +71,7 @@ public class MySQLListener extends AbstractDatabaseListener {
             }
             run();
         } catch (Exception e) {
-            logger.error("启动失败:{}", e.getMessage());
+            logger.error("Start failed: {}", e.getMessage());
             throw wrapException(e);
         } finally {
             connectLock.unlock();
@@ -83,11 +83,11 @@ public class MySQLListener extends AbstractDatabaseListener {
         try {
             connectLock.lock();
             if (client != null) {
-                // 重连间隙 connected=false 时也要 disconnect，才能置 stopped 并打断 keepalive
+                // Reconnect intervalconnected=false I'll have to.disconnect，I can't do that.stopped And interrupt.keepalive
                 client.disconnect();
             }
         } catch (Exception e) {
-            logger.error("关闭失败:{}", e.getMessage());
+            logger.error("Close failed: {}", e.getMessage());
         } finally {
             connectLock.unlock();
         }
@@ -113,7 +113,7 @@ public class MySQLListener extends AbstractDatabaseListener {
 
     @Override
     public void refreshEvent(ChangedOffset offset) {
-        // 排除手动重试操作
+        // Exclude ManualTry againActions
         if (StringUtil.isBlank(offset.getNextFileName()) && offset.getPosition() == null) {
             return;
         }
@@ -129,7 +129,7 @@ public class MySQLListener extends AbstractDatabaseListener {
     }
 
     protected String getCaptureSnapshotFailedMessage() {
-        return "捕获MySQL binlog位点失败:{}";
+        return "Failed Coverage of MySQL binlog bit: }";
     }
 
     protected RuntimeException wrapException(Exception e) {
@@ -179,7 +179,7 @@ public class MySQLListener extends AbstractDatabaseListener {
 
     private void trySendEvent(ChangedEvent event) {
         try {
-            // 如果消费事件失败，重试
+            // If you consumeEventFailed，Try again
             while (client.isConnected()) {
                 try {
                     sendChangedEvent(event);
@@ -201,7 +201,7 @@ public class MySQLListener extends AbstractDatabaseListener {
 
         @Override
         public void onConnect(BinaryLogRemoteClient client) {
-            // 记录binlog增量点
+            // RecordsbinlogIncrementalPoints 71
             refresh(client.getBinlogFilename(), client.getBinlogPosition());
         }
 
@@ -213,12 +213,12 @@ public class MySQLListener extends AbstractDatabaseListener {
             if (e instanceof ServerException) {
                 ServerException serverException = (ServerException) e;
                 if (serverException.getErrorCode() == 1236) {
-                    String log = String.format("[%s]执行异常，建议重新保存驱动，再启动驱动。", client.getWorkerThreadName());
+                    String log = String.format("[ Superintendent]", client.getWorkerThreadName());
                     errorEvent(wrapException(log + e.getMessage()));
                     return;
                 }
             }
-            // 事件组中间失败时，客户端可能已将位点推进到 nextPosition，需落盘避免重启回到坏点
+            // EventCenterFailed, the client may have moved the position tonextPosition，We need to drop the wheel to avoid restarting the bad points.
             if (BinaryLogRemoteClient.isIncompleteEventGroupFailure(e)) {
                 String snapFile = snapshot.get(binlogFilenameKey);
                 long snapPos = NumberUtil.toLong(snapshot.get(binlogPositionKey), -1L);
@@ -229,11 +229,11 @@ public class MySQLListener extends AbstractDatabaseListener {
                 forceFlushEvent();
                 if (advanced) {
                     errorEvent(wrapException(String.format(
-                            "[%s]binlog位点落在事件组中间，已跳过至%s/%d（原%s/%d）。若持续告警请重置位点。原因：%s",
+                            "[%s] binlog bits are in the middle of the event group and skip to %s/%d (former %s/%d). Please reset the location if the alarm continues. Reason: %s",
                             client.getWorkerThreadName(), fileName, position, snapFile, snapPos, e.getMessage())));
                 } else {
                     errorEvent(wrapException(String.format(
-                            "[%s]binlog位点落在事件组中间(%s/%d)，但无法解析nextPosition，请重置位点。原因：%s",
+                            "[%s] binlog bits are in the middle of the event group (%s/%d), but cannot resolve the textProsition, please reset the bits. Reason: %s",
                             client.getWorkerThreadName(), fileName, position, e.getMessage())));
                 }
                 return;
@@ -250,7 +250,7 @@ public class MySQLListener extends AbstractDatabaseListener {
     final class InnerEventListener implements BinaryLogRemoteClient.EventListener {
 
         /**
-         * 只处理非dbs写入事件（单线程消费，不存在并发竞争）
+         * Africa onlydbsWritingEvent（SingleThreadsConsumption, non-competition)
          */
         private boolean notUniqueCodeEvent = true;
 
@@ -309,7 +309,7 @@ public class MySQLListener extends AbstractDatabaseListener {
                 return;
             }
 
-            // 切换binlog
+            // Switchbinlog
             if (header.getEventType() == EventType.ROTATE) {
                 RotateEventData data = event.getData();
                 refresh(data.getBinlogFilename(), data.getBinlogPosition());
@@ -332,7 +332,7 @@ public class MySQLListener extends AbstractDatabaseListener {
                     return SqlParserUtil.parse(sql);
                 }
             } catch (JSQLParserException e) {
-                logger.warn("不支持的ddl:{}", sql);
+                logger.warn("Unsupported ddl:}", sql);
             }
             return null;
         }
@@ -341,11 +341,11 @@ public class MySQLListener extends AbstractDatabaseListener {
             // ALTER TABLE `test`.`my_user` MODIFY COLUMN `name` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL AFTER `id`
             String tableName = StringUtil.replace(alter.getTable().getName(), StringUtil.BACK_QUOTE, StringUtil.EMPTY);
             // databaseName 的取值不能为 QueryEventData#getDatabase, getDatabase 获取的是执行 SQL 语句时所在的数据库上下文,
-            // 不是 alter 语句修改的表所在的数据库
-            // 依次执行下面两条语句 use db1; alter table db2.my_user add column name varchar(128);
+            // Oh, no.Yes alter StatementEditThe data on which the table is locatedLibrary
+            // Execute the following two statements in turnuse db1; alter table db2.my_user add column name varchar(128);
             // data.getDatabase() 的值为 db1, 不是 db2, 必须从 alter 中获取 databaseName
             String databaseName = alter.getTable().getSchemaName();
-            // alter 中没有 databaseName 说明是 alter table my_user xxx 这种格式, 直接在上下文中获取即可
+            // alter Nothing.databaseName DescriptionYes alter table my_user xxx This format, Just get in the context.
             if (StringUtil.isBlank(databaseName)) {
                 databaseName = data.getDatabase();
             }

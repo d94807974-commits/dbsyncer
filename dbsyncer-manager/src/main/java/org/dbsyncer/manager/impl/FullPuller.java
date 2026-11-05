@@ -41,7 +41,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 
 /**
- * 全量同步（表级并发，对齐数据迁移：threadNum 控制表并发，单表内读写串行）。
+ * Full sync（Line up, align.Data Migration：threadNum Control the table and send, read and write a string within the table.
  *
  * @author AE86
  * @version 1.0.0
@@ -53,7 +53,7 @@ public final class FullPuller extends AbstractPuller implements ApplicationListe
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
-     * 单表内写批同步执行器（不再使用 threadNum 做写并发）
+     * Write Batch Synchronizer in Form (no longer used)threadNum Writing and distribution)
      */
     private static final Executor SYNC_WRITE_EXECUTOR = Runnable::run;
 
@@ -89,20 +89,20 @@ public final class FullPuller extends AbstractPuller implements ApplicationListe
     }
 
     /**
-     * 同步执行全量任务
+     * Sync executionFullTasks
      *
-     * @param mapping       驱动
-     * @param publishClosed 完成后是否发布关闭事件
+     * @param mapping       Driver
+     * @param publishClosed FinishBackYesNoReleaseCloseEvent
      */
     public void runSync(Mapping mapping, boolean publishClosed) {
-        Assert.isTrue(tableGroupProfile.getTableGroupCount(mapping.getId()) > 0, "映射关系不能为空");
+        Assert.isTrue(tableGroupProfile.getTableGroupCount(mapping.getId()) > 0, "Mapping cannot be empty");
         final String taskId = mapping.getId();
         boolean completed = false;
         try {
             Task task = map.computeIfAbsent(taskId, k -> new Task(taskId));
-            logger.info("开始全量同步：{}, {}", taskId, mapping.getName());
+            logger.info("Start FullSyn renders", taskId, mapping.getName());
             completed = doTask(task, mapping);
-            // 仅纯全量自然完成发通知（全量+增量 publishClosed=false，手动停止走 MappingStop）
+            // ProposalFullNaturally.FinishNotificationFull + incremental publishClosed=false，ManualStopCome on.MappingStop）
             if (publishClosed && completed) {
                 noticeMappingCompletedPublisher.publish(mapping);
             }
@@ -114,7 +114,7 @@ public final class FullPuller extends AbstractPuller implements ApplicationListe
             if (publishClosed) {
                 publishClosedEvent(taskId);
             }
-            logger.info("结束全量同步：{}, {}", taskId, mapping.getName());
+            logger.info("End FullSync: }, }", taskId, mapping.getName());
         }
     }
 
@@ -191,7 +191,7 @@ public final class FullPuller extends AbstractPuller implements ApplicationListe
                 markTableDone(parent, tableGroupId);
             }
         } catch (Exception e) {
-            logger.error("全量同步表失败: {} -> {}, {}",
+            logger.error("Full sync table failed: }->, {",
                     tableGroup.getSourceTable() != null ? tableGroup.getSourceTable().getName() : tableGroupId,
                     tableGroup.getTargetTable() != null ? tableGroup.getTargetTable().getName() : tableGroupId,
                     e.getMessage(), e);
@@ -207,7 +207,7 @@ public final class FullPuller extends AbstractPuller implements ApplicationListe
         }
         synchronized (metaLock(task.getId())) {
             Meta meta = taskMetaProfile.getMeta(task.getId());
-            Assert.notNull(meta, "检查meta为空.");
+            Assert.notNull(meta, "Check meta as empty.");
             refreshMetaTotals(meta);
             meta.setUpdateTime(Instant.now().toEpochMilli());
             Map<String, String> snapshot = meta.getSnapshot();
@@ -225,7 +225,7 @@ public final class FullPuller extends AbstractPuller implements ApplicationListe
         FullTableProgressUtil.save(taskMetaProfile, tableGroupId, FullTableProgressUtil.doneSnapshot());
         synchronized (metaLock(parent.getId())) {
             Meta meta = taskMetaProfile.getMeta(parent.getId());
-            Assert.notNull(meta, "检查meta为空.");
+            Assert.notNull(meta, "Check meta as empty.");
             refreshMetaTotals(meta);
             meta.setUpdateTime(Instant.now().toEpochMilli());
             taskMetaProfile.updateMeta(meta);
@@ -236,7 +236,7 @@ public final class FullPuller extends AbstractPuller implements ApplicationListe
         FullTableProgressUtil.clearAll(taskMetaProfile, tableGroupProfile, mappingId);
         synchronized (metaLock(task.getId())) {
             Meta meta = taskMetaProfile.getMeta(task.getId());
-            Assert.notNull(meta, "检查meta为空.");
+            Assert.notNull(meta, "Check meta as empty.");
             refreshMetaTotals(meta);
             meta.setUpdateTime(Instant.now().toEpochMilli());
             Map<String, String> snapshot = meta.getSnapshot();

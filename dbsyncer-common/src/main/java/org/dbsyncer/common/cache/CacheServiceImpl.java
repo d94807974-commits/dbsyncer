@@ -19,9 +19,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * 基于内存的 {@link CacheService} 实现：惰性删除 + 定时扫表。
+ * Based onMemoryYes.{@link CacheService} Achieved: inertiaDelete + ScheduledSweep the table.
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  */
 @Component
@@ -208,7 +208,7 @@ public class CacheServiceImpl implements CacheService, DisposableBean {
         });
         cleanupExecutor.scheduleWithFixedDelay(this::cleanupExpiredEntries,
                 CLEANUP_INTERVAL_MS, CLEANUP_INTERVAL_MS, TimeUnit.MILLISECONDS);
-        logger.debug("CacheService 已启动, cleanupInterval={}ms", CLEANUP_INTERVAL_MS);
+        logger.debug("CacheService started, cleanupInterval=ms", CLEANUP_INTERVAL_MS);
     }
 
     private void stopCleanup() {
@@ -221,7 +221,7 @@ public class CacheServiceImpl implements CacheService, DisposableBean {
             return;
         }
         executor.shutdownNow();
-        logger.debug("CacheService 已停止");
+        logger.debug("CacheService stopped");
     }
 
     private void cleanupExpiredEntries() {
@@ -238,10 +238,10 @@ public class CacheServiceImpl implements CacheService, DisposableBean {
                 }
             }
             if (removed > 0) {
-                logger.debug("CacheService 清理过期条目: {}", removed);
+                logger.debug("CacheService clears expired entries: }", removed);
             }
         } catch (Exception e) {
-            logger.error("CacheService 清理失败", e);
+            logger.error("CacheService cleanup failed", e);
         }
     }
 

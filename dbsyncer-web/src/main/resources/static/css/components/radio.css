@@ -1,17 +1,17 @@
 /**
- * Radio Group Component - 美化的圆形单选组件（方案2）
- * 保持传统圆形外观，但更精致优雅
- * 使用方式：为包含 radio 的容器添加 .radio-group 类，然后调用 $('.radio-group').radioGroup()
+ * Radio Group Component - Beautiful.round Multiple Component (Program)2）
+ * Keep the traditional round look, but more elegant.
+ * Usage: for inclusionradio The container.Add .radio-group class, then call$('.radio-group').radioGroup()
  */
 
-/* 单选组容器 */
+/* Single group containers*/
 .radio-group {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
 }
 
-/* 与 .form-control 输入框等高（37px），避免同行切换时行高抖动 */
+/* and .form-control Enter box height (%2)37px），Avoid row high-diversity when peer switching*/
 .radio-group.radio-group-control-height {
     height: 37px;
     min-height: 37px;
@@ -20,7 +20,7 @@
     margin-left: var(--spacing-lg, 24px);
 }
 
-/* 单个选项容器 */
+/* Single option container*/
 .radio-group-item {
     position: relative;
     display: inline-flex;
@@ -31,7 +31,7 @@
     padding-left: 0;
 }
 
-/* 隐藏原生 radio */
+/* Hide Nativeradio */
 .radio-group-item input[type="radio"] {
     position: absolute;
     opacity: 0;
@@ -40,7 +40,7 @@
     pointer-events: none;
 }
 
-/* 自定义圆形外框 */
+/* CustomCircle Border*/
 .radio-group-item::before {
     content: '';
     position: relative;
@@ -56,11 +56,11 @@
     box-sizing: border-box;
 }
 
-/* 自定义圆形内圈（选中状态） */
+/* Custominside circle (checked)Status） */
 .radio-group-item::after {
     content: '';
     position: absolute;
-    left: 10px; /* 20px / 2 = 10px，圆形外框的中心点 */
+    left: 10px; /* 20px / 2 = 10px，Centre of the circle frame*/
     top: 50%;
     transform: translate(-50%, -50%) scale(0);
     width: 8px;
@@ -72,7 +72,7 @@
     box-sizing: border-box;
 }
 
-/* 标签文本 */
+/* Tab Text*/
 .radio-group-item-label {
     font-size: var(--font-size-md, 16px);
     font-weight: 500;
@@ -81,7 +81,7 @@
     line-height: 1.5;
 }
 
-/* 悬停效果 */
+/* Suspend Effects*/
 .radio-group-item:hover:not(.disabled)::before {
     border-color: var(--primary-color, #165DFF);
     box-shadow: 0 0 0 3px rgba(22, 93, 255, 0.1);
@@ -91,7 +91,7 @@
     color: var(--primary-color, #165DFF);
 }
 
-/* 选中状态 */
+/* SelectStatus */
 .radio-group-item.active::before {
     border-color: var(--primary-color, #165DFF) !important;
     background-color: var(--primary-color, #165DFF) !important;
@@ -109,7 +109,7 @@
     font-weight: 600;
 }
 
-/* 选中时的动画效果 */
+/* Animation effects on selection*/
 @keyframes radio-ripple {
     0% {
         box-shadow: 0 0 0 0 rgba(22, 93, 255, 0.4);
@@ -123,7 +123,7 @@
     animation: radio-ripple 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 禁用状态 */
+/* DisableStatus */
 .radio-group-item.disabled {
     cursor: not-allowed;
     opacity: 0.5;
@@ -138,7 +138,7 @@
     color: var(--text-disabled, #bfbfbf);
 }
 
-/* 禁用且选中 */
+/* Disableand select*/
 .radio-group-item.disabled.active::before {
     background-color: var(--border-primary, #d9d9d9) !important;
     border-color: var(--border-primary, #d9d9d9) !important;
@@ -148,14 +148,14 @@
     background-color: var(--text-disabled, #bfbfbf);
 }
 
-/* 聚焦状态（键盘导航） */
+/* FocusStatus（Keyboard Navigator)*/
 .radio-group-item:focus-within:not(.disabled)::before {
     border-color: var(--primary-color, #165DFF);
     box-shadow: 0 0 0 4px rgba(22, 93, 255, 0.2);
     outline: none;
 }
 
-/* 不同主题色变体 */
+/* Different theme colour variants*/
 .radio-group.radio-group-success .radio-group-item.active::before {
     border-color: var(--success-color, #52c41a) !important;
     background-color: var(--success-color, #52c41a) !important;
@@ -220,7 +220,7 @@
     color: var(--info-color, #1890ff);
 }
 
-/* 尺寸变体 - 小号 */
+/* Size variant - Small*/
 .radio-group.radio-group-sm .radio-group-item::before {
     width: 16px;
     height: 16px;
@@ -241,7 +241,7 @@
     gap: var(--spacing-md, 16px);
 }
 
-/* 尺寸变体 - 大号 */
+/* Size variant - Large*/
 .radio-group.radio-group-lg .radio-group-item::before {
     width: 24px;
     height: 24px;
@@ -263,18 +263,18 @@
     gap: var(--spacing-xl, 32px);
 }
 
-/* 垂直布局 */
+/* Vertical Layout*/
 .radio-group.radio-group-vertical {
     flex-direction: column;
     align-items: flex-start;
 }
 
-/* 内联布局（紧凑） */
+/* Internal Beginnings (closer)*/
 .radio-group.radio-group-inline {
     gap: var(--spacing-md, 16px);
 }
 
-/* 响应式：小屏幕垂直布局 */
+/* Response mode: small screen vertical layout*/
 @media (max-width: 640px) {
     .radio-group:not(.radio-group-inline) {
         flex-direction: column;
@@ -283,7 +283,7 @@
     }
 }
 
-/* 带边框的选项卡样式（可选） */
+/* tab Higher (optional)*/
 .radio-group.radio-group-bordered .radio-group-item {
     padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
     border: 1px solid var(--border-primary, #d9d9d9);

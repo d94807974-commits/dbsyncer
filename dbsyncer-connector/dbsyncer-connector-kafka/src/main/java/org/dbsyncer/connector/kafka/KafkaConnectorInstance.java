@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
- * Kafka连接器实例
+ * KafkaConnectorExamples
  *
  * @Author AE86
  * @Version 1.0.0
@@ -50,10 +50,10 @@ public final class KafkaConnectorInstance implements ConnectorInstance<KafkaConf
         this.config = config;
         Properties props = new Properties();
         props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, config.getUrl());
-        props.put(AdminClientConfig.CONNECTIONS_MAX_IDLE_MS_CONFIG, 60000); // 连接空闲超时
-        props.put(AdminClientConfig.REQUEST_TIMEOUT_MS_CONFIG, 30000); // 请求超时
-        props.put(AdminClientConfig.RETRY_BACKOFF_MS_CONFIG, 1000); // 重试间隔
-        props.put(AdminClientConfig.METADATA_MAX_AGE_CONFIG, 300000); // 元数据最大缓存时间（5分钟）
+        props.put(AdminClientConfig.CONNECTIONS_MAX_IDLE_MS_CONFIG, 60000); // ConnectFreeTimeout
+        props.put(AdminClientConfig.REQUEST_TIMEOUT_MS_CONFIG, 30000); // Request Timeout
+        props.put(AdminClientConfig.RETRY_BACKOFF_MS_CONFIG, 1000); // Try againInterval
+        props.put(AdminClientConfig.METADATA_MAX_AGE_CONFIG, 300000); // Maximum cache of metadataTime（5minutes）
         props.putAll(config.getProperties());
         props.remove(KafkaUtil.PRODUCER_PROPERTIES);
         props.remove(KafkaUtil.CONSUMER_PROPERTIES);
@@ -63,7 +63,7 @@ public final class KafkaConnectorInstance implements ConnectorInstance<KafkaConf
             ping();
         } catch (Exception e) {
             close();
-            throw new RuntimeException("创建Kafka AdminClient失败，URL: " + config.getUrl() + "，错误: " + e.getMessage(), e);
+            throw new RuntimeException("Could not close temporary folder: %s " + config.getUrl() + ", Error: " + e.getMessage(), e);
         }
     }
 

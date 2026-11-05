@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
- * 持久化配置
+ * EnduringConfigure
  *
  * @author AE86
  * @version 1.0.0
@@ -22,17 +22,17 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 public class StorageConfig extends BufferActuatorConfig {
 
     /**
-     * 工作线程数
+     * WorkThreads
      */
     private int threadCoreSize = Runtime.getRuntime().availableProcessors();
 
     /**
-     * 最大工作线程数
+     * Max.Threads
      */
     private int maxThreadSize = threadCoreSize * 2;;
 
     /**
-     * 工作线任务队列
+     * WorklineTasksLine
      */
     private int threadQueueCapacity = 500;
 

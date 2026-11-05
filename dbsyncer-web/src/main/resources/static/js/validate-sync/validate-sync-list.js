@@ -1,5 +1,5 @@
 /**
- * 订正校验列表页
+ * Data validationListPage
  */
 (function (window) {
     'use strict';
@@ -7,10 +7,10 @@
     function copyTask(id) {
         doPoster('/validate-sync/copy', { id: id }, function (response) {
             if (response.success) {
-                bootGrowl('复制成功', 'success');
+                bootGrowl('Copied successfully', 'success');
                 backIndexPage();
             } else {
-                bootGrowl('复制失败: ' + response.message, 'danger');
+                bootGrowl('Copy failed: ' + response.message, 'danger');
             }
         });
     }
@@ -18,37 +18,37 @@
     function changeTaskState(id, url, title) {
         const btn = event.target.closest('.table-action-btn');
         const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fa fa-spinner fa-spin" title="' + title + '中"></i>';
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin" title="' + title + 'I\'ll take it.</i>';
         btn.disabled = true;
         doPoster(url, { id: id }, function (response) {
             btn.innerHTML = originalText;
             btn.disabled = false;
             if (response.success) {
-                bootGrowl(title + '成功', 'success');
+                bootGrowl(title + 'Success', 'success');
                 refreshIndexList();
             } else {
-                bootGrowl(title + '失败: ' + response.message, 'danger');
+                bootGrowl(title + 'Failed: ' + response.message, 'danger');
             }
         });
     }
 
     function deleteTask(id) {
         showConfirm({
-            title: '确定要删除任务？',
+            title: 'Are you sure you want to delete the task?',
             icon: 'warning',
             size: 'large',
             confirmType: 'danger',
             onConfirm: function () {
                 doPoster('/validate-sync/remove', { id: id }, function (response) {
                     if (response.success === true) {
-                        bootGrowl('删除成功！', 'success');
+                        bootGrowl('Deleted successfully!', 'success');
                         const rawStr = localStorage.getItem('dbsyncer.pagination.validate-sync-list');
                         const raw = JSON.parse(rawStr);
                         raw.pageNum = 1;
                         localStorage.setItem('dbsyncer.pagination.validate-sync-list', JSON.stringify(raw));
                         backIndexPage();
                     } else {
-                        bootGrowl(response.message || '删除失败', 'danger');
+                        bootGrowl(response.message || 'Delete failed', 'danger');
                     }
                 });
             }
@@ -59,42 +59,42 @@
         return {
             0: {
                 icon: 'fa-play',
-                title: '启动',
-                onclick: "changeTaskState('" + taskId + "', '/validate-sync/start', '启动')",
+                title: 'Start',
+                onclick: "changeTaskState('" + taskId + "', '/validate-sync/start', 'start')",
                 disabled: false,
                 class: 'badge-info',
-                text: '未运行'
+                text: 'Not running'
             },
             1: {
                 icon: 'fa-pause',
-                title: '停止',
-                onclick: "changeTaskState('" + taskId + "', '/validate-sync/stop', '停止')",
+                title: 'Stop',
+                onclick: "changeTaskState('" + taskId + "', '/validate-sync/stop', 'stop')",
                 disabled: false,
                 class: 'badge-success',
-                text: '运行中'
+                text: 'Running'
             },
             2: {
                 icon: 'fa-spinner fa-spin',
-                title: '停止中',
-                text: '停止中',
+                title: 'Stopping',
+                text: 'Stopping',
                 disabled: true,
                 class: 'badge-warning'
             },
             3: {
                 icon: 'fa-play',
-                title: '启动',
-                onclick: "changeTaskState('" + taskId + "', '/validate-sync/start', '启动')",
+                title: 'Start',
+                onclick: "changeTaskState('" + taskId + "', '/validate-sync/start', 'start')",
                 disabled: false,
                 class: 'badge-primary',
-                text: '已完成'
+                text: 'Completed'
             }
         };
     }
 
     function renderTaskTriggerText(type) {
         const modelState = {
-            timing: { class: 'badge-primary', text: '定时' },
-            once: { class: 'badge-info', text: '执行一次' }
+            timing: { class: 'badge-primary', text: 'Scheduled' },
+            once: { class: 'badge-info', text: 'Run once' }
         };
         const config = modelState[type];
         return '<span class="badge ' + config.class + '">' + config.text + '</span>';
@@ -118,7 +118,7 @@
         );
         if (state === 0 || state === 3) {
             stateBtn.push(
-                '<button class="table-action-btn delete" title="删除" onclick="deleteTask(\'' + mappingId + '\')">'
+                '{\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FF00} {\cHFFFFFF}{\cH00FF00} {\cH00FFFF} {\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FF00} {\cHFFFFFF} {\cHFFFFFF}{\cH00FF} {\cH00FF000 \cH303030303030300 \cH303030303030D}' + mappingId + '\')">'
                 + '<i class="fa fa-trash"></i></button>'
             );
         }
@@ -137,24 +137,24 @@
         if (completed > total) {
             completed = total;
         }
-        return '<span class="text-xs text-secondary whitespace-nowrap">' + completed + '/' + total + '张表</span>';
+        return '<span class="text-xs text-secondary whitespace-nowrap">' + completed + '/' + total + 'Watch</span>';
     }
 
     function renderTaskDurationText(task) {
-        // 定时任务长期挂起，列表不展示耗时
+        // ScheduledTasksIt's been a long time.ListDo not show time-consuming
         if (task.trigger === 'timing') {
             return '';
         }
         var state = Number(task.metaState);
         var RUNNING = 1;
         var STOPPING = 2;
-        // 运行中/停止中 updateTime 往往未随进度刷新，用前端当前时间算实时耗时
+        // Running/Stopping updateTime Unity, often without progress.Refresh，Use front-end currentTimeReal time.
         var endTime = (state === RUNNING || state === STOPPING) ? Date.now() : task.updateTime;
         var durationText = formatElapsedDuration(task.startTime, endTime);
         if (!durationText) {
             return '';
         }
-        return '<span class="text-xs text-tertiary whitespace-nowrap">耗时：' + durationText + '</span>';
+        return '<span class="text-xs text-tertiary whitespace-nowrap">Time-consuming:' + durationText + '</span>';
     }
 
     function renderResultColumn(task) {
@@ -195,10 +195,10 @@
         }
 
         var left = (n > 0)
-            ? ('异常：<a href="javascript:void(0)" class="hover:underline cursor-pointer" title="查看异常校验结果" '
+            ? ('Error：<a href="javascript:void(0)" class="hover:underline cursor-pointer" title="Check for abnormal verification" '
                 + 'onclick="doLoader(\'/validate-sync/page/detail?id=' + taskId + '&detailStatus=fail\'); return false;">'
                 + '<span class="badge badge-error">' + n + '</span></a>')
-            : '<span class="badge badge-success">正常</span>';
+            : '<span class="badge badge-success">Normal</span>';
         var tableProgressHtml = renderTableProgressText(task);
         var durationHtml = renderTaskDurationText(task);
         var centerParts = [];
@@ -230,8 +230,8 @@
         var target = task.targetConnector || {};
         var sourceType = escapeHtml((source.config && source.config.connectorType) || '');
         var targetType = escapeHtml((target.config && target.config.connectorType) || '');
-        var sourceName = source.name || '连接器已删除';
-        var targetName = target.name || '连接器已删除';
+        var sourceName = source.name || 'Connector has been deleted';
+        var targetName = target.name || 'Connector has been deleted';
         return ''
             + '<div class="flex items-center">'
             + '<img draggable="false" class="connector-logo mr-3" src="' + $basePath + '/img/' + sourceType + '.png" alt="">'
@@ -270,11 +270,11 @@
                     + '<tr>'
                     + '<td>' + index + '</td>'
                     + '<td>'
-                    + '<a href="javascript:void(0)" class="text-primary hover:underline cursor-pointer" title="点击查看详情" '
+                    + '<a href="javascript:void(0)""class= "text-primary hoover:underline cursor-pointer" '
                     + 'onclick="doLoader(\'/validate-sync/page/detail?id=' + taskId + '\')">' + escapeHtml(task.name) + '</a>'
                     + '</td>'
-                    + '<td title="' + escapeHtml((task.sourceConnector && task.sourceConnector.name) || '连接器已删除')
-                    + ' > ' + escapeHtml((task.targetConnector && task.targetConnector.name) || '连接器已删除') + '">'
+                    + '<td title="' + escapeHtml((task.sourceConnector && task.sourceConnector.name) || 'Connector has been deleted')
+                    + ' > ' + escapeHtml((task.targetConnector && task.targetConnector.name) || 'Connector has been deleted') + '">'
                     + renderConnectorCell(task)
                     + '</td>'
                     + '<td>' + renderTaskTriggerText(task.trigger) + '</td>'
@@ -282,14 +282,14 @@
                     + '<td>' + renderTaskStateText(task.metaState || 0) + '</td>'
                     + '<td>' + formatDate(task.updateTime || '') + '</td>'
                     + '<td><div class="flex items-center">'
-                    + '<button class="table-action-btn view" title="修改" onclick="doLoader(\'/validate-sync/page/edit?id=' + task.id + '\')">'
+                    + '{\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FFFF} {\cHFFFFFF}{\cH00FF00} {\cHFFFFFF} {\cHFFFFFF}{\cH00FF00} {\cHFFFFFF}{\cH00FF00} {\cHFFFFFF}{\cH00FF00} {\cHFFFFFF} {\cHFFFFFF} {\cHFFFFFF} {\cHFFFFFF} {\cHFFFFFF} {\cHFFFFFF} {\cHFFFFFF} {\cH00FF} {\cHFFFFFF} {\cH {\cH00H00FF00} {\cH3030303030303000}' + task.id + '\')">'
                     + '<i class="fa fa-edit"></i></button>'
                     + renderTaskStateButton(task.metaState || 0, task.id)
                     + '</div></td>'
                     + '</tr>';
             },
             emptyHtml: '<td colspan="9" class="text-center"><i class="fa fa-exchange empty-icon"></i>'
-                + '<p class="empty-text">暂无任务</p><p class="empty-description">点击"添加"按钮创建第一个任务</p></td>',
+                + '<p class="empty-text">No assignment.</p><p class="empty-description">Click Add button to create the first task</p></td>',
             customPageSize: true
         });
 

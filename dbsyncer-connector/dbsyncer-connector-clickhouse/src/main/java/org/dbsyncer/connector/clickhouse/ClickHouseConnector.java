@@ -48,9 +48,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * ClickHouse 连接器实现
+ * ClickHouse ConnectorAchieved
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-05-29 23:50
  */
@@ -96,19 +96,19 @@ public final class ClickHouseConnector extends AbstractDatabaseConnector {
 
     @Override
     protected boolean useJdbcTransaction() {
-        // ClickHouse 不支持事务
+        // ClickHouse Do not support services
         return false;
     }
 
     @Override
     public Map<String, String> getTargetCommand(CommandConfig commandConfig) {
         Map<String, String> map = super.getTargetCommand(commandConfig);
-        // 改为动态生成语句：ALTER TABLE {table} DELETE WHERE pk=?
+        // Change to dynamicGenerateStatement:ALTER TABLE {table} DELETE WHERE pk=?
         map.remove(ConnectorConstant.OPERTION_DELETE);
-        // 改为先删除，后插入
+        // For firstDelete，Insert after
         map.remove(ConnectorConstant.OPERTION_UPDATE);
 
-        // forceUpdate 不需要保存INSERT
+        // forceUpdate No need.SaveINSERT
         if (commandConfig.isForceUpdate()) {
             map.remove(ConnectorConstant.OPERTION_INSERT);
         }
@@ -117,7 +117,7 @@ public final class ClickHouseConnector extends AbstractDatabaseConnector {
 
     @Override
     public Result writer(DatabaseConnectorInstance connectorInstance, PluginContext context) {
-        // ClickHouse 逐条 DELETE 会产生大量 mutation，统一改为 ALTER TABLE ... DELETE WHERE pk IN 分批删除。
+        // ClickHouse Article by articleDELETE There's a lot of them.mutation，For unified readALTER TABLE ... DELETE WHERE pk IN minBatchDelete。
         if (isDelete(context.getEvent())) {
             deleteByPrimaryKey(connectorInstance, context);
             Result result = new Result();
@@ -127,7 +127,7 @@ public final class ClickHouseConnector extends AbstractDatabaseConnector {
         // ClickHouse 不支持标准 UPSERT，且禁止更新主键/排序键列：覆盖写入与修改统一为先删后插。
         if (context.isForceUpdate() || isUpdate(context.getEvent())) {
             deleteByPrimaryKey(connectorInstance, context);
-            // 未开启覆盖 且 update
+            // NotOnOverwrite andupdate
             if (!context.isForceUpdate() && isUpdate(context.getEvent())) {
                 context.setEvent(ConnectorConstant.OPERTION_INSERT);
             }
@@ -142,7 +142,7 @@ public final class ClickHouseConnector extends AbstractDatabaseConnector {
         }
         List<Field> primaryKeyFields = PrimaryKeyUtil.findExistPrimaryKeyFields(context.getTargetFields());
         if (CollectionUtils.isEmpty(primaryKeyFields)) {
-            throw new SdkException("按主键删除时主键字段不能为空.");
+            throw new SdkException("The primary key field cannot be empty when the primary key is deleted.");
         }
         try {
             List<String> primaryKeys = primaryKeyFields.stream().map(Field::getName).collect(Collectors.toList());
@@ -151,14 +151,14 @@ public final class ClickHouseConnector extends AbstractDatabaseConnector {
             Object[] args = buildDeleteInArgs(primaryKeyFields, targetRows);
             connectorInstance.execute(databaseTemplate -> databaseTemplate.update(sql, args));
         } catch (Exception e) {
-            throw new SdkException("按主键删除数据失败: " + e.getMessage());
+            throw new SdkException("Could not close temporary folder: %s " + e.getMessage());
         }
     }
 
     /**
-     * 动态生成批量删除语句：
-     * 单主键：ALTER TABLE `table` DELETE WHERE `pk` IN (?,?,...)
-     * 复合主键：ALTER TABLE `table` DELETE WHERE (`pk1`,`pk2`) IN ((?,?),(?,?),...)
+     * DynamicShit.GenerateBatchDeleteStatement:
+     * SinglePrimary key：ALTER TABLE `table` DELETE WHERE `pk` IN (?,?,...)
+     * CompositePrimary key：ALTER TABLE `table` DELETE WHERE (`pk1`,`pk2`) IN ((?,?),(?,?),...)
      */
     private String buildBatchDeleteSql(String tableName, List<String> primaryKeys, int batchSize) {
         StringBuilder sql = new StringBuilder("ALTER TABLE ");
@@ -201,7 +201,7 @@ public final class ClickHouseConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * 按分片实际行数动态组装 IN 参数，占位符数量与分片大小一致。
+     * PressminSnippet actual line dynamic assemblyIN Parameter，Number of placeholdersandminThe size of the piece corresponds.
      */
     private Object[] buildDeleteInArgs(List<Field> primaryKeyFields, List<Map> chunk) {
         Object[] args = new Object[chunk.size() * primaryKeyFields.size()];

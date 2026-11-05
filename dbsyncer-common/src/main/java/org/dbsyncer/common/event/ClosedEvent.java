@@ -4,7 +4,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ApplicationContextEvent;
 
 /**
- * 任务关闭事件
+ * TasksCloseEvent
  *
  * @author AE86
  * @version 1.0.0

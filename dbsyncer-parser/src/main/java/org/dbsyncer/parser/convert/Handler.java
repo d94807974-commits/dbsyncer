@@ -8,10 +8,10 @@ package org.dbsyncer.parser.convert;
 public interface Handler {
 
     /**
-     * 值转换
+     * ValueConvert
      *
-     * @param args 参数
-     * @param value 值
+     * @param args Parameter
+     * @param value Value
      * @return
      */
     Object handle(String args, Object value);

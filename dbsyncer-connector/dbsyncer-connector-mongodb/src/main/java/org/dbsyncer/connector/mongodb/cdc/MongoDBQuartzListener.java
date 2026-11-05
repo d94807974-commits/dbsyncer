@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-06 20:00
  */
@@ -62,7 +62,7 @@ public final class MongoDBQuartzListener extends AbstractQuartzListener {
                 continue;
             }
             if (!seenBeginPlaceholder.add(placeholder)) {
-                throw new MongoDBException(String.format("系统参数%s存在多个.", placeholder));
+                throw new MongoDBException(String.format("Multiple system parameters found for %s.", placeholder));
             }
             if (!filterEnum.getQuartzFilter().begin()) {
                 continue;
@@ -91,7 +91,7 @@ public final class MongoDBQuartzListener extends AbstractQuartzListener {
         Set<String> set = new HashSet<>();
         for (Filter f : filters) {
             if (set.contains(f.getValue())) {
-                throw new MongoDBException(String.format("系统参数%s存在多个.", f.getValue()));
+                throw new MongoDBException(String.format("Multiple system parameters found for %s.", f.getValue()));
             }
             QuartzFilterEnum filterEnum = QuartzFilterEnum.getQuartzFilterEnum(f.getValue());
             if (filterEnum != null) {

@@ -20,7 +20,7 @@ public class LsnPuller {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
-     * 间隔拉取最新LSN时间（毫秒）
+     * Spacing for UpdateLSNTime（ms）
      */
     private static final long DEFAULT_POLL_INTERVAL_MILLIS = 100;
 
@@ -77,7 +77,7 @@ public class LsnPuller {
                     }
                     TimeUnit.MILLISECONDS.sleep(DEFAULT_POLL_INTERVAL_MILLIS);
                 } catch (Throwable e) {
-                    logger.error("异常", e);
+                    logger.error("Error", e);
                     try {
                         TimeUnit.SECONDS.sleep(1);
                     } catch (InterruptedException ex) {

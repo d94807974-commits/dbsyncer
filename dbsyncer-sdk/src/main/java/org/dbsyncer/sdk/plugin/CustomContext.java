@@ -13,7 +13,7 @@ import org.dbsyncer.sdk.filter.BooleanFilter;
 public interface CustomContext {
 
     /**
-     * 获取筛选条件
+     * Get FilterCondition
      */
     BooleanFilter getFilter();
 

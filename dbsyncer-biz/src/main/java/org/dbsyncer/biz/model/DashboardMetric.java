@@ -6,34 +6,34 @@ package org.dbsyncer.biz.model;
 import org.dbsyncer.biz.vo.SyncTrendStackVO;
 
 /**
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2025-12-16 23:59
  */
 public final class DashboardMetric extends MappingReportMetric {
 
     /**
-     * 总任务数
+     * Total number of tasks
      */
     private long totalMeta;
 
     /**
-     * 上周任务数
+     * Last week.TasksNumber
      */
     private long lastWeekMeta;
 
     /**
-     * 运行任务数
+     * RunTasksNumber
      */
     private long runningMeta;
 
     /**
-     * 失败任务数
+     * Failed TaskNumber
      */
     private long failMeta;
 
     /**
-     * 同步趋势数据
+     * Sync TrendsData Fact
      */
     private SyncTrendStackVO trend = new SyncTrendStackVO();
 

@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <div th:fragment="content">
-    <!-- 策略配置标题 -->
-    <p><i class="fa fa-cogs text-primary"></i> 策略配置</p>
+    <!-- Policy ConfigurationTitle-->
+    <p><i class="fa fa-cogs text-primary"></i> Policy Configuration</p>
 
     <div class="form-item">
         <label class="form-label">
-            覆盖 <i class="fa fa-question-circle" title="Yes-目标表不存在数据时，执行insert，存在会执行update; No-不生效"></i>
+            Overwrite <i class="fa fa-question-circle" title="Yes - implement insert when data are not available in target table; no - not effective"></i>
         </label>
         <div class="form-control-area">
             <label class="form-switch">

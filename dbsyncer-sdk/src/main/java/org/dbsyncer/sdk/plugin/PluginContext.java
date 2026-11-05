@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 插件转换上下文
+ * PluginConvertContext
  *
  * @author AE86
  * @version 1.0.0
@@ -19,88 +19,88 @@ import java.util.Map;
 public interface PluginContext extends BaseContext {
 
     /**
-     * 获取同步方式
+     * Get Synchronization
      */
     ModelEnum getModelEnum();
 
     /**
-     * 是否终止同步数据到目标源库
+     * YesNoTerminationSync dataPresent.TargetLibrary
      */
     boolean isTerminated();
 
     /**
-     * 是否终止同步数据到目标源库
+     * YesNoTerminationSync dataPresent.TargetLibrary
      *
-     * @param terminated true: 终止，默认值false
+     * @param terminated true: It's over.Default valuefalse
      */
     void setTerminated(boolean terminated);
 
     /**
-     * 目标源连接实例
+     * TargetConnectExamples
      */
     ConnectorInstance getTargetConnectorInstance();
 
     /**
-     * 获取目标表信息
+     * AccessTarget tableInfo
      */
     Table getTargetTable();
 
     /**
-     * 增量同步，事件（INSERT/UPDATE/DELETE）
+     * Incremental sync，Event（INSERT/UPDATE/DELETE）
      */
     String getEvent();
 
     void setEvent(String event);
 
     /**
-     * 目标字段
+     * Target fields
      */
     List<Field> getTargetFields();
 
     /**
-     * 批量处理任务数
+     * Batch processingTasksNumber
      */
     int getBatchSize();
 
     /**
-     * 是否覆盖更新
+     * Overwrite?Update
      */
     boolean isForceUpdate();
 
     /**
-     * 是否打印trace信息
+     * YesNoCan not open message
      */
     boolean isEnablePrintTraceInfo();
 
     /**
-     * 数据源数据集合
+     * Data FactSource data set
      */
     List<Map> getSourceList();
 
     /**
-     * 目标源源数据集合
+     * TargetSource data set
      */
     List<Map> getTargetList();
 
     void setTargetList(List<Map> targetList);
 
     /**
-     * 获取插件
+     * AccessPlugin
      */
     Plugin getPlugin();
 
     /**
-     * 获取插件参数
+     * AccessPluginParameter
      */
     String getPluginExtInfo();
 
     /**
-     * 获取TraceId
+     * AccessTraceId
      */
     String getTraceId();
 
     /**
-     * 浅拷贝
+     * Light copy
      */
     Object clone() throws CloneNotSupportedException;
 

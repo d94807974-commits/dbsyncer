@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 系统配置
+ * System settings
  *
  * @author AE86
  * @version 1.0.0
@@ -22,63 +22,63 @@ import java.util.Map;
 public interface SystemConfigService {
 
     /**
-     * 修改系统配置
+     * Modify System Configuration
      *
      * @param params
      */
     String edit(Map<String, String> params);
 
     /**
-     * 修改通知配置
+     * UpdateAnnouncementsConfigure
      *
      * @param params
      */
     String editNoticeConfig(Map<String, String> params);
 
     /**
-     * 获取系统配置
+     * AccessSystem settings
      *
      * @return
      */
     SystemConfigVO getSystemConfigVo();
 
     /**
-     * 获取系统配置
+     * AccessSystem settings
      *
      * @return
      */
     SystemConfig getSystemConfig();
 
     /**
-     * 获取所有配置（system、user、connector、mapping、tableGroup、meta）
+     * Get AllConfigure（system、user、connector、mapping、tableGroup、meta）
      *
      * @return
      */
     List<ConfigModel> getConfigModelAll();
 
     /**
-     * 校验文件格式
+     * Verify INTRODUCTIONDocumentationFormat
      *
      * @param filename
      */
     void checkFileSuffix(String filename);
 
     /**
-     * 更新配置（仅支持 .zip）
+     * UpdateConfigure（Only support.zip）
      *
      * @param file
      */
     void refreshConfig(File file);
 
     /**
-     * 粗估导出配置体积（字节），供列表页提示，避免全量序列化。
+     * Crude estimateExport ConfigurationVolume (bytes) forListPageNotice，Avoid AllVolumeSerialization.
      *
-     * @return 估算字节数
+     * @return Estimated bytes
      */
     long estimateExportSize();
 
     /**
-     * 获取水印信息
+     * AccessWatermarkInfo
      *
      * @param systemConfig
      * @return
@@ -86,7 +86,7 @@ public interface SystemConfigService {
     String getWatermark(SystemConfig systemConfig);
 
     /**
-     * 生成RSA配置
+     * GenerateRSAConfigure
      *
      * @param keyLength
      * @return

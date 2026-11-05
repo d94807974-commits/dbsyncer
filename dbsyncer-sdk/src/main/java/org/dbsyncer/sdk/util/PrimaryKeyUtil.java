@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public abstract class PrimaryKeyUtil {
 
     /**
-     * 返回主键名称
+     * BackPrimary keyName
      *
      * @param table
      * @return
@@ -33,18 +33,18 @@ public abstract class PrimaryKeyUtil {
             throw new SdkException("The table is null.");
         }
 
-        // 获取表同步的主键字段
+        // Get treasury syncsPrimary keyField
         List<String> primaryKeys = findPrimaryKeyFields(table.getColumn()).stream().map(Field::getName).collect(Collectors.toList());
 
-        // 如果存在表字段映射关系，没有配置主键则抛出异常提示
+        // IfExisting TableFieldMapping，Auditorless.ConfigurePrimary keyThrowErrorNotice
         if (!CollectionUtils.isEmpty(table.getColumn()) && CollectionUtils.isEmpty(primaryKeys)) {
-            throw new SdkException(String.format("表 %s 缺少主键.", table.getName()));
+            throw new SdkException(String.format("Table %s missing primary key.", table.getName()));
         }
         return primaryKeys;
     }
 
     /**
-     * 返回主键属性字段集合
+     * BackPrimary keyPropertiesFieldGather!
      *
      * @param fields
      * @return
@@ -52,13 +52,13 @@ public abstract class PrimaryKeyUtil {
     public static List<Field> findExistPrimaryKeyFields(List<Field> fields) {
         List<Field> list = findPrimaryKeyFields(fields);
         if (CollectionUtils.isEmpty(list)) {
-            throw new SdkException("主键为空");
+            throw new SdkException("Main key is empty");
         }
         return list;
     }
 
     /**
-     * 返回主键属性字段集合
+     * BackPrimary keyPropertiesFieldGather!
      *
      * @param fields
      * @return
@@ -78,13 +78,13 @@ public abstract class PrimaryKeyUtil {
     }
 
     /**
-     * 游标主键必须为可比较类型（数字、字符、日期时间等），否则会导致分页失效
+     * CursorPrimary keyMust be comparable.Type（Numbers, characters, datesTimeThis post is part of our special coverage Syria Protests 2011.NoAnd it'll lead to...minPageInvalid
      * 
-     * <p>支持的类型：
+     * <p>SupportedType：
      * <ul>
-     *   <li>数字类型：NUMERIC, BIGINT, INTEGER, TINYINT, SMALLINT</li>
-     *   <li>字符类型：VARCHAR, CHAR, NCHAR, NVARCHAR, LONGVARCHAR（字典序比较）</li>
-     *   <li>日期时间类型：DATE, TIME, TIMESTAMP（按时间顺序比较）</li>
+     *   <li>NumbersType：NUMERIC, BIGINT, INTEGER, TINYINT, SMALLINT</li>
+     *   <li>CharacterType：VARCHAR, CHAR, NCHAR, NVARCHAR, LONGVARCHAR（Dictionary Comparison)</li>
+     *   <li>DateTimeType：DATE, TIME, TIMESTAMP（PressTimeOrder comparison)</li>
      * </ul>
      * </p>
      */
@@ -109,31 +109,31 @@ public abstract class PrimaryKeyUtil {
     }
 
     /**
-     * 是否支持游标类型
+     * YesNoSupport cursorType
      * 
-     * <p>支持可比较类型，包括：
+     * <p>Support comparableType，Including:
      * <ul>
-     *   <li>数字类型：可直接使用 > 比较</li>
-     *   <li>字符类型：使用字典序比较</li>
-     *   <li>日期时间类型：按时间顺序比较</li>
+     *   <li>NumbersType：Directly Available> Comparison</li>
+     *   <li>CharacterType：Use dictionary comparison</li>
+     *   <li>DateTimeType：PressTimeOrder comparison</li>
      * </ul>
      * </p>
-     * <p>注意：不支持 CLOB/NCLOB/BLOB 等大对象类型作为游标。</p>
+     * <p>Note: Not supportedCLOB/NCLOB/BLOB Big objectTypeAs a cursor.</p>
      *
-     * @param type JDBC类型
-     * @return 是否支持
+     * @param type JDBCType
+     * @return YesNoSupport
      */
     private static boolean isSupportedCursorType(Integer type) {
-        // 数字类型（支持直接比较）
+        // NumbersType（Support direct comparison)
         if (type == Types.NUMERIC || type == Types.BIGINT || type == Types.INTEGER || type == Types.TINYINT || type == Types.SMALLINT || type == Types.DECIMAL || type == Types.FLOAT
                 || type == Types.DOUBLE || type == Types.REAL) {
             return true;
         }
-        // 字符类型（支持字典序比较）
+        // CharacterType（Supports dictionary comparison)
         if (type == Types.VARCHAR || type == Types.CHAR || type == Types.NCHAR || type == Types.NVARCHAR || type == Types.LONGVARCHAR) {
             return true;
         }
-        // 日期时间类型（支持时间顺序比较）
+        // DateTimeType（SupportTimeOrder comparison)
         if (type == Types.DATE || type == Types.TIME || type == Types.TIMESTAMP) {
             return true;
         }
@@ -141,11 +141,11 @@ public abstract class PrimaryKeyUtil {
     }
 
     /**
-     * 获取最新游标值
+     * Get the latest cursorValue
      *
-     * @param data 数据列表
-     * @param primaryKeys 主键字段名列表
-     * @return 游标值数组，如果数据为空或主键列表为空则返回null
+     * @param data Data FactList
+     * @param primaryKeys Primary keyField nameList
+     * @return CursorValuearray, if data are empty orPrimary keyListemptyBacknull
      */
     public static Object[] getLastCursors(List<Map> data, List<String> primaryKeys) {
         if (CollectionUtils.isEmpty(data) || CollectionUtils.isEmpty(primaryKeys)) {
@@ -179,11 +179,11 @@ public abstract class PrimaryKeyUtil {
     }
 
     /**
-     * 比较两组游标，按主键从左到右。
+     * Compare the two sets, pressPrimary keyLeft to right.
      *
-     * @param left  左值
-     * @param right 右值
-     * @return 负/零/正
+     * @param left  LeftValue
+     * @param right ApplauseValue
+     * @return Negative/zero/positive
      */
     public static int compareCursors(Object[] left, Object[] right) {
         if (left == null && right == null) {
@@ -206,11 +206,11 @@ public abstract class PrimaryKeyUtil {
     }
 
     /**
-     * 当前游标是否已到达结束游标（含）。结束游标为空则永不视为到达。
+     * Current cursorYesNoIssuance of end cursor (included). Issuance will never be considered as an arrival.
      *
-     * @param current 当前游标
-     * @param end     结束游标
-     * @return true 已到达或越过结束
+     * @param current Current cursor
+     * @param end     End Curve
+     * @return true Reached or crossed the end
      */
     public static boolean reachedEnd(Object[] current, Object[] end) {
         if (end == null || end.length == 0) {
@@ -220,20 +220,20 @@ public abstract class PrimaryKeyUtil {
     }
 
     /**
-     * 保留游标小于等于结束游标的行（结束游标为空则原样返回）。
-     * <p>游标分页结果按主键升序；先比末行 O(1)，仅末行越过时再 stream 过滤截断，
-     * 避免本页无上界多读导致计数超过片预算。
+     * Keep cursor lines smaller than or equal to end cursor lines (end cursors as empty)Back）。
+     * <p>CursorminPageResultPressPrimary keyascending;first beat last lineO(1)，Only when the last line passes.stream This post is part of our special coverage Syria Protests 2011.
+     * Avoid Ben.PageNoneThe high reading has led to counting more than a piece of the budget.
      *
-     * @param data        数据行
-     * @param primaryKeys 主键名
-     * @param end         结束游标
-     * @return 截断后的列表
+     * @param data        Data Row
+     * @param primaryKeys Primary keyFirst Name
+     * @param end         End Curve
+     * @return After breakList
      */
     public static List<Map> trimToEndInclusive(List<Map> data, List<String> primaryKeys, Object[] end) {
         if (CollectionUtils.isEmpty(data) || CollectionUtils.isEmpty(primaryKeys) || end == null || end.length == 0) {
             return data;
         }
-        // 升序：末行未越过结束游标 → 整页都在片内
+        // Up: end line does not cross end cursor→ FullPageIt's all in the Budget Parties.
         if (compareCursors(cursorOf(data.get(data.size() - 1), primaryKeys), end) <= 0) {
             return data;
         }

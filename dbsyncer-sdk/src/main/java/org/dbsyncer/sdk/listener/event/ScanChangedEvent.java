@@ -8,7 +8,7 @@ import org.dbsyncer.sdk.enums.ChangedEventTypeEnum;
 import java.util.List;
 
 /**
- * 定时扫表变更事件
+ * ScheduledSweep changesEvent
  *
  * @version 1.0.0
  * @Author AE86

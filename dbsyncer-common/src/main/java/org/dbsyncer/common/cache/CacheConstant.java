@@ -4,7 +4,7 @@
 package org.dbsyncer.common.cache;
 
 /**
- * 缓存 key 常量（多业务共用 {@link CacheService} 时用前缀隔离）。
+ * C Facilitieskey Constant (multi-business)TotalUse{@link CacheService} It is always isolated by prefixes.
  *
  * @author wuji
  * @version 1.0.0
@@ -12,7 +12,7 @@ package org.dbsyncer.common.cache;
 public final class CacheConstant {
 
     /**
-     * OpenAPI 防重放 nonce 前缀，完整 key = 前缀 + nonce
+     * OpenAPI Weight protection.nonce Prefix, completekey = Prefix+ nonce
      */
     public static final String OPENAPI_NONCE_PREFIX = "openapi:nonce:";
 }

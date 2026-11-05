@@ -10,7 +10,7 @@ import org.dbsyncer.sdk.model.NoticeMessage;
 
 
 /**
- * HTTP通知服务实现
+ * HTTPNotification of service realization
  *
  * @author AE86
  * @version 1.0.0

@@ -117,14 +117,14 @@ public class TableGroupServiceImpl extends BaseServiceImpl implements TableGroup
                 if (params == null || StringUtil.isBlank(params.get("sourceTable")) || StringUtil.isBlank(params.get("targetTable"))) {
                     continue;
                 }
-                Assert.isTrue(StringUtil.equals(mappingId, params.get("mappingId")), "mappingId 必须一致");
+                Assert.isTrue(StringUtil.equals(mappingId, params.get("mappingId")), "I'd have to be consistent.");
                 params.remove("skipRepeatedCheck");
                 try {
                     TableGroup model = (TableGroup) tableGroupChecker.checkAddConfigModel(params);
                     model.setIndex(baseIndex + models.size() + 1);
                     models.add(model);
                 } catch (RepeatedTableGroupException e) {
-                    // 自定义映射等场景：已存在则跳过
+                    // CustomMap such scenes: exist and skip
                 }
             }
             if (CollectionUtils.isEmpty(models)) {
@@ -137,16 +137,16 @@ public class TableGroupServiceImpl extends BaseServiceImpl implements TableGroup
     }
 
     /**
-     * 校验并批量落库表映射。
+     * Verify and BatchLibraryMap.
      *
-     * @param skipRepeatedCheck true 时跳过重复校验（页面批量新增）；false 时遇重复跳过该表
+     * @param skipRepeatedCheck true Skip repeat check(s)PageBlanketInsert）；false Time and again skip that table
      */
     private List<TableGroup> createAndPersistTableGroups(Map<String, String> params, boolean skipRepeatedCheck) {
         String mappingId = params.get("mappingId");
         String[] sourceTableArray = StringUtil.split(params.get("sourceTable"), StringUtil.VERTICAL_LINE);
         String[] targetTableArray = StringUtil.split(params.get("targetTable"), StringUtil.VERTICAL_LINE);
         int tableSize = sourceTableArray.length;
-        Assert.isTrue(tableSize == targetTableArray.length, "数据源表和目标源表关系必须为一组");
+        Assert.isTrue(tableSize == targetTableArray.length, "Data source table and target source table relationships must be set");
 
         int baseIndex = tableGroupProfile.getTableGroupCount(mappingId);
         if (skipRepeatedCheck) {
@@ -166,7 +166,7 @@ public class TableGroupServiceImpl extends BaseServiceImpl implements TableGroup
                 if (skipRepeatedCheck) {
                     throw e;
                 }
-                // 自动匹配等场景：已存在则跳过
+                // Addition of scenes: Skip
             }
         }
         if (!CollectionUtils.isEmpty(models)) {
@@ -207,16 +207,16 @@ public class TableGroupServiceImpl extends BaseServiceImpl implements TableGroup
         Mapping mapping = mappingProfile.get(mappingId);
         assertRunning(mapping.getId());
 
-        // 批量删除表
+        // BatchDeleteTable
         Stream.of(StringUtil.split(ids, ",")).parallel().forEach(id -> {
             tableGroupProfile.removeTableGroup(id);
         });
 
-        // 合并驱动公共字段
+        // MergeMappingMaleTotalField
         mergeMappingColumn(mapping);
         submitTableGroupCountTask(mapping, Collections.emptyList());
 
-        // 重置排序
+        // ResetSort
         resetTableGroupAllIndex(mappingId);
         return mappingId;
     }
@@ -240,7 +240,7 @@ public class TableGroupServiceImpl extends BaseServiceImpl implements TableGroup
     @Override
     public void resetMeta(Mapping mapping, String metaSnapshot) {
         Meta meta = taskMetaProfile.getMeta(mapping.getId());
-        Assert.notNull(meta, "同步任务meta不存在.");
+        Assert.notNull(meta, "Synchronising task Meta does not exist.");
         meta.clear();
         if (StringUtil.isNotBlank(metaSnapshot)) {
             Map snapshot = JsonUtil.jsonToObj(metaSnapshot, HashMap.class);
@@ -255,7 +255,7 @@ public class TableGroupServiceImpl extends BaseServiceImpl implements TableGroup
     @Override
     public Meta refreshMetaTotal(Mapping mapping, String metaSnapshot) {
         Meta meta = taskMetaProfile.getMeta(mapping.getId());
-        Assert.notNull(meta, "同步任务meta不存在.");
+        Assert.notNull(meta, "Synchronising task Meta does not exist.");
         meta.clear();
         if (StringUtil.isNotBlank(metaSnapshot)) {
             Map snapshot = JsonUtil.jsonToObj(metaSnapshot, HashMap.class);
@@ -270,9 +270,9 @@ public class TableGroupServiceImpl extends BaseServiceImpl implements TableGroup
     }
 
     private void getMetaTotal(Meta meta, String model) {
-        // 全量同步
+        // Full sync
         if (ModelEnum.isFull(model)) {
-            // 统计tableGroup总条数（优先 SOURCE_TOTAL 列，兼容仅写在 sourceTable.count 的旧数据）
+            // StatisticstableGroupTotal number of articles (priority)SOURCE_TOTAL Columns, compatible only insourceTable.count )
             AtomicLong count = new AtomicLong(0);
             tableGroupProfile.pageScanTableGroups(meta.getTaskId(), ConfigConstant.PAGE_SIZE, groupAll -> {
                 for (TableGroup g : groupAll) {
@@ -334,7 +334,7 @@ public class TableGroupServiceImpl extends BaseServiceImpl implements TableGroup
     }
 
     /**
-     * 提交统计同步任务表总数任务
+     * SubmitCount sync task tablesTasks
      */
     private void submitTableGroupCountTask(Mapping mapping, List<String> list) {
         TableGroupCountTask task = (TableGroupCountTask) tableGroupCountTask.clone();

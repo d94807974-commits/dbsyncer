@@ -7,7 +7,7 @@ import org.dbsyncer.connector.kafka.util.KafkaUtil;
 import org.dbsyncer.sdk.model.ConnectorConfig;
 
 /**
- * Kafka连接配置
+ * KafkaConnectConfigure
  *
  * @Author AE86
  * @Version 1.0.0
@@ -28,7 +28,7 @@ public class KafkaConfig extends ConnectorConfig {
 
     @Override
     public String getPropertiesText() {
-        // 支持换行显示
+        // Supports line break display
         return KafkaUtil.toString(getProperties());
     }
 }

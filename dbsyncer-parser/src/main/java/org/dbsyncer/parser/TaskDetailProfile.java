@@ -9,7 +9,7 @@ import org.dbsyncer.parser.model.TaskDetailQuery;
 import java.util.Map;
 
 /**
- * 任务执行明细（dbsyncer_task_detail）查询：与 meta / table_group 关联装配展示行。
+ * TasksImplementation Details（dbsyncer_task_detail）Query:and meta / table_group Associated assembly display.
  *
  * @author wuji
  * @version 1.0.0
@@ -18,28 +18,28 @@ import java.util.Map;
 public interface TaskDetailProfile {
 
     /**
-     * 查询校验/迁移结果列表（存储侧过滤、排序、分页）。
+     * QuestionValidation/removalResultList（Storage side filters, sorting,minPage）。
      *
-     * @param query 查询参数（含 taskId、分页、类型/状态筛选、指标与排序）
-     * @return 分页结果
+     * @param query QuestionParameter（HamtaskId、minPage、Type/StatusScreening, indicatorsandSort)
+     * @return minPageResult
      */
     Paging queryResults(TaskDetailQuery query);
 
     /**
-     * 查询单条明细。
+     * Query a line detail.
      *
-     * @param query 查询参数（需含 taskId、detailId）
-     * @return 展示行，不存在时 null
+     * @param query QuestionParameter（OrganisationtaskId、detailId）
+     * @return Show lines when they do not existnull
      */
     Map<String, Object> getDetail(TaskDetailQuery query);
 
     /**
-     * 删除任务明细数据
+     * DeleteTasksDetailed data
      */
     void delete(String taskId, String id);
 
     /**
-     * 获取任务明细数据
+     * AccessTasksDetailed data
      */
     Map getData(String taskId, String messageId);
 

@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    /** 日期字符串 yyyy-MM-dd → 当天 00:00:00 毫秒 */
+    /** Date PROPOSALyyyy-MM-dd → When?days 00:00:00 ms */
     function toBeginMillis(value) {
         if (!value) {
             return '';
@@ -10,7 +10,7 @@
         return isNaN(t) ? '' : t;
     }
 
-    /** 日期字符串 yyyy-MM-dd → 当天 23:59:59.999 毫秒 */
+    /** Date PROPOSALyyyy-MM-dd → When?days 23:59:59.999 ms */
     function toEndMillis(value) {
         if (!value) {
             return '';
@@ -21,14 +21,14 @@
 
     function statusBadge(status) {
         if (Number(status) === 1) {
-            return '<span class="badge badge-success">成功</span>';
+            return '<span class="badge badge-success">Success</span>';
         }
-        return '<span class="badge badge-error">失败</span>';
+        return '<span class="badge badge-error">Failed</span>';
     }
 
     function formatJsonBlock(value) {
         if (value === undefined || value === null || value === '') {
-            return '无';
+            return 'None';
         }
         let text;
         if (typeof value === 'string') {
@@ -71,32 +71,32 @@
     function showDetail(id) {
         doPoster('/log/detail', {id: id}, function (res) {
             if (!res || res.success !== true) {
-                bootGrowl((res && res.message) || '查询详情失败', 'danger');
+                bootGrowl((res && res.message) || 'Failed to search for details', 'danger');
                 return;
             }
             const d = res.data || {};
             const body = ''
-                + '<div class="form-item"><label class="form-label">操作模块</label><div class="form-control-area">'
+                + '<div class="form-item"><label class="form-label">Operation module</label><div class="form-control-area">'
                 + escapeHtml(d.typeName || d.type || '') + '</div></div>'
-                + '<div class="form-item mt-4"><label class="form-label">登录信息</label><div class="form-control-area">'
+                + '<div class="form-item mt-4"><label class="form-label">Login info</label><div class="form-control-area">'
                 + escapeHtml((d.username || '') + (d.ip ? ' / ' + d.ip : '')) + '</div></div>'
-                + '<div class="form-item mt-4"><label class="form-label">请求地址</label><div class="form-control-area">'
-                + escapeHtml(d.requestUri || '无') + '</div></div>'
-                + '<div class="form-item mt-4"><label class="form-label">请求参数</label><div class="form-control-area">'
+                + '<div class="form-item mt-4"><label class="form-label">Request Address</label><div class="form-control-area">'
+                + escapeHtml(d.requestUri || 'None') + '</div></div>'
+                + '<div class="form-item mt-4"><label class="form-label">Request parameters</label><div class="form-control-area">'
                 + formatJsonBlock(d.requestParam) + '</div></div>'
-                + '<div class="form-item mt-4"><label class="form-label">返回参数</label><div class="form-control-area">'
+                + '<div class="form-item mt-4"><label class="form-label">shed</label><div class="form-control-area">'
                 + formatJsonBlock(d.responseParam) + '</div></div>'
-                + '<div class="form-item mt-4"><label class="form-label">状态 / 时间</label><div class="form-control-area">'
+                + '<div class="form-item mt-4"><label class="form-label">Status / Time</label><div class="form-control-area">'
                 + statusBadge(d.status) + ' &nbsp; ' + formatDate(d.createTime || '')
-                + (d.costMs != null ? '（耗时 ' + d.costMs + 'ms）' : '')
+                + (d.costMs != null ? '(time-consuming) ' + d.costMs + 'ms）' : '')
                 + '</div></div>';
 
             showConfirm({
-                title: '操作日志详细',
+                title: 'Operation log details',
                 icon: 'info',
                 size: 'xlarge',
                 showCancel: false,
-                confirmText: '关闭',
+                confirmText: 'Close',
                 body: body
             });
         });
@@ -119,7 +119,7 @@
                 + '<td>' + statusBadge(row.status) + '</td>'
                 + '<td>' + formatDate(row.createTime || '') + '</td>'
                 + '<td><button type="button" class="table-action-btn view log-detail-btn" data-id="'
-                + escapeHtml(row.id || '') + '" title="详细"><i class="fa fa-eye"></i></button></td>'
+                + escapeHtml(row.id || '') + '"title" is "detail."<i class="fa fa-eye"></i></button></td>'
                 + '</tr>';
         },
         refreshCompleted: function () {
@@ -168,17 +168,17 @@
     });
     $('#clearBtn').on('click', function () {
         showConfirm({
-            title: '确认清空全部日志？',
+            title: 'Confirming to empty all logs?',
             icon: 'warning',
             size: 'large',
             confirmType: 'danger',
             onConfirm: function () {
                 doPoster('/log/clear', {}, function (res) {
                     if (res && res.success) {
-                        bootGrowl('清空日志成功', 'success');
+                        bootGrowl('Clear Log Success', 'success');
                         search();
                     } else {
-                        bootGrowl((res && res.message) || '清空失败', 'danger');
+                        bootGrowl((res && res.message) || 'Empty failed', 'danger');
                     }
                 });
             }

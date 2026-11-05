@@ -8,7 +8,7 @@ import org.dbsyncer.common.util.StringUtil;
 import java.util.regex.Pattern;
 
 /**
- * 插件 JAR 文件描述（文件名、大小、摘要）。
+ * Plugin JAR DocumentationDescriptionFilename、Size, summary).
  *
  * @author wuji
  * @version 1.0.0
@@ -17,17 +17,17 @@ import java.util.regex.Pattern;
 public class PluginFile {
 
     /**
-     * 插件文件名请求头。
+     * PluginFilenameRequest head.
      */
     public static final String FILE_NAME_HEADER = "X-Plugin-File-Name";
 
     /**
-     * 接收后继续分发。值为 {@code 1} 时生效。
+     * Continue after receivingminLet's go.ValueYes{@code 1} Entered into force.
      */
     public static final String RELAY_HEADER = "X-Plugin-Relay";
 
     /**
-     * 单个插件文件上限，与页面上传限制一致。
+     * SinglePluginDocumentationceiling,andPageNoodles.UploadRestrictions are consistent.
      */
     public static final long MAX_BYTES = 128L * 1024 * 1024;
 
@@ -40,10 +40,10 @@ public class PluginFile {
     private String sha256;
 
     /**
-     * 文件名仅允许字母、数字、点、下划线、短横线，且以 {@code .jar} 结尾。
+     * FilenameLetters, numbers, dots, underlineds, short lines only, and in the{@code .jar} End.
      *
-     * @param name 文件名
-     * @return 合法返回 true
+     * @param name Filename
+     * @return LegalBack true
      */
     public static boolean isSafeName(String name) {
         if (StringUtil.isBlank(name) || name.indexOf("..") >= 0) {

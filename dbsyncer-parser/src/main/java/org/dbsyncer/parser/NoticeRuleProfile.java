@@ -8,7 +8,7 @@ import org.dbsyncer.parser.model.NoticeRule;
 import java.util.List;
 
 /**
- * 告警通知规则读写。
+ * Alert notificationRule read and write.
  *
  * @author wuji
  * @version 1.0.0
@@ -16,42 +16,42 @@ import java.util.List;
 public interface NoticeRuleProfile {
 
     /**
-     * 全部规则。
+     * AllRules.
      */
     List<NoticeRule> listAll();
 
     /**
-     * 按主键查询。
+     * PressPrimary keyquery.
      */
     NoticeRule get(String id);
 
     /**
-     * 按 (作用域类型, 作用域ID) 查一条。
+     * Press(ScopeType, ScopeID) Check one.
      */
     NoticeRule getByScope(String scopeType, String scopeId);
 
     /**
-     * 按作用域类型列出。
+     * PressScopeTypeList.
      */
     List<NoticeRule> listByScopeType(String scopeType);
 
     /**
-     * 新增。
+     * Insert。
      */
     String add(NoticeRule rule);
 
     /**
-     * 更新。
+     * Update.
      */
     String update(NoticeRule rule);
 
     /**
-     * 按主键删除。
+     * PressPrimary keyDelete。
      */
     void remove(String id);
 
     /**
-     * 按作用域批量删除（分组/任务被删除时收尾）。
+     * PressScopeBatchDelete（Group/TasksByDeleteEnd of story.
      */
     void removeByScopeId(String scopeType, String scopeId);
 }

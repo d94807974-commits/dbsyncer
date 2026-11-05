@@ -4,7 +4,7 @@
 package org.dbsyncer.sdk.service;
 
 /**
- * 连接器健康检查服务：由开源绑定，供单机/集群控制面启停周期探测任务。
+ * ConnectorHealth screening services: binding by open source for single machine/cluster control stop-off cycle detectionTasks。
  *
  * @author wuji
  * @version 1.0.0
@@ -13,12 +13,12 @@ package org.dbsyncer.sdk.service;
 public interface ScheduledScanService {
 
     /**
-     * 启动检测任务（幂等）。
+     * StartTestTasks（I'm sorry.
      */
     void start();
 
     /**
-     * 停止定时任务（幂等）。
+     * StopScheduledTasks（I'm sorry.
      */
     void stop();
 }

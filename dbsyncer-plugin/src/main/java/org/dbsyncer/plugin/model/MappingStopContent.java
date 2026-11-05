@@ -9,7 +9,7 @@ import org.dbsyncer.sdk.enums.ModelEnum;
 import org.dbsyncer.sdk.model.NoticeContent;
 
 /**
- * 驱动停止消息
+ * MappingStopMessage
  *
  * @Author AE86
  * @Version 1.0.0

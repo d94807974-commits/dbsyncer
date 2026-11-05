@@ -38,7 +38,7 @@ public class ManagerSupportConfiguration {
     }
 
     /**
-     * 全量页级落库：优先 SPI，否则单机默认实现。
+     * FullPageLevelLibrary：PrioritySPI，No.
      */
     @Bean
     @ConditionalOnMissingBean(FullFlushService.class)

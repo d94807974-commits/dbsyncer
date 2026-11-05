@@ -49,7 +49,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 数据同步服务
+ * Data syncServices
  *
  * @author AE86
  * @version 1.0.0
@@ -107,12 +107,12 @@ public class DataSyncServiceImpl implements DataSyncService {
     @Override
     public Map getBinlogData(Map row, boolean prettyBytes) throws InvalidProtocolBufferException {
         String tableGroupId = (String) row.get(ConfigConstant.DATA_TABLE_GROUP_ID);
-        // 1、获取配置信息
+        // 1、AccessConfiguration
         final TableGroup tableGroup = tableGroupProfile.getTableGroup(tableGroupId);
         if (tableGroup == null) {
             return Collections.EMPTY_MAP;
         }
-        // 2、获取记录的数据
+        // 2、Access to recorded data
         byte[] bytes = (byte[]) row.get(ConfigConstant.BINLOG_DATA);
         if (null == bytes) {
             if (prettyBytes) {
@@ -121,7 +121,7 @@ public class DataSyncServiceImpl implements DataSyncService {
             }
             return Collections.EMPTY_MAP;
         }
-        // 3、获取DDL
+        // 3、AccessDDL
         Map<String, Object> target = new HashMap<>();
         BinlogMap message = BinlogMap.parseFrom(bytes);
         String event = (String) row.get(ConfigConstant.CONFIG_MODEL_TYPE);
@@ -130,24 +130,24 @@ public class DataSyncServiceImpl implements DataSyncService {
             return target;
         }
 
-        // 4、获取连接器服务
+        // 4、AccessConnectorServices
         Mapping mapping = mappingProfile.get(tableGroup.getTaskId());
         String targetInstanceId = ConnectorInstanceUtil.buildConnectorInstanceId(mapping.getId(), mapping.getTargetConnectorId(), ConnectorInstanceUtil.TARGET_SUFFIX);
         ConnectorInstance connectorInstance = connectorFactory.connect(targetInstanceId);
         ConnectorService sourceConnector = connectorFactory.getConnectorService(connectorInstance.getConfig());
         SchemaResolver schemaResolver = sourceConnector.getSchemaResolver();
         if (schemaResolver == null) {
-            logger.warn("反序列化失败，没有实现SchemaResolver");
+            logger.warn("Inverse sequence failed and SchemaResolver failed");
             return target;
         }
-        // 5、反序列
+        // 5、Case
         final Picker picker = new Picker(tableGroup);
         final Map<String, Field> fieldMap = picker.getTargetFieldMap();
         message.getRowMap().forEach((k, v) -> {
             if (fieldMap.containsKey(k)) {
                 try {
                     Object val = schemaResolver.deserialize(v, fieldMap.get(k));
-                    // 处理二进制对象显示
+                    // Process binary object display
                     if (prettyBytes) {
                         if (val instanceof byte[]) {
                             byte[] b = (byte[]) val;
@@ -161,7 +161,7 @@ public class DataSyncServiceImpl implements DataSyncService {
                     }
                     target.put(k, val);
                 } catch (Exception e) {
-                    logger.warn("解析Binlog数据类型异常：typeName=[{}], valueType=[{}], value=[{}]", fieldMap.get(k).getTypeName(), (v == null ? null : v.getClass().getName()), v);
+                    logger.warn("Parsing Binlog data type anomalies: typeName=[}, valueType=[}, value=[}]", fieldMap.get(k).getTypeName(), (v == null ? null : v.getClass().getName()), v);
                 }
             }
         });
@@ -181,7 +181,7 @@ public class DataSyncServiceImpl implements DataSyncService {
         }
         String tableGroupId = (String) row.get(ConfigConstant.DATA_TABLE_GROUP_ID);
         String event = (String) row.get(ConfigConstant.CONFIG_MODEL_TYPE);
-        // 有修改同步值
+        // Yes.EditSyncValue
         String retryDataParams = params.get("retryDataParams");
         if (StringUtil.isNotBlank(retryDataParams)) {
             JsonUtil.parseMap(retryDataParams).forEach((k, v) -> binlogData.put(k, convertValue(binlogData.get(k), (String) v)));
@@ -189,18 +189,18 @@ public class DataSyncServiceImpl implements DataSyncService {
         TableGroup tableGroup = tableGroupProfile.getTableGroup(tableGroupId);
         String sourceTableName = tableGroup.getSourceTable().getName();
 
-        // 转换为源字段
+        // ConvertAs SourceField
         final Picker picker = new Picker(tableGroup);
         List<Object> changedRow = picker.pickSourceData(tableGroup.getSourceTable().getColumn(), binlogData);
         RowChangedEvent changedEvent = new RowChangedEvent(sourceTableName, event, changedRow, null, null);
 
-        // 执行同步是否成功
+        // Execute SyncYesNoSuccess
         bufferActuatorRouter.execute(taskId, changedEvent);
-        // 明细分表：从该任务分表(dbsyncer_task_detail_{taskId})删除该条同步数据
+        // DetailsminTable: FromTasksminTable(dbsyncer_task_detail_{taskId})DeleteArticleSync data
         taskDetailProfile.delete(taskId, messageId);
         Meta meta = taskMetaProfile.getMeta(taskId);
         Assert.notNull(meta, "Meta can not be null.");
-        // 更新失败数：fail 为库侧增量列，原子自减(同时刷新 updateTime)
+        // UpdateFailures：fail YesLibraryIt's the other way.IncrementalColumns, atom reduction(Meanwhile...Refresh updateTime)
         taskMetaProfile.incrementMeta(MetaIncrement.of(taskId).fail(-1L));
         return messageId;
     }
@@ -219,7 +219,7 @@ public class DataSyncServiceImpl implements DataSyncService {
         for (DataSyncEvent changedData : dataList) {
             String sourceTableName = tableGroup.getSourceTable().getName();
             RowChangedEvent changedEvent = new RowChangedEvent(sourceTableName, changedData.getEvent(), changedData.getData(), null, null);
-            // 执行同步是否成功
+            // Execute SyncYesNoSuccess
             bufferActuatorRouter.execute(meta.getTaskId(), changedEvent);
         }
     }

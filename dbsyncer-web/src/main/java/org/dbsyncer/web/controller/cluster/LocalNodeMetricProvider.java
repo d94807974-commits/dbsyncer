@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 本机系统/应用指标采集，供集群节点互探与聚合。
+ * HS/Application of indicators for cluster collectionNodesInterrogationandAggregation.
  *
  * @author wuji
  * @version 1.0.0
@@ -68,7 +68,7 @@ public class LocalNodeMetricProvider {
     private final DiskSpaceVO disk = new DiskSpaceVO();
     private long[] prevTicks = processor.getSystemCpuLoadTicks();
     /**
-     * 与 CPU/内存同一拍采样，避免聚合拉数时临时线程把本机线程数抬高。
+     * and CPU/MemorySame sample to avoid impregnation.ThreadsPut it on.ThreadsLift.
      */
     private volatile long threadLive;
 
@@ -111,9 +111,9 @@ public class LocalNodeMetricProvider {
     }
 
     /**
-     * 本机指标快照（免登录互探与聚合共用）。
+     * Scatter of current indicatorLoginInterrogationandAggregationTotalUse it.
      *
-     * @return 指标
+     * @return Indicators
      */
     public ClusterNodeMetricVO snapshot() {
         ClusterNodeMetricVO vo = new ClusterNodeMetricVO();
@@ -140,7 +140,7 @@ public class LocalNodeMetricProvider {
             vo.setTps(metricReporter.getCurrentBufferActuatorTps());
             vo.setTpsSeries(tpsSeries);
         } catch (Exception e) {
-            logger.warn("采集应用指标失败: {}", e.getMessage());
+            logger.warn("Failed to collect application indicator: {", e.getMessage());
         }
         return vo;
     }
@@ -224,7 +224,7 @@ public class LocalNodeMetricProvider {
             disk.setUsed(disk.getTotal().subtract(disk.getFree()));
             disk.setUsedPercent(formatPercent(disk.getUsed(), disk.getTotal()));
         } catch (Exception e) {
-            logger.warn("采集磁盘指标失败: {}", e.getMessage());
+            logger.warn("Failed to collect disk indicator: {", e.getMessage());
         }
     }
 
@@ -243,7 +243,7 @@ public class LocalNodeMetricProvider {
     private MetricResponse getMetricResponse(String code) {
         MetricsEndpoint.MetricResponse metric = metricsEndpoint.metric(code, null);
         if (metric == null) {
-            throw new IllegalArgumentException("不支持指标=" + code);
+            throw new IllegalArgumentException("Indicator not supported =" + code);
         }
         MetricResponse metricResponse = new MetricResponse();
         MetricEnum metricEnum = MetricEnum.getMetric(metric.getName());
@@ -274,7 +274,7 @@ public class LocalNodeMetricProvider {
                 optimizeStackOverflow(stackVo.getValue());
             }
         } catch (Exception e) {
-            logger.debug("采集堆栈指标失败 {}: {}", metricEnum, e.getMessage());
+            logger.debug("Collect stack Chairmanship failed", metricEnum, e.getMessage());
         }
     }
 
@@ -294,11 +294,11 @@ public class LocalNodeMetricProvider {
     }
 
     /**
-     * 本节点协议下的 Web 根地址（跟随 {@code server.ssl.enabled} 与 {@code server.servlet.context-path}）。
+     * Ben.NodesUnder an agreement.Web Root Address (Following){@code server.ssl.enabled} and {@code server.servlet.context-path}）。
      *
      * @param ip       IP
-     * @param httpPort 端口
-     * @return 如 http(s)://ip:port[/context-path]；非法时为空
+     * @param httpPort Port
+     * @return Likehttp(s)://ip:port[/context-path]；Space at Illegal
      */
     public String buildHttpUrl(String ip, int httpPort) {
         return NetUtil.buildWebRootUrl(ip, httpPort, sslEnabled, contextPath);

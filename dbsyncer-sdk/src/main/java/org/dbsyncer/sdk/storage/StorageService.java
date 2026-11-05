@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * 存储服务（支持记录配置/日志/同步数据）
+ * Storage services (support records)Configure/Log/Sync data）
  *
  * @author AE86
  * @version 1.0.0
@@ -21,105 +21,105 @@ import java.util.Properties;
 public interface StorageService {
 
     /**
-     * 初始化
+     * Initialize
      */
     void init(Properties properties);
 
     /**
-     * 查询所有数据
+     * Query All Data
      */
     Paging query(Query query);
 
     /**
-     * 按主键查询单条记录（不走分页、不统计总数）。
+     * PressPrimary keyQuery a single record (not to go)minPage、Do Not CountTotal）。
      */
     Map queryObject(Query query);
 
     /**
-     * 根据条件删除
+     * Based onConditionDelete
      */
     void delete(Query query);
 
     /**
-     * 清空数据/日志（保留表结构）。
+     * ClearData/Log（ReservationsTable schema）。
      */
     void clear(StorageEnum type, String taskId);
 
     /**
-     * 删除存储分片（动态分表物理 DROP）。
-     * <p>删除任务时使用；与 {@link #clear} 不同，会去掉物理表。
+     * DeleteStorageminFilm (Video)minTable physicsDROP）。
+     * <p>DeleteTasksis used at times;and {@link #clear} It's different. It'll remove the physical table.
      */
     void drop(StorageEnum type, String taskId);
 
     /**
-     * 添加
+     * Add
      */
     void add(StorageEnum type, Map params);
 
     /**
-     * 添加
+     * Add
      */
     void add(StorageEnum type, String taskId, Map params);
 
     /**
-     * 批量添加
+     * BatchAdd
      */
     void addBatch(StorageEnum type, String taskId, List<Map> list);
 
     /**
-     * 修改
+     * Update
      */
     void edit(StorageEnum type, Map params);
 
     /**
-     * 修改
+     * Update
      */
     void edit(StorageEnum type, String taskId, Map params);
 
     /**
-     * 批量修改
+     * BatchUpdate
      */
     void editBatch(StorageEnum type, String taskId, List<Map> list);
 
     /**
-     * 删除
+     * Delete
      */
     void remove(StorageEnum type, String id);
 
     /**
-     * 删除
+     * Delete
      */
     void remove(StorageEnum type, String taskId, String id);
 
     /**
-     * 批量删除
+     * BatchDelete
      */
     void removeBatch(StorageEnum type, String taskId, List<String> ids);
 
     /**
-     * 原子增量更新（按列自增，如 COL = GREATEST(COL + ?, 0)），用于严格走库下的 Meta 计数；结果小于 0 时钳为 0
+     * AtomIncrementalUpdate (additional by column, ifCOL = GREATEST(COL + ?, 0)），For strict walking.LibraryDownMeta Counting;Resultless than0 Timepliers0
      *
-     * @param type   存储类型
-     * @param id     记录主键
-     * @param deltas 列增量（key 为列 labelName，value 为增量值）
+     * @param type   StorageType
+     * @param id     RecordsPrimary key
+     * @param deltas ColumnsIncremental（key ColumnslabelName，value YesIncrementalValue）
      */
     void increment(StorageEnum type, String id, Map<String, Long> deltas);
 
     /**
-     * 执行原生查询 SQL（系统配置库）；{@link ExecuteRequest#isPaged()} 为 true 时带分页。
+     * Execute original queries SQL（System settingsLibrary）；{@link ExecuteRequest#isPaged()} Yestrue AIJminPage。
      *
-     * @param query SQL 与可选分页参数
-     * @return 行列表，无结果时空列表
+     * @param query SQL andOptionalminPageParameter
+     * @return Okay.List，NoneResultTimeList
      */
     List<Map<String, Object>> queryList(ExecuteRequest query);
 
     /**
-     * 执行原生更新
+     * Execute Native Updates
      */
     int update(String sql, Object[] args);
 
     /**
-     * 执行原生查询
+     * Execute original queries
      */
     <T> List<T> query(String sql, Object[] args, Class<T> beanClass);
 }

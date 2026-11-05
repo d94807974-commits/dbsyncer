@@ -18,11 +18,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * ES 日期类型
- * 支持: date
- * 默认格式："strict_date_optional_time||epoch_millis"
+ * ES DateType
+ * Support: date
+ * Default format:"strict_date_optional_time||epoch_millis"
  *
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2026-01-11 22:21
  */
@@ -61,7 +61,7 @@ public final class ElasticsearchTimestampType extends TimestampType {
                         return new Timestamp(DateFormatUtil.stringToDate((String) val).getTime());
                     }
                 } catch (ParseException | DateTimeException e) {
-                    // 尝试走兜底解析
+                    // Try to figure it out.
                 }
             }
             return DateFormatUtil.stringToTimestamp((String) val);
@@ -80,9 +80,9 @@ public final class ElasticsearchTimestampType extends TimestampType {
 
     @Override
     protected Object convert(Object val, Field field) {
-        // 根据配置转换时间格式
+        // Based onConfigureConvertTimeFormat
         String format = (String) field.getExtInfo().get("format");
-        // ES date 类型只能识别 java.util.Date
+        // ES date TypeI can only identify.java.util.Date
         if (val instanceof Timestamp) {
             return formatDate((Timestamp) val, format);
         }
@@ -92,7 +92,7 @@ public final class ElasticsearchTimestampType extends TimestampType {
             return formatDate(new Timestamp(date.getTime()), format);
         }
 
-        // 如果已经是 java.util.Date，直接返回
+        // If it's...Yes java.util.Date，DirectBack
         if (val instanceof java.util.Date) {
             java.util.Date date = (java.util.Date) val;
             return formatDate(new Timestamp(date.getTime()), format);

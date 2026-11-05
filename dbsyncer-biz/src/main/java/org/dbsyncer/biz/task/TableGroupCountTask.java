@@ -18,9 +18,9 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 统计同步任务表总数任务
+ * Count sync task tablesTasks
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2025-06-24 01:23
  */
@@ -46,10 +46,10 @@ public final class TableGroupCountTask extends AbstractCountTask {
     public void execute() throws Exception {
         Mapping mapping = mappingProfile.get(mappingId);
         int groupCount = tableGroupProfile.getTableGroupCount(mappingId);
-        logger.info("正在统计:{}, {}张表", mapping.getName(), groupCount);
+        logger.info("Counting {}: {} tables", mapping.getName(), groupCount);
         if (!CollectionUtils.isEmpty(tableGroups)) {
             for (String tableGroupId : tableGroups) {
-                // 任务类型发生切换，提前释放任务
+                // Task TypeSwitches, early release.Tasks
                 if (shouldStop(mappingId)) {
                     return;
                 }
@@ -57,7 +57,7 @@ public final class TableGroupCountTask extends AbstractCountTask {
             }
         }
         Meta meta = tableGroupService.refreshMetaTotal(mapping, null);
-        logger.info("完成统计:{}, {}张表, 总数:{}", mapping.getName(), groupCount, meta.getTotal());
+        logger.info("Completed statistics: }, } sheets, total: {", mapping.getName(), groupCount, meta.getTotal());
     }
 
     @Override

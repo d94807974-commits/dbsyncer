@@ -12,9 +12,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 达梦二进制类型（含 MySQL BLOB 族别名；BLOB/RAW 也可由 Oracle 映射覆盖）
+ * Dream binaryType（HamMySQL BLOB (a) Family aliases;BLOB/RAW Or byOracle Table GroupOverwrite）
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-07-18
  */

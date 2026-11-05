@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <div th:fragment="content">
-    <!-- 转换配置标题 -->
-    <p><i class="fa fa-magic text-primary"></i> 转换配置</p>
+    <!-- Convert ConfigurationTitle-->
+    <p><i class="fa fa-magic text-primary"></i> Convert Configuration</p>
 
-    <!-- 第一行：转换、目标源表字段 -->
+    <!-- First line:Convert、Target Source Table Fields -->
     <div class="grid grid-cols-3">
-        <!-- 转换 -->
+        <!-- Convert -->
         <div class="form-item">
-            <label class="form-label">转换</label>
+            <label class="form-label">Convert</label>
             <select id="convertOperator" class="form-control">
                 <option th:value="${c?.code}" th:text="${c?.name}" th:argNum="${c?.argNum}" th:each="c,state : ${convert}"/>
             </select>
         </div>
 
-        <!-- 目标源表字段 -->
+        <!-- Target Source Table Fields -->
         <div class="form-item">
-            <label class="form-label">目标字段</label>
+            <label class="form-label">Target fields</label>
             <select id="convertTargetField" class="form-control">
-                <!-- 目标源表公共字段 -->
+                <!-- Target tableMaleTotalField -->
                 <option th:if="${tableGroup} == null"
                         th:each="c,s:${mapping?.targetColumn}"
                         th:value="${c?.name}"
                         th:text="${c?.name} +' (' + ${c?.typeName} +')'" />
-                <!-- 目标源表字段 -->
+                <!-- Target Source Table Fields -->
                 <option th:each="c,s:${tableGroup?.targetTable?.column}"
                         th:value="${c?.name}"
                         th:text="${c?.name} +' (' + ${c?.typeName} +')'" />
@@ -33,33 +33,33 @@
         </div>
 
         <div class="form-item">
-            <label class="form-label">参数</label>
-            <input class="form-control convertArg" type="text" maxlength="50" placeholder="参数" />
+            <label class="form-label">Parameter</label>
+            <input class="form-control convertArg" type="text" maxlength="50" placeholder="Parameter" />
         </div>
 
     </div>
 
     <div class="grid grid-cols-3 mt-4">
         <div class="form-item">
-            <label class="form-label">参数</label>
-            <input class="form-control convertArg" type="text" maxlength="50" placeholder="参数" />
+            <label class="form-label">Parameter</label>
+            <input class="form-control convertArg" type="text" maxlength="50" placeholder="Parameter" />
         </div>
         <div></div>
         <div class="flex items-center justify-end">
             <button id="convertAdd" type="button" class="btn btn-info">
-                <i class="fa fa-plus"></i> 添加
+                <i class="fa fa-plus"></i> Add
             </button>
         </div>
     </div>
 
-    <!-- 转换列表表格 -->
+    <!-- ConvertListTable 134. -->
     <table id="convertTable" class="table">
         <thead>
             <tr>
-                <th>转换</th>
-                <th>目标字段</th>
-                <th>参数</th>
-                <th>操作</th>
+                <th>Convert</th>
+                <th>Target fields</th>
+                <th>Parameter</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody id="convertList">
@@ -69,7 +69,7 @@
                 <td th:text="${f?.name}"></td>
                 <td th:text="${f?.args}"></td>
                 <td>
-                    <button class='table-action-btn delete convertDelete' title="删除">
+                    <button class='table-action-btn delete convertDelete' title="Delete">
                         <i class="fa fa-trash"></i>
                     </button>
                 </td>
@@ -80,7 +80,7 @@
                 <td th:text="${f?.name}"></td>
                 <td th:text="${f?.args}"></td>
                 <td>
-                    <button class='table-action-btn delete convertDelete' title="删除">
+                    <button class='table-action-btn delete convertDelete' title="Delete">
                         <i class="fa fa-trash"></i>
                     </button>
                 </td>
@@ -88,15 +88,15 @@
         </tbody>
     </table>
 
-    <!-- 隐藏表单值 -->
+    <!-- Hide FormsValue -->
     <div class="hidden">
         <input id="convert" name="convert" class="form-control" type="text"/>
     </div>
 
 <script>
-    // 初始化映射关系参数
+    // InitializeMappingParameter
     function initConvertParams(){
-        // 生成JSON参数
+        // GenerateJSONParameter
         var row = [];
         var $convertList = $("#convertList");
         $convertList.find("tr").each(function(k,v) {
@@ -121,10 +121,10 @@
         $("#convert").val(JSON.stringify(row));
     }
 
-    // 绑定表格点击删除事件
+    // Tie Table ClickDeleteEvent
     function bindConvertListDelete(){
         $(".convertDelete").unbind("click").bind('click', function(){
-            // 阻止tr触发click事件
+            // StoptrTriggerclickEvent
             event.cancelBubble=true;
             $(this).closest('tr').remove();
             initConvertParams();
@@ -132,7 +132,7 @@
         initConvertParams();
     }
 
-    // 绑定新增转换点击事件
+    // TieAddConvertClickEvent
     function bindConvertAddClick() {
         const $convertAdd = $("#convertAdd");
         $convertAdd.unbind("click");
@@ -151,13 +151,13 @@
                 argArr.push(convertArg1);
             }
             const argText = argArr.join(",")
-            // 非空检查
+            // Non 159
             if (convertTargetField == null || convertTargetField === '') {
-                bootGrowl("目标源表字段不能空.", "danger");
+                bootGrowl("Target source table fields cannot be empty.", "danger");
                 return;
             }
 
-            // 检查重复字段
+            // Check RepeatField
             let repeated = false;
             const $convertList = $("#convertList");
             $convertList.find("tr").each(function (k, v) {
@@ -170,7 +170,7 @@
                 }
             });
             if (repeated) {
-                bootGrowl("转换配置已存在.", "danger");
+                bootGrowl("Conversion configuration LIST Schedule", "danger");
                 return;
             }
 
@@ -179,12 +179,12 @@
                 <td>${convertTargetField}</td>
                 <td>${argText}</td>
                 <td>
-                    <button class="table-action-btn delete convertDelete" title="删除"">
+                    <button class="table-action-btn delete convertDelete" title="Delete"">
                         <i class="fa fa-trash"></i>
                     </button>
                 </td>
             </tr>`);
-            // 清空参数
+            // ClearParameter
             $(".convertArg").val("");
             bindConvertListDelete();
         });

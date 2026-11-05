@@ -32,9 +32,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * RocketMQ 监听器
+ * RocketMQ Listener
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-07 01:00
  */
@@ -58,19 +58,19 @@ public class RocketMQListener extends AbstractListener<RocketMQConnectorInstance
                 String groupId = table.getExtInfo().getProperty("groupId");
                 String tags = table.getExtInfo().getProperty("tags");
                 if (StringUtil.isBlank(groupId)) {
-                    throw new IllegalArgumentException("RocketMQ 消费组 groupId 不能为空, topic: " + topic);
+                    throw new IllegalArgumentException("RocketMQ consumption group group Id cannot be empty, topic: " + topic);
                 }
                 DefaultMQPushConsumer consumer = instance.createConsumer(topic, groupId, tags);
                 consumer.registerMessageListener(createMessageListener(table));
                 consumer.start();
                 consumers.add(new ConsumerInfo(table, consumer));
-                logger.info("RocketMQ监听器已订阅 topic: {}, groupId: {}, tags: {}", topic, groupId, StringUtil.isBlank(tags) ? "*" : tags);
+                logger.info("RocketMQ listener Subscriptioned topic:}, groupId:}, tags:}", topic, groupId, StringUtil.isBlank(tags) ? "*" : tags);
             }
         } catch (Exception e) {
-            logger.error("启动RocketMQ监听器失败", e);
+            logger.error("Failed to activate RocketMQ listener", e);
             errorEvent(e);
             close();
-            throw new RuntimeException("启动RocketMQ监听器失败", e);
+            throw new RuntimeException("Failed to activate RocketMQ listener", e);
         }
     }
 
@@ -107,13 +107,13 @@ public class RocketMQListener extends AbstractListener<RocketMQConnectorInstance
         String topic = table.getName();
         byte[] body = message.getBody();
         if (body == null || body.length == 0) {
-            logger.warn("收到空消息，topic: {}, msgId: {}", topic, message.getMsgId());
+            logger.warn("Possibly.", topic, message.getMsgId());
             return;
         }
 
         Map<String, Object> valueMap = JsonUtil.jsonToObj(new String(body, StandardCharsets.UTF_8), HashMap.class);
         if (valueMap == null) {
-            logger.warn("消息体解析失败，topic: {}, msgId: {}", topic, message.getMsgId());
+            logger.warn("Message resolution failed, topic:}, msgId:}", topic, message.getMsgId());
             return;
         }
 

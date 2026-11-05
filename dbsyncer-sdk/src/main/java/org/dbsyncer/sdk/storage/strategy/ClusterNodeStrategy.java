@@ -7,7 +7,7 @@ import org.dbsyncer.sdk.enums.StorageEnum;
 import org.dbsyncer.sdk.storage.Strategy;
 
 /**
- * 集群节点：单表存储 {@code dbsyncer_cluster_node}。
+ * ClusterSection 235Point: Form storage {@code dbsyncer_cluster_node}。
  *
  * @author wuji
  * @version 1.0.0

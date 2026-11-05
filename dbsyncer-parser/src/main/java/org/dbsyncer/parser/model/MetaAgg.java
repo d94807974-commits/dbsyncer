@@ -7,7 +7,7 @@ import org.dbsyncer.common.model.ConfigModel;
 import org.dbsyncer.sdk.constant.ConfigConstant;
 
 /**
- * 同步任务 Meta 日汇总（{@code dbsyncer_meta_agg}），供首页同步趋势使用。
+ * Sync task Meta Day summary{@code dbsyncer_meta_agg}），ForFirst pageSync TrendsUse.
  *
  * @author wuji
  * @version 1.0.0
@@ -15,22 +15,22 @@ import org.dbsyncer.sdk.constant.ConfigConstant;
 public class MetaAgg extends ConfigModel {
 
     /**
-     * 统计日期 yyyy-MM-dd
+     * Statistical date yyy-MM-dd
      */
     private String statDate;
 
     /**
-     * 同步任务 Meta.total 合计
+     * Sync task Meta.total Total
      */
     private long total;
 
     /**
-     * 同步任务 Meta.success 合计
+     * Sync task Meta.success Total
      */
     private long success;
 
     /**
-     * 同步任务 Meta.fail 合计
+     * Sync task Meta.fail Total
      */
     private long fail;
 

@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 业务分组接口。
+ * Business groupInterface。
  *
  * @author wuji
  * @version 1.0.0
@@ -55,7 +55,7 @@ public class GroupController extends BaseController {
         }
     }
 
-    @OperLog(type = OperLogType.SYSTEM_INFO, message = "新增分组")
+    @OperLog(type = OperLogType.SYSTEM_INFO, message = "Add Group")
     @PostMapping("/add")
     @ResponseBody
     public RestResult add(HttpServletRequest request) {
@@ -69,7 +69,7 @@ public class GroupController extends BaseController {
         }
     }
 
-    @OperLog(type = OperLogType.SYSTEM_INFO, message = "修改分组")
+    @OperLog(type = OperLogType.SYSTEM_INFO, message = "Modify Group")
     @PostMapping("/edit")
     @ResponseBody
     public RestResult edit(HttpServletRequest request) {
@@ -83,7 +83,7 @@ public class GroupController extends BaseController {
         }
     }
 
-    @OperLog(type = OperLogType.SYSTEM_INFO, message = "删除分组")
+    @OperLog(type = OperLogType.SYSTEM_INFO, message = "Delete group")
     @PostMapping("/remove")
     @ResponseBody
     public RestResult remove(HttpServletRequest request) {
@@ -112,7 +112,7 @@ public class GroupController extends BaseController {
         }
     }
 
-    @OperLog(type = OperLogType.SYSTEM_INFO, message = "绑定分组资源")
+    @OperLog(type = OperLogType.SYSTEM_INFO, message = "Tie group resources")
     @PostMapping("/bind")
     @ResponseBody
     public RestResult bind(HttpServletRequest request) {
@@ -131,9 +131,9 @@ public class GroupController extends BaseController {
     }
 
     /**
-     * 批量挂组 / 移出。resourceIds 支持逗号分隔。
+     * Batch-mounted / removed.resourceIds Support commasminBreak.
      */
-    @OperLog(type = OperLogType.SYSTEM_INFO, message = "批量绑定分组资源")
+    @OperLog(type = OperLogType.SYSTEM_INFO, message = "Batch binding of cluster resources")
     @PostMapping("/bindBatch")
     @ResponseBody
     public RestResult bindBatch(HttpServletRequest request) {
@@ -151,9 +151,9 @@ public class GroupController extends BaseController {
     }
 
     /**
-     * 批量从指定分组移出（不影响其它组归属）。
+     * Batch from SpecifiedGroupOut (without prejudice to Each other group).
      */
-    @OperLog(type = OperLogType.SYSTEM_INFO, message = "批量解绑分组资源")
+    @OperLog(type = OperLogType.SYSTEM_INFO, message = "Batch release of cluster resources")
     @PostMapping("/unbindBatch")
     @ResponseBody
     public RestResult unbindBatch(HttpServletRequest request) {
@@ -204,7 +204,7 @@ public class GroupController extends BaseController {
     public RestResult get(@RequestParam("id") String id) {
         try {
             if (StringUtil.isBlank(id)) {
-                return RestResult.restFail("分组ID不能为空");
+                return RestResult.restFail("Group ID cannot be empty");
             }
             return RestResult.restSuccess(groupService.get(id));
         } catch (Exception e) {
@@ -214,8 +214,8 @@ public class GroupController extends BaseController {
     }
 
     /**
-     * 按资源类型映射编辑权限：连接器用 connector:edit，任务类用 mapping:edit。
-     * 未传类型时任一编辑权即可（兼容旧调用）。
+     * PressResource typeTable GroupEditPermissions：ConnectorUseconnector:edit，TasksCategorymapping:edit。
+     * UnsignedTypeEitherEditRight is fine (compatible with old calls).
      */
     private void requireGroupManagePermission(String resourceType) {
         if (StringUtil.equals(ConfigConstant.CONNECTOR, resourceType)) {

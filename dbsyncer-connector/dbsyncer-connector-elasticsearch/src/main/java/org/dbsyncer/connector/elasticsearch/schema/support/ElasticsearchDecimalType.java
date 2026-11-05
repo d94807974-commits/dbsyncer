@@ -12,10 +12,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * ES 高精度浮点类型
- * 支持: scaled_float
+ * ES HighOutlook saluteFloating PointType
+ * Support: scaled_float
  *
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2026-01-11 22:21
  */

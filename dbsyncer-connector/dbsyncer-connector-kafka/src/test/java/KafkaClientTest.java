@@ -65,9 +65,9 @@ public class KafkaClientTest {
                         + "enable.idempotence=false\n" + "linger.ms=10\n" + "retries=1\n" + "max.block.ms=60000\n" + "max.request.size=1048576");
         instance = new KafkaConnectorInstance(config);
 
-        // 生产者
+        // Ensure production
         producer = instance.getProducer(topic);
-        // 消费者
+        // Consumer Tenure
         // consumer = instance.getConsumer(topic, groupId);
     }
 
@@ -87,18 +87,18 @@ public class KafkaClientTest {
         KafkaConnector connector = new KafkaConnector();
         logger.info("ping {}", connector.isAlive(instance));
 
-        // 模拟生产者
+        // Model producers
         for (int i = 0; i < 2; i++) {
             Map<String, Object> map = new HashMap<>();
             map.put("id", i);
-            map.put("name", "张三" + i);
+            map.put("name", "Chang Empower" + i);
             map.put("create_date", new Timestamp(System.currentTimeMillis()));
 
             String key = String.valueOf(i);
             String message = JsonUtil.objToJson(map);
-            System.out.println("发送成功消息: " + message);
+            System.out.println("Can not open message " + message);
             Future<RecordMetadata> send = producer.send(new ProducerRecord<>(topic, key, map));
-            System.out.println("发送成功: " + JsonUtil.objToJson(send));
+            System.out.println("Can not open message " + JsonUtil.objToJson(send));
         }
 
         // new Consumer().start();
@@ -141,7 +141,7 @@ public class KafkaClientTest {
             while (true) {
                 ConsumerRecords<String, Object> records = consumer.poll(100);
                 for (ConsumerRecord<String, Object> record : records) {
-                    logger.info("收到消息：offset = {}, key = {}, value = {}", record.offset(), record.key(), record.value());
+                    logger.info("Message received: offset ={, key ={, value ={", record.offset(), record.key(), record.value());
                 }
                 try {
                     TimeUnit.MILLISECONDS.sleep(10);

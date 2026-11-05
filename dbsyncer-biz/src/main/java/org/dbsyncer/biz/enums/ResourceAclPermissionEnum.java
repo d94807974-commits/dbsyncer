@@ -4,7 +4,7 @@
 package org.dbsyncer.biz.enums;
 
 /**
- * 资源 ACL 权限档位：0-只读 / 1-可读写（含启停）。
+ * Resource ACL PermissionsTranche:0-Read-only / 1-Read/Write（I'm sorry.
  *
  * @author wuji
  * @version 1.0.0
@@ -12,14 +12,14 @@ package org.dbsyncer.biz.enums;
 public enum ResourceAclPermissionEnum {
 
     /**
-     * 只读
+     * Read-only
      */
-    READ(0, "只读"),
+    READ(0, "Read-only"),
 
     /**
-     * 可读写（含启停）
+     * Read/Write（I'm sorry.
      */
-    READ_WRITE(1, "可读写");
+    READ_WRITE(1, "Read/Write");
 
     private final int code;
     private final String name;
@@ -30,7 +30,7 @@ public enum ResourceAclPermissionEnum {
     }
 
     /**
-     * 按编码解析；未知返回 {@code null}。
+     * Parsing by code;UnknownBack {@code null}。
      */
     public static ResourceAclPermissionEnum get(int code) {
         for (ResourceAclPermissionEnum permission : values()) {
@@ -42,14 +42,14 @@ public enum ResourceAclPermissionEnum {
     }
 
     /**
-     * 是否支持的权限编码。
+     * YesNoSupportedPermissionscode.
      */
     public static boolean isSupported(int code) {
         return get(code) != null;
     }
 
     /**
-     * 已授权档位是否满足动作要求：read 需任意档；write/operate 需可读写。
+     * AlreadyAuthorizationSlotYesNoAddress action requirements:read (b) Any form required;write/operate YesRead/Write。
      */
     public static boolean satisfies(int grantedPermission, String actionCode) {
         ResourceAclActionEnum action = ResourceAclActionEnum.get(actionCode);

@@ -20,10 +20,10 @@ public abstract class JsonUtil {
 
     /**
      * 将对象序列化为 JSON 字符串，对 FastJSON2 难以序列化的类型做转换，避免 JSONException。
-     * 用于 getBinlogData 等可能包含 byte[]、ByteBuffer、原始数组等类型的 Map。
+     * ForgetBinlogData Waiting for possible Inspectionbyte[]、ByteBuffer、Original array, etc.TypeYes.Map。
      * <p>
-     * 转换规则：byte[]/ByteBuffer -> Base64；int/long/short/float/double/boolean/char[] -> List；
-     * 其他类型保持不变；Map/List 递归处理。
+     * Convert27. Rules:byte[]/ByteBuffer -> Base64；int/long/short/float/double/boolean/char[] -> List；
+     * OtherTypeNo change;Map/List Recursive processing.
      */
     public static String objToJsonSafe(Object obj) {
         if (obj == null) {
@@ -150,7 +150,7 @@ public abstract class JsonUtil {
     }
 
     /**
-     * 清理字符串中的非法 UTF-16（未配对 surrogate 等），避免 FastJSON 写入 JSON 时抛错。
+     * Cleans up illegal in a stringUTF-16（Not pairedsurrogate Wait, avoid.FastJSON WritingJSON is the wrong time.
      */
     private static String sanitizeStringForJson(String s) {
         if (s == null || s.isEmpty())
@@ -174,12 +174,12 @@ public abstract class JsonUtil {
     }
 
     /**
-     * Map 转对象（拆分列存储行还原场景）。
+     * Map Switch object Observations (dismantling)minColumn storage line returns scene.
      *
-     * @param map       存储行或中间 Map
-     * @param valueType 目标类型
-     * @param <T>       目标类型
-     * @return 反序列化结果，map 为空时返回 null
+     * @param map       Store line or middleMap
+     * @param valueType Objective CombinedType
+     * @param <T>       Objective CombinedType
+     * @return Inverse sequenceResult，map is emptyBack null
      */
     public static <T> T mapToObj(Map<?, ?> map, Class<T> valueType) {
         if (map == null || valueType == null) {
@@ -189,12 +189,12 @@ public abstract class JsonUtil {
     }
 
     /**
-     * 反序列化为带泛型的对象（如 {@code Map<String, Xxx>}）。
+     * Inverse sequences into objects of a general nature (e.g.{@code Map<String, Xxx>}）。
      *
-     * @param json          JSON 字符串
-     * @param typeReference 泛型类型引用
-     * @param <T>           目标类型
-     * @return 反序列化结果，json 为空时返回 null
+     * @param json          JSON String
+     * @param typeReference PanTypeReferences
+     * @param <T>           Objective CombinedType
+     * @return Inverse sequenceResult，json is emptyBack null
      */
     public static <T> T jsonToObj(String json, TypeReference<T> typeReference) {
         if (json == null || typeReference == null) {
@@ -220,7 +220,7 @@ public abstract class JsonUtil {
     }
 
     /**
-     * 判断JSON字符串的类型
+     * Judgement ConfirmationJSONStringType
      */
     public static JsonType getJsonType(String jsonStr) {
         if (jsonStr == null) {
@@ -229,18 +229,18 @@ public abstract class JsonUtil {
 
         String trimmed = jsonStr.trim();
 
-        // 快速检查
+        // Quick Check
         if (trimmed.isEmpty()) {
             return JsonType.INVALID;
         }
 
-        // 检查是否是有效的JSON
+        // InspectionYesNoYesIt works.JSON
         JSONValidator validator = JSONValidator.from(jsonStr);
         if (!validator.validate()) {
             return JsonType.INVALID;
         }
 
-        // 根据第一个字符判断
+        // According to firstCharacterJudgement Confirmation
         char firstChar = trimmed.charAt(0);
 
         switch (firstChar) {
@@ -262,7 +262,7 @@ public abstract class JsonUtil {
                 }
                 break;
             default:
-                // 检查是否是数字
+                // InspectionYesNoYesNumbers
                 if (trimmed.matches("-?\\d+(\\.\\d+)?([eE][+-]?\\d+)?")) {
                     return JsonType.NUMBER;
                 }
@@ -272,13 +272,13 @@ public abstract class JsonUtil {
     }
 
     public enum JsonType {
-        OBJECT, // JSON对象 {key: value}
-        ARRAY, // JSON数组 [element1, element2]
-        STRING, // JSON字符串 "text"
-        NUMBER, // JSON数字 123 or 123.45
-        BOOLEAN, // JSON布尔值 true or false
+        OBJECT, // JSONObject {key: value}
+        ARRAY, // JSONArray [element1, element2]
+        STRING, // JSONString"text"
+        NUMBER, // JSONNumbers123 or 123.45
+        BOOLEAN, // JSONBooleanValue true or false
         NULL, // JSON null
-        INVALID, // 无效的JSON
-        UNKNOWN // 未知类型
+        INVALID, // NoneActiveJSON
+        UNKNOWN // UnknownType
     }
 }

@@ -66,19 +66,19 @@ public abstract class AbstractListener<C extends ConnectorInstance> implements L
         if (null != event) {
             switch (event.getEvent()) {
                 case ConnectorConstant.OPERTION_UPDATE:
-                    // 是否支持监听修改事件
+                    // YesNoSupport listeningUpdateEvent
                     processEvent(listenerConfig.isEnableUpdate(), event);
                     break;
                 case ConnectorConstant.OPERTION_INSERT:
-                    // 是否支持监听新增事件
+                    // YesNoSupport listeningInsertEvent
                     processEvent(listenerConfig.isEnableInsert(), event);
                     break;
                 case ConnectorConstant.OPERTION_DELETE:
-                    // 是否支持监听删除事件
+                    // YesNoSupport listeningDeleteEvent
                     processEvent(listenerConfig.isEnableDelete(), event);
                     break;
                 case ConnectorConstant.OPERTION_ALTER:
-                    // 表结构变更事件
+                    // Table schemaChangeEvent
                     watcher.changeEvent(event);
                     break;
                 default:
@@ -94,7 +94,7 @@ public abstract class AbstractListener<C extends ConnectorInstance> implements L
 
     @Override
     public void flushEvent() {
-        // 20s内更新，执行写入
+        // 20sInternal update, execute writing
         if (watcher.getMetaUpdateTime() > Timestamp.valueOf(LocalDateTime.now().minusSeconds(FLUSH_DELAYED_SECONDS)).getTime()) {
             if (!CollectionUtils.isEmpty(snapshot)) {
                 logger.info("snapshot：{}", snapshot);
@@ -125,7 +125,7 @@ public abstract class AbstractListener<C extends ConnectorInstance> implements L
     }
 
     /**
-     * 如果允许监听该事件，则触发事件通知
+     * If you're allowed to listen,Event，TriggerEventAnnouncements
      *
      * @param permitEvent
      * @param event

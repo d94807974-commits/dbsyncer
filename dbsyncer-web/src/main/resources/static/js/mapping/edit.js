@@ -1,4 +1,4 @@
-// 修改驱动名称
+// EditDriverName
 function mappingModifyName() {
     const $name = $("#mapping_name_modify");
     const tmp = $name.text();
@@ -13,7 +13,7 @@ function mappingModifyName() {
     });
 }
 
-// 绑定全量+增量切换事件
+// TieFull + incrementalSwitchEvent
 function bindMappingModelChange() {
     const mappingModel = $('#mapping_model').radioGroup({
         theme: 'info',
@@ -22,7 +22,7 @@ function bindMappingModelChange() {
             showSuperConfig(value);
         }
     });
-    // 渲染选择radio配置
+    // Render Selection ratifyradioConfigure
     showSuperConfig(mappingModel.getValue());
 }
 function showSuperConfig(model){
@@ -35,7 +35,7 @@ function showSuperConfig(model){
     }
 }
 
-// 绑定日志+定时切换事件
+// TieLog+ScheduledSwitchEvent
 function bindIncrementConfigChange(){
     const incrementStrategy = $('#increment_strategy').radioGroup({
         theme: 'info',
@@ -44,7 +44,7 @@ function bindIncrementConfigChange(){
             showIncrementConfig(value);
         }
     });
-    // 渲染选择radio配置
+    // Render Selection ratifyradioConfigure
     showIncrementConfig(incrementStrategy.getValue());
 }
 function showIncrementConfig(model){
@@ -56,7 +56,7 @@ function showIncrementConfig(model){
     }
 }
 
-// 修改增量点配置
+// EditIncrementalPoints 71Configure
 function bindSnapshotModifyClick() {
     $(".metaSnapshotModify").click(function(){
         const $cell = $(this).closest('tr').find("td:eq(2)");
@@ -75,7 +75,7 @@ function bindSnapshotModifyClick() {
         });
     })
 }
-// 生成增量点配置参数
+// GenerateIncrementalPoints 71ConfigureParameter
 function createMetaSnapshotParams() {
     const snapshot = {};
     $("#mappingMetaSnapshotConfig tr").each(function () {
@@ -105,7 +105,7 @@ function resolveConnectorType($connector, connectorId) {
 
 function isOracleConnector($connector, connectorId) {
     const type = resolveConnectorType($connector, connectorId);
-    // 达梦 / OceanBaseOracle 与 Oracle 一样以 Schema(用户) 为命名空间，无独立库列表
+    // Dream /OceanBaseOracle and Oracle Same asSchema(User) To name space,NoneIndependenceLibraryList
     return type && ['oracle', 'dameng', 'oceanbaseoracle'].indexOf(String(type).toLowerCase()) >= 0;
 }
 
@@ -133,7 +133,7 @@ function onDBChange(connectorId, schemaSelect, dbName, defaultSchema, oracleMode
                 schemaSelect.setValues([defaultSchema], true);
             }
         } else {
-            bootGrowl("获取Schema信息失败: " + response.message, "danger");
+            bootGrowl("Could not close temporary folder: %s " + response.message, "danger");
         }
     });
 }
@@ -165,13 +165,13 @@ function onConnectorChange(connectorId, dbSelect, schemaSelect, $connector, $dat
                 onDBChange(connectorId, schemaSelect, defaultDatabase, defaultSchema, false);
             }
         } else {
-            bootGrowl("获取数据库信息失败: " + response.message, "danger");
+            bootGrowl("Could not close temporary folder: %s " + response.message, "danger");
         }
     });
 }
 
 function initDBSelect($connector, $database, $schema, role) {
-    // 为每个 select 组维护独立的连接器ID，避免上下文串用
+    // For eachselect Group maintains independenceConnectorID，Avoid context string
     let currentConnectorId = null;
     const defaultDatabase = $database.data("database") || '';
     const defaultSchema = $schema.data("schema") || '';
@@ -201,7 +201,7 @@ function initDBSelect($connector, $database, $schema, role) {
         }
     }));
 
-    // 初始化：如果有默认选中的连接器，加载库列表
+    // Initialization: if selectedHAConnector，LoadLibraryList
     const selected = connectorSelect.getValues();
     if (selected.length >= 1) {
         currentConnectorId = selected[0];
@@ -210,36 +210,36 @@ function initDBSelect($connector, $database, $schema, role) {
 }
 
 $(function () {
-    // 定义返回函数，子页面返回
+    // DefinitionsBackFunctions，SonPageNoodles.Back
     window.backIndexPage = function () {
         doLoader('/mapping/list');
     };
 
     initDBSelect($('#sourceConnectorId'), $('#sourceDatabase'), $('#sourceSchema'), 'source');
     initDBSelect($('#targetConnectorId'), $('#targetDatabase'), $('#targetSchema'), 'target');
-    // 绑定全量+增量切换事件
+    // TieFull + incrementalSwitchEvent
     bindMappingModelChange();
-    // 绑定日志+定时切换事件
+    // TieLog+ScheduledSwitchEvent
     bindIncrementConfigChange();
-    // 绑定增量点配置编辑事件
+    // TieIncrementalPoints 71ConfigureEditEvent
     bindSnapshotModifyClick();
 
-    // 保存
+    // Save
     $("#mappingSubmitBtn").click(function () {
         let $form = $("#mappingModifyForm");
         if (validateForm($form)) {
             const $btn = $(this);
             const originalText = $btn.html();
-            $btn.html('<i class="fa fa-spinner fa-spin"></i> 保存中...').prop('disabled', true);
+            $btn.html('<i class="fa fa-spinner fa-spin"></i> Saving...').prop('disabled', true);
             doPoster("/mapping/edit", $form.serializeJson(), function (response) {
                 $btn.html(originalText).prop('disabled', false);
                 if (response.success === true) {
-                    bootGrowl("保存成功!", "success");
+                    bootGrowl("Saved successfully!", "success");
                     const rawStr = localStorage.getItem("dbsyncer.pagination.mapping-list");
                     const raw = JSON.parse(rawStr);
                     raw.pageNum = 1;
                     localStorage.setItem('dbsyncer.pagination.mapping-list', JSON.stringify(raw));
-                    // 返回到默认主页
+                    // BackTo Default MasterPage
                     backIndexPage();
                 } else {
                     bootGrowl(response.message, "danger");

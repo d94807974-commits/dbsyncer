@@ -4,21 +4,21 @@
 package org.dbsyncer.biz.model;
 
 /**
- * Token信息
+ * TokenInfo
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-02-07 00:02
  */
 public class TokenInfo {
 
     /**
-     * 签发时间
+     * IssuanceTime
      */
     private Long iat;
 
     /**
-     * 有效期
+     * Valid until
      */
     private Long exp;
 

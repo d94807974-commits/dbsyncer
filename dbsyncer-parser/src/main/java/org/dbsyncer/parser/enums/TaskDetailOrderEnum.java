@@ -4,7 +4,7 @@
 package org.dbsyncer.parser.enums;
 
 /**
- * 任务明细列表显式排序（与指标无关时使用；有指标时优先用 {@link TaskDetailMetricEnum#getOrderSql()}）。
+ * TasksDetailsListVisible Sorting (andIndicatorsNoneuse at close;Shh! when indicators are available{@link TaskDetailMetricEnum#getOrderSql()}）。
  *
  * @author wuji
  * @version 1.0.0
@@ -13,7 +13,7 @@ package org.dbsyncer.parser.enums;
 public enum TaskDetailOrderEnum {
 
     /**
-     * 按明细更新时间
+     * By DetailsUpdated at
      */
     UPDATE_TIME("ORDER BY d.UPDATE_TIME DESC ");
 
@@ -24,7 +24,7 @@ public enum TaskDetailOrderEnum {
     }
 
     /**
-     * ORDER BY 子句（含尾部空格）。
+     * ORDER BY Substatement (with end spaces).
      */
     public String getSql() {
         return sql;

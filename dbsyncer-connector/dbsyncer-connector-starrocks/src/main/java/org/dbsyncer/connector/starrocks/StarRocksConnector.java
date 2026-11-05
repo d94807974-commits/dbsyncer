@@ -42,9 +42,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * StarRocks 连接器（兼容 MySQL 协议）
+ * StarRocks Connector（CompatibilityMySQL )
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-07 03:00
  */
@@ -99,8 +99,8 @@ public final class StarRocksConnector extends MySQLConnector {
     }
 
     /**
-     * StarRocks 不支持 MySQL 的 {@code INSERT IGNORE} 语法，主键模型（Primary Key / Unique Key）表
-     * 通过 {@code INSERT INTO} 即可按主键自动去重覆盖，故这里改为纯 {@code INSERT INTO}。
+     * StarRocks Not supportedMySQL Yes.{@code INSERT IGNORE} Syntax:Primary keyModelPrimary Key / Unique Key）Table
+     * Pass.{@code INSERT INTO} You opted.Primary keyAutomatically heavyOverwrite，So here it's pure.{@code INSERT INTO}。
      */
     @Override
     public String buildInsertSql(SqlBuilderConfig config) {
@@ -108,8 +108,8 @@ public final class StarRocksConnector extends MySQLConnector {
     }
 
     /**
-     * StarRocks 不支持 MySQL 的 {@code ON DUPLICATE KEY UPDATE} 语法，主键模型表的 {@code INSERT INTO}
-     * 本身即为 UPSERT（按主键覆盖），故 upsert 与 insert 使用相同的 {@code INSERT INTO} 语句。
+     * StarRocks Not supportedMySQL Yes.{@code ON DUPLICATE KEY UPDATE} Syntax:Primary keyModel Table{@code INSERT INTO}
+     * That's what it is.UPSERT（PressPrimary keyOverwrite），And so...upsert and insert Use same{@code INSERT INTO} statement.
      */
     @Override
     public String buildUpsertSql(DatabaseConnectorInstance connectorInstance, SqlBuilderConfig config) {
@@ -154,9 +154,9 @@ public final class StarRocksConnector extends MySQLConnector {
     }
 
     /**
-     * StarRocks 的 JDBC {@code getPrimaryKeys} 对 key 模型表通常返回空，导致列元数据缺少主键标记，
-     * 整库迁移时会因「缺少主键」失败。故列类型仍走父类 JDBC，主键改用 {@code DESC table} 的 Key 列
-     *（key 模型排序键为 true）补齐。
+     * StarRocks Yes.JDBC {@code getPrimaryKeys} Yeah.key Model tables usuallyBackEmpty, resulting in column metadata missingPrimary keyMark,
+     * Database migrationIt's time.「MissingPrimary key」Failed。HomeTypeStill FatherJDBC，Primary keyChange{@code DESC table} Yes.Key Columns
+     *（key Model Sort Keytrue）Completion.
      */
     @Override
     public List<MetaInfo> getMetaInfo(DatabaseConnectorInstance connectorInstance, ConnectorServiceContext context) {
@@ -183,7 +183,7 @@ public final class StarRocksConnector extends MySQLConnector {
                     if (StringUtil.isNotBlank(database)) {
                         table = buildWithQuotation(database) + "." + table;
                     }
-                    // queryForList 返回大小写不敏感的 LinkedCaseInsensitiveMap，可直接按 Field/Key 取值
+                    // queryForList BackCase insensitiveLinkedCaseInsensitiveMap，Directly pressableField/Key RemoveValue
                     Set<String> keys = new HashSet<>();
                     for (Map<String, Object> row : databaseTemplate.queryForList("DESC " + table)) {
                         if (isKeyColumn(row.get("Key"))) {
@@ -192,8 +192,8 @@ public final class StarRocksConnector extends MySQLConnector {
                     }
                     metaInfo.getColumn().forEach(f -> f.setPk(keys.contains(f.getName().toUpperCase(Locale.ROOT))));
                 } catch (Exception e) {
-                    // 键标记失败不阻断元数据加载，下游无主键时再由业务报错
-                    logger.warn("获取 StarRocks 键列失败, database={}, table={}, err={}", database, metaInfo.getTable(), e.getMessage());
+                    // Key TagsFailedDo not block metadata loading, downstreamNonePrimary keyIt Thirties.
+                    logger.warn("Failed to get StarRocks Table =}, table =}, err ={", database, metaInfo.getTable(), e.getMessage());
                 }
             }
             return metaInfos;
@@ -201,7 +201,7 @@ public final class StarRocksConnector extends MySQLConnector {
     }
 
     /**
-     * StarRocks {@code DESC} 的 Key 列在 key 模型排序键为 true；兼容 PRI/UNI/DUP（部分版本/明细模型排序键）。
+     * StarRocks {@code DESC} Yes.Key Listedkey Model Sort Keytrue；CompatibilityPRI/UNI/DUP（DepartmentminVersion/Detailed Model Sorting Key.
      */
     private static boolean isKeyColumn(Object columnKey) {
         if (columnKey == null) {

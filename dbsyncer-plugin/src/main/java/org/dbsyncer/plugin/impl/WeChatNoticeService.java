@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 企业微信通知服务实现
+ * Corporate WisdomNotification of service realization
  *
  * @author AE86
  * @version 1.0.0
@@ -41,11 +41,11 @@ public final class WeChatNoticeService extends AbstractWebHookNoticeService {
         TextContent content = new TextContent();
         content.setContent(c);
 
-        // @所有人
+        // @everyone
         if (wechat.isAtAll()) {
             content.setMentionedList(StringUtil.split("@all", StringUtil.COMMA));
         } else {
-            // @某个人手机号
+            // @Someone.Cell phone number
             String atMobiles = wechat.getAtMobiles();
             if (StringUtil.isNotBlank(atMobiles)) {
                 content.setMentionedMobileList(StringUtil.split(atMobiles, StringUtil.COMMA));
@@ -85,13 +85,13 @@ public final class WeChatNoticeService extends AbstractWebHookNoticeService {
         private String content;
 
         /**
-         * At用户列表
+         * AtUserList
          */
         @JSONField(name = "mentioned_list")
         private String[] mentionedList;
 
         /**
-         * At手机号列表
+         * AtCell phone numberList
          */
         @JSONField(name = "mentioned_mobile_list")
         private String[] mentionedMobileList;

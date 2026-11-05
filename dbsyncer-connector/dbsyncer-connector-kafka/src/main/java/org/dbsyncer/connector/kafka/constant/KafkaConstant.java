@@ -4,7 +4,7 @@
 package org.dbsyncer.connector.kafka.constant;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-06 22:30
  */
@@ -13,17 +13,17 @@ public final class KafkaConstant {
     public static final String TOPIC = "topic";
 
     /**
-     * 消息体：源表名
+     * MessageBody：Source Table Name
      */
     public static final String FIELD_TABLE = "table";
 
     /**
-     * 消息体：操作类型（INSERT/UPDATE/DELETE）
+     * MessageBody：ActionsType（INSERT/UPDATE/DELETE）
      */
     public static final String FIELD_EVENT = "event";
 
     /**
-     * 消息体：行数据
+     * MessageBody：Row data
      */
     public static final String FIELD_DATA = "data";
 

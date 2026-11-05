@@ -7,36 +7,36 @@ import java.util.concurrent.RejectedExecutionHandler;
 public abstract class ThreadPoolUtil {
 
     /**
-     * 新建线程池
+     * NewThreadsJi.
      *
-     * @param corePoolSize 核心线程数
-     * @param maxPoolSize 最大线程数
-     * @param queueCapacity 队列容量
-     * @param keepAliveSeconds 空闲线程销毁时间（秒）
-     * @param threadNamePrefix 线程前缀名称
+     * @param corePoolSize CoreThreads
+     * @param maxPoolSize MaxThreads
+     * @param queueCapacity Queue Capacity
+     * @param keepAliveSeconds FreeThreadsDestructionTime（seconds）
+     * @param threadNamePrefix ThreadsPrefixName
      * @return
      */
     public static ThreadPoolTaskExecutor newThreadPoolTaskExecutor(int corePoolSize, int maxPoolSize, int queueCapacity, int keepAliveSeconds, String threadNamePrefix) {
-        // 注意这一行日志：2. do submit,taskCount [101], completedTaskCount [87], activeCount [5], queueSize [9]
-        // 这说明提交任务到线程池的时候，调用的是submit(Callable task)这个方法，当前已经提交了101个任务，完成了87个，当前有5个线程在处理任务，还剩9个任务在队列中等待，线程池的基本情况一路了然；
+        // Watch the line.Log：2. do submit,taskCount [101], completedTaskCount [87], activeCount [5], queueSize [9]
+        // /54/7DescriptionSubmitTasksPresent.ThreadsWhen I was in the pool, I called.Yessubmit(Callable task)This way, it's already...SubmitYeah.101individualTasks，FinishYeah.87Yeah, I do.5individualThreadsI'm working on it.Tasks，There's nothing left.9individualTasksIn the queue, wait.ThreadsThe basics of the pool are on the way;
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        // 核心线程数10：线程池创建时候初始化的线程数
+        // CoreThreads10：ThreadsInitialised when the pool was createdThreads
         executor.setCorePoolSize(corePoolSize);
-        // 最大线程数128：线程池最大的线程数，只有在缓冲队列满了之后才会申请超过核心线程数的线程
-        // maxPoolSize 当系统负载大道最大值时,核心线程数已无法按时处理完所有任务,这是就需要增加线程.每秒200个任务需要20个线程,那么当每秒1000个任务时,则需要(1000-queueCapacity)*(20/200),即60个线程,可将maxPoolSize设置为60;
+        // MaxThreads128：ThreadsBiggest poolThreads，Only when the buffer line is full will the application go beyond the core.ThreadsYes.Threads
+        // maxPoolSize When system loads are largestValueTime,CoreThreadsAlreadyNoneIt's done on time.Tasks,/54/7YesWe need more.Threads.Everyseconds200individualTasksYes.20individualThreads,♪ So when every ♪seconds1000individualTasksTime,Yes.(1000-queueCapacity)*(20/200),That's...60individualThreads,Yes.maxPoolSizeSettingsYes60;
         executor.setMaxPoolSize(maxPoolSize);
-        // 缓冲队列：用来缓冲执行任务的队列
+        // Social securityTasksqueue
         executor.setQueueCapacity(queueCapacity);
-        // 允许线程的空闲时间30秒：当超过了核心线程出之外的线程在空闲时间到达之后会被销毁
+        // verifieThreadsYes.FreeTime30seconds：When the core is exceededThreadsOutsideThreadsYes.FreeTimeThey'll be destroyed when they arrive.
         executor.setKeepAliveSeconds(keepAliveSeconds);
-        // 线程池名的前缀：设置好了之后可以方便我们定位处理任务所在的线程池
+        // ThreadsPool name prefix:SettingsIt'll be easy for us to locate.TasksPlaceThreadsJi.
         executor.setThreadNamePrefix(threadNamePrefix);
-        // 理线程池对拒绝任务的处策略：这里采用了CallerRunsPolicy策略，当线程池没有处理能力的时候，该策略会直接在 execute 方法的调用线程中运行被拒绝的任务；如果执行程序已关闭，则会丢弃该任务
+        // RiceThreadsIke said no.TasksThe local strategy:CallerRunsPolicyStrategy, whenThreadsWhen the pool doesn't have the capacity to handle it, the strategy will go straight ahead.execute Method CallThreadsRunning rejectedTasks；If execution proceduresDisabled，I'll throw it away.Tasks
         /*
-         * CallerRunsPolicy：线程调用运行该任务的 execute 本身。此策略提供简单的反馈控制机制，能够减缓新任务的提交速度。
-         * 这个策略显然不想放弃执行任务。但是由于池中已经没有任何资源了，那么就直接使用调用该execute的线程本身来执行。（开始我总不想丢弃任务的执行，但是对某些应用场景来讲，很有可能造成当前线程也被阻塞。如果所有线程都是不能执行的，很可能导致程序没法继续跑了。需要视业务情景而定吧。） AbortPolicy：处理程序遭到拒绝将抛出运行时
-         * RejectedExecutionException 这种策略直接抛出异常，丢弃任务。（jdk默认策略，队列满并线程满时直接拒绝添加新任务，并抛出异常，所以说有时候放弃也是一种勇气，为了保证后续任务的正常进行，丢弃一些也是可以接收的，记得做好记录） DiscardPolicy：不能执行的任务将被删除 这种策略和AbortPolicy几乎一样，也是丢弃任务，只不过他不抛出异常。
-         * DiscardOldestPolicy：如果执行程序尚未关闭，则位于工作队列头部的任务将被删除，然后重试执行程序（如果再次失败，则重复此过程） 该策略就稍微复杂一些，在pool没有关闭的前提下首先丢掉缓存在队列中的最早的任务，然后重新尝试运行该任务。这个策略需要适当小心
+         * CallerRunsPolicy：ThreadsCall to run theTasksYes.execute By itself. This strategy provides simple feedback control mechanisms that can slow down new onesTasksYes.SubmitSpeed.
+         * This strategy obviously doesn't want to give up.Tasks。But...YesBecause there's no more in the pool.ResourceThen just use the call.executeYes.ThreadsBy itself. At first I didn't want to leave.Tasksimplementation, butYesFor some applications, it's very likely to create the current situation.ThreadsIt's blocked. If allThreadsBothYesFailure Ninety-five per cent of the total number of cases were reported. Depending Ninety-five per centAbortPolicy：Processor rejected will be thrown out when running
+         * RejectedExecutionException This strategy goes straight out.Error，DropTasks。（jdkDefault policy, line upThreadsIt's a direct rejection.AddNewTasks，And throw it out.Error，So sometimes I give up.YesA kind of courage to ensure follow-up.TasksYes.NormalLet's go. Throw some away.YesYou can take it. Make a record.DiscardPolicy：UnenforceableTasksWill beDelete This strategy andAbortPolicyAlmost the same, too.YesDropTasks，Except he didn't throw it.Error。
+         * DiscardOldestPolicy：If enforcement procedures are not yet in placeClose，At the head of the task force.TasksWill beDelete，And...Try againExecution procedure (if again)Failed，It's a slightly more complicated strategy.poolAuditorless.CloseIf you want to get rid of the first of the slow queuesTasks，And then try to run that again.Tasks。This strategy requires proper care.
          */
         executor.setRejectedExecutionHandler(rejectedExecutionHandler());
         executor.setWaitForTasksToCompleteOnShutdown(true);

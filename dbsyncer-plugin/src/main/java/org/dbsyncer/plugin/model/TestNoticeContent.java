@@ -8,7 +8,7 @@ import org.dbsyncer.sdk.enums.NoticeTypeEnum;
 import org.dbsyncer.sdk.model.NoticeContent;
 
 /**
- * 测试通知消息
+ * TestOrganisation
  *
  * @Author AE86
  * @Version 1.0.0

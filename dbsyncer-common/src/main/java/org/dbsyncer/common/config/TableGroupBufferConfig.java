@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * 表执行器配置
+ * Table-group actuatorConfigure
  *
  * @author AE86
  * @version 1.0.0
@@ -15,17 +15,17 @@ import org.springframework.context.annotation.Configuration;
 public class TableGroupBufferConfig extends BufferActuatorConfig {
 
     /**
-     * 工作线程数
+     * WorkThreads
      */
     private int threadCoreSize = 1;
 
     /**
-     * 最大工作线程数
+     * Max.Threads
      */
     private int maxThreadSize = threadCoreSize * 2;
 
     /**
-     * 工作线任务队列
+     * WorklineTasksLine
      */
     private int threadQueueCapacity = 1000;
 

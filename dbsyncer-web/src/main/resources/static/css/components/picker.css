@@ -1,9 +1,9 @@
 /**
- * 数据选择器（表树勾选）
- * 用于整库迁移等「选表」场景
+ * Data Selector (table tree tick)
+ * ForDatabase migrationWait.「Selection」scene
  */
 
-/* ========== 可滚动表树区域 ========== */
+/* ========== Scrollable Table Tree Area Extent========== */
 .picker-scroll {
   height: 320px;
   overflow-y: auto;
@@ -77,7 +77,7 @@
 }
 
 .picker-tree-children {
-  /* 子表 checkbox 与分组行展开箭头对齐：16px 复选框 + 8px 间距 */
+  /* Subwatchcheckbox andGroupLines to expand arrow alignment:16px Checkbox+ 8px Space*/
   padding: 4px 8px 6px 24px;
   margin-top: 2px;
   background-color: rgba(22, 93, 255, 0.05);

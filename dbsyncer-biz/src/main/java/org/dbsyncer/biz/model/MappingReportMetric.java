@@ -3,32 +3,32 @@ package org.dbsyncer.biz.model;
 public class MappingReportMetric {
 
     /**
-     * 已处理成功数
+     * ProcessedSuccesses
      */
     private long success;
 
     /**
-     * 已处理失败数
+     * ProcessedFailures
      */
     private long fail;
 
     /**
-     * 插入事件
+     * InsertEvent
      */
     private long insert;
 
     /**
-     * 更新事件
+     * UpdateEvent
      */
     private long update;
 
     /**
-     * 删除事件
+     * DeleteEvent
      */
     private long delete;
 
     /**
-     * ddl事件
+     * ddlEvent
      */
     private long ddl;
 

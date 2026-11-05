@@ -7,7 +7,7 @@ import org.dbsyncer.common.model.ConfigModel;
 import org.dbsyncer.sdk.constant.ConfigConstant;
 
 /**
- * 菜单权限。
+ * MenuPermissions。
  *
  * @author wuji
  * @version 1.0.0

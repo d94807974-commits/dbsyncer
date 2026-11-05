@@ -15,9 +15,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 达梦日期时间类型（归一化后不含精度括号）
+ * Dream DateTimeType（Not included when consolidatedOutlook saluteparenthesis)
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-07-18
  */

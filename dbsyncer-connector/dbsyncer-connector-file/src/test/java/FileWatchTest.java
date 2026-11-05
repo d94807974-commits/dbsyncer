@@ -42,14 +42,14 @@ public class FileWatchTest {
         Path p = Paths.get(path);
         p.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
 
-        logger.info("启动监听");
+        logger.info("Start listening");
         long count = 0L;
         while (count < 30) {
             WatchKey watchKey = watchService.take();
             List<WatchEvent<?>> watchEvents = watchKey.pollEvents();
             for (WatchEvent<?> event : watchEvents) {
                 Object context = event.context();
-                logger.info("[{}{}] 文件发生了[{}]事件", path, context, event.kind());
+                logger.info("[{{}] File has happened [}", path, context, event.kind());
             }
             watchKey.reset();
 

@@ -252,7 +252,7 @@ public class TaskProfileImpl implements TaskProfile {
             }
             String type = map.get(ConfigConstant.CONFIG_MODEL_TYPE) == null
                     ? null : String.valueOf(map.get(ConfigConstant.CONFIG_MODEL_TYPE));
-            // 导入兼容历史大写 TYPE，规范后再解析/落库
+            // ImportHistory CompatibilityTYPE，Regulation before resolution/downLibrary
             type = CommonTaskTypeEnum.normalizeImportType(type);
             if (StringUtil.isNotBlank(type)) {
                 map.put(ConfigConstant.CONFIG_MODEL_TYPE, type);
@@ -284,7 +284,7 @@ public class TaskProfileImpl implements TaskProfile {
                     enterpriseTasks.add(task);
                 }
             } else {
-                logger.warn("跳过未知任务类型: type={}, id={}", type, map.get(ConfigConstant.CONFIG_MODEL_ID));
+                logger.warn("Skip unknown task type: type={, id={", type, map.get(ConfigConstant.CONFIG_MODEL_ID));
             }
         }
         if (!CollectionUtils.isEmpty(mappings)) {
@@ -343,7 +343,7 @@ public class TaskProfileImpl implements TaskProfile {
         if (StringUtil.isBlank(taskId)) {
             return;
         }
-        // 清空明细分表数据（任务仍在）；表级 Meta 重置而非删除，供分片选表 JOIN
+        // ClearDetailsminTable dataTasksStill in place; scheduleMeta ResetNotDelete，ForminSelectedJOIN
         taskDetailMetaProfile.clearData(taskId);
         resetTableDetailMetas(taskId);
     }
@@ -367,7 +367,7 @@ public class TaskProfileImpl implements TaskProfile {
         if (StringUtil.isBlank(taskId)) {
             return;
         }
-        // 物理 DROP 明细分表，不重建
+        // PhysicsDROP DetailsminTable, no reconstruction
         taskDetailMetaProfile.dropTaskDetailTable(taskId);
         deleteTableGroupDetailMetas(taskId);
     }

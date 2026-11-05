@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * SqlQuery 结果行别名规范化：忽略驱动返回的列名大小写，再按固定驼峰别名写出。
+ * SqlQuery ResultStandardize Revenue: IgnoreMappingBackCompetences for listing are written by a fixed camel.
  *
  * @author wuji
  * @version 1.0.0
@@ -21,11 +21,11 @@ public final class SqlResultRowUtil {
     }
 
     /**
-     * 将 SQL 结果行按别名列表投影为稳定驼峰字段（避免 JSON 出现 TYPE/UPDATETIME）。
+     * WillSQL ResultLine by aliasesListThe projection is a stable hump.Field（AvoidJSON Come on.TYPE/UPDATETIME）。
      *
-     * @param sqlRow  驱动返回行，可为 null
-     * @param aliases 目标别名（顺序保留）
-     * @return 仅含命中别名的新 Map
+     * @param sqlRow  MappingBackYes, I can.null
+     * @param aliases Objective CombinedAli Physical aliases (maintain order)
+     * @return New only with aliases.Map
      */
     public static Map<String, Object> toAliasRow(Map<String, Object> sqlRow, String[] aliases) {
         Map<String, Object> src = new LinkedCaseInsensitiveMap<>();

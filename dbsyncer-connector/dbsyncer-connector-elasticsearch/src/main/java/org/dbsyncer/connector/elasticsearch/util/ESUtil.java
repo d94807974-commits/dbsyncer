@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * ES连接器工具类
+ * ESConnectorTool class
  *
  * @Author AE86
  * @Version 1.0.0
@@ -78,8 +78,8 @@ public abstract class ESUtil {
     }
 
     /**
-     * 构建 range 查询。7.x 客户端的 {@code RangeQueryBuilder#gt()} 等会序列化为 from/to，
-     * ES 8+ 已不支持该写法，需直接使用 gt/gte/lt/lte。
+     * Buildrange query.7.x Client{@code RangeQueryBuilder#gt()} When the sequence becomesfrom/to，
+     * ES 8+ This writing is not supported and needs to be used directlygt/gte/lt/lte。
      */
     public static QueryBuilder buildRangeQuery(String field, FilterEnum filterEnum, String value) {
         String boundKey;

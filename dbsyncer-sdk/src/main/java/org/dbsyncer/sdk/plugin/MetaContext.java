@@ -4,7 +4,7 @@
 package org.dbsyncer.sdk.plugin;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-02-12 00:47
  */

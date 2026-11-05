@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-03-30 20:00
  */
@@ -60,10 +60,10 @@ public class ValidateSyncTableGroupChecker extends TableGroupChecker {
         ValidateSyncTask task = validateSyncProfile.get(taskId);
         Assert.notNull(task, "task can not be null.");
 
-        // 检查是否存在重复映射关系
+        // InspectionYesNoDuplicationMapping
         checkRepeatedTable(taskId, sourceTable, targetTable);
 
-        // 获取连接器信息
+        // AccessConnectorInfo
         TableGroup tableGroup = new TableGroup();
         tableGroup.setTaskId(taskId);
         Table source = findTable(task.getSourceTable(), sourceTable, sourceType);
@@ -71,10 +71,10 @@ public class ValidateSyncTableGroupChecker extends TableGroupChecker {
         tableGroup.setSourceTable(updateTableColumn(task, ConnectorInstanceUtil.SOURCE_SUFFIX, sourceTablePK, source));
         tableGroup.setTargetTable(updateTableColumn(task, ConnectorInstanceUtil.TARGET_SUFFIX, targetTablePK, target));
 
-        // 修改基本配置
+        // UpdateBasicConfigure
         this.modifyConfigModel(tableGroup, params);
 
-        // 匹配相似字段映射关系
+        // Match SimilarFieldMapping
         if (StringUtil.isNotBlank(fieldMappings)) {
             matchFieldMapping(tableGroup, fieldMappings);
         } else {
@@ -94,17 +94,17 @@ public class ValidateSyncTableGroupChecker extends TableGroupChecker {
         String fieldMappingJson = params.get("fieldMapping");
         Assert.hasText(fieldMappingJson, "TableGroupChecker check params fieldMapping is empty");
 
-        // 修改基本配置
+        // UpdateBasicConfigure
         this.modifyConfigModel(tableGroup, params);
 
-        // 过滤条件
+        // Filter Conditions
         String filterJson = params.get("filter");
         if (StringUtil.isNotBlank(filterJson)) {
             List<Filter> list = JsonUtil.jsonToArray(filterJson, Filter.class);
             tableGroup.setFilter(list);
         }
 
-        // 字段映射关系
+        // FieldMapping
         setFieldMapping(tableGroup, fieldMappingJson);
 
         return tableGroup;

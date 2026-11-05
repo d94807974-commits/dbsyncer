@@ -31,8 +31,8 @@ import java.util.stream.Collectors;
 public abstract class AbstractDatabaseListener extends AbstractListener<DatabaseConnectorInstance> {
 
     /**
-     * 自定义SQL，支持1对多
-     * <p>MY_USER > [用户表1, 用户表2]
+     * CustomSQL，Support1Yes.
+     * <p>MY_USER > [UserTable1, UserTable2]
      */
     private final Map<String, List<DqlMapper>> dqlMap = new ConcurrentHashMap<>();
 
@@ -43,7 +43,7 @@ public abstract class AbstractDatabaseListener extends AbstractListener<Database
     }
 
     /**
-     * 发送增量事件
+     * SendIncremental events
      *
      * @param event
      */
@@ -115,7 +115,7 @@ public abstract class AbstractDatabaseListener extends AbstractListener<Database
             List<Field> tableColumns = t.getColumn();
             Assert.notEmpty(tableColumns, String.format("The column of table name '%s' is empty.", tableName));
             List<Field> primaryFields = PrimaryKeyUtil.findPrimaryKeyFields(tableColumns);
-            Assert.notEmpty(primaryFields, String.format("主表 %s 缺少主键.", tableName));
+            Assert.notEmpty(primaryFields, String.format("Main presidencies %s missing primary keys.", tableName));
             List<String> primaryKeys = primaryFields.stream().map(Field::getName).collect(Collectors.toList());
             Map<String, Integer> tablePKIndexMap = new HashMap<>(primaryKeys.size());
             List<Integer> tablePKIndex = getPKIndex(tableColumns, tablePKIndexMap);
@@ -124,7 +124,7 @@ public abstract class AbstractDatabaseListener extends AbstractListener<Database
             final List<Field> sqlColumns = sqlMetaInfo.getColumn();
             Assert.notEmpty(sqlColumns, String.format("The column of table name '%s' is empty.", sqlName));
             Map<Integer, Integer> sqlPKIndexMap = getPKIndexMap(sqlColumns, tablePKIndexMap);
-            Assert.notEmpty(sqlPKIndexMap, String.format("表 %s 缺少主键.", sqlName));
+            Assert.notEmpty(sqlPKIndexMap, String.format("Table %s missing primary key.", sqlName));
 
             sql = sql.replace("\t", " ");
             sql = sql.replace("\r", " ");

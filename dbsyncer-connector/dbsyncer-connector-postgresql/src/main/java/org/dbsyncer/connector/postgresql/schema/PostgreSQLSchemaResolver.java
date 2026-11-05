@@ -27,42 +27,42 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
- * PostgreSQL标准数据类型解析器
+ * PostgreSQLStandard ContextTypeParser
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2025-06-25 23:01
  */
 public class PostgreSQLSchemaResolver extends AbstractDatabaseSchemaResolver {
 
     /**
-     * 规范化 PostgreSQL 类型名：去除 schema 前缀（如 "public"."geometry" -> geometry）和引号，并转小写。
+     * NormativePostgreSQL TypeName: Removeschema Prefix(s)"public"."geometry" -> geometry）And quotes and lowercases.
      *
-     * @param typeName 原始类型名
-     * @return 规范化后的类型名
+     * @param typeName OriginalTypeFirst Name
+     * @return NormalizedTypeFirst Name
      */
     public static String normalizeTypeName(String typeName) {
         if (typeName == null) {
             return null;
         }
-        // 处理带 schema 前缀的类型，如 "public"."geometry" 或 public.geometry
+        // Processing tapeschema Prefix.Type，Like"public"."geometry" orpublic.geometry
         int dotIndex = typeName.lastIndexOf('.');
         if (dotIndex >= 0) {
             typeName = typeName.substring(dotIndex + 1);
         }
-        // 去除引号
+        // Remove quote
         typeName = typeName.replace("\"", "").replace("'", "").trim();
         return typeName.toLowerCase();
     }
 
     @Override
     protected DataType getDataType(Map<String, DataType> mapping, Field field) {
-        // 先用原始类型名查找，找不到则规范化后再查
+        // Use original first.TypeName search, if not standardized
         DataType dataType = mapping.get(field.getTypeName());
         if (dataType == null) {
             dataType = mapping.get(normalizeTypeName(field.getTypeName()));
         }
-        // 数组类型（_int8 等）统一由 PostgreSQLStringType 处理
+        // ArrayType（_int8 I'll be right back.PostgreSQLStringType Processing
         if (dataType == null && isArrayType(field.getTypeName())) {
             dataType = mapping.get("text");
         }
@@ -97,7 +97,7 @@ public class PostgreSQLSchemaResolver extends AbstractDatabaseSchemaResolver {
     }
 
     /**
-     * PostgreSQL 数组类型：JDBC TYPE_NAME 以 _ 前缀表示（如 int8[] => _int8），部分场景为 xxx[]。
+     * PostgreSQL ArrayType：JDBC TYPE_NAME As   prefix (if)int8[] => _int8），DepartmentminThe scene isxxx[]。
      */
     public static boolean isArrayType(String typeName) {
         if (typeName == null) {

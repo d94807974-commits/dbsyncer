@@ -4,7 +4,7 @@ import org.dbsyncer.common.util.DateFormatUtil;
 import org.dbsyncer.parser.convert.AbstractHandler;
 
 /**
- * 字符串转Timestamp
+ * String rotationTimestamp
  *
  * @author AE86
  * @version 1.0.0

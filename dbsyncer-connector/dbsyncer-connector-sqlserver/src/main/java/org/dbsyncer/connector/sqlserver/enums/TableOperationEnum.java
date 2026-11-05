@@ -6,19 +6,19 @@ package org.dbsyncer.connector.sqlserver.enums;
 public enum TableOperationEnum {
 
     /**
-     * 插入
+     * Insert
      */
     INSERT(2),
     /**
-     * 更新（旧值）
+     * Update（AppealValue）
      */
     UPDATE_BEFORE(3),
     /**
-     * 更新（新值）
+     * Update（NewValue）
      */
     UPDATE_AFTER(4),
     /**
-     * 删除
+     * Delete
      */
     DELETE(1);
 

@@ -3,7 +3,7 @@ package org.dbsyncer.biz.enums;
 import org.dbsyncer.common.util.StringUtil;
 
 /**
- * 安全信息枚举
+ * Clear.InfoEnumeration
  *
  * @author AE86
  * @version 1.0.0
@@ -12,47 +12,47 @@ import org.dbsyncer.common.util.StringUtil;
 public enum SafeInfoEnum {
 
     /**
-     * 密码
+     * Password
      */
     PASSWORD("password"),
     /**
-     * API密钥
+     * API Key
      */
     API_SECRET("apiSecret"),
     /**
-     * 集群密钥
+     * Cluster Key
      */
     CLUSTER_SECRET("clusterSecret"),
     /**
-     * RSA私钥
+     * RSA private key
      */
     RSA_PRIVATE_KEY("rsaPrivateKey"),
     /**
-     * RSA公钥
+     * RSA Public Key
      */
     RSA_PUBLIC_KEY("rsaPublicKey"),
     /**
-     * 企业微信@用户手机号
+     * Corporate Wisdom@UserCell phone number
      */
     WECHAT_AT_MOBILES("wechatAtMobiles"),
     /**
-     * 企业微信Webhook地址
+     * Corporate WisdomWebhookAddress
      */
     WECHAT_WebhookUrl("wechatWebhookUrl"),
     /**
-     * 钉钉@用户手机号
+     * Nail.@UserCell phone number
      */
     DINGTALK_AT_MOBILES("dingTalkAtMobiles"),
     /**
-     * 钉钉Webhook地址
+     * Nail.WebhookAddress
      */
     DINGTALK_WebhookUrl("dingTalkWebhookUrl"),
     /**
-     * 旧密码
+     * Old password
      */
     OLD_PWD("oldpwd"),
     /**
-     * 新密码
+     * New Password
      */
     NEW_PWD("newpwd");
 
@@ -67,7 +67,7 @@ public enum SafeInfoEnum {
     }
 
     /**
-     * 是否安全敏感字段（忽略大小写）。
+     * YesNoSecurity sensitivityField（Ignores case.
      */
     public static boolean contains(String key) {
         if (StringUtil.isBlank(key)) {

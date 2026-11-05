@@ -35,9 +35,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * Redis Stream 增量监听器
+ * Redis Stream IncrementalListener
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-05-29 23:20
  */
@@ -47,7 +47,7 @@ public class RedisListener extends AbstractListener<RedisConnectorInstance> {
 
     private static final String OFFSET = "pos_";
     private static final String PAYLOAD_FIELD = "payload";
-    /** XREADGROUP 读取消费组 pending（未 ACK）消息，Redis 特殊 ID 为 0（非 0-0） */
+    /** XREADGROUP ReadConsumer grouppending（NotACK）News.Redis SpecialID Yes0（Not0-0） */
     private static final StreamEntryID PENDING_ENTRY = new StreamEntryID() {
         @Override
         public String toString() {
@@ -68,11 +68,11 @@ public class RedisListener extends AbstractListener<RedisConnectorInstance> {
             for (Table table : customTable) {
                 String stream = resolveStreamName(table);
                 if (StringUtil.isBlank(stream)) {
-                    throw new RedisException("Redis Stream 名称不能为空，请配置 Stream 或表名");
+                    throw new RedisException("Redis Stream name cannot be empty, please configure Stream or table First Name");
                 }
                 String groupId = table.getExtInfo().getProperty(RedisConstant.GROUP_ID);
                 if (StringUtil.isBlank(groupId)) {
-                    throw new RedisException("Redis Stream 消费组 groupId 不能为空");
+                    throw new RedisException("Redis Stream consumer group group group Id cannot be Among empty");
                 }
                 String consumerName = table.getExtInfo().getProperty(RedisConstant.CONSUMER_NAME);
                 if (StringUtil.isBlank(consumerName)) {
@@ -81,17 +81,17 @@ public class RedisListener extends AbstractListener<RedisConnectorInstance> {
                 ensureGroup(instance, stream, groupId);
                 logResumeOffset(stream);
                 consumers.add(new StreamConsumer(table, stream, groupId, consumerName));
-                logger.info("Redis监听器已订阅 Stream: {}, groupId: {}, consumer: {}", stream, groupId, consumerName);
+                logger.info("Redis listener Subscriptioned to", stream, groupId, consumerName);
             }
             worker = new Worker();
             worker.setName("redis-listener-" + instance.getConfig().getUrl() + "_" + worker.hashCode());
             worker.setDaemon(false);
             worker.start();
         } catch (Exception e) {
-            logger.error("启动Redis监听器失败", e);
+            logger.error("Failed to activate Redis listening device", e);
             errorEvent(e);
             close();
-            throw new RedisException("启动Redis监听器失败", e);
+            throw new RedisException("Failed to activate Redis listening device", e);
         }
     }
 
@@ -129,7 +129,7 @@ public class RedisListener extends AbstractListener<RedisConnectorInstance> {
     private void logResumeOffset(String stream) {
         String offsetStr = snapshot.get(OFFSET + stream);
         if (StringUtil.isNotBlank(offsetStr)) {
-            logger.info("Redis Stream {} 已保存位点 {}", stream, offsetStr);
+            logger.info("Redis Stream{Saved bits{", stream, offsetStr);
         }
     }
 
@@ -156,7 +156,7 @@ public class RedisListener extends AbstractListener<RedisConnectorInstance> {
             jedis = getConnectorInstance().borrowJedis();
             jedis.xack(consumer.stream, consumer.groupId, new StreamEntryID(entryId));
         } catch (Exception e) {
-            logger.warn("ACK Stream {} entry {} 失败: {}", consumer.stream, entryId, e.getMessage());
+            logger.warn("ACK Stream{entry{ Failed: {", consumer.stream, entryId, e.getMessage());
         } finally {
             RedisUtil.returnResource(getConnectorInstance().getConnection(), jedis);
         }
@@ -268,7 +268,7 @@ public class RedisListener extends AbstractListener<RedisConnectorInstance> {
                     sleepInMills(1000);
                 }
             }
-            logger.info("Redis监听器Worker线程已退出");
+            logger.info("Redis listener Worker is out.");
         }
 
         private void pollStream(RedisConnectorInstance instance, StreamConsumer consumerInfo) {
@@ -278,7 +278,7 @@ public class RedisListener extends AbstractListener<RedisConnectorInstance> {
                 readNewEntries(jedis, consumerInfo);
             } catch (Exception e) {
                 if (!Thread.currentThread().isInterrupted()) {
-                    logger.error("读取 Stream {} 失败", consumerInfo.stream, e);
+                    logger.error("Failed to read Stream{", consumerInfo.stream, e);
                     errorEvent(e);
                 }
             } finally {

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <div th:fragment="content" th:if="${mapping?.extendedType eq 'SEMI'}">
-    <!-- 半结构化配置 -->
+    <!-- Semi-structuredConfig -->
     <div class="grid grid-cols-2 mt-4">
         <div class="form-item">
-            <label class="form-label">[[${type == 'source' ? '数据源' : '目标源'}]]表</label>
+            <label class="form-label">[[${type == 'source' ? 'Source' : 'Target'}]]Table</label>
             <select id="custom_table_select" class="form-control" name="customTable">
                 <option th:each="t,s:${mapping?.customTables}"
                         th:value="${t?.name}"
@@ -21,18 +21,18 @@
             <div class="form-actions">
                 <button th:if="${mapping?.meta?.state eq 0 and mapping?.customTables.size gt 0}"
                         id="delSemiTableBtn" type="button" class="btn btn-outline">
-                    <i class="fa fa-remove"></i> 删除
+                    <i class="fa fa-remove"></i> Delete
                 </button>
                 <button th:if="${mapping?.meta?.state eq 0 and mapping?.customTables.size gt 0}"
                         id="editSemiTableBtn" type="button" class="btn btn-outline">
-                    <i class="fa fa-edit"></i> 修改
+                    <i class="fa fa-edit"></i> Edit
                 </button>
                 <button th:if="${mapping?.meta?.state eq 0}"
                         id="addSemiTableBtn" type="button" class="btn btn-primary">
-                    <i class="fa fa-plus"></i> 添加
+                    <i class="fa fa-plus"></i> Add
                 </button>
                 <button type="button" class="btn btn-outline" onclick="backIndexPage()">
-                    <i class="fa fa-reply"></i> 返回
+                    <i class="fa fa-reply"></i> Back
                 </button>
             </div>
         </div>
@@ -44,14 +44,14 @@
         <thead>
         <tr>
             <th></th>
-            <th>类型 <a class="text-sm" href="https://gitee.com/ghi/dbsyncer/wikis/%E9%A1%B9%E7%9B%AE%E8%AE%BE%E8%AE%A1/%E6%A0%87%E5%87%86%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/Standard%20Data%20Type#standard-data-type-mapping"
-                        title="DBS标准数据类型" target='_blank'>
-                <i class="fa fa-external-link"></i>参考文档
+            <th>Type <a class="text-sm" href="https://gitee.com/ghi/dbsyncer/wikis/%E9%A1%B9%E7%9B%AE%E8%AE%BE%E8%AE%A1/%E6%A0%87%E5%87%86%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/Standard%20Data%20Type#standard-data-type-mapping"
+                        title="DBS standard data type" target='_blank'>
+                <i class="fa fa-external-link"></i>Documentation
             </a>
             </th>
-            <th>字段</th>
-            <th>主键</th>
-            <th>操作</th>
+            <th>Field</th>
+            <th>Primary key</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody id="fieldList">
@@ -62,10 +62,10 @@
                     <option th:each="dataTypeItem,s:${dataType}" th:value="${dataTypeItem.name()}" th:text="${dataTypeItem.name()}" th:selected="${dataTypeItem.name() eq 'STRING'}"/>
                 </select>
             </td>
-            <td><input class="form-control field-name-input" type="text" maxlength="64" placeholder="请输入字段名"/></td>
+            <td><input class="form-control field-name-input" type="text" maxlength="64" placeholder="Please enter a field name"/></td>
             <td></td>
             <td>
-                <button class="table-action-btn view fieldAdd" type="button" title="添加">
+                <button class="table-action-btn view fieldAdd" type="button" title="Add">
                     <i class="fa fa-plus"></i>
                 </button>
             </td>
@@ -75,7 +75,7 @@
 
     <div class="blank-block"></div>
 <script>
-    // 生成http配置
+    // GeneratehttpConfig
     function renderHttpInfo(customType, extInfo, items) {
         let connectorUrl = $("#connectorUrl").val();
         let method = extInfo.method === undefined ? 'POST' : extInfo.method;
@@ -90,24 +90,24 @@
                 </div>
             </div>
             <div class="form-item">
-                <label class="form-label">接口<strong class="text-primary">*</strong></label>
+                <label class="form-label">Interface<strong class="text-primary">*</strong></label>
                 <div class="form-control-area flex">
                     <select class="form-control form-control-mini" name="method">
                         <option value="POST" ${method === 'POST' ? 'selected' : ''}>POST</option>
                         <option value="GET" ${method === 'GET' ? 'selected' : ''}>GET</option>
                     </select>
-                    <input class="form-control ml-2" name="api" type="text" placeholder="请输入请求接口，如：/api/users" value="${api}" required />
+                    <input class="form-control ml-2" name="api" type="text" placeholder="Please enter the API path, e.g. /api/users" value="${api}" required />
                 </div>
             </div>`);
 
-        // 源配置
+        // SourceConfig
         if (customType === 'source') {
             let params = extInfo.params === undefined ? '' : extInfo.params;
             let extractPath = extInfo.extractPath === undefined ? '$.data.data[*]' : extInfo.extractPath;
             let extractTotal = extInfo.extractTotal === undefined ? '$.data.total' : extInfo.extractTotal;
             items.push(`
             <div class="form-item">
-                <label class="form-label">请求参数</label>
+                <label class="form-label">Request parameters</label>
                 <div class="form-control-area">
                     <input name="params" class="form-control" type="text" value="${params}" />
                 </div>
@@ -122,16 +122,16 @@
                 </div>
             </div>
             <div class="form-item">
-                <label class="form-label">解析格式
-                    <i class="fa fa-question-circle" title="解析接口返回的数据列表，表达式参考json"></i>
+                <label class="form-label">Parsing Format
+                    <i class="fa fa-question-circle" title="List of data returned by parsing interface, expression reference json"></i>
                 </label>
                 <div class="bg-gray-100">
                     <input name="extractPath" class="form-control" type="text" value="${extractPath}" required />
                 </div>
             </div>
             <div class="form-item">
-                <label class="form-label">解析总数<strong class="text-primary">*</strong>
-                    <i class="fa fa-question-circle" title="解析接口返回的总数，表达式参考json"></i></label>
+                <label class="form-label">Total resolved<strong class="text-primary">*</strong>
+                    <i class="fa fa-question-circle" title="Parsing totals returned by interface, expression referencejson"></i></label>
                 <div class="bg-gray-100">
                     <input name="extractTotal" class="form-control" type="text" value="${extractTotal}" required />
                 </div>
@@ -139,12 +139,12 @@
             return;
         }
 
-        // 目标配置
+        // Objective CombinedConfig
         let params = extInfo.params === undefined ? '' : extInfo.params;
         let writePath = extInfo.writePath === undefined ? '' : extInfo.writePath;
         items.push(`
         <div class="form-item">
-            <label class="form-label">请求参数</label>
+            <label class="form-label">Request parameters</label>
             <div class="form-control-area">
                 <input name="params" class="form-control" type="text" value="${params}" />
             </div>
@@ -158,8 +158,8 @@
             </div>
         </div>
         <div class="form-item">
-            <label class="form-label">写入格式
-                <i class="fa fa-question-circle" title="根据请求参数格式，替换对应路径的数据列表，表达式参考json"></i>
+            <label class="form-label">Writing Format
+                <i class="fa fa-question-circle" title="Replace the data list of the corresponding path according to the requested parameter format, expression reference json"></i>
             </label>
             <div class="bg-gray-100">
                 <input name="writePath" class="form-control" type="text" value="${writePath}" />
@@ -167,18 +167,18 @@
         </div>`);
     }
 
-    // 生成redis配置
+    // GenerateredisConfig
     function renderRedisInfo(customType, extInfo, items) {
         let dataStructure = extInfo.dataStructure === undefined ? 'String' : extInfo.dataStructure;
         items.push(`<div class="form-item">
-                    <label class="form-label">数据结构<strong class="text-primary">*</strong></label>
+                    <label class="form-label">Data Structure<strong class="text-primary">*</strong></label>
                     <div class="form-control-area">
                         <select class="form-control" name="dataStructure" required>
                             <option value="String" ${dataStructure === 'String' ? 'selected' : ''}>String</option>
-                            <option value="List" disabled ${dataStructure === 'List' ? 'selected' : ''}>List(开发中)</option>
-                            <option value="Set" disabled ${dataStructure === 'Set' ? 'selected' : ''}>Set(开发中)</option>
-                            <option value="ZSet" disabled ${dataStructure === 'ZSet' ? 'selected' : ''}>ZSet(开发中)</option>
-                            <option value="Hash" disabled ${dataStructure === 'Hash' ? 'selected' : ''}>Hash(开发中)</option>
+                            <option value="List" disabled ${dataStructure === 'List' ? 'selected' : ''}>List (under development)</option>
+                            <option value="Set" disabled ${dataStructure === 'Set' ? 'selected' : ''}>Set (under development)</option>
+                            <option value="ZSet" disabled ${dataStructure === 'ZSet' ? 'selected' : ''}>ZSet (developing)</option>
+                            <option value="Hash" disabled ${dataStructure === 'Hash' ? 'selected' : ''}>Hash (developing)</option>
                         </select>
                     </div>
                 </div>`);
@@ -188,19 +188,19 @@
             items.push(`<div class="form-item">
                 <label class="form-label">Stream</label>
                 <div class="form-control-area">
-                    <input class="form-control" name="stream" type="text" maxlength="128" value="${stream}" placeholder="Redis Stream 名称，如 user#，为空则使用表名"/>
+                    <input class="form-control" name="stream" type="text" maxlength="128" value="${stream}" placeholder="Red Leading name, e. g. user#, use a table name if empty"/>
                 </div>
             </div>`);
             let groupId = extInfo.groupId === undefined ? '' : extInfo.groupId;
             items.push(`<div class="form-item">
-                    <label class="form-label">消费组 groupId<strong class="text-primary">*</strong></label>
+                    <label class="form-label">GroupId<strong class="text-primary">*</strong></label>
                     <div class="form-control-area">
                         <input class="form-control" name="groupId" type="text" maxlength="128" value="${groupId}" required placeholder="dbsyncer-group"/>
                     </div>
                 </div>`);
             let consumerName = extInfo.consumerName === undefined ? 'dbsyncer-consumer' : extInfo.consumerName;
             items.push(`<div class="form-item">
-                        <label class="form-label">消费者名称</label>
+                        <label class="form-label">Consumer name</label>
                         <div class="form-control-area">
                             <input class="form-control" name="consumerName" type="text" maxlength="128" value="${consumerName}" placeholder="dbsyncer-consumer"/>
                         </div>
@@ -216,30 +216,30 @@
             expireSeconds = 86440;
         }
         items.push(`<div class="form-item">
-                <label class="form-label">缓存key前缀</label>
+                <label class="form-label">Cachekey prefix</label>
                 <div class="form-control-area">
-                    <input class="form-control" name="keyPrefix" type="text" maxlength="128" value="${keyPrefix}" placeholder="如：user:cache，为空则使用表名"/>
+                    <input class="form-control" name="keyPrefix" type="text" maxlength="128" value="${keyPrefix}" placeholder="e. g. user:cache if empty"/>
                 </div>
             </div>`);
         items.push(`<div class="form-item">
-                <label class="form-label">主键拼接符 <i class="fa fa-question-circle" title="如果有多个主键时，示例效果：A:B:C"></i></label>
+                <label class="form-label">Main key speller <i class="fa fa-question-circle" title="Example effect: A:B:C"></i></label>
                 <div class="form-control-area">
-                    <input class="form-control" name="keyJoiner" type="text" maxlength="16" value="${keyJoiner}" placeholder="默认 :"/>
+                    <input class="form-control" name="keyJoiner" type="text" maxlength="16" value="${keyJoiner}" placeholder="Default:"/>
                 </div>
             </div>`);
         items.push(`<div class="form-item">
-                <label class="form-label">过期策略</label>
+                <label class="form-label">Expiry Policy</label>
                 <div class="form-control-area">
                     <div id="redis_expire_type" class="radio-group radio-group-control-height">
                         <input type="radio" name="expireType" value="never" ${expireType === 'never' ? 'checked' : ''} />
-                        <label>永不过期</label>
+                        <label>Never Expiry</label>
                         <input type="radio" name="expireType" value="expire" ${expireType === 'expire' ? 'checked' : ''} />
-                        <label>到期</label>
+                        <label>Due</label>
                     </div>
                 </div>
             </div>`);
         items.push(`<div class="form-item">
-                <label class="form-label redis-expire-config hidden">过期时间(秒)<strong class="text-primary">*</strong></label>
+                <label class="form-label redis-expire-config hidden">Expiry time (sec)<strong class="text-primary">*</strong></label>
                 <div class="form-control-area redis-expire-config hidden">
                     <input class="form-control" name="expireSeconds" type="number" min="1" maxlength="20" value="${expireSeconds}" placeholder="86440"/>
                 </div>
@@ -290,13 +290,13 @@
                     let groupId = extInfo.groupId === undefined ? '' : extInfo.groupId;
                     let tags = extInfo.tags === undefined ? '*' : extInfo.tags;
                     items.push(`<div class="form-item">
-                        <label class="form-label">消费组 groupId<strong class="text-primary">*</strong></label>
+                        <label class="form-label">GroupId<strong class="text-primary">*</strong></label>
                         <div class="form-control-area">
                             <input class="form-control" name="groupId" type="text" maxlength="128" value="${groupId}" required placeholder="dbsyncer-group"/>
                         </div>
                     </div>`);
                     items.push(`<div class="form-item">
-                        <label class="form-label">标签 tags</label>
+                        <label class="form-label">Tags</label>
                         <div class="form-control-area">
                             <input class="form-control" name="tags" type="text" maxlength="128" value="${tags}" placeholder="*"/>
                         </div>
@@ -304,7 +304,7 @@
                 } else {
                     let tags = extInfo.tags === undefined ? '*' : extInfo.tags;
                     items.push(`<div class="form-item">
-                        <label class="form-label">标签 tags</label>
+                        <label class="form-label">Tags</label>
                         <div class="form-control-area">
                             <input class="form-control" name="tags" type="text" maxlength="128" value="${tags}" placeholder="*"/>
                         </div>
@@ -312,31 +312,31 @@
                 }
                 break;
             case 'Redis':
-                config.label = '表名';
+                config.label = 'Table name';
                 renderRedisInfo(customType, extInfo, items);
                 break;
             case 'File':
-                config.label = '文件名';
+                config.label = 'Filename';
                 let separator = extInfo.separator === undefined ? '|' : extInfo.separator;
                 items.push(`<div class="form-item">
-                        <label class="form-label">分割符<strong class="text-primary">*</strong></label>
+                        <label class="form-label">Separator<strong class="text-primary">*</strong></label>
                         <div class="form-control-area">
                             <input class="form-control" name="separator" type="text" maxlength="128" value="${separator}" required/>
                         </div>
                     </div>`);
                 break;
             case 'Http':
-                config.label = '名称';
+                config.label = 'Name';
                 renderHttpInfo(customType, extInfo, items);
                 break;
             default:
-                config.label = '表名';
+                config.label = 'Table name';
                 break;
         }
         items.unshift(`<div class="form-item">
             <label class="form-label">${config.label}<strong class="text-primary">*</strong></label>
             <div class="form-control-area">
-                <input class="form-control" name="tableName" type="text" maxlength="64" placeholder="请输入${config.label}" value="${tableName}" required />
+                <input class="form-control" name="tableName" type="text" maxlength="64" placeholder="Please enter" value="${tableName}" required />
             </div>
         </div>`);
         return items;
@@ -345,59 +345,59 @@
     $(function () {
         const $fieldList = $("#fieldList");
 
-        // 更新序号
+        // UpdateNo.
         function updateRowNumbers() {
             $fieldList.find('tr:not(.field-input-row)').each(function(index) {
                 $(this).find('td:first').text(index + 1);
             });
         }
 
-        // 切换主键
+        // SwitchPrimary key
         function togglePrimaryKey($row) {
             const $pkCell = $row.find('td:eq(3)');
             if ($pkCell.find('.fa-key').length > 0) {
                 $pkCell.empty();
             } else {
-                $pkCell.html('<i title="主键" class="fa fa-key text-warning"></i>');
+                $pkCell.html('<i title="Primary key" class="fa fa-key text-warning"></i>');
             }
         }
 
-        // 获取输入行的值
+        // Fetch input lineValue
         function getInputRowValues() {
             const $inputRow = $fieldList.find('.field-input-row');
             const fieldName = $inputRow.find('.field-name-input').val().trim();
             const $typeSelect = $inputRow.find('.field-type-select');
-            // 如果已初始化 dbSelect，使用 getValues 方法
+            // If initializeddbSelect，UsegetValues Methodology
             const typeSelectApi = $typeSelect.data('dbSelect');
             const fieldType = typeSelectApi ? (typeSelectApi.getValues()[0] || '') : $typeSelect.val();
             return { fieldName: fieldName, fieldType: fieldType };
         }
 
-        // 清空输入行
+        // ClearEnter Line
         function clearInputRow() {
             const $inputRow = $fieldList.find('.field-input-row');
             $inputRow.find('.field-name-input').val('');
         }
 
-        // 绑定拖拽事件
+        // Tie and drag.Event
         function bindDragEvents($row) {
-            // 拖拽开始
+            // Start Drag
             $row.on('dragstart', function(e) {
                 e.originalEvent.dataTransfer.effectAllowed = 'move';
                 e.originalEvent.dataTransfer.setData('text/html', this.innerHTML);
                 $(this).addClass('dragging');
             });
 
-            // 拖拽结束
+            // Drag End
             $row.on('dragend', function(e) {
                 $(this).removeClass('dragging');
                 $fieldList.find('tr').removeClass('drag-over');
                 updateRowNumbers();
             });
 
-            // 拖拽经过
+            // Drag through.
             $row.on('dragover', function(e) {
-                // 不允许拖到输入行
+                // Moreover, drag to input line is not allowed
                 if ($(this).hasClass('field-input-row')) {
                     return false;
                 }
@@ -409,12 +409,12 @@
                 return false;
             });
 
-            // 拖拽离开
+            // Drag away.
             $row.on('dragleave', function(e) {
                 $(this).removeClass('drag-over');
             });
 
-            // 放置
+            // Placement
             $row.on('drop', function(e) {
                 if (e.stopPropagation) {
                     e.stopPropagation();
@@ -435,61 +435,61 @@
             });
         }
 
-        // 添加字段行
+        // AddFieldOkay.
         function addFieldRow(fieldName, fieldType, isPrimaryKey) {
-            // 使用 jQuery 创建元素，避免 XSS
-            const $newRow = $('<tr>')
-                .addClass('field-data-row')
-                .attr('title', '双击设置/取消主键 | 拖动排序')
-                .attr('draggable', 'true')
-                .append($('<td>'))
+            // UsejQuery Create elements, avoidXSS
+            const $newRow = $('<tr>I'm sorry.
+.addClass ('field-data-row')
+.attr ('title', 'double click to set/ unset primary key | drag sorting')
+.attr.
+...append(')<td>'))
                 .append($('<td>').text(fieldType))
                 .append($('<td>').text(fieldName))
-                .append($('<td>').html(isPrimaryKey ? '<i title="主键" class="fa fa-key text-warning"></i>' : ''))
-                .append($('<td>').html('<button class="table-action-btn delete fieldDelete" type="button" title="删除"><i class="fa fa-trash"></i></button>'));
+                .append($('<td>').html(isPrimaryKey ? '<i title="Primary key" class="fa fa-key text-warning"></i>' : ''))
+                .append($('<td>').html('<button class="table-action-btn delete fieldDelete" type="button" title="Delete"><i class="fa fa-trash"></i></button>'));
 
-            // 在输入行之前插入
+            // Insert Before Input Line
             $fieldList.find('.field-input-row').before($newRow);
 
-            // 绑定删除事件
+            // TieDeleteEvent
             $newRow.find('.fieldDelete').on('click', function(e) {
                 e.stopPropagation();
                 deleteFieldRow($newRow);
             });
 
-            // 绑定双击主键事件
+            // Bind double clickPrimary keyEvent
             $newRow.on('dblclick', function(e) {
                 togglePrimaryKey($newRow);
             });
 
-            // 绑定拖拽事件
+            // Tie and drag.Event
             bindDragEvents($newRow);
 
-            // 更新序号
+            // UpdateNo.
             updateRowNumbers();
         }
 
-        // 删除字段行
+        // DeleteFieldOkay.
         function deleteFieldRow($row) {
             $row.remove();
             updateRowNumbers();
         }
 
-        // 添加字段的通用逻辑（避免重复校验）
+        // AddFieldCommon logic (duplicate validation)
         function handleAddField() {
             const values = getInputRowValues();
 
             if (!values.fieldName) {
-                bootGrowl("请输入字段名", "warning");
+                bootGrowl("Please enter a field name", "warning");
                 return false;
             }
 
             if (!values.fieldType) {
-                bootGrowl("请选择字段类型", "warning");
+                bootGrowl("Select Field Type", "warning");
                 return false;
             }
 
-            // 检查字段名是否重复
+            // InspectionField nameYesNoRepeat
             let isDuplicate = false;
             $fieldList.find('.field-data-row').each(function() {
                 const existingField = $(this).find('td:eq(2)').text().trim();
@@ -500,7 +500,7 @@
             });
 
             if (isDuplicate) {
-                bootGrowl("字段名已存在", "warning");
+                bootGrowl("Field name already exists Nature", "warning");
                 return false;
             }
 
@@ -509,7 +509,7 @@
             return true;
         }
 
-        // 收集所有字段数据
+        // Collect AllFieldData Fact
         function collectColumns() {
             const fieldData = [];
             $fieldList.find('tr.field-data-row').each(function() {
@@ -518,7 +518,7 @@
                 const name = $row.find('td:eq(2)').text().trim();
                 const pk = $row.find('td:eq(3) .fa-key').length > 0;
 
-                if (name) { // 只收集有字段名的数据
+                if (name) { // Only collectionsField nameData
                     let row = { name: name, typeName: typeName }
                     if (pk) {
                         row.pk = pk;
@@ -531,10 +531,10 @@
 
         function handleResponse(response, title) {
             if (response.success === true) {
-                bootGrowl(title + "成功！", "success");
+                bootGrowl(title + "Success!", "success");
                 doLoader('/mapping/pageCustomTable?id=' + $("#mappingId").val() + '&type=' + $("#customType").val());
             } else {
-                bootGrowl(response.message || title + "失败", "danger");
+                bootGrowl(response.message || title + "Failed", "danger");
             }
         }
 
@@ -545,13 +545,13 @@
             }
             const $btn = $(this);
             const originalText = $btn.html();
-            $btn.html(`<i class="fa fa-spinner fa-spin"></i> ${title}中...`).prop('disabled', true);
+            $btn.html(`<i class="fa fa-spinner fa-spin"></i> ${title}Medium...`).prop('disabled', true);
             let data = $form.serializeJson();
             data.operator = operator;
             data.columnList = JSON.stringify(collectColumns());
             doPoster("/mapping/saveCustomTable", data, function (response) {
                 $btn.html(originalText).prop('disabled', false);
-                handleResponse(response, title + "自定义表");
+                handleResponse(response, title + "Custom table");
             });
         }
 
@@ -568,7 +568,7 @@
                 }
                 items = renderSemiInfo(selected[0], extInfo);
             } else {
-                // 首次添加
+                // First EquallyAdd
                 items = renderSemiInfo('', {});
             }
             $("#customItems").html(items);
@@ -587,18 +587,18 @@
         });
         showCustomTableInfo(customTableSelect);
 
-        // 初始化现有的字段类型选择器
+        // Initialize existingFieldTypeSelector
         initSelect($('.field-type-select'));
 
-        //添加
+        //Add
         $("#addSemiTableBtn").off('click').on('click', function () {
-            submit("add", "添加");
+            submit("add", "Add");
         });
-        //修改
+        //Edit
         $("#editSemiTableBtn").off('click').on('click', function () {
-            submit("edit", "修改");
+            submit("edit", "Edit");
         });
-        //删除
+        //Delete
         $("#delSemiTableBtn").off('click').on('click', function () {
             let selected = customTableSelect.getValues() || [];
             if (selected.length >= 1) {
@@ -608,19 +608,19 @@
                     customTable: selected[0]
                 }
                 doPoster("/mapping/removeCustomTable", data, function (response) {
-                    handleResponse(response, "删除自定义表");
+                    handleResponse(response, "Delete custom table");
                 });
             }
         });
 
-        // 添加字段按钮点击事件
+        // AddFieldButton ClickEvent
         $(".fieldAdd").off('click').on('click', function () {
             handleAddField();
         });
 
-        // 输入框回车键添加（直接调用处理函数，避免触发按钮点击事件）
+        // Enter frameback keysAdd（Direct Call ProcessingFunctions，Avoid trigger button clickEvent）
         $(".field-name-input").off('keypress').on('keypress', function (e) {
-            if (e.which === 13) { // Enter键
+            if (e.which === 13) { // EnterKeys
                 e.preventDefault();
                 e.stopPropagation();
                 handleAddField();

@@ -4,14 +4,14 @@
 package org.dbsyncer.common.model;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-03-06 01:01
  */
 public abstract class NoticeChannel {
 
     /**
-     * 是否启用
+     * YesNoEnable
      */
     private boolean enabled;
 

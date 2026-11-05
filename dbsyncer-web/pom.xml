@@ -10,14 +10,14 @@
     <artifactId>dbsyncer-web</artifactId>
 
     <dependencies>
-        <!-- Biz 业务层 -->
+        <!-- Biz Business Level -->
         <dependency>
             <groupId>org.ghi</groupId>
             <artifactId>dbsyncer-biz</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 
-        <!-- Web 容器，默认使用Tomcat-->
+        <!-- Web container, default to Tomcat -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -35,13 +35,13 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!-- Thymeleaf 渲染引擎 -->
+        <!-- Thymeleaf Rendering Engine -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
-        <!-- spring security依赖 -->
+        <!-- Spring security dependent -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -62,11 +62,11 @@
     </dependencies>
 
     <build>
-        <!-- 指定打包名称 -->
+        <!-- Specify packing name -->
         <finalName>${project.parent.artifactId}-${project.parent.version}</finalName>
 
         <plugins>
-            <!-- compiler插件参数设置，指定编码 -->
+            <!-- Comp Temporary Plugin Settings, assign code -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -78,7 +78,7 @@
                 </configuration>
             </plugin>
 
-            <!-- 负责将应用程序打包成可执行的jar文件 -->
+            <!-- Responsible for packing applications into enforceable jar files -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -91,7 +91,7 @@
                 </configuration>
             </plugin>
 
-            <!-- 负责将整个项目按照自定义的目录结构打成最终的压缩包，方便实际部署 -->
+            <!-- Responsible for backgrounds of the entire project, based on a self-defined catalogue structure, into a final compressed package to facilitate actual deployment -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>

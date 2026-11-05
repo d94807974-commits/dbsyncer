@@ -1,15 +1,15 @@
 /**
- * DBSyncer 文件上传组件
- * 支持拖拽上传、点击选择、预览、删除等功能
+ * DBSyncer DocumentationUploadComponent
+ * We would be in need of a strike in the amount of a total, in the Committee, in the Committee, and in total, in total, in the Committee, in total, in the Committee, in the Committee, in a total, in a total, in a total, in total, and in the Committee, in total, in a total in the Committee, in total, in a total in a total in a total in a in in a in in a in in in a in a in in a in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in in inUpload、Click to select, preview,DeleteEqual Sexual Functions
  */
 
-/* 上传容器 */
+/* UploadPlans*/
 .upload-container {
   width: 100%;
   position: relative;
 }
 
-/* 上传区域 */
+/* UploadRegional*/
 .upload-area {
   border: 2px dashed rgba(22, 93, 255, 0.25);
   border-radius: 12px;
@@ -40,7 +40,7 @@
   pointer-events: none;
 }
 
-/* 上传图标 */
+/* UploadIcon*/
 .upload-icon {
   width: 64px;
   height: 64px;
@@ -60,7 +60,7 @@
   background: linear-gradient(135deg, rgba(22, 93, 255, 0.15) 0%, rgba(22, 93, 255, 0.25) 100%);
 }
 
-/* 上传文本 */
+/* UploadText*/
 .upload-text {
   color: var(--text-primary);
   font-size: var(--font-size-base);
@@ -93,7 +93,7 @@
   transform: translateY(-1px);
 }
 
-/* 隐藏的文件输入框 */
+/* HiddenDocumentationInput Box*/
 .upload-input {
   position: absolute;
   width: 0;
@@ -102,7 +102,7 @@
   overflow: hidden;
 }
 
-/* 文件列表 */
+/* DocumentationList */
 .upload-list {
   margin-top: 16px;
   display: flex;
@@ -110,7 +110,7 @@
 }
 .upload-list > *:not(:first-child) { margin-top: 8px; }
 
-/* 文件项 */
+/* DocumentationItem*/
 .upload-item {
   display: flex;
   align-items: center;
@@ -139,7 +139,7 @@
   }
 }
 
-/* 文件图标 */
+/* DocumentationIcon*/
 .upload-item-icon {
   width: 40px;
   height: 40px;
@@ -153,7 +153,7 @@
   flex-shrink: 0;
 }
 
-/* 文件信息 */
+/* DocumentationInfo */
 .upload-item-info {
   flex: 1;
   min-width: 0;
@@ -176,7 +176,7 @@
   font-size: var(--font-size-xs);
 }
 
-/* 进度条 */
+/* Progress Bar*/
 .upload-item-progress {
   width: 100%;
   height: 4px;
@@ -193,7 +193,7 @@
   transition: width 0.3s ease;
 }
 
-/* 状态 */
+/* Status */
 .upload-item-status {
   display: flex;
   align-items: center;
@@ -216,7 +216,7 @@
   color: #ff4d4f;
 }
 
-/* 状态图标 */
+/* StatusIcon*/
 .upload-status-icon {
   width: 20px;
   height: 20px;
@@ -239,7 +239,7 @@
   color: #ff4d4f;
 }
 
-/* 删除按钮 */
+/* Deletebutton*/
 .upload-item-remove {
   width: 24px;
   height: 24px;
@@ -260,7 +260,7 @@
   color: #ff4d4f;
 }
 
-/* 空状态 */
+/* EmptyStatus */
 .upload-empty {
   padding: 40px 20px;
   text-align: center;
@@ -268,14 +268,14 @@
   font-size: var(--font-size-sm);
 }
 
-/* 批量操作按钮 */
+/* BatchActionsbutton*/
 .upload-actions {
   display: flex;
   margin-top: 12px;
 }
 .upload-actions > *:not(:first-child) { margin-left: 8px; }
 
-/* 淡出动画 */
+/* F Fade Animation*/
 @keyframes fadeOut {
   from {
     opacity: 1;
@@ -287,7 +287,7 @@
   }
 }
 
-/* 响应式 */
+/* Response*/
 @media (max-width: 768px) {
   .upload-area {
     padding: 24px 16px;

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <div th:fragment="content">
     <div class="grid grid-cols-2">
@@ -15,7 +15,7 @@
         </div>
 
         <div class="form-item">
-            <label class="form-label">开启加密<i class="fa fa-question-circle" title="开启后，调用api时会自动加密请求参数，需要打开【开放api】功能才生效"></i></label>
+            <label class="form-label">Open Encryption<i class="fa fa-question-circle" title="When enabled, the request parameter is automatically encrypted when calling api, and the [open api] function needs to be enabled"></i></label>
             <div class="form-control-area">
                 <label class="form-switch">
                     <input name="enableEncrypt" th:checked="${connector?.config?.enableEncrypt}" type="checkbox" />
@@ -31,9 +31,9 @@
 
     <div class="grid grid-cols-2 mt-4">
         <div class="form-item">
-            <label class="form-label">连接参数<strong class="text-primary">*</strong></label>
+            <label class="form-label">Connection parameters<strong class="text-primary">*</strong></label>
             <div class="form-control-area">
-                <textarea name="properties" class="form-control" maxlength="1024" rows="6" required placeholder="每行一个参数：key=value">
+                <textarea name="properties" class="form-control" maxlength="1024" rows="6" required placeholder="One argument per row: key=value">
 [[${connector?.config?.propertiesText ?:
 'connection.timeout.ms=30000
 socket.timeout.ms=30000
@@ -44,7 +44,7 @@ charset=UTF-8'}]]</textarea>
         </div>
 
         <div class="form-item">
-            <label class="form-label">是否公网<i class="fa fa-question-circle" title="开启后，使用RSA-SHA256验证签名，默认使用HMAC-SHA256"></i></label>
+            <label class="form-label">Is it a public network?<i class="fa fa-question-circle" title="Enabled with RSA-SHA256 for signature, default HMAC-SHA256"></i></label>
             <div class="form-control-area">
                 <label class="form-switch">
                     <input name="publicNetwork" th:checked="${connector?.config?.publicNetwork}" type="checkbox" />

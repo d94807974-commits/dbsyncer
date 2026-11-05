@@ -25,7 +25,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * 订正校验任务异步匹配相似表
+ * Revised verification tasksA walk.Match similar tables
  *
  * @author AE86
  * @version 1.0.0
@@ -65,13 +65,13 @@ public final class ValidateSyncMatchTableTask extends AbstractDispatchTask {
     }
 
     /**
-     * 批量写入相似表映射，整批结束后由 addTableGroupBatch 只对齐一次明细。
+     * Batch writing of similar map byaddTableGroupBatch Just once.
      */
     private void matchSimilarTableGroups(ValidateSyncTask validateSyncTask) {
         List<Table> sourceTables = validateSyncTask.getSourceTable();
         List<Table> targetTables = validateSyncTask.getTargetTable();
         if (CollectionUtils.isEmpty(sourceTables) || CollectionUtils.isEmpty(targetTables)) {
-            logger.warn("源库或目标库表列表为空，跳过匹配相似表, taskId={}", taskId);
+            logger.warn("Source library or target library table list empty, skip matching table, tabskId={}", taskId);
             return;
         }
         Map<String, Table> targetTableMap = new LinkedHashMap<>();

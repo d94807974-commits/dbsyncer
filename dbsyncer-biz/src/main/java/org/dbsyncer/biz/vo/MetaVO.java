@@ -9,11 +9,11 @@ import org.dbsyncer.parser.model.Meta;
  */
 public class MetaVO extends Meta {
 
-    // 同步方式
+    // Synchronisation Method
     private String model;
-    // 同步任务名称
+    // Sync taskName
     private String mappingName;
-    // 是否统计总数中
+    // YesNoStatisticsTotalMedium
     private boolean counting;
 
     public MetaVO(String model, String mappingName) {

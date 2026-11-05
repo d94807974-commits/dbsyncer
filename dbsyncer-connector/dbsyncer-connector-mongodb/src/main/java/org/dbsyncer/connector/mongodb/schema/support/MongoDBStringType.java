@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-06 20:00
  */
@@ -46,8 +46,8 @@ public final class MongoDBStringType extends StringType {
     }
 
     /**
-     * 读侧归一化：Binary/byte[] 保持为 byte[]，与 MySQL BLOB 标准域对齐，避免校验时 byte[] vs String。
-     * 字段类型常为 string（空集合元数据推断），不能只靠 typeName=binData 判断。
+     * Read side integration:Binary/byte[] Keep Asbyte[]，and MySQL BLOB Standard Field Alignment Avoid Verificationbyte[] vs String。
+     * FieldTypeAlways.string（It's an empty collection of metadata.typeName=binData Judgement.
      */
     @Override
     public Object mergeValue(Object val, Field field) {
@@ -96,8 +96,8 @@ public final class MongoDBStringType extends StringType {
     }
 
     /**
-     * 写入前转换：MySQL BLOB/BINARY 等以 byte[] 到来时，无论目标字段声明为 string 还是 binData，
-     * 都写入 BSON Binary，避免父类把 byte[] 转成 String 导致数据损坏。
+     * Before writingConvert：MySQL BLOB/BINARY Wait.byte[] In the end,NoneCommentTarget fieldsDeclare asstring And...Yes binData，
+     * WritingBSON Binary，Avoid Fatheringbyte[] ConvertString Caused data damage.
      */
     @Override
     protected Object convert(Object val, Field field) {

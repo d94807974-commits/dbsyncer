@@ -6,7 +6,7 @@ package org.dbsyncer.common.model;
 import org.dbsyncer.common.util.StringUtil;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-09-12 13:43
  */
@@ -21,7 +21,7 @@ public class HttpResult {
     }
 
     /**
-     * @return HTTP 状态码是否为 200
+     * @return HTTP StatusCodeYesNoYes200
      */
     public boolean isOk() {
         return statusCode == 200;

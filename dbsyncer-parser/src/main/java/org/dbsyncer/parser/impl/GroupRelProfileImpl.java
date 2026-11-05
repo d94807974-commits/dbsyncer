@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * {@link GroupRelProfile} 实现。
+ * {@link GroupRelProfile} Achieved.
  *
  * @author wuji
  * @version 1.0.0

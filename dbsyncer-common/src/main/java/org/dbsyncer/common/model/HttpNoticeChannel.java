@@ -4,7 +4,7 @@
 package org.dbsyncer.common.model;
 
 /**
- * HTTP告警配置
+ * HTTPPolice!Configure
  *
  * @Author AE86
  * @Version 1.0.0
@@ -13,7 +13,7 @@ package org.dbsyncer.common.model;
 public final class HttpNoticeChannel extends NoticeChannel {
 
     /**
-     * 回调地址
+     * Callback Address
      */
     private String url;
 

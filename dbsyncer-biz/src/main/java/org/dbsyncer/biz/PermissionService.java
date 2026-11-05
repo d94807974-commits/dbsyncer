@@ -6,7 +6,7 @@ package org.dbsyncer.biz;
 import java.util.Set;
 
 /**
- * 功能权限查询（一期 RBAC）。
+ * Functional PermissionsQuery (first part)RBAC）。
  *
  * @author wuji
  * @version 1.0.0
@@ -15,52 +15,52 @@ import java.util.Set;
 public interface PermissionService {
 
     /**
-     * 超管时写入 Authority 的标记。
+     * Write on Superbar (20%)Authority the mark.
      */
     String AUTHORITY_ROLE_ADMIN = "role_admin";
 
     /**
-     * 是否超管（仅 username 为默认账号 admin）。
+     * YesNoSuperbarrel (only)username As DefaultAccount admin）。
      */
     boolean isAdmin(String username);
 
     /**
-     * 是否拥有指定权限码（如 {@code mapping:operate}）。
+     * YesNoPossession of specifiedPermissionsCode{@code mapping:operate}）。
      */
     boolean hasPermission(String username, String permissionCode);
 
     /**
-     * 用户全部权限码（多角色并集）。
+     * UserAllPermissionsCode (More)RoleAnd that's it.
      */
     Set<String> listPermissionCodes(String username);
 
     /**
-     * 登录/SSO 用：权限码 + 可选 {@link #AUTHORITY_ROLE_ADMIN}，逗号拼接。
+     * Login/SSO With:PermissionsCode+ Optional{@link #AUTHORITY_ROLE_ADMIN}，Comma spell.
      */
     String buildAuthorityString(String username);
 
     /**
-     * 为用户绑定角色（按角色 ID，幂等）。
+     * YesUserTieRole（PressRole ID，I'm sorry.
      */
     void bindUserRole(String userId, String roleId);
 
     /**
-     * 覆盖用户角色绑定（先清空再绑一个）。
+     * OverwriteUserRoleTie (first)ClearOne more.
      */
     void replaceUserRole(String userId, String roleId);
 
     /**
-     * 删除用户全部角色绑定。
+     * DeleteUserAllRoleTie.
      */
     void unbindAllUserRoles(String userId);
 
     /**
-     * 用户主角色 ID（取第一条 user_role）。
+     * UserLordRole ID（Upper 1user_role）。
      */
     String resolvePrimaryRoleId(String userId);
 
     /**
-     * 用户主角色名称。
+     * UserLordRole Name。
      */
     String resolvePrimaryRoleName(String userId);
 }

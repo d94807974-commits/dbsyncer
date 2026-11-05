@@ -41,9 +41,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 达梦（DM）连接器（兼容 Oracle 语法）
+ * Tamang.DM）Connector（CompatibilityOracle Syntax:
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-07 02:00
  */
@@ -52,13 +52,13 @@ public final class DamengConnector extends OracleConnector {
     private static final Logger LOGGER = LoggerFactory.getLogger(DamengConnector.class);
 
     /**
-     * 使用 ALL_USERS（非 DBA_USERS），普通用户也有权限查看 Schema 列表。
+     * UseALL_USERS（NotDBA_USERS），NormalUserAnd...PermissionsView Schema List。
      */
     private static final String QUERY_SCHEMA = "SELECT USERNAME FROM ALL_USERS WHERE USERNAME NOT IN "
             + "('SYS','SYSSSO','SYSAUDITOR','SYSDBO','CTISYS') ORDER BY USERNAME";
 
     /**
-     * 判断表是否含 IDENTITY 自增列（SYSCOLUMNS.INFO2 bit0）。
+     * Table of judgementYesNoHamIDENTITY AddSYSCOLUMNS.INFO2 bit0）。
      */
     private static final String QUERY_TABLE_IDENTITY =
             "SELECT COUNT(1) FROM SYSCOLUMNS COL, SYSOBJECTS TAB "
@@ -70,7 +70,7 @@ public final class DamengConnector extends OracleConnector {
                     + "AND BITAND(COL.INFO2, 1) = 1 AND TAB.NAME = ? AND SCH.NAME = ?";
 
     /**
-     * getTargetCommand 包装后的 SQL：SET IDENTITY_INSERT ... ON;{merge};SET IDENTITY_INSERT ... OFF
+     * getTargetCommand After packagingSQL：SET IDENTITY_INSERT ... ON;{merge};SET IDENTITY_INSERT ... OFF
      */
     private static final Pattern IDENTITY_WRAP = Pattern.compile(
             "^SET IDENTITY_INSERT (.+?) ON;(.+);SET IDENTITY_INSERT \\1 OFF$",
@@ -97,7 +97,7 @@ public final class DamengConnector extends OracleConnector {
     @Override
     public ConnectorInstance connect(DatabaseConfig config, ConnectorServiceContext context) {
         DamengConstant.enrichJdbcProperties(config);
-        // 纠正历史错误 URL（曾把库名拼到路径上，驱动会当作 schema）
+        // Correct historyError URL（I used to.LibraryName on the path.DriverYes.schema）
         config.setUrl(buildJdbcUrl(config, config.getDatabase()));
         return super.connect(config, context);
     }
@@ -119,8 +119,8 @@ public final class DamengConnector extends OracleConnector {
     }
 
     /**
-     * 达梦 JDBC URL 为 {@code jdbc:dm://host:port}；路径上的名称会被驱动当作<strong>模式名</strong>，
-     * 不能把实例库名（如 DAMENG）拼进去。默认模式与用户名一致，如需指定请用连接参数 {@code schema=}。
+     * Tam Revenue.JDBC URL Yes{@code jdbc:dm://host:port}；PathNameIt will.DriverConsider<strong>Modename</strong>，
+     * Can't take an example.LibraryName (e.g.DAMENG）Spell it in. Default ModeandUsernameYes, please specifyConnection parameters {@code schema=}。
      */
     @Override
     public String buildJdbcUrl(DatabaseConfig config, String database) {
@@ -128,7 +128,7 @@ public final class DamengConnector extends OracleConnector {
     }
 
     /**
-     * 含 IDENTITY 自增列时，全量/覆盖写入需临时打开 IDENTITY_INSERT，否则报 -2723。
+     * HamIDENTITY Since the addition,Full/OverwriteWriting needs temporary openingIDENTITY_INSERT，NoThen report--2723。
      */
     @Override
     public Map<String, String> getTargetCommand(CommandConfig commandConfig) {
@@ -143,7 +143,7 @@ public final class DamengConnector extends OracleConnector {
     }
 
     /**
-     * 达梦 MERGE 成功时常返回 0 或空数组，需单独处理成功计数，否则界面进度一直为 0。
+     * Tam Revenue.MERGE SuccessOften.Back 0 or empty array, to be handled separatelySuccessCount.No, the interface progress is always as0。
      */
     @Override
     public Result writer(DatabaseConnectorInstance connectorInstance, PluginContext context) {
@@ -163,8 +163,8 @@ public final class DamengConnector extends OracleConnector {
         List<Field> fields = new ArrayList<>(targetFields);
         String executeSql = resolveWriterSql(context, event, fields);
         if (StringUtil.isBlank(executeSql)) {
-            LOGGER.error("事件:{}, 执行SQL不能为空", event);
-            throw new SdkException("执行SQL不能为空");
+            LOGGER.error("Event: }, executing SQL cannot be empty", event);
+            throw new SdkException("Implementing SQL cannot be empty");
         }
 
         Result result = new Result();
@@ -179,8 +179,8 @@ public final class DamengConnector extends OracleConnector {
     }
 
     /**
-     * MERGE INTO ... USING (SELECT ? FROM DUAL) 时，达梦对大字段默认按 VARCHAR 推断，
-     * 需显式 CAST，否则报「无法转换的数据类型」。
+     * MERGE INTO ... USING (SELECT ? FROM DUAL) At a time like this, Dream is great.FieldDefault PressVARCHAR I don't know.
+     * RemarkableCAST，NoReport「NoneFrenchConvertDataType」。
      */
     @Override
     public boolean buildCustomValue(List<String> vs, Field field) {
@@ -197,7 +197,7 @@ public final class DamengConnector extends OracleConnector {
     }
 
     /**
-     * 二进制列使用 createBlob/setBytes，避免 setObject 推断失败。
+     * Use binary columnscreateBlob/setBytes，AvoidsetObject InferenceFailed。
      */
     @Override
     protected Object wrapBindParameter(Field field, Object val) {
@@ -237,7 +237,7 @@ public final class DamengConnector extends OracleConnector {
     }
 
     /**
-     * 达梦 PreparedStatement 对多语句支持不稳定，将 IDENTITY_INSERT 与 MERGE 拆开执行。
+     * Tam Revenue.PreparedStatement Supporting instability for multiple words willIDENTITY_INSERT and MERGE Open for execution.
      */
     private int[] damengBatchUpdate(DatabaseTemplate databaseTemplate, String executeSql, List<Field> fields, List<Map> data) throws Exception {
         Matcher matcher = IDENTITY_WRAP.matcher(StringUtil.trimToEmpty(executeSql));
@@ -263,7 +263,7 @@ public final class DamengConnector extends OracleConnector {
             try {
                 databaseTemplate.execute(offSql);
             } catch (Exception ignore) {
-                // 会话结束时会自动还原 OFF
+                // The session will be automatically restored at the end.OFF
             }
             connection.setAutoCommit(true);
         }
@@ -285,7 +285,7 @@ public final class DamengConnector extends OracleConnector {
     }
 
     /**
-     * 达梦 MERGE 成功常返回 0；多语句 batch 可能返回空数组，均按成功处理。
+     * Tam Revenue.MERGE SuccessRegularBack 0；Multiple statementsbatch Maybe.BackEmpty array, pressSuccessDeal.
      */
     private static int[] fillSuccessResult(int[] result, int dataSize) {
         if (result == null || result.length == 0) {
@@ -316,7 +316,7 @@ public final class DamengConnector extends OracleConnector {
             if (isInsert(event)) {
                 result.getFailData().add(data.get(i));
                 if (StringUtil.isBlank(result.getError())) {
-                    result.getError().append("目标表数据可能存在");
+                    result.getError().append("Possible 8.6 Sheet Data");
                 }
             }
         }
@@ -364,7 +364,7 @@ public final class DamengConnector extends OracleConnector {
                     return databaseTemplate.update(executeSql, batch.get(0));
                 });
                 if (!isDamengWriteSuccess(affected)) {
-                    throw new SdkException("数据不存在或执行异常");
+                    throw new SdkException("Data non-existent or performance abnormal");
                 }
                 result.getSuccessData().add(row);
             } catch (Exception e) {

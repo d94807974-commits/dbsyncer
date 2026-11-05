@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 告警策略：表模型 / DTO / 运行时互转。
+ * Police strategy Corrupt：Table-1, /DTO / Run-on.
  *
  * @author wuji
  * @version 1.0.0

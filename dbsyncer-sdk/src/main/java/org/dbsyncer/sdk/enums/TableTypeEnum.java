@@ -6,7 +6,7 @@ package org.dbsyncer.sdk.enums;
 import org.dbsyncer.sdk.SdkException;
 
 /**
- * 表类型
+ * TableType
  *
  * @author AE86
  * @version 1.0.0
@@ -15,27 +15,27 @@ import org.dbsyncer.sdk.SdkException;
 public enum TableTypeEnum {
 
     /**
-     * 表
+     * Table
      */
     TABLE("TABLE"),
 
     /**
-     * 视图
+     * View
      */
     VIEW("VIEW"),
 
     /**
-     * 物化视图
+     * Image View
      */
     MATERIALIZED_VIEW("MATERIALIZED VIEW"),
 
     /**
-     * SQL(扩展类型)
+     * SQL(ExtensionType)
      */
     SQL("SQL"),
 
     /**
-     * ‌半结构化(扩展类型，如File，Kafka，ES)
+     * ‌Semi-structured(ExtensionType，LikeFile，Kafka，ES)
      */
     SEMI("SEMI");
 
@@ -46,7 +46,7 @@ public enum TableTypeEnum {
     }
 
     /**
-     * 是否表类型
+     * YesNoTableType
      *
      * @param type
      * @return

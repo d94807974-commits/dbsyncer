@@ -8,7 +8,7 @@ import org.dbsyncer.parser.model.MetaAgg;
 import java.util.List;
 
 /**
- * 同步任务 Meta 日汇总读写。
+ * Sync task Meta Day summary reading and writing.
  *
  * @author wuji
  * @version 1.0.0
@@ -16,22 +16,22 @@ import java.util.List;
 public interface MetaAggProfile {
 
     /**
-     * 按统计日查询。
+     * Query by statistical day.
      */
     MetaAgg getByStatDate(String statDate);
 
     /**
-     * 最近若干天（按 STAT_DATE 升序，最多 {@code days} 条）。
+     * Some recently.days（PressSTAT_DATE Raised, maximum{@code days} (Article Concerning Article).
      */
     List<MetaAgg> listRecent(int days);
 
     /**
-     * 新增或按 STAT_DATE 更新当日汇总。
+     * InsertOr pressSTAT_DATE Updates the summary of the day.
      */
     void upsert(MetaAgg daily);
 
     /**
-     * 删除早于指定统计日的行（不含 cutoff）。
+     * DeleteLines earlier than the date specified (excludingcutoff）。
      */
     void removeBefore(String cutoffStatDate);
 }

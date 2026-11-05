@@ -17,12 +17,12 @@ import org.dbsyncer.connector.postgresql.decoder.impl.TestDecodingMessageDecoder
 public enum MessageDecoderEnum {
 
     /**
-     * 插件：TEST_DECODING
+     * Plugin：TEST_DECODING
      */
     TEST_DECODING("test_decoding", TestDecodingMessageDecoder.class),
 
     /**
-     * 插件：PG_OUTPUT
+     * Plugin：PG_OUTPUT
      */
     PG_OUTPUT("pgoutput", PgOutputMessageDecoder.class);
 

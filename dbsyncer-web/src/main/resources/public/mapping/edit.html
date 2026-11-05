@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <div class="form-container">
     <form id="mappingModifyForm" method="post">
@@ -9,9 +9,9 @@
             <div class="lg:col-span-2"></div>
             <div class="lg:col-span-2 card-title text-center">
                 <span id="mapping_name_modify" class="text-xxl">[[${mapping?.name}]]</span>
-                <i class="fa fa-edit text-info text-xl cursor-pointer" th:title="点击修改名称" th:onclick="mappingModifyName()"></i>
+ <i class="fa fa-edit text-info text-xl cursor-pointer" th:title="ClickUpdateName" th:onclick="mappingModifyName()"></i>
                 <p class="card-subtitle">[[${mapping?.id}]]</p>
-                <!-- 隐藏表单值 -->
+ <!-- KeyTableUnit -->
                 <div class="hidden">
                     <input id="mappingId" name="id" type="text" th:value="${mapping?.id}"/>
                     <input name="name" type="text" th:value="${mapping?.name}"/>
@@ -21,15 +21,15 @@
         </div>
     </div>
     <div class="card-body">
-        <!-- 驱动同步关系 -->
+ <!-- DriverSync relationships -->
         <div class="grid grid-cols-9">
             <div class="flex items-center lg:col-span-4">
                 <img draggable="false" style="width: 60px; height: 60px;" th:src="@{'/img/'+ ${mapping?.sourceConnector?.config?.connectorType} + '.png'}" />
                 <div class="w-full">
-                    <!-- 数据源 -->
+ <!-- Source -->
                     <div class="form-item mb-4">
                         <label class="form-label">
-                            <i class="fa fa-database text-primary"></i> 数据源<strong class="text-primary">*</strong>
+ <i class="fa fa-database text-primary"></i> Source<strong class="text-primary">*</strong>
                         </label>
                         <select name="sourceConnectorId" id="sourceConnectorId" class="form-control"
                                 th:attr="data-default-id=${mapping?.sourceConnectorId},
@@ -37,11 +37,11 @@
                                          data-default-label=${mapping?.sourceConnector?.name + '(' + mapping?.sourceConnector?.config?.connectorType + ')'}"></select>
                     </div>
                     <div class="form-item mb-4">
-                        <label class="form-label">源Schema</label>
+ <label class="form-label">Source schema</label>
                         <select name="sourceSchema" id="sourceSchema" class="form-control" th:data-schema="${mapping?.sourceSchema}"></select>
                     </div>
                     <div class="form-item">
-                        <label class="form-label">源库</label>
+ <label class="form-label">Source database</label>
                         <select name="sourceDatabase" id="sourceDatabase" class="form-control" th:data-database="${mapping?.sourceDatabase}"></select>
                     </div>
                 </div>
@@ -52,10 +52,10 @@
             <div class="flex items-center lg:col-span-4">
                 <img draggable="false" style="width: 60px; height: 60px;" th:src="@{'/img/'+ ${mapping?.targetConnector?.config?.connectorType} + '.png'}" />
                 <div class="w-full">
-                    <!-- 目标源 -->
+ <!-- Target -->
                     <div class="form-item mb-4">
                         <label class="form-label">
-                            <i class="fa fa-database text-success"></i> 目标源<strong class="text-primary">*</strong>
+ <i class="fa fa-database text-success"></i> Target<strong class="text-primary">*</strong>
                         </label>
                         <select name="targetConnectorId" id="targetConnectorId" class="form-control"
                                 th:attr="data-default-id=${mapping?.targetConnectorId},
@@ -63,69 +63,69 @@
                                          data-default-label=${mapping?.targetConnector?.name + '(' + mapping?.targetConnector?.config?.connectorType + ')'}"></select>
                     </div>
                     <div class="form-item mb-4">
-                        <label class="form-label">目标Schema</label>
+ <label class="form-label">Target schema</label>
                         <select name="targetSchema" id="targetSchema" class="form-control" th:data-schema="${mapping?.targetSchema}"></select>
                     </div>
                     <div class="form-item">
-                        <label class="form-label">目标库</label>
+ <label class="form-label">Target database</label>
                         <select name="targetDatabase" id="targetDatabase" class="form-control" th:data-database="${mapping?.targetDatabase}"></select>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 同步模式选择 -->
+ <!-- Sync Mode Selection -->
         <div class="flex items-center justify-between mt-4">
             <div id="mapping_model" class="radio-group">
                 <input type="radio" name="model" value="full" th:checked="${'full' eq mapping?.model}" />
-                <label>全量</label>
+ <label>Full</label>
                 <input type="radio" name="model" value="increment" th:checked="${'increment' eq mapping?.model}" />
-                <label>增量</label>
+ <label>Incremental</label>
                 <input type="radio" name="model" value="fullIncrement" th:checked="${'fullIncrement' eq mapping?.model}" />
-                <label>全量+增量</label>
+ <label>Full+Incremental</label>
             </div>
 
             <div class="form-actions">
                 <span th:if="${mapping?.meta?.state ne 0}">
                     <button type="button" class="btn btn-info" disabled>
-                        <i class="fa fa-save"></i> 运行中
+ <i class="fa fa-save"></i> Running
                     </button>
                 </span>
                 <button th:if="${mapping?.meta?.state eq 0}" 
                         id="mappingSubmitBtn" 
                         type="button" 
                         class="btn btn-primary">
-                    <i class="fa fa-save"></i> 保存
+ <i class="fa fa-save"></i> Save
                 </button>
                 <button type="button" class="btn btn-outline" onclick="backIndexPage()">
-                    <i class="fa fa-reply"></i> 返回
+ <i class="fa fa-reply"></i> Back
                 </button>
             </div>
         </div>
 
-        <!-- 映射关系区域 -->
-        <h3><i class="fa fa-table text-success"></i> 映射关系</h3>
+ <!-- MappingRelationship Area -->
+ <h3><i class="fa fa-table text-success"></i> MappingRelations</h3>
         <div th:replace="mapping/editTable :: content"></div>
 
-        <!-- 高级配置区域 -->
-        <h3><i class="fa fa-table text-info"></i> 高级配置</h3>
-        <p class="text-xs text-tertiary">对所有表映射关系都生效</p>
-        <!-- 全量配置 -->
+ <!-- Advanced settingsRegional -->
+ <h3><i class="fa fa-table text-info"></i> Advanced settings</h3>
+ <p class="text-xs text-tertiary">AllTableMappingThe relationship is valid.</p>
+ <!-- FullConfigure -->
         <div th:replace="mapping/editFull :: content"></div>
 
-        <!-- 增量配置 -->
+ <!-- IncrementalConfigure -->
         <div th:replace="mapping/editIncrement :: content"></div>
 
-        <!-- 策略配置 -->
+ <!-- Policy Configuration -->
         <div th:replace="mapping/editStrategy :: content"></div>
 
-        <!-- 过滤条件 -->
+ <!-- Filter Conditions -->
         <div th:replace="mapping/editFilter :: content"></div>
 
-        <!-- 转换配置 -->
+ <!-- Convert Configuration -->
         <div th:replace="mapping/editConvert :: content"></div>
 
-        <!-- 插件配置 -->
+ <!-- PluginsConfigure -->
         <div th:replace="mapping/editPlugin :: content"></div>
 
         <div class="blank-block-md"></div>

@@ -1,7 +1,7 @@
 package org.dbsyncer.biz.enums;
 
 /**
- * 线程池指标
+ * ThreadsPool indicators
  *
  * @author AE86
  * @version 1.0.0
@@ -10,25 +10,25 @@ package org.dbsyncer.biz.enums;
 public enum ThreadPoolMetricEnum {
 
     /**
-     * 核心线程
+     * CoreThreads
      */
-    CORE_SIZE("线程"),
+    CORE_SIZE("Threads"),
     /**
-     * 排队中
+     * Queued
      */
-    QUEUE_UP("排队中"),
+    QUEUE_UP("Queued"),
     /**
-     * 处理中
+     * Processing
      */
-    ACTIVE("处理中"),
+    ACTIVE("Processing"),
     /**
-     * 已完成
+     * Completed
      */
-    COMPLETED("完成"),
+    COMPLETED("Finish"),
     /**
-     * 空闲队列
+     * Idle queue
      */
-    REMAINING_CAPACITY("空闲队列");
+    REMAINING_CAPACITY("Idle queue");
 
     private final String metricName;
 

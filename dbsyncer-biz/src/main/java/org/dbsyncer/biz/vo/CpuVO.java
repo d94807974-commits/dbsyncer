@@ -6,7 +6,7 @@ package org.dbsyncer.biz.vo;
 import java.math.BigDecimal;
 
 /**
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2025-12-20 21:22
  */
@@ -14,11 +14,11 @@ public final class CpuVO extends HistoryStackVO {
 
     private final int core = Runtime.getRuntime().availableProcessors();
 
-    // 用户使用百分比
+    // UserUse 100minThat's right.
     private BigDecimal userPercent;
-    // 系统化使用百分比
+    // Systematically use 100%minThat's right.
     private BigDecimal sysPercent;
-    // 总使用百分比
+    // Total usageminThat's right.
     private BigDecimal totalPercent;
 
     public int getCore() {

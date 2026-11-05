@@ -11,7 +11,7 @@ import org.dbsyncer.sdk.connector.database.AbstractDatabaseConnector;
 import java.util.Map;
 
 /**
- * OceanBase Oracle 模式连接配置校验
+ * OceanBase Oracle ModeConnectConfigureVerify INTRODUCTION
  *
  * @author wuji
  * @version 1.0.0

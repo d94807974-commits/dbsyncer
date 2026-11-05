@@ -4,7 +4,7 @@
 package org.dbsyncer.connector.kingbase;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-06 18:30
  */

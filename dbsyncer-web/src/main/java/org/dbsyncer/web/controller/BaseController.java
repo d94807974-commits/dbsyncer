@@ -44,39 +44,39 @@ public abstract class BaseController {
     private ResourceAclService resourceAclService;
 
     /**
-     * 当前登录用户名。
+     * CurrentLoginUsername。
      */
     protected String currentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Assert.notNull(authentication, "无法获取登录用户.");
+        Assert.notNull(authentication, "Unable to get logged-in user.");
         String username = authentication.getName();
-        Assert.hasText(username, "无法获取登录用户.");
+        Assert.hasText(username, "Unable to get logged-in user.");
         return username;
     }
 
     /**
-     * 断言当前用户具备权限码。
+     * Claim CurrentUserExistingPermissionscode.
      */
     protected void requirePermission(String permissionCode) {
         permissionChecker.requirePermission(currentUsername(), permissionCode);
     }
 
     /**
-     * 断言当前用户具备任一权限码。
+     * Claim CurrentUserHave anyPermissionscode.
      */
     protected void requireAnyPermission(String... permissionCodes) {
         permissionChecker.requireAnyPermission(currentUsername(), permissionCodes);
     }
 
     /**
-     * 断言当前用户对资源具备动作权限。
+     * Claim CurrentUserYeah.ResourceAction availablePermissions。
      */
     protected void requireResource(String resourceType, String resourceId, String action) {
         resourceAclService.require(currentUsername(), resourceType, resourceId, action);
     }
 
     /**
-     * 获取请求参数（附带当前登录用户名，供 Service 层 ACL 过滤）。
+     * AccessRequest parameters（Attach CurrentLoginUsername，ForService LayerACL Filter.
      */
     protected Map<String, String> getParams(HttpServletRequest request) {
         Map<String, String[]> map = request.getParameterMap();
@@ -87,7 +87,7 @@ public abstract class BaseController {
     }
 
     /**
-     * 初始化: 条件/转换/插件（插件仅加载已安装列表，不含全库关联扫描）
+     * Initialize: Condition/Convert/Plugin（PluginLoad only installedList，Without AllLibraryAssociation scan)
      */
     protected void initConfig(ModelMap model) {
         model.put("condition", filterService.getCondition());
@@ -96,14 +96,14 @@ public abstract class BaseController {
     }
 
     /**
-     * 初始化: 条件
+     * Initialize: Condition
      */
     protected void initConditionConfig(ModelMap model) {
         model.put("condition", filterService.getCondition());
     }
 
     /**
-     * 读取请求体
+     * Read Request
      */
     protected String readRequestBody(HttpServletRequest request) throws IOException {
         StringBuilder sb = new StringBuilder();

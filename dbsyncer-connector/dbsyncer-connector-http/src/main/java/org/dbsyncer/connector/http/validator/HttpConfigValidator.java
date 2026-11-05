@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Http连接配置校验器实现
+ * HttpConnectConfigureVerifyer Achieved
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-02-02 00:01
  */
@@ -55,8 +55,8 @@ public class HttpConfigValidator implements ConfigValidator<HttpConnector, HttpC
         if ("source".equals(type)) {
             String extractPath = params.get(HttpConstant.EXTRACT_PATH);
             String extractTotal = params.get(HttpConstant.EXTRACT_TOTAL);
-            Assert.hasText(extractPath, "解析数据规则不能为空");
-            Assert.hasText(extractTotal, "解析总数规则不能为空");
+            Assert.hasText(extractPath, "Data parsing rules cannot be empty");
+            Assert.hasText(extractTotal, "The number rule cannot be empty");
             table.getExtInfo().put(HttpConstant.EXTRACT_PATH, extractPath);
             table.getExtInfo().put(HttpConstant.EXTRACT_TOTAL, extractTotal);
         } else {
@@ -74,11 +74,11 @@ public class HttpConfigValidator implements ConfigValidator<HttpConnector, HttpC
         String requestParams = params.get(HttpConstant.PARAMS);
         Assert.hasText(tableName, "TableName is empty");
         Assert.hasText(columnList, "ColumnList is empty");
-        Assert.hasText(method, "请求方式 is empty");
-        Assert.hasText(api, "接口不能为空");
-        Assert.hasText(contentType, "ContentType不能为空");
+        Assert.hasText(method, "Request Mode is empty");
+        Assert.hasText(api, "Interface cannot be empty");
+        Assert.hasText(contentType, "ContentType can't be empty.");
         List<Field> fields = JsonUtil.jsonToArray(columnList, Field.class);
-        Assert.notEmpty(fields, "字段不能为空.");
+        Assert.notEmpty(fields, "Field cannot be empty.");
         table.setName(tableName);
         table.setColumn(fields);
         table.setType(connectorService.getExtendedTableType().getCode());

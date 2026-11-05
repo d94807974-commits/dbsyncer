@@ -4,16 +4,16 @@
 package org.dbsyncer.common.enums;
 
 /**
- * 消息业务域。
+ * Message business field.
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-09-23 00:27
  */
 public enum CommonMessageTypeEnum {
 
     /**
-     * 删除配置缓存
+     * DeleteConfigureCache
      */
     REMOVE_CONFIG_MODEL_CACHE(0);
 
@@ -24,10 +24,10 @@ public enum CommonMessageTypeEnum {
     }
 
     /**
-     * 按 code 解析；未知抛异常（兼作 JSON 反序列化入口）。
+     * Presscode Analysis;UnknownThrow!Error（Co-authorJSON Inverse sequence entry.
      *
-     * @param code 业务域 code
-     * @return 枚举
+     * @param code Fieldcode
+     * @return Enumeration
      */
     public static CommonMessageTypeEnum getByCode(int code) {
         for (CommonMessageTypeEnum e : values()) {

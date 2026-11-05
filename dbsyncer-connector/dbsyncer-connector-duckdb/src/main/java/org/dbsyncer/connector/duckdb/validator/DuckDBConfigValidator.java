@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * DuckDB 连接配置校验器（文件库，serviceName 为数据库文件路径）
+ * DuckDB ConnectConfigureVerifyerDocumentationLibrary，serviceName YesDatabase filePath)
  *
  * @author wuji
  * @version 1.0.0
@@ -29,10 +29,10 @@ public final class DuckDBConfigValidator extends AbstractDataBaseConfigValidator
         String driverClassName = params.get("driverClassName");
         int maxActive = NumberUtil.toInt(Objects.toString(params.get("maxActive")), connectorConfig.getMaxActive());
         long keepAlive = NumberUtil.toLong(Objects.toString(params.get("keepAlive")), connectorConfig.getKeepAlive());
-        Assert.hasText(serviceName, "数据库文件路径不能为空.");
-        // DuckDB 单写多读，连接数不宜过大
-        Assert.isTrue(maxActive >= 1 && maxActive <= 64, "最大连接数只允许输入1-64.");
-        Assert.isTrue(keepAlive >= 10000 && keepAlive <= 120000, "有效期只允许输入10000-120000.");
+        Assert.hasText(serviceName, "Database file path cannot be empty.");
+        // DuckDB I'm not going to read it.ConnectNot too big.
+        Assert.isTrue(maxActive >= 1 && maxActive <= 64, "Maximum number of connections allowed only 1 - 64");
+        Assert.isTrue(keepAlive >= 10000 && keepAlive <= 120000, "TTL must be between 10000 and 120000.");
 
         connectorConfig.setServiceName(serviceName);
         connectorConfig.setProperties(PropertiesUtil.parse(properties));

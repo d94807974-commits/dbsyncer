@@ -4,12 +4,12 @@
 package org.dbsyncer.sdk.storage;
 
 /**
- * 创建数据存放的集合ID
+ * Create a collection of data repositoriesID
  * <pre>
  * /data
- * ----/config 连接器、驱动、运行状态
- * ----/log 连接器、驱动、系统
- * ----/data 驱动实时同步数据
+ * ----/config Connector、Mapping、RunStatus
+ * ----/log Connector、Mapping、System
+ * ----/data MappingReal timeSync data
  * --------/driver1
  * --------/driver2
  * --------/driver...
@@ -22,7 +22,7 @@ package org.dbsyncer.sdk.storage;
 public interface Strategy {
 
     /**
-     * 创建分片
+     * CreateminSnippets
      *
      * @param separator
      * @param collectionId

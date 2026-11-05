@@ -4,7 +4,7 @@
 package org.dbsyncer.sdk.model;
 
 /**
- * 集群节点
+ * ClusterNodes
  *
  * @author wuji
  * @version 1.0.0

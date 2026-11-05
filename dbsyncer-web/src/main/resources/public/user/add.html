@@ -1,46 +1,46 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <div class="form-container">
     <div class="card-header">
-        <h3 class="card-title text-center">添加用户</h3>
+        <h3 class="card-title text-center">Add User</h3>
     </div>
     <div class="card-body">
         <div class="form-actions mb-4">
             <button id="userSubmitBtn" class="btn btn-primary">
-                <i class="fa fa-save"></i> 保存
+                <i class="fa fa-save"></i> Save
             </button>
             <button class="btn btn-outline" onclick="backIndexPage()">
-                <i class="fa fa-reply"></i> 返回
+                <i class="fa fa-reply"></i> Back
             </button>
         </div>
         <form id="user-form-add" method="post">
             <div class="grid grid-cols-2">
-                <!-- 账号 -->
+                <!-- Account -->
                 <div class="form-item">
-                    <label class="form-label">账号<strong class="text-primary">*</strong></label>
+                    <label class="form-label">Account<strong class="text-primary">*</strong></label>
                     <div class="form-control-area">
                         <input class="form-control" name="username" type="text" maxlength="50" required
-                               placeholder="请输入账号"/>
+                               placeholder="Please enter the account number."/>
                     </div>
                 </div>
 
-                <!-- 昵称 -->
+                <!-- Nickname -->
                 <div class="form-item">
-                    <label class="form-label">昵称<strong class="text-primary">*</strong></label>
+                    <label class="form-label">Nickname<strong class="text-primary">*</strong></label>
                     <div class="form-control-area">
                         <input class="form-control" name="nickname" type="text" maxlength="50" required
-                               placeholder="请输入昵称"/>
+                               placeholder="Please enter nickname"/>
                     </div>
                 </div>
 
-                <!-- 角色 -->
+                <!-- Role -->
                 <div class="form-item">
-                    <label class="form-label">角色<strong class="text-primary">*</strong></label>
+                    <label class="form-label">Role<strong class="text-primary">*</strong></label>
                     <div class="form-control-area">
                         <select id="roleId" class="form-control" name="roleId" required>
-                            <option value="">请选择角色</option>
+                            <option value="">Please select a role</option>
                             <option th:each="r : ${roles}"
                                     th:value="${r.id}"
                                     th:text="${r.name}"></option>
@@ -48,17 +48,17 @@
                     </div>
                 </div>
 
-                <!-- 密码 -->
+                <!-- Password -->
                 <div class="form-item">
-                    <label class="form-label">密码<strong class="text-primary">*</strong></label>
+                    <label class="form-label">Password<strong class="text-primary">*</strong></label>
                     <div class="form-control-area">
                         <input class="form-control" name="password" type="password" maxlength="64" required
-                               placeholder="请输入密码"/>
+                               placeholder="Please enter password"/>
                     </div>
                 </div>
             </div>
         </form>
-        <!-- 为角色 dbSelect 下拉预留高度，避免被 form-container 裁切 -->
+        <!-- YesRole dbSelect Draw down to set up heights to avoid being hitform-container DisarmCut. -->
         <div class="blank-block-md"></div>
     </div>
 </div>
@@ -66,7 +66,7 @@
 <script type="text/javascript">
     $('#roleId').dbSelect({type: 'single'});
 
-    //保存
+    //Save
     $("#userSubmitBtn").on('click', function () {
         const $form = $("#user-form-add");
         if (!validateForm($form)) {
@@ -75,14 +75,14 @@
 
         const $btn = $(this);
         const originalText = $btn.html();
-        $btn.html('<i class="fa fa-spinner fa-spin"></i> 保存中...').prop('disabled', true);
+        $btn.html('<i class="fa fa-spinner fa-spin"></i> Saving...').prop('disabled', true);
         doPoster("/user/add", $form.serializeJson(), function (response) {
             $btn.html(originalText).prop('disabled', false);
             if (response.success === true) {
-                bootGrowl("新增用户成功！", "success");
+                bootGrowl("Add user successfully!", "success");
                 doLoader("/user?refresh=" + new Date().getTime());
             } else {
-                bootGrowl(response.message || "新增失败", "danger");
+                bootGrowl(response.message || "New Failed", "danger");
             }
         });
     });

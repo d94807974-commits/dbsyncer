@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * OceanBase Oracle 模式标准数据类型解析器（标准 JDBC，不依赖 oracle.sql.*）。
+ * OceanBase Oracle Model Standard DataTypeParser (standard)JDBC，Not dependentoracle.sql.*）。
  *
  * @author wuji
  * @version 1.0.0
@@ -48,8 +48,8 @@ public final class OceanBaseOracleSchemaResolver extends AbstractDatabaseSchemaR
     }
 
     /**
-     * 规范化类型名：大写、去掉精度括号。
-     * <p>例如 {@code TIMESTAMP(6) WITH TIME ZONE} → {@code TIMESTAMP WITH TIME ZONE}</p>
+     * NormativeTypeName: uppercase, removedOutlook saluteparenthesis.
+     * <p>For example:{@code TIMESTAMP(6) WITH TIME ZONE} → {@code TIMESTAMP WITH TIME ZONE}</p>
      */
     public static String normalizeTypeName(String typeName) {
         if (typeName == null) {

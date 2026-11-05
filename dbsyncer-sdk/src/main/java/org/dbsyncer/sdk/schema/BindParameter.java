@@ -8,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * 自定义 JDBC 参数绑定（如 Oracle CLOB 需通过连接创建后 setClob）。
+ * Custom JDBC ParameterTie (if)Oracle CLOB To passConnectAfter CreatesetClob）。
  */
 public interface BindParameter {
 

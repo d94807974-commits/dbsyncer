@@ -45,18 +45,18 @@ public class BinlogColumnValue extends AbstractColumnValue<ByteString> {
         byte[] bytes = asByteArray();
         int expectedLength = BinlogByteEnum.SHORT.getByteLength();
 
-        // 如果字节数组长度小于期望长度，进行填充
+        // If bytesLengthLess than expectedLength，Fill
         if (bytes.length < expectedLength) {
             byte[] paddedBytes = new byte[expectedLength];
             System.arraycopy(bytes, 0, paddedBytes, 0, bytes.length);
-            // 剩余字节填充为0
+            // The remaining bytes fill as0
             ByteBuffer buffer = ByteBuffer.allocate(expectedLength);
             buffer.put(paddedBytes);
             buffer.flip();
             return buffer.asShortBuffer().get();
         }
 
-        // 如果字节数组长度大于等于期望长度，只取前 expectedLength 字节
+        // If bytesLengthGreater than or equal to expectationLength，Only beforeexpectedLength Bytes
         ByteBuffer buffer = ByteBuffer.allocate(expectedLength);
         buffer.put(bytes, 0, expectedLength);
         buffer.flip();
@@ -93,18 +93,18 @@ public class BinlogColumnValue extends AbstractColumnValue<ByteString> {
         byte[] bytes = asByteArray();
         int expectedLength = BinlogByteEnum.FLOAT.getByteLength();
 
-        // 如果字节数组长度小于期望长度，进行填充
+        // If bytesLengthLess than expectedLength，Fill
         if (bytes.length < expectedLength) {
             byte[] paddedBytes = new byte[expectedLength];
             System.arraycopy(bytes, 0, paddedBytes, 0, bytes.length);
-            // 剩余字节填充为0
+            // The remaining bytes fill as0
             ByteBuffer buffer = ByteBuffer.allocate(expectedLength);
             buffer.put(paddedBytes);
             buffer.flip();
             return buffer.asFloatBuffer().get();
         }
 
-        // 如果字节数组长度大于等于期望长度，只取前 expectedLength 字节
+        // If bytesLengthGreater than or equal to expectationLength，Only beforeexpectedLength Bytes
         ByteBuffer buffer = ByteBuffer.allocate(expectedLength);
         buffer.put(bytes, 0, expectedLength);
         buffer.flip();
@@ -116,18 +116,18 @@ public class BinlogColumnValue extends AbstractColumnValue<ByteString> {
         byte[] bytes = asByteArray();
         int expectedLength = BinlogByteEnum.DOUBLE.getByteLength();
 
-        // 如果字节数组长度小于期望长度，进行填充
+        // If bytesLengthLess than expectedLength，Fill
         if (bytes.length < expectedLength) {
             byte[] paddedBytes = new byte[expectedLength];
             System.arraycopy(bytes, 0, paddedBytes, 0, bytes.length);
-            // 剩余字节填充为0
+            // The remaining bytes fill as0
             ByteBuffer buffer = ByteBuffer.allocate(expectedLength);
             buffer.put(paddedBytes);
             buffer.flip();
             return buffer.asDoubleBuffer().get();
         }
 
-        // 如果字节数组长度大于等于期望长度，只取前 expectedLength 字节
+        // If bytesLengthGreater than or equal to expectationLength，Only beforeexpectedLength Bytes
         ByteBuffer buffer = ByteBuffer.allocate(expectedLength);
         buffer.put(bytes, 0, expectedLength);
         buffer.flip();

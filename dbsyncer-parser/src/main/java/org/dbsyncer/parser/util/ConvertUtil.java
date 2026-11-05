@@ -10,7 +10,7 @@ import java.util.Map;
 public abstract class ConvertUtil {
 
     /**
-     * 转换参数
+     * ConvertParameter
      *
      * @param convert
      * @param data
@@ -22,14 +22,14 @@ public abstract class ConvertUtil {
     }
 
     /**
-     * 转换参数
+     * ConvertParameter
      *
      * @param convert
      * @param row
      */
     public static void convert(List<Convert> convert, Map row) {
         if (!CollectionUtils.isEmpty(convert) && !CollectionUtils.isEmpty(row)) {
-            // 替换row值, 复用堆栈地址，减少开销
+            // ReplacerowValue, Reuse stacking address to reduce costs
             final int size = convert.size();
             Convert c = null;
             String name = null;

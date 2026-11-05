@@ -4,7 +4,7 @@
 package org.dbsyncer.connector.oceanbaseoracle;
 
 /**
- * OceanBase Oracle 模式连接器异常
+ * OceanBase Oracle ModeConnectorError
  *
  * @author wuji
  * @version 1.0.0

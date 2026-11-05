@@ -10,7 +10,7 @@
     <artifactId>dbsyncer-storage</artifactId>
 
     <dependencies>
-        <!-- Connector 连接器 -->
+        <!-- Connector Connector -->
         <dependency>
             <groupId>org.ghi</groupId>
             <artifactId>dbsyncer-connector-base</artifactId>

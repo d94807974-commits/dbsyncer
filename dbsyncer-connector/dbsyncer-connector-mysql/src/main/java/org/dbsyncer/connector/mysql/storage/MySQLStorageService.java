@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 将数据存储在mysql
+ * Store data inmysql
  *
  * @author AE86
  * @version 1.0.0
@@ -84,7 +84,7 @@ public class MySQLStorageService extends AbstractStorageService {
         logger.info("url:{}", url);
         database = DatabaseUtil.getDatabaseName(url);
         connectorInstance = new DatabaseConnectorInstance(config);
-        // 初始化表（建表前检测新拆表，缺失则建表后数据升级）
+        // Initial Links (testing new break tables before tabulation, missing post-formation data upgrade)
         initTable();
     }
 
@@ -142,7 +142,7 @@ public class MySQLStorageService extends AbstractStorageService {
     @Override
     protected Paging select(String sharding, Query query) {
         Paging paging = new Paging(query.getPageNum(), query.getPageSize());
-        // 读路径：分表不存在时不建表，避免错误 shardId 产生孤儿表
+        // Read path:minDo not form when a table does not exist, avoidError shardId Create an orphan watch
         Executor executor = getExecutor(query.getType(), sharding, false);
         if (executor == null) {
             return paging;
@@ -175,7 +175,7 @@ public class MySQLStorageService extends AbstractStorageService {
 
     @Override
     protected Map selectOne(String sharding, Query query) {
-        // 读路径：分表不存在时不建表
+        // Read path:minDo not make a table when it does not exist
         Executor executor = getExecutor(query.getType(), sharding, false);
         if (executor == null) {
             return null;
@@ -217,13 +217,13 @@ public class MySQLStorageService extends AbstractStorageService {
     @Override
     protected void deleteAll(String sharding) {
         Executor executor = tables.remove(sharding);
-        // 系统表：截断后放回缓存
+        // System chart: release back after cut
         if (executor != null && executor.isSystemTable()) {
             tables.put(sharding, executor);
             executeSql(String.format(TRUNCATE_TABLE, PREFIX_TABLE.concat(sharding)));
             return;
         }
-        // 动态分表：物理 DROP（删除任务）
+        // DynamicShit.minTable: PhysicsDROP（DeleteTasks）
         String tableName = PREFIX_TABLE.concat(sharding);
         try {
             executeSql(String.format(DROP_TABLE, tableName));
@@ -306,7 +306,7 @@ public class MySQLStorageService extends AbstractStorageService {
                 sql.append(", ");
             }
             String quotation = connector.buildWithQuotation(column);
-            // 原子加减，结果小于 0 时钳为 0
+            // Atom plus minus,Resultless than0 Timepliers0
             sql.append(quotation).append(" = GREATEST(").append(quotation).append(" + ?, 0)");
             args.add(entry.getValue());
             hasColumn = true;
@@ -365,15 +365,15 @@ public class MySQLStorageService extends AbstractStorageService {
     }
 
     /**
-     * @param createIfAbsent true：写路径，分表不存在则建表；false：读/删路径，不存在则返回 null，避免错误 shard 产生孤儿表
+     * @param createIfAbsent true：Write a path,minIf they do not exist, form;false：Read/ Deleting Path, do not existBack null，AvoidError shard Create an orphan watch
      */
     private Executor getExecutor(StorageEnum type, String sharding, boolean createIfAbsent) {
         Executor template = tables.get(type.getType());
         if (template == null) {
-            throw new NullExecutorException("未知的存储类型");
+            throw new NullExecutorException("Unknown storage type");
         }
         String physicalTable = PREFIX_TABLE.concat(sharding);
-        // 读路径：缓存命中也要校验物理表，避免 DROP 后仍查已失效的 Executor
+        // Read path: Check the physical chart in Cache, avoidDROP I'm still checking explains Physically.Executor
         if (!createIfAbsent && !template.isSystemTable()) {
             if (!tableExists(physicalTable)) {
                 tables.remove(sharding);
@@ -449,7 +449,7 @@ public class MySQLStorageService extends AbstractStorageService {
     }
 
     /**
-     * 可自定义 select 字段查询结果
+     * Yeah.Custom select FieldQuestionResult
      */
     private String buildSelectFromSql(Query query, Executor executor) {
         if (!query.hasSelectField()) {
@@ -465,7 +465,7 @@ public class MySQLStorageService extends AbstractStorageService {
             if (!CollectionUtils.isEmpty(includeLabels) && !includeLabels.contains(label)) {
                 continue;
             }
-            // 自定义查询字段
+            // CustomQuestionField
             if (StringUtil.isNotBlank(label)) {
                 selectedFields.add(database.buildWithQuotation(field.getName()) + " AS " + label);
             } else if (!database.buildCustom(selectedFields, field)) {
@@ -475,7 +475,7 @@ public class MySQLStorageService extends AbstractStorageService {
         if (selectedFields.isEmpty()) {
             return executor.getQuery();
         }
-        // 拼接最终SQL
+        // The spell endsSQL
         return String.format("SELECT %s FROM %s",
                 StringUtil.join(selectedFields, StringUtil.COMMA),
                 database.buildWithQuotation(executor.getTable()));
@@ -525,7 +525,7 @@ public class MySQLStorageService extends AbstractStorageService {
     }
 
     private void buildQuerySqlWithFilters(List<AbstractFilter> filters, List<Object> args, StringBuilder sql, List<AbstractFilter> highLightKeys) {
-        // 过滤值
+        // FilterValue
         int size = filters.size();
 
         for (int i = 0; i < size; i++) {
@@ -571,7 +571,7 @@ public class MySQLStorageService extends AbstractStorageService {
     }
 
     /**
-     * 展开 IN：生成 {@code IN (?,?,?)} 并逐个绑定参数（逗号拼接值或 {@link InFilter#getBindValues()}）。
+     * ExpandIN：Generate {@code IN (?,?,?)} And bind them one by one.Parameter（Comma SpellingValueor{@link InFilter#getBindValues()}）。
      */
     private void appendInClause(AbstractFilter filter, List<Object> args, StringBuilder sql) {
         List<Object> binds;
@@ -604,7 +604,7 @@ public class MySQLStorageService extends AbstractStorageService {
     }
 
     private void buildQuerySqlWithBooleanFilters(List<BooleanFilter> clauses, List<Object> args, StringBuilder sql, List<AbstractFilter> highLightKeys) {
-        // 解析查询
+        // Parse Query
         int size = clauses.size();
         for (int i = 0; i < size; i++) {
             BooleanFilter booleanFilter = clauses.get(i);
@@ -613,7 +613,7 @@ public class MySQLStorageService extends AbstractStorageService {
                 continue;
             }
 
-            // 组合条件
+            // CompositeCondition
             if (i > 0) {
                 sql.append(" ").append(booleanFilter.getOperationEnum().name().toUpperCase()).append(" ");
             }
@@ -631,12 +631,12 @@ public class MySQLStorageService extends AbstractStorageService {
     }
 
     private void initTable() {
-        // 配置
+        // Configure
         FieldBuilder builder = new FieldBuilder();
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_NAME, ConfigConstant.CONFIG_MODEL_TYPE, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME, ConfigConstant.CONFIG_MODEL_JSON);
         List<Field> configFields = builder.getFields();
 
-        // 用户配置：一行一用户，严格按 dbsyncer_user 拆分列
+        // User Configuration：Line one.User，Strictly pressdbsyncer_user OpenminColumns
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.USER_USERNAME, ConfigConstant.USER_PASSWORD, ConfigConstant.USER_NICKNAME,
                 ConfigConstant.USER_ROLE,
@@ -649,7 +649,7 @@ public class MySQLStorageService extends AbstractStorageService {
                 ConfigConstant.CONFIG_MODEL_JSON);
         List<Field> connectorFields = builder.getFields();
 
-        // 表映射关系：关联信息拆分列 + json(字段映射/command等)
+        // Map relation：AssociationInfoOpenminreorganize+ json(Field mapping/commandWait.)
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.TABLE_GROUP_TASK_ID, ConfigConstant.TABLE_GROUP_SORT_INDEX,
                 ConfigConstant.TABLE_GROUP_SOURCE_CONNECTOR_ID, ConfigConstant.TABLE_GROUP_TARGET_CONNECTOR_ID,
@@ -660,31 +660,31 @@ public class MySQLStorageService extends AbstractStorageService {
                 ConfigConstant.CONFIG_MODEL_JSON);
         List<Field> tableGroupFields = builder.getFields();
 
-        // 任务执行结果：严格按 dbsyncer_meta 拆分列(无 name/type/json)
+        // Mandate performance：Strictly pressdbsyncer_meta OpenminColumns(None name/type/json)
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.META_START_TIME, ConfigConstant.META_TASK_ID, ConfigConstant.META_STATE, ConfigConstant.META_IS_TASK_DETAIL,
                 ConfigConstant.META_TOTAL, ConfigConstant.META_SUCCESS, ConfigConstant.META_FAIL,
                 ConfigConstant.META_DIFF, ConfigConstant.META_FIXED, ConfigConstant.META_SNAPSHOT);
         List<Field> metaFields = builder.getFields();
 
-        // 任务执行明细：按任务分表(无 TASK_ID 列，靠 TABLE_GROUP_ID 关联)
+        // TasksImplementation Details：PressTasksminTable(None TASK_ID Ray, fuck.TABLE_GROUP_ID Association)
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.DATA_TABLE_GROUP_ID, ConfigConstant.CONFIG_MODEL_TYPE,
                 ConfigConstant.DETAIL_TARGET_TABLE, ConfigConstant.DETAIL_IS_SUCCESS, ConfigConstant.DATA_ERROR,
                 ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME, ConfigConstant.BINLOG_DATA);
         List<Field> taskDetailFields = builder.getFields();
 
-        // 日志
+        // Log
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_TYPE,
                 ConfigConstant.LOG_USERNAME, ConfigConstant.LOG_IP, ConfigConstant.LOG_STATUS,
                 ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_JSON);
         List<Field> logFields = builder.getFields();
 
-        // 任务配置表(同步/校验/迁移统一)：ID/NAME/TYPE/JSON/时间
+        // Task Profile(Synchronization/validation/transfer)：ID/NAME/TYPE/JSON/Time
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_NAME, ConfigConstant.CONFIG_MODEL_TYPE,
                 ConfigConstant.CONFIG_MODEL_JSON, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME);
         List<Field> taskFields = builder.getFields();
 
-        // 集群节点表
+        // Cluster nodes
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CLUSTER_NODE_ID,
                 ConfigConstant.CONFIG_MODEL_NAME, ConfigConstant.CLUSTER_IP, ConfigConstant.CLUSTER_HTTP_PORT,
                 ConfigConstant.CLUSTER_WORKER_ID, ConfigConstant.CLUSTER_STATUS, ConfigConstant.CLUSTER_ROLE,
@@ -692,13 +692,13 @@ public class MySQLStorageService extends AbstractStorageService {
                 ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME);
         List<Field> clusterNodeFields = builder.getFields();
 
-        // 集群任务表
+        // ClusterTasksTable
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.TASK_ID, ConfigConstant.SCHEDULE_TASK_TYPE,
                 ConfigConstant.SCHEDULE_NODE_ID,
                 ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME);
         List<Field> taskScheduleFields = builder.getFields();
 
-        // 集群任务分片表
+        // ClusterTasksminTable
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.TASK_ID, ConfigConstant.DATA_TABLE_GROUP_ID,
                 ConfigConstant.SCHEDULE_NODE_ID, ConfigConstant.PLAN_START_CURSOR, ConfigConstant.PLAN_END_CURSOR,
                 ConfigConstant.PLAN_LAST_CURSOR, ConfigConstant.PLAN_SUCCESS, ConfigConstant.PLAN_FAIL,
@@ -707,50 +707,50 @@ public class MySQLStorageService extends AbstractStorageService {
                 ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME);
         List<Field> taskPlanFields = builder.getFields();
 
-        // 业务分组
+        // Business group
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_NAME,
                 ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.CONFIG_MODEL_JSON);
         List<Field> groupFields = builder.getFields();
 
-        // 业务分组关系
+        // Business groupRelations
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.GROUP_REL_GROUP_ID, ConfigConstant.GROUP_REL_RESOURCE_TYPE, ConfigConstant.GROUP_REL_RESOURCE_ID);
         List<Field> groupRelFields = builder.getFields();
 
-        // 角色
+        // Role
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.CONFIG_MODEL_NAME);
         List<Field> roleFields = builder.getFields();
 
-        // 菜单权限
+        // MenuPermissions
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.PERMISSION_CODE, ConfigConstant.CONFIG_MODEL_NAME, ConfigConstant.PERMISSION_MODULE);
         List<Field> permissionFields = builder.getFields();
 
-        // 角色-权限
+        // Role-Permissions
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.ROLE_PERMISSION_ROLE_ID, ConfigConstant.ROLE_PERMISSION_PERMISSION_ID);
         List<Field> rolePermissionFields = builder.getFields();
 
-        // 用户-角色
+        // User-Role
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.USER_ROLE_USER_ID, ConfigConstant.USER_ROLE_ROLE_ID);
         List<Field> userRoleFields = builder.getFields();
 
-        // 资源 ACL
+        // Resource ACL
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.RESOURCE_ACL_SUBJECT_TYPE, ConfigConstant.RESOURCE_ACL_SUBJECT_ID,
                 ConfigConstant.GROUP_REL_RESOURCE_TYPE, ConfigConstant.GROUP_REL_RESOURCE_ID, ConfigConstant.RESOURCE_ACL_PERMISSION);
         List<Field> resourceAclFields = builder.getFields();
 
-        // 告警通知规则
+        // Alert notificationRule
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.NOTICE_RULE_SCOPE_TYPE, ConfigConstant.NOTICE_RULE_SCOPE_ID,
                 ConfigConstant.NOTICE_RULE_AT_ALL, ConfigConstant.NOTICE_RULE_AT_PHONES, ConfigConstant.NOTICE_RULE_EMAILS);
         List<Field> noticeRuleFields = builder.getFields();
 
-        // 告警策略
+        // Police strategy Corrupt
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.CONFIG_MODEL_NAME,
                 ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME,
                 ConfigConstant.NOTICE_STRATEGY_NOTICE_TYPES, ConfigConstant.NOTICE_STRATEGY_ENABLED,
@@ -758,7 +758,7 @@ public class MySQLStorageService extends AbstractStorageService {
                 ConfigConstant.NOTICE_STRATEGY_REMARK);
         List<Field> noticeStrategyFields = builder.getFields();
 
-        // 同步任务 Meta 日汇总
+        // Sync task Meta Summary
         builder.build(ConfigConstant.CONFIG_MODEL_ID, ConfigConstant.META_DAILY_STAT_DATE,
                 ConfigConstant.META_TOTAL, ConfigConstant.META_SUCCESS, ConfigConstant.META_FAIL,
                 ConfigConstant.CONFIG_MODEL_CREATE_TIME, ConfigConstant.CONFIG_MODEL_UPDATE_TIME);
@@ -785,9 +785,9 @@ public class MySQLStorageService extends AbstractStorageService {
         tables.computeIfAbsent(StorageEnum.NOTICE_RULE.getType(), k -> new Executor(k, noticeRuleFields, true, true));
         tables.computeIfAbsent(StorageEnum.NOTICE_STRATEGY.getType(), k -> new Executor(k, noticeStrategyFields, true, true));
         tables.computeIfAbsent(StorageEnum.META_DAILY.getType(), k -> new Executor(k, metaDailyFields, true, true));
-        // 建表前：新拆表齐全且 task 无 STATUS → 新版本跳过数据升级
+        // Before form: New list is completetask None STATUS → NewVersionSkip Data Upgrade
         boolean newStorageSchema = isNewStorageSchema();
-        // 创建表
+        // Create Table
         tables.forEach((tableName, e) -> {
             if (e.isSystemTable()) {
                 createTableIfNotExist(tableName, e);
@@ -802,17 +802,17 @@ public class MySQLStorageService extends AbstractStorageService {
         } catch (InterruptedException e) {
             logger.error(e.getMessage(), e);
         }
-        // 兼容升级（临时脚本，若干版本后可删）：缺新拆表则拆分；始终幂等物化/预建 detail
+        // Compatibility upgrade (temporary scripts, selected)Versionto be deleted: the new form is removedmin；Always platonic/preformdetail
         StorageDataMigrator migrator = new MySQLStorageDataMigrator(this, connectorInstance, database);
         if (!newStorageSchema) {
-            logger.info("未检测到完整新存储拆表（或仍含 task.STATUS），执行兼容升级");
+            logger.info("No complete new storage scrapping form (or still containing task.STATUS) detected to perform compatibility upgrades");
             migrator.run();
             dropTaskStatusColumnIfPresent();
         }
     }
 
     /**
-     * 是否已是新版本存储：关键拆表齐全，dbsyncer_task 无旧 STATUS 列，且无历史企业任务 TYPE。
+     * YesNoAlreadyYesNewVersionStorage: All critical pieces of material,dbsyncer_task NoneOldSTATUS rows, andNoneHistorical enterpriseTasks TYPE。
      */
     private boolean isNewStorageSchema() {
         String taskTable = PREFIX_TABLE.concat(StorageEnum.TASK.getType());
@@ -826,7 +826,7 @@ public class MySQLStorageService extends AbstractStorageService {
     }
 
     /**
-     * 任务表是否仍存在历史大写 TYPE（VALIDATE_SYNC / DATABASE_SYNC），需跑驼峰化迁移。
+     * TasksTableYesNoThere's still history.TYPE（VALIDATE_SYNC / DATABASE_SYNC），It/1992.
      */
     private boolean hasLegacyEnterpriseTaskType(String taskTable) {
         if (StringUtil.isBlank(taskTable) || !tableExists(taskTable)) {
@@ -839,7 +839,7 @@ public class MySQLStorageService extends AbstractStorageService {
             return cnt != null && cnt > 0;
         } catch (Exception e) {
             logger.debug("hasLegacyEnterpriseTaskType({}) failed: {}", taskTable, e.getMessage());
-            // 查失败时视为仍有旧数据，触发迁移更安全
+            // Cha.FailedIt's now considered that old data are still available, so it's safer to trigger migration.
             return true;
         }
     }
@@ -859,21 +859,21 @@ public class MySQLStorageService extends AbstractStorageService {
     }
 
     /**
-     * 删除旧 dbsyncer_task.STATUS 及依赖索引（与当前 DDL 对齐）。
+     * DeleteOlddbsyncer_task.STATUS And dependence.Index（andCurrentDDL Alignment.
      */
     private void dropTaskStatusColumnIfPresent() {
         String table = PREFIX_TABLE.concat(StorageEnum.TASK.getType());
         if (!tableExists(table) || !columnExists(table, "STATUS")) {
             return;
         }
-        // 旧索引可能含 STATUS，先尽量删除
+        // AppealIndexPossibleSTATUS，Try first.Delete
         dropIndexIfExists(table, "IDX_TYPE_UPDATE_CREATE_TIME");
         dropIndexIfExists(table, "IDX_STATUS_UPDATE_TIME");
         try {
             executeSql(String.format("ALTER TABLE `%s` DROP COLUMN `STATUS`", table));
-            logger.info("已删除 {}.STATUS", table);
+            logger.info("Deleted {}.STATUS", table);
         } catch (Exception e) {
-            logger.warn("删除 {}.STATUS 失败: {}", table, e.getMessage());
+            logger.warn("Delete {}.STATUS failed: }", table, e.getMessage());
         }
     }
 
@@ -889,7 +889,7 @@ public class MySQLStorageService extends AbstractStorageService {
     }
 
     /**
-     * 表不存在则创建；返回是否本次新建（复用已有 SHOW TABLES 判断）。
+     * Create tables if they do not exist;BackYesNoNew this time (reused already)SHOW TABLES The judge.
      */
     private boolean createTableIfNotExist(String table, Executor executor) {
         table = PREFIX_TABLE.concat(table);
@@ -899,13 +899,13 @@ public class MySQLStorageService extends AbstractStorageService {
         try {
             connectorInstance.execute(databaseTemplate -> databaseTemplate.queryForMap(sql));
         } catch (EmptyResultDataAccessException e) {
-            // 不存在表
+            // Oh, no.Existing Table
             String ddl = readSql(executor.getType(), executor.isSystemTable(), table);
             executeSql(ddl);
             created = true;
         }
 
-        // 老版本升级：动态补齐新增字段
+        // OldVersionUpgrade: dynamic completionCreateField
         upgradeTableColumns(executor.getType(), table);
 
         List<Field> fields = executor.getFields();
@@ -922,21 +922,21 @@ public class MySQLStorageService extends AbstractStorageService {
     }
 
     /**
-     * 老版本升级：按表类型动态补齐新增字段/索引（已存在则跳过）
+     * OldVersionUpgrade: by tableTypeDynamic CompletionCreateField/Index（Existing and Skipping)
      *
-     * @param type  存储类型
-     * @param table 已带前缀的表名
+     * @param type  StorageType
+     * @param table PrefixedTable name
      */
     private void upgradeTableColumns(String type, String table) {
         if (StorageEnum.CONNECTOR.getType().equals(type)) {
-            addColumnIfNotExist(table, "IS_SOURCE", "tinyint NOT NULL DEFAULT 1 COMMENT '作为源标识, 0-否 1-是'");
-            addColumnIfNotExist(table, "IS_TARGET", "tinyint NOT NULL DEFAULT 1 COMMENT '作为目标标识, 0-否 1-是'");
-            addColumnIfNotExist(table, "STATUS", "tinyint NOT NULL DEFAULT 1 COMMENT '连接状态, 0-离线 1-在线'");
+            addColumnIfNotExist(table, "IS_SOURCE", "Tinyint NOT NULL DEFAULT 1 COMMENT ' as source identifier, 0-No 1-Yes '");
+            addColumnIfNotExist(table, "IS_TARGET", "Tinyint NOT NULL DEFAULT 1 COMMENT 'as target identifier, 0-No 1-Yes '");
+            addColumnIfNotExist(table, "STATUS", "tinyint NOT NULL DEFAULT 1 COMMENT 'Connect, 0-offline 1-Online '");
             return;
         }
         if (StorageEnum.USER.getType().equals(type)) {
-            addColumnIfNotExist(table, "LOGIN_FAIL_COUNT", "int NOT NULL DEFAULT 0 COMMENT '连续登录失败次数'");
-            addColumnIfNotExist(table, "LOCK_UNTIL", "bigint NOT NULL DEFAULT 0 COMMENT '锁定截止时间（毫秒，0未锁定）'");
+            addColumnIfNotExist(table, "LOGIN_FAIL_COUNT", "Int NOT NULL DEFAULT 0 COMMENT 's number of consecutive login failures '");
+            addColumnIfNotExist(table, "LOCK_UNTIL", "Bigint NOT NULL DEFAULT 0 COMMENT 'lock deadline (ms, 0 unlocked) '");
             return;
         }
         if (StorageEnum.TABLE_GROUP.getType().equals(type)) {
@@ -945,17 +945,17 @@ public class MySQLStorageService extends AbstractStorageService {
             return;
         }
         if (StorageEnum.TASK_DETAIL.getType().equals(type)) {
-            // 新表 DDL 已含该索引；仅对老表补齐，存在则跳过，避免 Duplicate key name 打 ERROR
+            // NewTableDDL IncludedTheIndex；OnlyYeah.OldTableCompletion，ExistencethenSkip Actions，AvoidDuplicate key name Fight! ERROR
             createIndexIfNotExist(table, "IDX_TG_UPDATE", "`TABLE_GROUP_ID`,`UPDATE_TIME`");
             return;
         }
         if (StorageEnum.TASK_PLAN.getType().equals(type)) {
             addColumnIfNotExist(table, "CONTENT",
-                    "mediumblob NULL COMMENT '分片错误/差异样本JSON，波次收齐后合并进TASK_DETAIL'");
+                    "JSON, sample of split error/discrepancies of mediamblob Null COMMENT, merged with TASK DETAIL'");
             return;
         }
         if (StorageEnum.META.getType().equals(type)) {
-            addColumnIfNotExist(table, "START_TIME", "bigint NOT NULL DEFAULT 0 COMMENT '任务启动时间'");
+            addColumnIfNotExist(table, "START_TIME", "Bigint NOT NULL DEFAULT 0 COMMENT 'task start '");
             createIndexIfNotExist(table, "IDX_TASK_IS_DETAIL", "`TASK_ID`,`IS_TASK_DETAIL`");
             return;
         }
@@ -966,9 +966,9 @@ public class MySQLStorageService extends AbstractStorageService {
             return;
         }
         if (StorageEnum.LOG.getType().equals(type)) {
-            addColumnIfNotExist(table, "USERNAME", "varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '操作人/登录账号'");
-            addColumnIfNotExist(table, "IP", "varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '登录/操作客户端IP'");
-            addColumnIfNotExist(table, "STATUS", "tinyint NOT NULL DEFAULT 1 COMMENT '状态：0失败 1成功'");
+            addColumnIfNotExist(table, "USERNAME", "varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4 bin NOT NULL DEFAULT ' ' COMMENT 'Operator/Register ♪ I'm sorry ♪");
+            addColumnIfNotExist(table, "IP", "varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4 bin NOT NULL DEFAULT ' 'COMMENT ' login/operate client IP'");
+            addColumnIfNotExist(table, "STATUS", "tinyint NOT NULL DEFAULT 1 COMMENT 'SATE: 0 failed 1 successful ♪ I'm sorry ♪");
             createIndexIfNotExist(table, "IDX_TYPE_TIME", "`TYPE`,`CREATE_TIME`");
             createIndexIfNotExist(table, "IDX_USERNAME_TIME", "`USERNAME`,`CREATE_TIME`");
             createIndexIfNotExist(table, "IDX_IP_TIME", "`IP`,`CREATE_TIME`");
@@ -977,7 +977,7 @@ public class MySQLStorageService extends AbstractStorageService {
     }
 
     /**
-     * 列不存在则追加。
+     * Adds if columns do not exist.
      */
     private void addColumnIfNotExist(String table, String columnName, String columnDef) {
         if (columnExists(table, columnName)) {
@@ -985,9 +985,9 @@ public class MySQLStorageService extends AbstractStorageService {
         }
         try {
             executeSql(String.format("ALTER TABLE `%s` ADD COLUMN `%s` %s", table, columnName, columnDef));
-            logger.info("已补齐 {}.{}", table, columnName);
+            logger.info("Backfilled {}.{}", table, columnName);
         } catch (Exception e) {
-            logger.warn("补齐 {}.{} 失败: {}", table, columnName, e.getMessage());
+            logger.warn("Failed to backfill {}.{}: {}", table, columnName, e.getMessage());
         }
     }
 
@@ -1039,7 +1039,7 @@ public class MySQLStorageService extends AbstractStorageService {
             IOUtils.closeQuietly(in);
         }
 
-        // 动态替换表名
+        // DynamicShit.ReplaceTable name
         if (!systemTable) {
             String template = PREFIX_TABLE.concat(type);
             return StringUtil.replace(res.toString(), template, table);
@@ -1048,7 +1048,7 @@ public class MySQLStorageService extends AbstractStorageService {
     }
 
     /**
-     * 获取sql脚本路径
+     * AccesssqlScript Path
      *
      * @param type
      * @return /dbsyncer_mysql_config.sql
@@ -1066,7 +1066,7 @@ public class MySQLStorageService extends AbstractStorageService {
     }
 
     private void replaceHighLight(List<AbstractFilter> highLightKeys, List<Map<String, Object>> list) {
-        // 开启高亮
+        // OnHighlight
         if (!CollectionUtils.isEmpty(list) && !CollectionUtils.isEmpty(highLightKeys)) {
             list.forEach(row -> highLightKeys.forEach(paramFilter -> {
                 String text = String.valueOf(row.get(paramFilter.getName()));
@@ -1166,7 +1166,7 @@ public class MySQLStorageService extends AbstractStorageService {
                             new Field(ConfigConstant.META_DAILY_STAT_DATE, "VARCHAR", Types.VARCHAR))
                     .peek(field -> {
                         field.setLabelName(field.getName());
-                        // 转换列下划线
+                        // ConvertColumn Underline
                         String labelName = UnderlineToCamelUtils.camelToUnderline(field.getName());
                         field.setName(labelName);
                     }).collect(Collectors.toMap(Field::getLabelName, field -> field, (a, b) -> a));

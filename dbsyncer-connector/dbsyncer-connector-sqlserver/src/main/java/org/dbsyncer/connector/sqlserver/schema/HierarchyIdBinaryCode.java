@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 /**
- * sqlserver hierarchyid 类型转换
+ * sqlserver hierarchyid TypeConvert
  */
 public final class HierarchyIdBinaryCode {
 
@@ -18,7 +18,7 @@ public final class HierarchyIdBinaryCode {
     }
 
     /**
-     * 根节点：零长度字节。
+     * RootNodes：nil HelpLengthbytes.
      */
     public static String parseToHierarchyPath(byte[] hierarchyIdBytes) {
         if (hierarchyIdBytes == null || hierarchyIdBytes.length == 0) {
@@ -75,7 +75,7 @@ public final class HierarchyIdBinaryCode {
     }
 
     /**
-     * 与 Microsoft.SqlServer.Types.SqlHierarchy.BitReader 一致：自左向右的高位优先位流。
+     * and Microsoft.SqlServer.Types.SqlHierarchy.BitReader Unanimously: High-priority flow from left to right.
      */
     private static final class BitReader {
         private final byte[] bytes;
@@ -136,7 +136,7 @@ public final class HierarchyIdBinaryCode {
     }
 
     /**
-     * 与 Microsoft.SqlServer.Types.SqlHierarchy.BitPattern 一致。
+     * and Microsoft.SqlServer.Types.SqlHierarchy.BitPattern Unanimously.
      */
     private static final class BitPattern {
         final long minValue;
@@ -187,7 +187,7 @@ public final class HierarchyIdBinaryCode {
     }
 
     /**
-     * 与 Microsoft.SqlServer.Types.SqlHierarchy.KnownPatterns 一致
+     * and Microsoft.SqlServer.Types.SqlHierarchy.KnownPatterns Consistent
      */
     private static final class KnownPatterns {
 

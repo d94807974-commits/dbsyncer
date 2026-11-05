@@ -8,7 +8,7 @@ import org.dbsyncer.parser.model.GroupRel;
 import java.util.List;
 
 /**
- * 业务分组关系读写（多对多：一资源可挂多组）。
+ * Business groupRelationship reading and writing (multiple: one)Resourcecan be hung in multiple groups.
  *
  * @author wuji
  * @version 1.0.0
@@ -17,12 +17,12 @@ import java.util.List;
 public interface GroupRelProfile {
 
     /**
-     * 按 (分组, 资源类型, 资源ID) 查一条归属。
+     * Press(Group, Resource type, Resource ID) Check one for belonging.
      */
     GroupRel getByGroupAndResource(String groupId, String resourceType, String resourceId);
 
     /**
-     * 按 (资源类型, 资源ID) 列出全部归属。
+     * Press(Resource type, Resource ID) ListAllAttribution.
      */
     List<GroupRel> listByResource(String resourceType, String resourceId);
 
@@ -32,42 +32,42 @@ public interface GroupRelProfile {
     List<GroupRel> listByGroup(String groupId, String resourceType);
 
     /**
-     * 按分组 + 资源类型列出 RESOURCE_ID。
+     * PressGroup + Resource typeListRESOURCE_ID。
      */
     List<String> listResourceIds(String groupId, String resourceType);
 
     /**
-     * 统计分组下成员数。
+     * StatisticsGroupNumber of members.
      */
     int countByGroup(String groupId);
 
     /**
-     * 新增关系。
+     * InsertRelationship.
      */
     String add(GroupRel rel);
 
     /**
-     * 更新关系。
+     * Update relationship.
      */
     String update(GroupRel rel);
 
     /**
-     * 按主键删除。
+     * PressPrimary keyDelete。
      */
     void remove(String id);
 
     /**
-     * 删除某资源在指定分组下的关系。
+     * DeleteSomeResourceAssignGroupUnder the relationship.
      */
     void removeByGroupAndResource(String groupId, String resourceType, String resourceId);
 
     /**
-     * 删除某资源全部归属关系。
+     * DeleteSomeResourceAllAttribution.
      */
     void removeByResource(String resourceType, String resourceId);
 
     /**
-     * 删除某分组下全部关系。
+     * DeleteSomeGroupconcludeAllRelationship.
      */
     void removeByGroup(String groupId);
 }

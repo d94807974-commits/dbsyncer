@@ -45,7 +45,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * ES测试用例
+ * ESTestExample
  *
  * @Author AE86
  * @Version 1.0.0
@@ -93,11 +93,11 @@ public class ESClientTest {
     public void createIndexTest() throws IOException {
         CreateIndexRequest request = new CreateIndexRequest(indexName);
         request.settings(Settings.builder().put("index.number_of_shards", 1).put("index.number_of_replicas", 0));
-        // 构建索引字段
+        // ICALLYIndexField
         XContentBuilder builder = XContentFactory.jsonBuilder();
         builder.startObject();
         {
-            // 是否容许对象下面的属性自由扩展，（值true/false/strict,默认true）
+            // YesNoAllows a free extension of properties below objects, (Valuetrue/false/strict,Defaulttrue）
             builder.field("dynamic", "strict");
             builder.startObject("properties");
             {
@@ -118,7 +118,7 @@ public class ESClientTest {
                 builder.startObject("content");
                 {
                     builder.field("type", "keyword");
-                    // 字符串长度限定（针对keyword），keyword类型下，字符过于长，检索意义不大，索引会被禁用，数据不可被检索，默认值256
+                    // StringLengthLimit (forkeyword），keywordTypeIt's too long. It doesn't mean much.IndexIt will.Disable，The data is not accessible.Default value256
                     builder.field("ignore_above", 256);
                 }
                 builder.endObject();
@@ -133,16 +133,16 @@ public class ESClientTest {
             builder.endObject();
         }
         builder.endObject();
-        // 7版本开始去掉type
+        // 7VersionStart taking it off.type
         request.mapping(builder);
-        // 这里创建索引结构
+        // Create HereIndexStructure
         CreateIndexResponse response = client.indices().create(request, RequestOptions.DEFAULT);
-        // 指示是否所有节点都已确认请求
+        // InstructionsYesNoAllNodesBothConfirmRequest
         boolean acknowledged = response.isAcknowledged();
-        // 指示是否在超时之前为索引中的每个分片启动了必需的分片副本数
+        // InstructionsYesNoBefore overtime 13IndexEach of themminSnippetsStartIt's necessary.minNumber of copies of films
         boolean shardsAcknowledged = response.isShardsAcknowledged();
         if (acknowledged || shardsAcknowledged) {
-            logger.info("创建索引成功！索引名称为{}", indexName);
+            logger.info("Creating index succeeded! Index name is {}", indexName);
         }
     }
 
@@ -150,13 +150,13 @@ public class ESClientTest {
     public void getIndexTest() throws IOException {
         GetIndexRequest request = new GetIndexRequest(indexName);
         GetIndexResponse indexResponse = client.indices().get(request, RequestOptions.DEFAULT);
-        // 获取索引
+        // AccessIndex
         String[] indices = indexResponse.getIndices();
         for (String index : indices) {
             logger.info(index);
         }
 
-        // 字段信息
+        // FieldInfo
         MappingMetadata mappingMetaData = indexResponse.getMappings().get(indexName);
         Map<String, Object> propertiesMap = mappingMetaData.getSourceAsMap();
         Map<String, Map> properties = (Map<String, Map>) propertiesMap.get(ESUtil.PROPERTIES);
@@ -174,8 +174,8 @@ public class ESClientTest {
     public void pushTest() throws IOException {
         Map<String, Object> map = new HashMap<>();
         map.put("id", 2);
-        map.put("name", "刘备关羽张飞");
-        map.put("content", "桃园结义");
+        map.put("name", "Liu Bei Yu Zhang Fei");
+        map.put("content", "Peach Garden Yuyi");
         map.put("tags", new Long[]{200L});
         map.put("update_time", System.currentTimeMillis());
         IndexRequest request = new IndexRequest(indexName, type, "2");
@@ -191,8 +191,8 @@ public class ESClientTest {
         BulkRequest request = new BulkRequest();
         Map<String, Object> m1 = new HashMap<>();
         m1.put("id", 1);
-        m1.put("name", "刘备关羽张飞");
-        m1.put("content", "桃园结义");
+        m1.put("name", "Liu Bei Yu Zhang Fei");
+        m1.put("content", "Peach Garden Yuyi");
         m1.put("tags", new Long[]{200L});
         m1.put("update_time", System.currentTimeMillis());
         IndexRequest r1 = new IndexRequest(indexName, type, "1");
@@ -201,8 +201,8 @@ public class ESClientTest {
 
         Map<String, Object> m2 = new HashMap<>();
         m2.put("id", 2);
-        m2.put("name", "曹阿瞒");
-        m2.put("content", "火烧");
+        m2.put("name", "Tsao!");
+        m2.put("content", "Fire");
         m2.put("tags", new Long[]{200L, 300L});
         m2.put("update_time", System.currentTimeMillis());
         IndexRequest r2 = new IndexRequest(indexName, type, "2");
@@ -261,7 +261,7 @@ public class ESClientTest {
     @Test
     public void getCountTest() throws IOException {
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-        // 取消限制返回查询条数10000
+        // CancelLimitsBackNumber of query lines10000
         sourceBuilder.trackTotalHits(true);
         SearchRequest request = new SearchRequest(new String[]{indexName}, sourceBuilder);
         SearchResponse searchResponse = client.search(request, RequestOptions.DEFAULT);

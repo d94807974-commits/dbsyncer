@@ -4,35 +4,35 @@
 package org.dbsyncer.web.model;
 
 /**
- * OpenAPI统一响应格式
+ * OpenAPIHarmonized Response Format
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  */
 public class OpenApiResponse<T> {
 
     /**
-     * 是否成功
+     * YesNoSuccess
      */
     private Boolean success;
 
     /**
-     * 响应码
+     * Response code
      */
     private Integer code;
 
     /**
-     * 响应消息
+     * Reply Message
      */
     private String message;
 
     /**
-     * 响应数据
+     * Response Data
      */
     private T data;
 
     /**
-     * 时间戳
+     * TimePoke
      */
     private Long timestamp;
 
@@ -49,28 +49,28 @@ public class OpenApiResponse<T> {
     }
 
     /**
-     * 成功响应
+     * SuccessResponse
      */
     public static <T> OpenApiResponse<T> success(T data) {
         return new OpenApiResponse<>(true, 200, "success", data);
     }
 
     /**
-     * 成功响应（带消息）
+     * SuccessResponse (with message)
      */
     public static <T> OpenApiResponse<T> success(String message, T data) {
         return new OpenApiResponse<>(true, 200, message, data);
     }
 
     /**
-     * 失败响应
+     * FailedResponse
      */
     public static <T> OpenApiResponse<T> fail(Integer code, String message) {
         return new OpenApiResponse<>(false, code, message, null);
     }
 
     /**
-     * 失败响应（默认400错误码）
+     * FailedResponseDefault 400ErrorCode)
      */
     public static <T> OpenApiResponse<T> fail(String message) {
         return new OpenApiResponse<>(false, 400, message, null);

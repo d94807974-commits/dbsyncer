@@ -59,7 +59,7 @@ public class StorageSupportConfiguration {
             }
         }
 
-        // 指定存储类型
+        // Specified storageType
         String storageType = properties.getProperty(STORAGE_TYPE);
         if (StringUtil.isNotBlank(storageType)) {
             String connectorType = getConnectorType(storageType);
@@ -72,7 +72,7 @@ public class StorageSupportConfiguration {
             }
         }
 
-        // 默认H2存储
+        // DefaultH2Storage
         H2StorageService storageService = new H2StorageService();
         storageService.init(properties);
         return storageService;

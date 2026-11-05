@@ -1,5 +1,5 @@
 /**
- * DBSyncer 下拉菜单组件样式（通用）
+ * DBSyncer Dropdown Menu Component Style (General)
  */
 
 .dropdown { position: relative; }
@@ -27,7 +27,7 @@
   padding: 6px;
 }
 
-/* 统一菜单项 */
+/* Unified Menu Item*/
 .dropdown-menu > li {
   display: flex;
   align-items: center;
@@ -50,13 +50,13 @@
 
 .dropdown-divider { height: 1px; background-color: var(--border-tertiary); margin: 4px 0; }
 
-/* ========================= 多选下拉框组件 ========================= */
+/* ========================= Select Multi-Select Box Component========================= */
 .dbsyncer-multi-select {
   position: relative;
   width: 100%;
 }
 
-/* 触发器样式 */
+/* TriggerStyles*/
 .dbsyncer-multi-select-trigger {
   display: flex;
   align-items: center;
@@ -80,7 +80,7 @@
   box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
 }
 
-/* 搜索框样式 */
+/* SearchBox Styles*/
 .dbsyncer-multi-select-search {
   flex: 1;
   border: none;
@@ -96,7 +96,7 @@
   color: var(--text-tertiary);
 }
 
-/* 箭头图标 */
+/* Arrow Icon*/
 .dbsyncer-multi-select-arrow {
   display: flex;
   align-items: center;
@@ -109,7 +109,7 @@
   transform: rotate(180deg);
 }
 
-/* 下拉框容器 */
+/* Drop box container*/
 .dbsyncer-multi-select-dropdown {
   position: absolute;
   top: calc(100% + 4px);
@@ -131,7 +131,7 @@
   opacity: 1;
 }
 
-/* 操作按钮区域 */
+/* ActionsButton Area*/
 .dbsyncer-multi-select-actions {
   display: flex;
   padding: 8px;
@@ -140,7 +140,7 @@
 }
 .dbsyncer-multi-select-actions > *:not(:first-child) { margin-left: 8px; }
 
-/* 操作按钮样式 */
+/* ActionsButton Style*/
 .dbsyncer-multi-select-action-btn {
   flex: 1;
   padding: 4px 8px;
@@ -164,14 +164,14 @@
   transform: scale(0.98);
 }
 
-/* 选项列表容器 */
+/* OptionsListPlans*/
 .dbsyncer-multi-select-options {
   max-height: 300px;
   overflow-y: auto;
   padding: 4px;
 }
 
-/* 滚动条美化 */
+/* ScrollbarBeautiful. */
 .dbsyncer-multi-select-options::-webkit-scrollbar {
   width: 8px;
 }
@@ -190,7 +190,7 @@
   background: var(--text-tertiary);
 }
 
-/* 选项样式 */
+/* Options Styles*/
 .dbsyncer-multi-select-option {
   display: flex;
   align-items: center;
@@ -232,7 +232,7 @@
   font-weight: 500;
 }
 
-/* 空状态 */
+/* EmptyStatus */
 .dbsyncer-multi-select-empty {
   padding: 24px;
   text-align: center;
@@ -240,7 +240,7 @@
   font-size: var(--font-size-sm);
 }
 
-/* 已选标签容器 */
+/* Selected label container*/
 .dbsyncer-multi-select-tags {
   display: flex;
   flex-wrap: wrap;
@@ -249,7 +249,7 @@
 }
 .dbsyncer-multi-select-tags > *:not(:first-child) { margin-left: 4px; }
 
-/* 已选标签样式 */
+/* maintains the selected tab style*/
 .dbsyncer-multi-select-tag {
   display: inline-flex;
   align-items: center;

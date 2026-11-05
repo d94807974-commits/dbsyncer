@@ -8,14 +8,14 @@ import org.dbsyncer.common.enums.DispatchTaskEnum;
 import java.util.function.Consumer;
 
 /**
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2025-06-12 23:54
  */
 public interface DispatchTask extends Runnable {
 
     /**
-     * 唯一任务id
+     * UniqueTasksid
      */
     String getUniqueId();
 

@@ -11,9 +11,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 达梦长整型（含 MySQL INT UNSIGNED 别名）
+ * D'ArtagnanMySQL INT UNSIGNED Alias)
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-07-18
  */

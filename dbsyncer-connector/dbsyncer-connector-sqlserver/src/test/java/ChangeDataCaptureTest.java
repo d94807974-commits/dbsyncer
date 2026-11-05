@@ -65,15 +65,15 @@ public class ChangeDataCaptureTest {
     private String schema;
 
     /**
-     * <p>cdc.captured_columns – 此表返回捕获列列表的结果。</p>
-     * <p>cdc.change_tables – 此表返回所有启用捕获的表的列表。</p>
+     * <p>cdc.captured_columns – This succeededBackCapture ColumnsListYes.Result。</p>
+     * <p>cdc.change_tables – This succeededBackAllEnableThe catch table.List。</p>
      * <p>cdc.ddl_history – 此表包含自启用捕获数据以来所有 DDL 更改的历史记录。</p>
-     * <p>cdc.index_columns – 该表包含与变更表相关的索引。</p>
-     * <p>cdc.lsn_time_mapping – 此表映射 LSN编号(唯一序列号标识, 增加数字) 和时间。</p>
-     * <p>cdc.fn_cdc_get_all_changes_MY_USER - 可用于获取在特定时间段内发生的事件</p>
-     * <p>sys.fn_cdc_map_time_to_lsn - 表中是否有 tran_end_time值大于或等于指定时间的行。例如，可以用此查询来确定捕获进程是否已处理完截至前指定时间提交的更改</p>
+     * <p>cdc.index_columns – This table containsandChange table relatedIndex。</p>
+     * <p>cdc.lsn_time_mapping – MapLSNPart Number(Unique Serial Number ID, Increase) andTime。</p>
+     * <p>cdc.fn_cdc_get_all_changes_MY_USER - Available for specific accessTimeof theEvent</p>
+     * <p>sys.fn_cdc_map_time_to_lsn - TableYesNoYes Notably.tran_end_timeValueGreater than or equal to designationTimeAll right. For example, we can use this query.OKMontenegroYesNoCompleted pre-designatedTimeSubmitChanges</p>
      * <p>sys.fn_cdc_get_max_lsn</p>
-     * <p>sys.sp_cdc_cleanup_change_table 默认情况下间隔为3天清理日志数据</p>
+     * <p>sys.sp_cdc_cleanup_change_table Interval with Default3days3, 2, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 3, 3, 4, 3, 3, 3, 4, 4, favoured, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 10, 3LogData Fact</p>
      *
      * @throws SQLException
      */
@@ -82,9 +82,9 @@ public class ChangeDataCaptureTest {
         ChangeDataCaptureTest cdc = new ChangeDataCaptureTest();
         cdc.start();
 
-        // 获取数据库名 test
+        // AccessDatabase name test
         realDatabaseName = cdc.queryAndMap(GET_DATABASE_NAME, rs->rs.getString(1));
-        logger.info("数据库名:{}", realDatabaseName);
+        logger.info("Database name: }", realDatabaseName);
         // As per https://www.mssqltips.com/sqlservertip/1140/how-to-tell-what-sql-server-version-you-are-running/
         // Always beginning with 'Microsoft SQL Server NNNN' but only in case SQL Server is standalone
         String version = cdc.queryAndMap(GET_DATABASE_VERSION, rs->rs.getString(1));
@@ -92,7 +92,7 @@ public class ChangeDataCaptureTest {
         if (version.startsWith("Microsoft SQL Server ")) {
             supportsAtTimeZone = 2016 < Integer.valueOf(version.substring(21, 25));
         }
-        logger.info("数据库版本:{}", version);
+        logger.info("Database version: }", version);
         tables = cdc.queryAndMapList(GET_TABLE_LIST.replace(STATEMENTS_PLACEHOLDER, realDatabaseName), rs-> {
             Set<String> table = new LinkedHashSet<>();
             while (rs.next()) {
@@ -100,38 +100,38 @@ public class ChangeDataCaptureTest {
             }
             return table;
         });
-        logger.info("所有表:{}", tables);
-        // 获取Agent服务状态 Stopped. Running.
+        logger.info("All tables: }", tables);
+        // AccessAgentServicesStatus Stopped. Running.
         boolean enabledServerAgent = cdc.queryAndMap(IS_SERVER_AGENT_RUNNING.replace(STATEMENTS_PLACEHOLDER, realDatabaseName), rs->"Running.".equals(rs.getString(1)));
-        logger.info("是否启动Agent服务:{}", enabledServerAgent);
+        logger.info("Whether to start Agent service: }", enabledServerAgent);
         Assert.assertTrue("The agent server is not running", enabledServerAgent);
         boolean enabledCDC = cdc.queryAndMap(IS_DB_CDC_ENABLED.replace(STATEMENTS_PLACEHOLDER, realDatabaseName), rs->rs.getBoolean(1));
-        logger.info("是否启用CDC库[{}]:{}", realDatabaseName, enabledCDC);
+        logger.info("Whether or not to enable the CDC library [{}]:", realDatabaseName, enabledCDC);
         if (!enabledCDC) {
             cdc.execute(ENABLE_DB_CDC.replace(STATEMENTS_PLACEHOLDER, realDatabaseName));
             // make sure DB has cdc-enabled before proceeding
             TimeUnit.SECONDS.sleep(3);
         }
 
-        // 注册CDC表
+        // RegistrationCDCTable
         tables.forEach(table-> {
             try {
                 boolean enabledTableCDC = cdc.queryAndMap(IS_TABLE_CDC_ENABLED.replace(STATEMENTS_PLACEHOLDER, table), rs->rs.getInt(1) > 0);
-                logger.info("是否启用CDC表[{}]:{}", table, enabledTableCDC);
+                logger.info("Whether to enable the CDC table [{}]: {", table, enabledTableCDC);
                 if (!enabledTableCDC) {
                     cdc.execute(String.format(ENABLE_TABLE_CDC.replace(STATEMENTS_PLACEHOLDER, table), schema));
                     Lsn minLsn = cdc.queryAndMap(GET_MIN_LSN.replace(STATEMENTS_PLACEHOLDER, table), rs->new Lsn(rs.getBytes(1)));
-                    logger.info("启用CDC表[{}]:{}", table, minLsn.isAvailable());
+                    logger.info("Enable CDC table [{}]: {", table, minLsn.isAvailable());
                 }
             } catch (SQLException e) {
                 logger.error(e.getMessage());
             }
         });
 
-        // 支持UTC
+        // SupportUTC
         getAllChangesForTable = GET_ALL_CHANGES_FOR_TABLE.replaceFirst(STATEMENTS_PLACEHOLDER, Matcher.quoteReplacement(supportsAtTimeZone ? AT_TIME_ZONE_UTC : ""));
 
-        // 读取增量
+        // ReadIncremental
         Set<SqlServerChangeTable> changeTables = cdc.queryAndMapList(GET_TABLES_CDC_ENABLED, rs-> {
             final Set<SqlServerChangeTable> tables = new HashSet<>();
             while (rs.next()) {
@@ -155,7 +155,7 @@ public class ChangeDataCaptureTest {
             }
             return tables;
         });
-        logger.info("监听表数:{} ", changeTables.size());
+        logger.info("Number of listening tables: } ", changeTables.size());
 
         if (!CollectionUtils.isEmpty(changeTables)) {
             AtomicInteger count = new AtomicInteger(0);
@@ -206,7 +206,7 @@ public class ChangeDataCaptureTest {
             }
         }
 
-        // 注销CDC表
+        // LogoutCDCTable
         for (String table : tables) {
             cdc.execute(String.format(DISABLE_TABLE_CDC.replace(STATEMENTS_PLACEHOLDER, table), schema));
         }
@@ -320,7 +320,7 @@ public class ChangeDataCaptureTest {
             rs = ps.executeQuery();
             apply = mapper.apply(rs);
         } catch (SQLServerException e) {
-            // 为过程或函数 cdc.fn_cdc_get_all_changes_ ... 提供的参数数目不足。
+            // For process orFunctions cdc.fn_cdc_get_all_changes_ ... ProvidedInsufficient number of parameters。
             logger.warn(e.getMessage());
         } catch (Exception e) {
             logger.error(e.getMessage());

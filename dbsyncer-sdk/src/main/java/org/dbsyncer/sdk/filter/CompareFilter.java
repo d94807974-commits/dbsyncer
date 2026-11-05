@@ -4,7 +4,7 @@
 package org.dbsyncer.sdk.filter;
 
 /**
- * 值比较器实现
+ * ValueComparator Achieved
  *
  * @Author AE86
  * @Version 1.0.0

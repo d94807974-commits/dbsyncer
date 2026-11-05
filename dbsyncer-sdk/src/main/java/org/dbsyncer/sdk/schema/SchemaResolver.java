@@ -8,48 +8,48 @@ import org.dbsyncer.sdk.enums.DataTypeEnum;
 import org.dbsyncer.sdk.model.Field;
 
 /**
- * 数据类型解析器
+ * Data FactTypeParser
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2024-11-25 22:48
  */
 public interface SchemaResolver {
 
     /**
-     * 转换为标准数据类型
+     * ConvertAs Standard DataType
      *
-     * @param val   转换值
-     * @param field 数据类型
+     * @param val   ConvertValue
+     * @param field Data FactType
      * @return Object
      */
     Object merge(Object val, Field field);
 
     /**
-     * 转换为指定数据类型
+     * ConvertAssign DataType
      *
-     * @param val   转换值
-     * @param field 数据类型
+     * @param val   ConvertValue
+     * @param field Data FactType
      * @return Object
      */
     Object convert(Object val, Field field);
 
     /**
-     * 获取标准字段类型
+     * Access criteriaFieldType
      */
     DataTypeEnum getFieldType(Field field);
 
     /**
-     * 同步完成的数据，需要做序列化写入磁盘，使用标准的数据类型解析器转换
+     * SyncFinishdata to be sequenced for writingDisk，Use standard dataTypeParserConvert
      *
-     * @param value 待序列化的值
+     * @param value SequencedValue
      */
     ByteString serialize(Object value, Field field);
 
     /**
-     * 反序列化从磁盘读取的数据，使用标准的数据类型解析器转换，返回原始值
-     * @param value 序列化的值
-     * @param field 数据类型
+     * Inverse sequence fromDiskRead data, use standard dataTypeParserConvert，BackOriginalValue
+     * @param value SequencedValue
+     * @param field Data FactType
      */
     Object deserialize(ByteString value, Field field);
 

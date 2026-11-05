@@ -6,7 +6,7 @@ package org.dbsyncer.parser.util;
 import org.dbsyncer.common.util.StringUtil;
 
 /**
- * Meta 写锁：全量并发时 {@code incrementMeta} 与 snapshot flush 共用，避免整行回写覆盖原子计数。
+ * Meta Ensure:FullTogether{@code incrementMeta} and snapshot flush TotalUse to avoid line writing backOverwriteExclusive Refer POLICY Continuity Accommodation Moratorium
  *
  * @author wuji
  * @version 1.0.0
@@ -15,10 +15,10 @@ import org.dbsyncer.common.util.StringUtil;
 public abstract class MetaLockUtil {
 
     /**
-     * 按 taskId 获取进程内互斥锁（{@link String#intern()}）。
+     * PresstaskId Accusation locks within the acquisition process ({@link String#intern()}）。
      *
-     * @param taskId 任务ID
-     * @return 锁对象；
+     * @param taskId Task ID
+     * @return Lock/42;
      */
     public static Object lock(String taskId) {
         String id = StringUtil.isBlank(taskId) ? StringUtil.EMPTY : taskId;

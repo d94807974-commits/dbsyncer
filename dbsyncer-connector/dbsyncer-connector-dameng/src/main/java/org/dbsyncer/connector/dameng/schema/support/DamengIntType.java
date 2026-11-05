@@ -13,9 +13,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 达梦整型（含 MySQL YEAR/MEDIUMINT 别名）
+ * D'ArtagnanMySQL YEAR/MEDIUMINT Alias)
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-07-18
  */

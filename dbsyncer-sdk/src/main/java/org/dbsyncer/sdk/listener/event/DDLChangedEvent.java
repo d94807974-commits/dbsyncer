@@ -3,7 +3,7 @@ package org.dbsyncer.sdk.listener.event;
 import org.dbsyncer.sdk.enums.ChangedEventTypeEnum;
 
 /**
- * DDL变更事件
+ * DDLChangeEvent
  *
  * @version 1.0.0
  * @Author AE86

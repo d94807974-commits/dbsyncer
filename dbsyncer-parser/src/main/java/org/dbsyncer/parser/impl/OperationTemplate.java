@@ -26,8 +26,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 通用配置存储模板
- * 用户/连接器/表映射/Meta 见各自 Profile）。
+ * UniversalConfigureStorage Templates
+ * User/Connector/Map/Meta See individualProfile）。
  *
  * @author AE86
  * @version 1.0.0
@@ -43,7 +43,7 @@ public final class OperationTemplate {
     private SnowflakeIdWorker snowflakeIdWorker;
 
     /**
-     * 按主键查询单条配置。
+     * PressPrimary keyQuery LineConfigure。
      */
     public <T> T queryObject(Class<T> clazz, String id) {
         if (StringUtil.isBlank(id)) {
@@ -79,7 +79,7 @@ public final class OperationTemplate {
     }
 
     /**
-     * 批量写入配置：单次存储批量 ADD / EDIT。
+     * Batch writingConfigure：Single storage batchADD / EDIT。
      */
     public List<String> executeBatch(List<? extends ConfigModel> models, CommandEnum commandEnum) {
         if (CollectionUtils.isEmpty(models)) {
@@ -105,7 +105,7 @@ public final class OperationTemplate {
     }
 
     /**
-     * 按存储类型统计行数（仅 total，不拉明细）。
+     * Press StorageTypeNumber of statistical lines (only)total，No, no, no.
      */
     public int count(StorageEnum type, Query condition) {
         Query query = new Query();
@@ -121,7 +121,7 @@ public final class OperationTemplate {
     }
 
     /**
-     * 分页查询指定存储表，反序列化 json 列为模型。
+     * minPageQuery specified memory table, inverse sequencejson as a model.
      */
     public <T> List<T> queryList(StorageEnum type, Query condition, Class<T> clazz) {
         List<T> result = new ArrayList<>();

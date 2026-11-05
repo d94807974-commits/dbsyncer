@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 import java.util.Map;
 
 /**
- * 通知配置校验器
+ * AnnouncementsConfigureVerifyer
  *
  * @author AE86
  * @version 1.0.0
@@ -42,51 +42,51 @@ public class NoticeConfigChecker extends AbstractChecker {
         printParams(params);
         Assert.notEmpty(params, "Config check params is null.");
         SystemConfig systemConfig = systemConfigProfile.getSystemConfig();
-        Assert.notNull(systemConfig, "配置文件为空.");
+        Assert.notNull(systemConfig, "Profile is empty.");
 
         if (systemConfig.getNoticeConfig() == null) {
             systemConfig.setNoticeConfig(new NoticeConfig());
         }
         NoticeConfig noticeConfig = systemConfig.getNoticeConfig();
 
-        // 是否启用企业微信告警
+        // YesNoEnableCorporate WisdomPolice!
         boolean enableWechat = StringUtil.isNotBlank(params.get("enableWechat"));
         WeChatNoticeChannel weChat = noticeConfig.getWechat();
         weChat.setEnabled(enableWechat);
         if (enableWechat) {
             String webhookUrl = StringUtil.trim(params.get("wechatWebhookUrl"));
-            Assert.hasText(webhookUrl, "企业微信告警Webhook地址不能为空.");
+            Assert.hasText(webhookUrl, "The company's Twitter alert is not empty.");
             weChat.setWebhookUrl(webhookUrl);
         }
 
-        // 是否启用钉钉告警
+        // YesNoEnableNail.Police!
         boolean enableDingTalk = StringUtil.isNotBlank(params.get("enableDingTalk"));
         DingTalkNoticeChannel dingTalk = noticeConfig.getDingTalk();
         dingTalk.setEnabled(enableDingTalk);
         if (enableDingTalk) {
             String webhookUrl = StringUtil.trim(params.get("dingTalkWebhookUrl"));
-            Assert.hasText(webhookUrl, "钉钉告警Webhook地址不能为空.");
+            Assert.hasText(webhookUrl, "The Consultant's address cannot be empty.");
             dingTalk.setWebhookUrl(webhookUrl);
         }
-        // 是否启用HTTP告警
+        // YesNoEnableHTTPPolice!
         boolean enableHttp = StringUtil.isNotBlank(params.get("enableHttp"));
         HttpNoticeChannel http = noticeConfig.getHttp();
         http.setEnabled(enableHttp);
         if (enableHttp) {
             String url = StringUtil.trim(params.get("httpUrl"));
-            Assert.hasText(url, "回调HTTP地址不能为空.");
+            Assert.hasText(url, "The HTTP address can't be empty.");
             http.setUrl(url);
         }
 
-        // 是否启用邮件告警
+        // YesNoEnableEmailPolice!
         boolean enableMail = StringUtil.isNotBlank(params.get("enableMail"));
         MailNoticeChannel mail = noticeConfig.getMail();
         mail.setEnabled(enableMail);
         if (enableMail) {
             String account = params.get("mailAccount");
             String code = params.get("mailCode");
-            Assert.hasText(account, "账号不能为空.");
-            Assert.hasText(code, "Code不能为空.");
+            Assert.hasText(account, "The account cannot be empty.");
+            Assert.hasText(code, "Code can't be empty.");
             mail.setAccount(account);
             mail.setCode(code);
         }

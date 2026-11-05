@@ -6,7 +6,7 @@ package org.dbsyncer.connector.sqlserver.validator;
 import org.dbsyncer.sdk.connector.AbstractDataBaseConfigValidator;
 
 /**
- * SqlServer连接配置校验器实现
+ * SqlServerConnectConfigureVerifyer Achieved
  *
  * @Author AE86
  * @Version 1.0.0

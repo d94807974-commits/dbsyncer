@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * 邮件通知服务实现
+ * EmailNotification of service realization
  *
  * @author AE86
  * @version 1.0.0
@@ -40,17 +40,17 @@ public final class MailNoticeService extends AbstractNoticeService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
-     * 邮箱账户
+     * MailboxAccount
      */
     private String username;
 
     /**
-     * 授权码
+     * AuthorizationCode
      */
     private String password;
 
     /**
-     * 邮箱会话
+     * MailboxSession
      */
     private Session session;
 
@@ -64,7 +64,7 @@ public final class MailNoticeService extends AbstractNoticeService {
         sf.setTrustAllHosts(true);
         props.put("mail.smtp.ssl.enable", "true");
         props.put("mail.smtp.ssl.socketFactory", sf);
-        // 构建授权信息，用于进行SMTP身份验证
+        // ICALLYAuthorizationInfo，For implementationSMTPOrganisation
         session = Session.getInstance(props, new Authenticator() {
 
             @Override
@@ -82,7 +82,7 @@ public final class MailNoticeService extends AbstractNoticeService {
         }
         try {
             checkMail(notice);
-            // 统一应用标题
+            // Uniform application title
             AppConfig appConfig = getAppConfig();
             NoticeContent noticeContent = notice.getNoticeContent();
             String title = String.format("[%s] %s", appConfig.getName(), noticeContent.getTitle());
@@ -92,12 +92,12 @@ public final class MailNoticeService extends AbstractNoticeService {
                 return;
             }
 
-            // 创建邮件消息
+            // CreateEmailMessage
             MimeMessage message = new MimeMessage(session);
-            // 设置发件人
+            // SettingsFrom
             message.setFrom(new InternetAddress(username));
 
-            // 接收人
+            // Recipient
             List<String> messageReceivers = notice.getReceivers();
             int size = messageReceivers.size();
             InternetAddress[] addresses = new InternetAddress[size];
@@ -106,12 +106,12 @@ public final class MailNoticeService extends AbstractNoticeService {
             }
             message.setRecipients(Message.RecipientType.TO, addresses);
 
-            // 设置邮件标题
+            // SettingsEmailTitle
             message.setSubject(title);
 
-            // 设置邮件的内容体
+            // SettingsEmailContents Body
             message.setContent(content, "text/html;charset=UTF-8");
-            // 发送邮件
+            // SendEmail
             Transport.send(message);
             logger.info("simple mail send success");
         } catch (Exception e) {
@@ -120,36 +120,36 @@ public final class MailNoticeService extends AbstractNoticeService {
     }
 
     private String buildContent(NoticeContent noticeContent) {
-        // 运行异常
+        // RunError
         if (noticeContent instanceof MappingErrorContent) {
             return getMappingErrorContent((MappingErrorContent) noticeContent);
         }
 
-        // 停止驱动
+        // StopMapping
         if (noticeContent instanceof MappingStopContent) {
             MappingStopContent meta = (MappingStopContent) noticeContent;
-            return String.format("驱动：%s(%s)", meta.getName(), meta.getModel().getName());
+            return String.format("Driver: %s (%s)", meta.getName(), meta.getModel().getName());
         }
 
-        // 全量同步完成
+        // Full Sync
         if (noticeContent instanceof MappingFullCompleteContent) {
             MappingFullCompleteContent meta = (MappingFullCompleteContent) noticeContent;
-            return String.format("驱动：%s(%s)，成功:%s，失败:%s，总数:%s",
+            return String.format("Driver: %s (%s), succeeded: %s, failed: %s, total: %s",
                     meta.getName(), meta.getModel().getName(), meta.getSuccess(), meta.getFail(), meta.getTotal());
         }
 
-        // 连接离线
+        // Connect Offline
         if (noticeContent instanceof ConnectorOfflineContent) {
             return getConnectorOfflineContent((ConnectorOfflineContent) noticeContent);
         }
 
-        // 通用通知
+        // General announcement
         if (noticeContent instanceof GeneralNoticeContent) {
             GeneralNoticeContent meta = (GeneralNoticeContent) noticeContent;
             return meta.getContent();
         }
 
-        // 测试通知
+        // TestAnnouncements
         if (noticeContent instanceof TestNoticeContent) {
             TestNoticeContent meta = (TestNoticeContent) noticeContent;
             return meta.getContent();
@@ -173,9 +173,9 @@ public final class MailNoticeService extends AbstractNoticeService {
         for (int i = 0; i < noticeContent.getErrorItems().size(); i++) {
             MappingErrorContent.ErrorItem item = noticeContent.getErrorItems().get(i);
             c.append("<p>");
-            c.append(String.format("%d. %s(%s) 失败:%s, 成功:%s", i+1, item.getName(), item.getModel().getName(), item.getFail(), item.getSuccess()));
+            c.append(String.format("%d. %s (%s) failed: %s, success: %s", i+1, item.getName(), item.getModel().getName(), item.getFail(), item.getSuccess()));
             if (ModelEnum.FULL == item.getModel()) {
-                c.append(String.format(", 总数:%s", item.getTotal()));
+                c.append(String.format(", Total: %s", item.getTotal()));
             }
             c.append("<p>");
         }
@@ -183,17 +183,17 @@ public final class MailNoticeService extends AbstractNoticeService {
     }
 
     private String createTemplate(String appName, String content) {
-        String temp = "<!DOCTYPE html>\n" + "<html lang=\"en\">\n" + "<meta charset=\"UTF-8\">\n" + "<title>${appName}通知</title>\n" + "</head>\n" + "<body>\n" + "${content}\n" + "<p><a href=\"http://gitee.com/ghi/dbsyncer\">访问项目</a></p>\n" + "</body>\n" + "</html>";
+        String temp = "<!DOCTYPE html>\n" + "<html lang=\"en\">\n" + "<meta charset=\"UTF-8\">\n" + "<title>${appName} Notification</title>\n" + "</head>\n" + "<body>\n" + "${content}\n" + "<p><a href=\"http://gitee.com/ghi/dbsyncer\">Visits</a></p>\n" + "</body>\n" + "</html>";
         String replace = StringUtil.replace(temp, "${appName}", appName);
         replace = StringUtil.replace(replace, "${content}", content);
         return replace;
     }
 
     private void checkMail(NoticeMessage notice) {
-        Assert.notNull(notice, "通知请求不能为空");
-        Assert.notNull(notice.getNoticeContent(), "通知请求信息不能为空");
-        Assert.notNull(notice.getNoticeContent().getTitle(), "邮件主题不能为空");
-        Assert.notEmpty(notice.getReceivers(), "邮件收件人不能为空");
+        Assert.notNull(notice, "Notification request cannot be empty");
+        Assert.notNull(notice.getNoticeContent(), "Notification request information cannot be empty");
+        Assert.notNull(notice.getNoticeContent().getTitle(), "Mail theme cannot be empty");
+        Assert.notEmpty(notice.getReceivers(), "Mail recipient cannot be empty");
     }
 
     public void setUsername(String username) {

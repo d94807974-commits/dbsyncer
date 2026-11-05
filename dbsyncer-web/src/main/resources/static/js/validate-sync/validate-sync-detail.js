@@ -1,5 +1,5 @@
 /**
- * 订正校验结果详情页
+ * RevisedVerify results detailsPage
  */
 (function (window) {
     'use strict';
@@ -63,21 +63,21 @@
         initFilterSelect('#detailStatusFilter');
 
         var typeTextMap = {
-            rowData: '行数据',
-            tableSchema: '表结构',
-            index: '索引'
+            rowData: 'Row data',
+            tableSchema: 'Table schema',
+            index: 'Index'
         };
         var typeBadgeMap = {
             rowData: 'badge-primary',
             tableSchema: 'badge-info',
             index: 'badge-warning'
         };
-        // 与 CommonTaskStatusEnum 对齐：0未运行 / 1运行中 / 2停止中 / 3已完成
+        // and CommonTaskStatusEnum Alignment:0Not running / 1Running / 2Stopping / 3Completed
         var statusTextMap = {
-            0: '未运行',
-            1: '运行中',
-            2: '停止中',
-            3: '已完成'
+            0: 'Not running',
+            1: 'Running',
+            2: 'Stopping',
+            3: 'Completed'
         };
         var statusBadgeMap = {
             0: 'badge-info',
@@ -102,7 +102,7 @@
             }
             var sourceTotal = (row.sourceTotal === undefined || row.sourceTotal === null) ? '-' : row.sourceTotal;
             var targetTotal = (row.targetTotal === undefined || row.targetTotal === null) ? '-' : row.targetTotal;
-            return '<span>源：' + sourceTotal + '</span><br><span>目：' + targetTotal + '</span>';
+            return '<span>Source:' + sourceTotal + '</span><br><span>Objectives:' + targetTotal + '</span>';
         }
 
         function getElapsedDuration(row) {
@@ -110,7 +110,7 @@
             if (!text) {
                 return '';
             }
-            return '<span class="text-tertiary">耗时：' + escapeHtml(text) + '</span>';
+            return '<span class="text-tertiary">Time-consuming:' + escapeHtml(text) + '</span>';
         }
 
         function getExecutionDetail(row) {
@@ -173,13 +173,13 @@
 
         function buildCompareDiffTable(rows, options) {
             options = options || {};
-            var firstHeader = options.firstHeader || '字段';
+            var firstHeader = options.firstHeader || 'Field';
             var firstKey = options.firstKey || 'field';
             var html = '<div class="table-inset"><table class="table table-wrap-cells">'
                 + '<thead><tr>'
                 + '<th class="width38p">' + escapeHtml(firstHeader) + '</th>'
-                + '<th class="width31p">源</th>'
-                + '<th class="width31p">目标</th>'
+                + '<th class="width31p">Source</th>'
+                + '<th class="width31p">Objective</th>'
                 + '</tr></thead><tbody>';
             rows.forEach(function (row) {
                 var firstVal = row[firstKey];
@@ -197,7 +197,7 @@
         }
 
         function buildFieldDiffTable(details) {
-            return buildCompareDiffTable(details, {firstHeader: '字段', firstKey: 'field'});
+            return buildCompareDiffTable(details, {firstHeader: 'Field', firstKey: 'field'});
         }
 
         function parseSchemaDiffFromMsg(msg) {
@@ -205,11 +205,16 @@
                 return null;
             }
             var text = msg.trim();
+            // EN patterns for localized messages; ZH kept for historical/SPI payloads still emitting Chinese
             var patterns = [
-                {re: /^类型不一致[，,]\s*source[：:]\s*(.+?)[，,]\s*target[：:]\s*(.+)$/i, label: '类型'},
-                {re: /^长度不一致[，,]\s*source[：:]\s*(.+?)[，,]\s*target[：:]\s*(.+)$/i, label: '长度'},
-                {re: /^精度不一致[，,]\s*source[：:]\s*(.+?)[，,]\s*target[：:]\s*(.+)$/i, label: '精度'},
-                {re: /^主键标记不一致[，,]\s*source[：:]\s*(.+?)[，,]\s*target[：:]\s*(.+)$/i, label: '主键'}
+                {re: /^Type mismatch[，,]\s*source[：:]\s*(.+?)[，,]\s*target[：:]\s*(.+)$/i, label: 'Type'},
+                {re: /^Length mismatch[，,]\s*source[：:]\s*(.+?)[，,]\s*target[：:]\s*(.+)$/i, label: 'Length'},
+                {re: /^Precision mismatch[，,]\s*source[：:]\s*(.+?)[，,]\s*target[：:]\s*(.+)$/i, label: 'Precision'},
+                {re: /^Primary key flag mismatch[，,]\s*source[：:]\s*(.+?)[，,]\s*target[：:]\s*(.+)$/i, label: 'Primary key'},
+                {re: /^类型不一致[，,]\s*source[：:]\s*(.+?)[，,]\s*target[：:]\s*(.+)$/i, label: 'Type'},
+                {re: /^长度不一致[，,]\s*source[：:]\s*(.+?)[，,]\s*target[：:]\s*(.+)$/i, label: 'Length'},
+                {re: /^精度不一致[，,]\s*source[：:]\s*(.+?)[，,]\s*target[：:]\s*(.+)$/i, label: 'Precision'},
+                {re: /^主键标记不一致[，,]\s*source[：:]\s*(.+?)[，,]\s*target[：:]\s*(.+)$/i, label: 'Primary key'}
             ];
             var i;
             for (i = 0; i < patterns.length; i++) {
@@ -240,7 +245,7 @@
             } else if (isSchemaDiffItem(item)) {
                 var schemaRow = parseSchemaDiffFromMsg(item.msg);
                 if (schemaRow) {
-                    html += buildCompareDiffTable([schemaRow], {firstHeader: '差异项', firstKey: 'label'});
+                    html += buildCompareDiffTable([schemaRow], {firstHeader: 'Variance', firstKey: 'label'});
                 } else {
                     html += '<div class="text-secondary">' + escapeHtml(item.msg || '-') + '</div>';
                 }
@@ -288,20 +293,20 @@
             }
 
             return '<div class="grid grid-cols-4 gap-2">'
-                + summaryItem('源表', 'badge-info', src)
-                + summaryItem('目标', 'badge-info', tgt)
-                + summaryItem('差异', 'badge-error', counts.diff)
-                + summaryItem('已订正', 'badge-success', counts.fixed)
+                + summaryItem('Source table', 'badge-info', src)
+                + summaryItem('Objective Combined', 'badge-info', tgt)
+                + summaryItem('Variance', 'badge-error', counts.diff)
+                + summaryItem('Revised', 'badge-success', counts.fixed)
                 + '</div>';
         }
 
         function buildDiffDetailBodyHtml(data, tableNameOuter) {
             var html = '<div class="white-space-none">';
             var headHtml = '<tr>'
-                + '<th class="width18p">源表名称</th>'
-                + '<th class="width10p">类型</th>'
-                + '<th class="width12p">主键/标识</th>'
-                + '<th class="width40p">异常</th></tr>';
+                + '<th class="width18p">Source Table Name</th>'
+                + '<th class="width10p">Type</th>'
+                + '<th class="width12p">Main key/identify</th>'
+                + '<th class="width40p">Unusual</th></tr>';
             var bodyHtml = '';
             data.forEach(function (d) {
                 var msgHtml = buildDiffMsgCell(d);
@@ -314,7 +319,7 @@
                     + '</tr>';
             });
             if (data.length === 0) {
-                bodyHtml = '<tr><td colspan="4" class="text-center text-gray-400">无差异数据</td></tr>';
+                bodyHtml = '<tr><td colspan="4" class="text-center text-gray-400">No discrepancies</td></tr>';
             }
             html += '<table class="table table-wrap-cells"><thead>' + headHtml + '</thead><tbody>' + bodyHtml + '</tbody></table>';
             html += '</div>';
@@ -323,13 +328,13 @@
 
         function hasTargetExtraDiff(diffList) {
             return diffList.some(function (d) {
-                return d && String(d.msg || '') === '目标多余';
+                return d && String(d.msg || '') === 'Target is redundant.';
             });
         }
 
         function hasNonTargetExtraDiff(diffList) {
             return diffList.some(function (d) {
-                return d && String(d.msg || '') !== '目标多余';
+                return d && String(d.msg || '') !== 'Target is redundant.';
             });
         }
 
@@ -339,15 +344,15 @@
             }
             var hasDelete = hasTargetExtraDiff(currentDetailContent);
             var hasUpsert = hasNonTargetExtraDiff(currentDetailContent);
-            var title = '确定手动订正？';
+            var title = 'Are you sure about the manual revisions?';
             var body = '';
             var confirmType = 'primary';
             if (hasDelete && !hasUpsert) {
-                title = '确定反向订正？';
-                body = '以源库为权威基准，删除目标库内源库不存在的冗余记录，删除操作不可恢复，请确认源库数据完整无误后继续。';
+                title = 'Confirm reverse revisions?';
+                body = 'Use the repository as the authoritative benchmark, remove redundant records that do not exist in the target library, and delete operations cannot be restored. Please confirm that the database is complete and continue.';
                 confirmType = 'danger';
             } else if (hasDelete && hasUpsert) {
-                body = '将写入源数据到目标，并删除目标库中源库不存在的多余行，请确认后继续。';
+                body = 'GAS: Write source data to the target and delete redundant lines that do not exist in the target library.';
                 confirmType = 'warning';
             }
             showConfirm({
@@ -372,10 +377,10 @@
                             confirmBtn.disabled = false;
                         }
                         if (!res.success) {
-                            bootGrowl(res.message || '手动订正失败', 'danger');
+                            bootGrowl(res.message || 'Manual correction failed', 'danger');
                             return;
                         }
-                        bootGrowl('手动订正完成', 'success');
+                        bootGrowl('Manual revision complete.', 'success');
                         renderDiffDetailModal(res.data || {});
                         resultPagination.doSearch(buildSearchParams());
                     });
@@ -386,7 +391,7 @@
         function renderDiffDetailModal(row) {
             var content = parseContent(row.content);
             if (!content) {
-                bootGrowl('无差异数据！', 'warning');
+                bootGrowl('No discrepancies!', 'warning');
                 return;
             }
             var type = row.type || '';
@@ -402,15 +407,15 @@
             currentDetailContent = data;
 
             diffModalInstance = showConfirm({
-                title: '差异详情',
+                title: 'Details of variances',
                 titleExtra: type === 'rowData' ? buildDiffSummaryTitleExtra(src, tgt, counts) : '',
                 icon: 'info',
                 size: 'max',
                 position: 'center',
                 body: buildDiffDetailBodyHtml(data, tableNameOuter),
-                confirmText: pending ? '手动订正(最多100条)' : '关闭',
+                confirmText: pending ? 'Manual revision (up to 100)' : 'Close',
                 showCancel: pending,
-                cancelText: '关闭',
+                cancelText: 'Close',
                 confirmType: 'primary',
                 closeOnConfirm: !pending,
                 onConfirm: function () {
@@ -434,7 +439,7 @@
             }
             doPoster('/validate-sync/getResultDetail', {taskId: currentTaskId, id: detailId}, function (res) {
                 if (!res.success) {
-                    bootGrowl(res.message || '加载失败', 'danger');
+                    bootGrowl(res.message || 'Loading failed', 'danger');
                     return;
                 }
                 renderDiffDetailModal(res.data || {});
@@ -467,16 +472,16 @@
                     + '<td>' + getDiffTotal(row) + '</td>'
                     + '<td>' + getCorrectedTotal(row) + '</td>'
                     + '<td>' + formatDate(row.updateTime || '') + '</td>'
-                    + '<td><button type="button" class="table-action-btn view diff-detail-btn" title="查看详情" data-detail-id="'
+                    + '<td><button type = "button" class = "table-action-btn view diff-detail-btn"'
                     + String(detailId).replace(/"/g, '') + '"><i class="fa fa-eye"></i></button></td>'
                     + '</tr>';
             },
             emptyHtml: '<td colspan="9" class="text-center"><i class="fa fa-file-text-o empty-icon"></i>'
-                + '<p class="empty-text">暂无校验结果</p><p class="empty-description">请先执行校验任务</p></td>',
+                + '<p class="empty-text">There is no confirmation.</p><p class="empty-description">Please do the validation first.</p></td>',
             customPageSize: true
         });
 
-        // 注册到全局定时刷新管理器（保持当前页与筛选条件）
+        // Register to GlobalScheduledRefreshManager (maintenance current)PageandFilterCondition）
         PageRefreshManager.register(function () {
             resultPagination.doSearch(buildSearchParams(), resultPagination.currentPage);
         });

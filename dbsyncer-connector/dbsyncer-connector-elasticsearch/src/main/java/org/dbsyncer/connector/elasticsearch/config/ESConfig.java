@@ -6,7 +6,7 @@ package org.dbsyncer.connector.elasticsearch.config;
 import org.dbsyncer.sdk.model.ConnectorConfig;
 
 /**
- * ES连接配置
+ * ESConnectConfigure
  *
  * @Author AE86
  * @Version 1.0.0
@@ -15,22 +15,22 @@ import org.dbsyncer.sdk.model.ConnectorConfig;
 public class ESConfig extends ConnectorConfig {
 
     /**
-     * 集群地址, http(s)-9200, tcp-9300 http://192.168.1.100:9200,http://192.168.1.200:9200
+     * Group Address, http(s)-9200, tcp-9300 http://192.168.1.100:9200,http://192.168.1.200:9200
      */
     private String url;
 
     /**
-     * 帐号
+     * Account number
      */
     private String username;
 
     /**
-     * 密码
+     * Password
      */
     private String password;
 
     /**
-     * 查询请求超时(秒)
+     * QuestionRequest timeout (sec)
      */
     private int timeoutSeconds = 10;
 

@@ -19,53 +19,53 @@ import java.util.stream.Collectors;
 public interface Database {
 
     /**
-     * 获取dbs唯一标识码
+     * AccessdbsUnique ID number
      */
     default String generateUniqueCode() {
         return StringUtil.EMPTY;
     }
 
     /**
-     * 获取引号（默认不加）
+     * Get quotes (not by default)
      */
     default String buildSqlWithQuotation() {
         return StringUtil.EMPTY;
     }
 
     /**
-     * 返回带引号的名称
+     * BackWith quotation marks.Name
      */
     default String buildWithQuotation(String name) {
         return buildSqlWithQuotation() + name + buildSqlWithQuotation();
     }
 
     /**
-     * 生成创建数据库（或同级命名空间）的 DDL；已存在时不报错（各库方言由连接器覆盖）。
+     * GenerateCreate DataLibrary（Or a class namespace.DDL；No errors reported when existing (per cent)LibrarySourceConnectorOverwrite）。
      */
     String buildCreateDatabaseSql(String databaseName, String schemaName);
 
     /**
-     * 判断目标命名空间是否存在（库名 + Schema 由连接器方言解释）。
+     * Judgement ConfirmationObjective CombinedNamespaceYesNoExistenceLibraryFirst Name+ Schema ByConnectorAn explanation of the dialect 101.
      */
     boolean databaseExists(DatabaseConnectorInstance connectorInstance, String databaseName, String schemaName);
 
     /**
-     * 生成创建表 DDL
+     * GenerateCreate TableDDL
      */
     String getTargetTableDDL(DatabaseConnectorInstance targetInstance, String tableName, String sourceDDL);
 
     /**
-     * 从源库获取建表DDL
+     * FromSource databaseFetching TablesDDL
      */
     String getSourceTableDDL(DatabaseConnectorInstance sourceInstance, String sourceTableName);
 
     /**
-     * 生成删除表 DDL；targetInstance
+     * GenerateDeleteTableDDL；targetInstance
      */
     String buildDropTableSql(DatabaseConnectorInstance targetInstance, String tableName);
 
     /**
-     * 获取主键字段名称
+     * AccessPrimary keyField nameClaims
      */
     default List<String> buildPrimaryKeys(List<String> primaryKeys) {
         if (CollectionUtils.isEmpty(primaryKeys)) {
@@ -75,7 +75,7 @@ public interface Database {
     }
 
     /**
-     * 追加主键和参数占位符
+     * App AuthorityPrimary keyandParameterPlaceholder
      *
      * @param sql
      * @param primaryKeys
@@ -89,7 +89,7 @@ public interface Database {
     }
 
     /**
-     * 获取分页SQL
+     * AccessminPageSQL
      *
      * @param config
      * @return
@@ -97,7 +97,7 @@ public interface Database {
     String getPageSql(PageSql config);
 
     /**
-     * 获取分页参数
+     * AccessminPageParameter
      *
      * @param context
      * @return
@@ -105,7 +105,7 @@ public interface Database {
     Object[] getPageArgs(ReaderContext context);
 
     /**
-     * 获取游标分页SQL
+     * Get cursorsminPageSQL
      *
      * @param pageSql
      * @return
@@ -113,7 +113,7 @@ public interface Database {
     String getPageCursorSql(PageSql pageSql);
 
     /**
-     * 获取游标分页参数
+     * Get cursorsminPageParameter
      *
      * @param context
      * @return
@@ -121,22 +121,22 @@ public interface Database {
     Object[] getPageCursorArgs(ReaderContext context);
 
     /**
-     * 批量构建 MODIFY / ALTER COLUMN 语句。
-     * 默认实现回退为逐列拼接；建议各数据库方言覆盖为原生批量语法。
+     * Batch BuildMODIFY / ALTER COLUMN statement.
+     * Default achieves retreat to column-by-column; recommends dataLibrarydialectOverwrite(zz) Be original mass syntax.
      *
-     * @param targetInstance    目标连接实例
-     * @param task              校验任务
-     * @param targetTableName   目标表名
-     * @param sourceDefinitions 源端字段定义列表（期望形态）
-     * @param targetColumnNames 目标列名列表（与 sourceDefinitions 一一对应）
-     * @return 可执行批量 DDL
+     * @param targetInstance    Target ConnectionExamples
+     * @param task              Verify INTRODUCTIONTasks
+     * @param targetTableName   Target Table Name
+     * @param sourceDefinitions SourceFieldDefinitionsList（(Performance of expectations)
+     * @param targetColumnNames Objective CombinedListingList（and sourceDefinitions One-on-one
+     * @return Executable lotDDL
      */
     String buildModifyColumnsSql(DatabaseConnectorInstance targetInstance, ValidateSyncTask task,
                                  String targetTableName, List<Field> sourceDefinitions,
                                  List<String> targetColumnNames);
 
     /**
-     * 健康检查
+     * Health screening
      *
      * @return
      */
@@ -145,26 +145,26 @@ public interface Database {
     }
 
     /**
-     * 获取查询总数SQL
+     * Get queriesTotalSQL
      */
     default String getQueryCountSql(SqlBuilderConfig sqlConfig) {
         return SqlBuilderEnum.QUERY_COUNT.getSqlBuilder().buildSql(sqlConfig);
     }
 
     /**
-     * 查询目标总数表
+     * QuestionObjective CombinedTotalTable
      */
     default String getQueryTargetCountSql(SqlBuilderConfig sqlConfig) {
         return SqlBuilderEnum.TARGET_QUERY_COUNT.getSqlBuilder().buildSql(sqlConfig);
     }
 
     /**
-     * 生成upsert
+     * Generateupsert
      */
     String buildUpsertSql(DatabaseConnectorInstance connectorInstance, SqlBuilderConfig config);
 
     /**
-     * 生成insert
+     * Generateinsert
      */
     default String buildInsertSql(SqlBuilderConfig config) {
         return SqlBuilderEnum.INSERT.getSqlBuilder().buildSql(config);
@@ -175,23 +175,23 @@ public interface Database {
     }
 
     /**
-     * 为特殊字段类型构建自定义的值表达式
+     * For SpecialFieldTypeICALLYCustomYes.ValueExpression
      *
-     * <p>用于 INSERT/UPDATE 语句的 VALUES 部分，允许数据库连接器为特定字段类型（如 geometry、geography）
-     * 提供自定义的 SQL 表达式，而不是简单的占位符 ?</p>
+     * <p>ForINSERT/UPDATE StatementVALUES Departmentmin，Allow DataLibraryConnectorFor SpecificFieldType（Likegeometry、geography）
+     * ProvisionCustomYes.SQL Expression, noYes52. Simple placeholder?</p>
      *
-     * <p>例如 SQL Server 的 geometry 类型需要使用 geometry::STGeomFromText(?, ?) 来转换</p>
+     * <p>For example:SQL Server Yes.geometry TypeRequiredgeometry::STGeomFromText(?, ?) Come on.Convert</p>
      *
-     * @param vs    值表达式列表（VALUES 部分）
-     * @param field 字段信息
-     * @return true 表示已添加自定义值表达式，false 表示使用默认的 ? 占位符
+     * @param vs    ValueExpressionList（VALUES Departmentmin）
+     * @param field FieldInfo
+     * @return true OrganisationAddCustomValueExpression Actualfalse For default? Placeholder
      */
     default boolean buildCustomValue(List<String> vs, Field field) {
         return false;
     }
 
     /**
-     * 替换ddl语句中的catalog
+     * Replaceddlprepared forcatalog
      *
      * @param connectorInstance
      * @param alter

@@ -9,9 +9,9 @@ import java.io.IOException;
 import java.io.Serializable;
 
 /**
- * 解析 MySQL binlog TIME 类型，按字面量读取时分秒，避免按 Unix 时间戳构造产生时区偏差。
+ * ParsingMySQL binlog TIME Type，When read literallyminseconds，Avoid pressingUnix Time... to create a time-zone deviation..
  * <p>
- * 位域提取与 mysql-binlog-connector-java 保持一致，不对 packed 值做符号位翻转。
+ * Bit extractionand mysql-binlog-connector-java That's not true.packed ValueDo sign bit flip.
  */
 public final class TimeDeserialize {
 

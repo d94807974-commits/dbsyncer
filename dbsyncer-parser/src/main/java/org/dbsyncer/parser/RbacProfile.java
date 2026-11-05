@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * RBAC 读写（角色 / 权限点 / 关系）。
+ * RBAC Read & WriteRole / PermissionsPoint/ relation).
  *
  * @author wuji
  * @version 1.0.0
@@ -27,7 +27,7 @@ public interface RbacProfile {
     String updateRole(Role role);
 
     /**
-     * 按 ID 删除角色。
+     * PressID Remove Role。
      */
     void removeRole(String roleId);
 
@@ -42,14 +42,14 @@ public interface RbacProfile {
     List<RolePermission> listRolePermissionsByRoleId(String roleId);
 
     /**
-     * 按角色 ID 批量查角色-权限关系（IN）。
+     * PressRole ID Batch CheckRole-PermissionsRelationshipIN）。
      */
     List<RolePermission> listRolePermissionsByRoleIds(Collection<String> roleIds);
 
     void addRolePermission(RolePermission rel);
 
     /**
-     * 删除角色全部权限绑定。
+     * Remove RoleAllPermissionsTie.
      */
     void removeRolePermissionsByRoleId(String roleId);
 
@@ -58,14 +58,14 @@ public interface RbacProfile {
     List<UserRole> listUserRolesByUserId(String userId);
 
     /**
-     * 按角色查用户绑定（用于删除前占用校验）。
+     * PressRoleCha.UserTieDeleteFormer occupation check.
      */
     List<UserRole> listUserRolesByRoleId(String roleId);
 
     String addUserRole(UserRole rel);
 
     /**
-     * 删除用户全部角色绑定。
+     * DeleteUserAllRoleTie.
      */
     void removeUserRolesByUserId(String userId);
 
@@ -74,7 +74,7 @@ public interface RbacProfile {
     Permission getPermissionById(String id);
 
     /**
-     * 按权限 ID 批量查权限点（IN）。
+     * PressPermissions ID Batch CheckPermissionsPointIN）。
      */
     List<Permission> listPermissionsByIds(Collection<String> permissionIds);
 }

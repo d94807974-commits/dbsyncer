@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * {@link GroupProfile} 实现。
+ * {@link GroupProfile} Achieved.
  *
  * @author wuji
  * @version 1.0.0

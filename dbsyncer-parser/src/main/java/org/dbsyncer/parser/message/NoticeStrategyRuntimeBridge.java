@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 /**
- * 策略表 → 决策引擎运行态的装载桥：独立于 {@link org.dbsyncer.sdk.notice.MessageService} 依赖链，
- * 避免 Engine 直接依赖 Profile 导致启动期循环依赖。
+ * Policy Table→ Decision fulfillr bridge: independent{@link org.dbsyncer.sdk.notice.MessageService} The chain of dependence,
+ * AvoidEngine Direct DependenceProfile Recommendations maintainStartPeriod cycle MISC.
  *
  * @author wuji
  * @version 1.0.0
@@ -28,7 +28,7 @@ public class NoticeStrategyRuntimeBridge implements ApplicationListener<RemoveNo
     private NoticeDecisionEngine noticeDecisionEngine;
 
     /**
-     * 从策略表装载并刷新引擎运行态。
+     * Load from policy sheetRefreshEngine runs the state.
      */
     public void reloadFromStore() {
         noticeDecisionEngine.reload(

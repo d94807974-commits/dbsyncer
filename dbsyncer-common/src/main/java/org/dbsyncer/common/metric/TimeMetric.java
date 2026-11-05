@@ -13,49 +13,49 @@ import java.util.concurrent.locks.ReentrantLock;
 public class TimeMetric {
 
     /**
-     * 槽位的数量
+     * Number of slots
      */
     private int bucketSize;
 
     /**
-     * 时间片，单位毫秒
+     * TimeFilm, unitms
      */
     private int slice;
 
     /**
-     * 用于判断是否可跳过锁争抢
+     * For judgementYesNoBut skip the lock fight.
      */
     private int timeSliceUsed;
 
     /**
-     * 槽位
+     * Slot
      */
     private Bucket[] buckets;
 
     /**
-     * 目标槽位的位置
+     * Objective CombinedLocation of slots
      */
     private volatile int position;
 
     /**
-     * 接近目标槽位最新时间
+     * CloseObjective CombinedZoom UpdateTime
      */
     private volatile Long latestPassedTime;
 
     /**
-     * 进入下一个槽位时使用的锁
+     * Lock used to enter Proposal
      */
     private ReentrantLock enterNextBucketLock;
 
     /**
-     * 默认60个槽位，槽位的时间片为1000毫秒
+     * Default60A slot. A slot.TimeAs1000ms
      */
     public TimeMetric() {
         this(60, 1000);
     }
 
     /**
-     * 初始化Bucket数量与每个Bucket的时间片
+     * InitializeBucketNumberandEachBucketYes.TimeSnippets
      *
      * @param bucketSize
      * @param slice

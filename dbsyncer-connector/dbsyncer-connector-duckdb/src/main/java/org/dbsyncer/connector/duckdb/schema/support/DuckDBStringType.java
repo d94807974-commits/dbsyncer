@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * DuckDB 字符串类型
+ * DuckDB StringType
  *
  * @author wuji
  * @version 1.0.0

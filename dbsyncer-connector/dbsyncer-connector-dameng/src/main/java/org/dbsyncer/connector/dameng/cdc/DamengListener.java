@@ -6,9 +6,9 @@ package org.dbsyncer.connector.dameng.cdc;
 import org.dbsyncer.connector.oracle.cdc.OracleListener;
 
 /**
- * 达梦 LogMiner 增量监听器（兼容 Oracle LogMiner 协议）
+ * Tam Revenue.LogMiner IncrementalListener (compatible)Oracle LogMiner )
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-07 02:00
  */

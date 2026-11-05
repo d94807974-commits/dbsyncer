@@ -37,9 +37,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Http连接器配置构建器
+ * HttpConnectorConfigureBuilder
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-02-11 00:01
  */
@@ -47,37 +47,37 @@ public final class RequestBuilder {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
-     * 客户端
+     * Client
      */
     private final CloseableHttpClient client;
 
     /**
-     * 请求URL
+     * RequestURL
      */
     private final String url;
 
     /**
-     * 请求方法
+     * Method of request
      */
     private final HttpMethodEnum method;
 
     /**
-     * 请求头
+     * Request Header
      */
     private final Map<String, String> headers = new HashMap<>();
 
     /**
-     * 查询参数
+     * QuestionParameter
      */
     private final Map<String, String> queryParams = new HashMap<>();
 
     /**
-     * 请求体参数（用于表单提交）
+     * RequestParameter（For FormsSubmit）
      */
     private final Map<String, String> bodyParams = new HashMap<>();
 
     /**
-     * 请求体（JSON字符串）
+     * Requester(s)JSONString)
      */
     private String jsonBody;
 
@@ -87,36 +87,36 @@ public final class RequestBuilder {
     private ContentTypeEnum contentType;
 
     /**
-     * 连接超时时间（毫秒）
+     * ConnectTimeoutTime（ms）
      */
     private Integer connectionTimeout = 30000;
 
     /**
-     * 读取超时时间（毫秒）
+     * Read timeoutTime（ms）
      */
     private Integer socketTimeout = 30000;
 
     /**
-     * 从连接池获取连接的超时时间（毫秒）
+     * FromConnectPool AccessConnectTimeoutTime（ms）
      */
     private Integer connectionRequestTimeout = 30000;
 
     /**
-     * 字符编码
+     * Character encoding
      */
     private String charset = "UTF-8";
 
     /**
-     * 重试次数
+     * Try againNumber
      */
     private int retryTimes = 0;
 
     /**
-     * 构造函数
+     * ConstructFunctions
      *
-     * @param client      客户端
-     * @param url         请求URL
-     * @param method      请求方法
+     * @param client      Client
+     * @param url         RequestURL
+     * @param method      Method of request
      */
     public RequestBuilder(CloseableHttpClient client, String url, HttpMethodEnum method) {
         this.client = client;
@@ -128,10 +128,10 @@ public final class RequestBuilder {
     }
 
     /**
-     * 添加查询参数
+     * AddQuestionParameter
      *
-     * @param key   参数名
-     * @param value 参数值
+     * @param key   ParameterFirst Name
+     * @param value ParameterValue
      */
     public void addParam(String key, Object value) {
         if (key != null && value != null) {
@@ -140,10 +140,10 @@ public final class RequestBuilder {
     }
 
     /**
-     * 添加多个查询参数
+     * AddMultiple queriesParameter
      *
-     * @param params 参数Map
-     * @return 当前构建器
+     * @param params ParameterMap
+     * @return Current Builder
      */
     public RequestBuilder addParams(Map<String, Object> params) {
         if (params != null) {
@@ -153,10 +153,10 @@ public final class RequestBuilder {
     }
 
     /**
-     * 添加请求体参数（用于 application/x-www-form-urlencoded）
+     * AddRequestParameter（Forapplication/x-www-form-urlencoded）
      *
-     * @param key   参数名
-     * @param value 参数值
+     * @param key   ParameterFirst Name
+     * @param value ParameterValue
      */
     public void addBodyParam(String key, Object value) {
         if (key != null && value != null) {
@@ -165,9 +165,9 @@ public final class RequestBuilder {
     }
 
     /**
-     * 添加多个请求体参数
+     * AddMultiple requestsParameter
      *
-     * @param params 参数Map
+     * @param params ParameterMap
      */
     public void addBodyParams(Map<String, Object> params) {
         if (params != null) {
@@ -176,9 +176,9 @@ public final class RequestBuilder {
     }
 
     /**
-     * 设置请求体为JSON
+     * SettingsRequest byJSON
      *
-     * @param body 请求体对象
+     * @param body Requested Object
      */
     public void setBodyAsJson(Object body) {
         if (body != null) {
@@ -188,9 +188,9 @@ public final class RequestBuilder {
     }
 
     /**
-     * 设置请求体为JSON字符串
+     * SettingsRequest byJSONString
      *
-     * @param jsonString JSON字符串
+     * @param jsonString JSONString
      */
     public void setBodyAsJsonString(String jsonString) {
         if (StringUtil.isNotBlank(jsonString)) {
@@ -200,10 +200,10 @@ public final class RequestBuilder {
     }
 
     /**
-     * 添加请求头
+     * AddRequest Header
      *
-     * @param key   头名称
-     * @param value 头值
+     * @param key   HeadName
+     * @param value HeadValue
      */
     public void addHeader(String key, Object value) {
         if (key != null && value != null) {
@@ -212,10 +212,10 @@ public final class RequestBuilder {
     }
 
     /**
-     * 添加多个请求头
+     * AddMultiple Request Headers
      *
-     * @param headers 请求头Map
-     * @return 当前构建器
+     * @param headers Request HeaderMap
+     * @return Current Builder
      */
     public RequestBuilder addHeaders(Map<String, String> headers) {
         if (headers != null) {
@@ -225,7 +225,7 @@ public final class RequestBuilder {
     }
 
     /**
-     * 设置 Content-Type
+     * Settings Content-Type
      *
      * @param contentType Content-Type
      */
@@ -236,78 +236,78 @@ public final class RequestBuilder {
     }
 
     /**
-     * 设置字符编码
+     * SettingsCharacter encoding
      *
-     * @param charset 字符编码
+     * @param charset Character encoding
      */
     public void setCharset(String charset) {
         this.charset = charset;
     }
 
     /**
-     * 设置连接超时时间（毫秒）
+     * SettingsConnectTimeoutTime（ms）
      *
-     * @param connectionTimeout 连接超时时间
+     * @param connectionTimeout ConnectTimeoutTime
      */
     public void setConnectionTimeout(int connectionTimeout) {
         this.connectionTimeout = connectionTimeout;
     }
 
     /**
-     * 设置读取超时时间（毫秒）
+     * SettingsRead timeoutTime（ms）
      *
-     * @param socketTimeout 读取超时时间
+     * @param socketTimeout Read timeoutTime
      */
     public void setSocketTimeout(int socketTimeout) {
         this.socketTimeout = socketTimeout;
     }
 
     /**
-     * 设置从连接池获取连接的超时时间（毫秒）
+     * SettingsFromConnectPool AccessConnectTimeoutTime（ms）
      *
-     * @param connectionRequestTimeout 连接请求超时时间
+     * @param connectionRequestTimeout ConnectRequest TimeoutTime
      */
     public void setConnectionRequestTimeout(int connectionRequestTimeout) {
         this.connectionRequestTimeout = connectionRequestTimeout;
     }
 
     /**
-     * 设置重试次数
+     * SettingsTry againNumber
      *
-     * @param retryTimes 重试次数
+     * @param retryTimes Try againNumber
      */
     public void setRetryTimes(int retryTimes) {
         this.retryTimes = Math.max(0, retryTimes);
     }
 
     /**
-     * 执行请求
+     * Enforcement of requests
      *
-     * @return HTTP响应
+     * @return HTTPResponse
      */
     public HttpResponse execute() {
         try {
-            // 构建URL
+            // ICALLYURL
             String requestUrl = buildUrl();
 
-            // 创建请求配置
+            // Create RequestConfigure
             RequestConfig requestConfig = createRequestConfig();
 
-            // 根据方法类型创建请求
+            // By UndertakingTypeCreate Request
             HttpRequestBase httpRequest = createHttpRequest(requestUrl, requestConfig);
 
-            // 设置请求头
+            // SettingsRequest Header
             setRequestHeaders(httpRequest);
 
-            // 设置请求体（对于 POST/PUT）
+            // SettingsRequest body (forPOST/PUT）
             if (httpRequest instanceof HttpEntityEnclosingRequestBase) {
                 setRequestBody((HttpEntityEnclosingRequestBase) httpRequest);
             }
 
-            // 执行请求（带重试）
+            // Execute requests (withTry again）
             CloseableHttpResponse httpResponse = executeWithRetry(httpRequest);
 
-            // 处理响应
+            // Processing responses
             HttpResponse response = handleResponse(httpResponse);
 
             if (!response.isSuccess()) {
@@ -322,9 +322,9 @@ public final class RequestBuilder {
     }
 
     /**
-     * 构建完整URL（包含查询参数）
+     * Build CompleteURL（Include queriesParameter）
      *
-     * @return 完整URL
+     * @return FullURL
      */
     private String buildUrl() {
         if (queryParams.isEmpty()) {
@@ -342,11 +342,11 @@ public final class RequestBuilder {
     }
 
     /**
-     * 构建查询字符串
+     * Build query string
      *
      * @param sb     StringBuilder
-     * @param params 参数Map
-     * @return 查询字符串
+     * @param params ParameterMap
+     * @return Query String
      */
     private String buildQueryString(StringBuilder sb, Map<String, String> params) {
         try {
@@ -367,7 +367,7 @@ public final class RequestBuilder {
     }
 
     /**
-     * 创建请求配置
+     * Create RequestConfigure
      *
      * @return RequestConfig
      */
@@ -380,10 +380,10 @@ public final class RequestBuilder {
     }
 
     /**
-     * 创建 HTTP 请求对象
+     * TermsHTTP Requested
      *
-     * @param requestUrl    请求URL
-     * @param requestConfig 请求配置
+     * @param requestUrl    RequestURL
+     * @param requestConfig RequestConfigure
      * @return HttpRequestBase
      */
     private HttpRequestBase createHttpRequest(String requestUrl, RequestConfig requestConfig) {
@@ -410,12 +410,12 @@ public final class RequestBuilder {
     }
 
     /**
-     * 设置请求头
+     * SettingsRequest Header
      *
-     * @param request HTTP请求
+     * @param request HTTPRequest
      */
     private void setRequestHeaders(HttpRequestBase request) {
-        // 设置默认请求头
+        // SettingsDefault Request Header
         if (!headers.containsKey("User-Agent")) {
             headers.put("User-Agent", "HttpClientUtil/4.5.13");
         }
@@ -423,28 +423,28 @@ public final class RequestBuilder {
             headers.put("Accept", "*/*");
         }
 
-        // 添加所有请求头
+        // AddAll requests headers
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             request.addHeader(entry.getKey(), entry.getValue());
         }
     }
 
     /**
-     * 设置请求体
+     * SettingsRequest
      *
-     * @param request HTTP请求
-     * @throws UnsupportedEncodingException 不支持的编码异常
+     * @param request HTTPRequest
+     * @throws UnsupportedEncodingException Unsupported EncodingError
      */
     private void setRequestBody(HttpEntityEnclosingRequestBase request) throws IOException {
         HttpEntity entity = null;
 
-        // 如果有 JSON body，优先使用 JSON
+        // If there is LocatedJSON body，Use PriorityJSON
         if (StringUtil.isNotBlank(jsonBody)) {
             ContentType contentType = ContentType.create(ContentTypeEnum.JSON.getCode(), charset);
             entity = new StringEntity(jsonBody, contentType);
             request.setHeader("Content-Type", contentType.toString());
         }
-        // 如果设置了 bodyParams，使用表单提交
+        // IfSettingsYeah.bodyParams，Use FormSubmit
         else if (!bodyParams.isEmpty()) {
             List<NameValuePair> params = new ArrayList<>();
             for (Map.Entry<String, String> entry : bodyParams.entrySet()) {
@@ -459,11 +459,11 @@ public final class RequestBuilder {
     }
 
     /**
-     * 带重试的执行
+     * And...Try againImplementation
      *
-     * @param request HTTP请求
+     * @param request HTTPRequest
      * @return CloseableHttpResponse
-     * @throws Exception 异常
+     * @throws Exception Error
      */
     private CloseableHttpResponse executeWithRetry(HttpRequestBase request) throws Exception {
         CloseableHttpResponse httpResponse = null;
@@ -481,7 +481,7 @@ public final class RequestBuilder {
                     break;
                 }
                 logger.warn("Socket timeout, retrying ({}/{})...", actualRetryTimes, retryTimes);
-                Thread.sleep(100); // 重试前等待100毫秒
+                Thread.sleep(100); // Try againWaiting before100ms
             }
         }
 
@@ -493,18 +493,18 @@ public final class RequestBuilder {
     }
 
     /**
-     * 处理响应
+     * Processing responses
      *
-     * @param httpResponse HTTP响应x
+     * @param httpResponse HTTPResponsex
      * @return HttpResponse
-     * @throws IOException IO异常
+     * @throws IOException IOError
      */
     private HttpResponse handleResponse(CloseableHttpResponse httpResponse) throws IOException {
         try {
             int statusCode = httpResponse.getStatusLine().getStatusCode();
             HttpEntity entity = httpResponse.getEntity();
             String body = entity != null ? EntityUtils.toString(entity, charset) : null;
-            // 消耗实体内容，确保连接可以释放
+            // Consumption of physical content to ensureConnectIt can be released.
             EntityUtils.consumeQuietly(entity);
             return new HttpResponse(statusCode, body);
         } finally {

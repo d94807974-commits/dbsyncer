@@ -4,7 +4,7 @@
 package org.dbsyncer.sdk.enums;
 
 /**
- * 条件表达式类型
+ * ConditionExpressionType
  *
  * @author AE86
  * @version 1.0.0
@@ -12,7 +12,7 @@ package org.dbsyncer.sdk.enums;
  */
 public enum OperationEnum {
 
-    AND("and", "并且"), OR("or", "或者"), SQL("sql", "自定义sql条件");
+    AND("and", "AND"), OR("or", "OR"), SQL("sql", "Custom SQL condition");
 
     private final String name;
     private final String message;

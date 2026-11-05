@@ -5,7 +5,7 @@ import org.dbsyncer.common.util.JsonUtil;
 import java.util.Properties;
 
 /**
- * 字段属性
+ * FieldProperties
  *
  * @author AE86
  * @version 1.0.0
@@ -14,42 +14,42 @@ import java.util.Properties;
 public class Field {
 
     /**
-     * 字段名，ID
+     * Field name，ID
      */
     private String name;
 
     /**
-     * 类型名，INT
+     * TypeName,INT
      */
     private String typeName;
 
     /**
-     * 类型编码
+     * TypeEncoded
      */
     private int type;
 
     /**
-     * 主键
+     * Primary key
      */
     private boolean pk;
 
     /**
-     * 字段别名
+     * FieldAlias
      */
     private String labelName;
 
     /**
-     * 字段大小
+     * Field/5/
      */
     private int columnSize;
 
     /**
-     * 字段比例
+     * FieldPercentage
      */
     private int ratio;
 
     /**
-     * 扩展配置
+     * Extension Configuration
      */
     private Properties extInfo = new Properties();
 

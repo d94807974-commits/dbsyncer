@@ -7,19 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * JWT密钥配置（服务端签名密钥配置）
+ * JWTKeyConfigure（Service Signing KeyConfigure）
  * <p>
- * 支持密钥版本管理和多个历史密钥，用于平滑轮换。
- * 用于生成和验证JWT Token。
+ * Support keyVersionManages and multiple historical keys for smooth rotation.
+ * ForGenerateAnd authenticationJWT Token。
  * </p>
  *
- * @author 穿云
+ * @author The clouds.
  * @version 2.0.0
  */
 public class JwtSecretConfig {
 
     /**
-     * 密钥列表（按版本号存储，用于验证旧Token）
+     * KeyList（PressVersionNumber storage to verify oldToken）
      */
     private final List<JwtSecretVersion> secrets = new ArrayList<>();
 

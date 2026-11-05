@@ -32,17 +32,17 @@ import java.util.Map;
 public abstract class ConfigModelUtil {
 
     /**
-     * 将配置模型转换为存储层入参(按表拆分列 + json)。
+     * WillConfigureModelConvertArguments for storage(Split by Tableminreorganize+ json)。
      *
-     * @param model 配置模型
-     * @return 存储层入参
+     * @param model ConfigureModel
+     * @return Storage input
      */
     public static Map<String, Object> convertModelToMap(ConfigModel model) {
-        // Meta：严格按 dbsyncer_meta 拆分列，无 name/type/json
+        // Meta：Strictly pressdbsyncer_meta OpenminColumns,None name/type/json
         if (model instanceof Meta) {
             return convertMetaToMap((Meta) model);
         }
-        // GroupRel：严格按 dbsyncer_group_rel 拆分列，无 name/json；RESOURCE_TYPE 存资源类型
+        // GroupRel：Strictly pressdbsyncer_group_rel OpenminColumns,None name/json；RESOURCE_TYPE SaveResource type
         if (model instanceof GroupRel) {
             return convertGroupRelToMap((GroupRel) model);
         }
@@ -78,7 +78,7 @@ public abstract class ConfigModelUtil {
         params.put(ConfigConstant.CONFIG_MODEL_UPDATE_TIME, model.getUpdateTime());
         params.put(ConfigConstant.CONFIG_MODEL_JSON, JsonUtil.objToJson(model));
 
-        // 连接器：源/目标角色落拆分列（1/0），便于 search 按角色过滤
+        // Connector：Source/Objective CombinedRoleDropminColumn1/0），Easy.search PressRoleFilter
         if (model instanceof Connector) {
             Connector connector = (Connector) model;
             params.put(ConfigConstant.CONNECTOR_IS_SOURCE, connector.isSource() ? 1 : 0);
@@ -86,7 +86,7 @@ public abstract class ConfigModelUtil {
             params.put(ConfigConstant.CONNECTOR_STATUS, connector.getStatus());
         }
 
-        // 表映射关系：关联信息落拆分列
+        // Map relation：AssociationInfoDropminColumns
         if (model instanceof TableGroup) {
             TableGroup tableGroup = (TableGroup) model;
             params.put(ConfigConstant.TABLE_GROUP_TASK_ID, tableGroup.getTaskId());
@@ -106,7 +106,7 @@ public abstract class ConfigModelUtil {
     }
 
     /**
-     * 单条用户行转存储入参(dbsyncer_user 拆分列，无 name/type/json)。
+     * SingleUserLine transfer memory login Annual(dbsyncer_user OpenminColumns,None name/type/json)。
      */
     public static Map<String, Object> convertUserInfoToMap(UserInfo user) {
         Map<String, Object> params = new HashMap<>();
@@ -123,7 +123,7 @@ public abstract class ConfigModelUtil {
     }
 
     /**
-     * 从存储行还原模型（与 {@link #convertModelToMap}/{@link #convertUserInfoToMap} 对称）。
+     * CLD Revert model from storage line (and {@link #convertModelToMap}/{@link #convertUserInfoToMap} Symmetry.
      */
     public static <T> T parseFromRow(Map row, Class<T> clazz) {
         if (row == null || clazz == null) {
@@ -202,14 +202,14 @@ public abstract class ConfigModelUtil {
     }
 
     /**
-     * 分组关系行转模型（RESOURCE_TYPE → resourceType）。
+     * GroupRelationship flow model(s)RESOURCE_TYPE → resourceType）。
      */
     private static GroupRel parseGroupRel(Map row) {
         return JsonUtil.mapToObj(row, GroupRel.class);
     }
 
     /**
-     * 分组关系转存储入参：resourceType → RESOURCE_TYPE，不写 name/json。
+     * GroupRelationship storage participation:resourceType → RESOURCE_TYPE，Do Not Writename/json。
      */
     private static Map<String, Object> convertGroupRelToMap(GroupRel rel) {
         Map<String, Object> params = new HashMap<>();
@@ -326,7 +326,7 @@ public abstract class ConfigModelUtil {
 
     private static UserInfo parseUserInfo(Map row) {
         HashMap data = new HashMap<>(row);
-        // 列名 role 对应模型字段 roleCode
+        // Listingrole Corresponding ModelField roleCode
         Object role = data.remove(ConfigConstant.USER_ROLE);
         if (role != null) {
             data.put("roleCode", role);
@@ -357,7 +357,7 @@ public abstract class ConfigModelUtil {
     }
 
     /**
-     * 按模型 Class 路由存储表。
+     * Press ModelClass Route storage form.
      */
     public static StorageEnum getStorageEnum(Class<?> clazz) {
         try {
@@ -369,11 +369,11 @@ public abstract class ConfigModelUtil {
     }
 
     /**
-     * 依据配置类型路由到对应的存储表。
-     * <p>同步 Mapping 与企业任务（validateSync / databaseSync）均并入 {@code dbsyncer_task}。
+     * BasisConfigureTypeRoute Configuration
+     * <p>SyncMapping andEnterpriseShh! EffectivenessTasks（validateSync / databaseSync）Integration{@code dbsyncer_task}。
      *
-     * @param type 配置类型 {@link ConfigConstant} / {@link CommonTaskTypeEnum#name()}
-     * @return 存储枚举
+     * @param type ConfigureType {@link ConfigConstant} / {@link CommonTaskTypeEnum#name()}
+     * @return Storage Enumeration
      */
     public static StorageEnum getStorageEnum(String type) {
         if (type == null) {
@@ -388,7 +388,7 @@ public abstract class ConfigModelUtil {
             case ConfigConstant.TASK:
             case ConfigConstant.VALIDATE_SYNC:
             case ConfigConstant.DATABASE_SYNC:
-                // 同步/校验/迁移统一存 dbsyncer_task
+                // Synchronization/validation/transferdbsyncer_task
                 return StorageEnum.TASK;
             case ConfigConstant.TABLE_GROUP:
                 return StorageEnum.TABLE_GROUP;
@@ -415,7 +415,7 @@ public abstract class ConfigModelUtil {
             case ConfigConstant.META_DAILY:
                 return StorageEnum.META_DAILY;
             default:
-                // 后续新增的 CommonTaskTypeEnum 仍走 task 表
+                // Follow-upInsertYes.CommonTaskTypeEnum Keep going.task Table
                 return CommonTaskTypeEnum.parse(type) != null ? StorageEnum.TASK : StorageEnum.CONFIG;
         }
     }

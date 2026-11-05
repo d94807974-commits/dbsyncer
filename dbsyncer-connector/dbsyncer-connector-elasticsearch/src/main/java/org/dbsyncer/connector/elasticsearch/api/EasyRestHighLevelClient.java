@@ -27,7 +27,7 @@ import java.util.List;
 import static java.util.Collections.emptySet;
 
 /**
- * ES客户端（同时兼容6-7版本API）
+ * ESClient (compatible)6-7VersionAPI）
  *
  * @Author AE86
  * @Version 1.0.0

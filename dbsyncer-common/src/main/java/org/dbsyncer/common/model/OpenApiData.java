@@ -4,40 +4,40 @@
 package org.dbsyncer.common.model;
 
 /**
- * OpenAPI统一数据模型
+ * OpenAPIUnified data model
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  */
 public class OpenApiData {
 
     /**
-     * 时间戳
+     * TimePoke
      */
     private Long timestamp;
 
     /**
-     * 随机数（防重放）
+     * Random Six
      */
     private String nonce;
 
     /**
-     * 加密的数据（Base64编码）
+     * Encrypted DataBase64Encoding)
      */
     private String encryptedData;
 
     /**
-     * 初始化向量（Base64编码）
+     * Initialization vector (%1)Base64Encoding)
      */
     private String iv;
 
     /**
-     * RSA加密的AES密钥（Base64编码）
+     * RSAEncryptedAESKeyBase64Encoding)
      */
     private String encryptedKey;
 
     /**
-     * 签名
+     * Signature
      */
     private String signature;
 

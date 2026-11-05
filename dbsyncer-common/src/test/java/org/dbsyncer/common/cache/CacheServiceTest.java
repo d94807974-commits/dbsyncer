@@ -13,9 +13,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * {@link CacheServiceImpl} 单元测试。
+ * {@link CacheServiceImpl} UnitsTest。
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  */
 public class CacheServiceTest {

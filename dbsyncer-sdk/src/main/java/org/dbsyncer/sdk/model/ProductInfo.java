@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 产品信息
+ * ProductsInfo
  *
  * @Author AE86
  * @Version 1.0.0
@@ -16,52 +16,52 @@ import java.util.List;
 public class ProductInfo {
 
     /**
-     * 机器码
+     * Machine code
      */
     private String licenseKey;
 
     /**
-     * 系统名称
+     * SystemName
      */
     private String osName;
 
     /**
-     * 公司名称
+     * Company name
      */
     private String company;
 
     /**
-     * 负责人
+     * Head
      */
     private String owner;
 
     /**
-     * 手机号
+     * Cell phone number
      */
     private String phone;
 
     /**
-     * 邮箱(多个邮箱使用逗号拼接)
+     * Mailbox(Multiple MailboxesComm put it together)
      */
     private String email;
 
     /**
-     * 备注信息
+     * RemarksInfo
      */
     private String remark;
 
     /**
-     * 授权时间
+     * Mandate Time
      */
     private long createTime;
 
     /**
-     * 版本号
+     * VersionNo. No.
      */
     private long version;
 
     /**
-     * 授权产品列表明细
+     * AuthorizationProductsListDetails
      */
     private List<Product> products = new ArrayList<>();
 

@@ -8,7 +8,7 @@ package org.dbsyncer.sdk.model;
 import java.util.List;
 
 /**
- * 通知消息
+ * Organisation
  *
  * @author AE86
  * @version 1.0.0
@@ -17,17 +17,17 @@ import java.util.List;
 public class NoticeMessage {
 
     /**
-     * 通知内容
+     * Contents of notice
      */
     private NoticeContent noticeContent;
 
     /**
-     * 消息接收人
+     * Message Receiver
      */
     private List<String> receivers;
 
     /**
-     * 通知配置
+     * AnnouncementsConfigure
      */
     private NoticeConfig noticeConfig;
 

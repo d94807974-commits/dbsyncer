@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 public class UserConfigServiceImpl implements UserConfigService {
 
     /**
-     * 默认超管账号（与 {@link PermissionService#isAdmin} 一致）。
+     * Default superbarAccount（and {@link PermissionService#isAdmin} (d) Unanimously.
      */
     public static final String DEFAULT_USERNAME = "admin";
 
@@ -85,10 +85,10 @@ public class UserConfigServiceImpl implements UserConfigService {
 
         UserConfig userConfig = getUserConfig();
         UserInfo currentUser = userConfig.getUserInfo(currentUserName);
-        Assert.notNull(currentUser, "无法获取登录用户.");
-        Assert.isNull(userConfig.getUserInfo(username), "用户已存在，请换个账号");
+        Assert.notNull(currentUser, "Unable to get logged-in user.");
+        Assert.isNull(userConfig.getUserInfo(username), "User already exists, change account number");
 
-        Assert.hasText(params.get("roleId"), "请选择角色");
+        Assert.hasText(params.get("roleId"), "Please select a role");
         String roleId = resolveAssignableRoleId(params.get("roleId"), null);
 
         userConfig.getUserInfoList().add(new UserInfo(username, nickname, SHA1Util.b64_sha1(password),
@@ -113,26 +113,26 @@ public class UserConfigServiceImpl implements UserConfigService {
         String currentUserName = params.get(UserConfigService.CURRENT_USER_NAME);
         UserConfig userConfig = getUserConfig();
         UserInfo currentUser = userConfig.getUserInfo(currentUserName);
-        Assert.notNull(currentUser, "无法获取登录用户.");
+        Assert.notNull(currentUser, "Unable to get logged-in user.");
         boolean canEditOthers = permissionService.hasPermission(currentUserName, PERM_USER_EDIT);
         boolean self = StringUtil.equals(currentUser.getUsername(), username);
         Assert.isTrue(canEditOthers || self, "No permission.");
 
         UserInfo updateUser = self ? currentUser : userConfig.getUserInfo(username);
-        Assert.notNull(updateUser, "用户不存在");
+        Assert.notNull(updateUser, "User does not exist");
 
         updateUser.setNickname(nickname);
         if (StringUtil.isNotBlank(newPwd)) {
             if (self) {
                 String oldPwd = params.get("oldPwd");
-                Assert.hasText(oldPwd, "旧密码不能为空.");
+                Assert.hasText(oldPwd, "The old code can't be empty.");
                 if (!StringUtil.equals(SHA1Util.b64_sha1(oldPwd), updateUser.getPassword())) {
-                    logService.log(LogType.SystemLog.ERROR, String.format("[%s]修改密码失败", username));
-                    throw new BizException("修改密码失败.");
+                    logService.log(LogType.SystemLog.ERROR, String.format("Could not close temporary folder Utilizing password failed", username));
+                    throw new BizException("Change password failed.");
                 }
             }
             newPwd = SHA1Util.b64_sha1(newPwd);
-            Assert.isTrue(!StringUtil.equals(newPwd, updateUser.getPassword()), "新旧密码不能完全一样.");
+            Assert.isTrue(!StringUtil.equals(newPwd, updateUser.getPassword()), "New and old codes can't be exactly the same.");
             updateUser.setPassword(newPwd);
         }
 
@@ -160,19 +160,19 @@ public class UserConfigServiceImpl implements UserConfigService {
 
         UserConfig userConfig = getUserConfig();
         UserInfo currentUser = userConfig.getUserInfo(currentUserName);
-        Assert.notNull(currentUser, "无法获取登录用户.");
-        Assert.isTrue(!StringUtil.equals(currentUser.getUsername(), username), "不能删除自己.");
-        Assert.isTrue(!StringUtil.equals(DEFAULT_USERNAME, username), "不能删除默认管理员账号.");
+        Assert.notNull(currentUser, "Unable to get logged-in user.");
+        Assert.isTrue(!StringUtil.equals(currentUser.getUsername(), username), "Can't delete yourself.");
+        Assert.isTrue(!StringUtil.equals(DEFAULT_USERNAME, username), "The default administrator account cannot be deleted.");
 
         UserInfo deleteUser = userConfig.getUserInfo(username);
-        Assert.notNull(deleteUser, "用户已删除.");
+        Assert.notNull(deleteUser, "User deleted.");
         if (StringUtil.isNotBlank(deleteUser.getId())) {
             permissionService.unbindAllUserRoles(deleteUser.getId());
             resourceAclService.revokeAllForSubject(ResourceAclSubjectEnum.USER.getCode(), deleteUser.getId());
         }
         userConfig.removeUserInfo(username);
         userProfile.saveUserConfig(userConfig);
-        return "删除用户成功!";
+        return "Delete user success!";
     }
 
     @Override
@@ -184,7 +184,7 @@ public class UserConfigServiceImpl implements UserConfigService {
     public UserInfoVO getUserInfoVo(String currentUserName, String username) {
         UserConfig userConfig = getUserConfig();
         UserInfo currentUser = userConfig.getUserInfo(currentUserName);
-        Assert.notNull(currentUser, "无法获取登录用户.");
+        Assert.notNull(currentUser, "Unable to get logged-in user.");
         boolean self = StringUtil.equals(currentUser.getUsername(), username);
         boolean canEdit = permissionService.hasPermission(currentUserName, PERM_USER_EDIT);
         Assert.isTrue(canEdit || self, "No permission.");
@@ -197,7 +197,7 @@ public class UserConfigServiceImpl implements UserConfigService {
     public List<UserInfoVO> getUserInfoAll(String currentUserName) {
         UserConfig userConfig = getUserConfig();
         UserInfo currentUser = userConfig.getUserInfo(currentUserName);
-        Assert.notNull(currentUser, "无法获取登录用户.");
+        Assert.notNull(currentUser, "Unable to get logged-in user.");
         if (permissionService.hasPermission(currentUserName, PERM_USER_VIEW)
                 || permissionService.isAdmin(currentUserName)) {
             return getUserConfig().getUserInfoList().stream().map(this::convertUserInfo2Vo).collect(Collectors.toList());
@@ -249,9 +249,9 @@ public class UserConfigServiceImpl implements UserConfigService {
 
     private String resolveAssignableRoleId(String roleId, String defaultId) {
         String id = StringUtil.isBlank(roleId) ? defaultId : roleId.trim();
-        Assert.hasText(id, "请选择角色");
+        Assert.hasText(id, "Please select a role");
         Role role = rbacProfile.getRoleById(id);
-        Assert.notNull(role, "角色不存在");
+        Assert.notNull(role, "Role does not exist");
         return role.getId();
     }
 

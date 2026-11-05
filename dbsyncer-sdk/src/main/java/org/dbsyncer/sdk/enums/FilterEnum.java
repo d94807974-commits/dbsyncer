@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * 运算符表达式类型
+ * Operator expressionType
  *
  * @Author AE86
  * @Version 1.0.0
@@ -23,53 +23,53 @@ import java.util.Objects;
 public enum FilterEnum {
 
     /**
-     * 等于
+     * equals
      */
     EQUAL("=", StringUtil::equals),
     /**
-     * 不等于
+     * Not equal to
      */
     NOT_EQUAL("!=", (value, filterValue)->!StringUtil.equals(value, filterValue)),
     /**
-     * 大于
+     * Greater than
      */
     GT(">", (value, filterValue)->NumberUtil.toLong(value) > NumberUtil.toLong(filterValue)),
     /**
-     * 小于
+     * less than
      */
     LT("<", (value, filterValue)->NumberUtil.toLong(value) < NumberUtil.toLong(filterValue)),
     /**
-     * 大于等于
+     * greater than or equal to
      */
     GT_AND_EQUAL(">=", (value, filterValue)->NumberUtil.toLong(value) >= NumberUtil.toLong(filterValue)),
     /**
-     * 小于等于
+     * less than or equal to
      */
     LT_AND_EQUAL("<=", (value, filterValue)->NumberUtil.toLong(value) <= NumberUtil.toLong(filterValue)),
     /**
-     * 模糊匹配
+     * Fuzzy Match
      */
     LIKE("like", (value, filterValue)-> {
         boolean startsWith = StringUtil.startsWith(filterValue, StringUtil.PERCENT) || StringUtil.startsWith(filterValue, StringUtil.STAR);
         boolean endsWith = StringUtil.endsWith(filterValue, StringUtil.PERCENT) || StringUtil.endsWith(filterValue, StringUtil.STAR);
         String compareValue = StringUtil.replace(filterValue, StringUtil.PERCENT, StringUtil.EMPTY);
         compareValue = StringUtil.replace(compareValue, StringUtil.STAR, StringUtil.EMPTY);
-        // 模糊匹配
+        // Fuzzy Match
         if (startsWith && endsWith) {
             return StringUtil.contains(value, compareValue);
         }
-        // 前缀匹配
+        // Prefix Match
         if (endsWith) {
             return StringUtil.startsWith(value, compareValue);
         }
-        // 后缀匹配
+        // Postfix Match
         if (startsWith) {
             return StringUtil.endsWith(value, compareValue);
         }
         return false;
     }),
     /**
-     * 集合匹配
+     * Gather Match
      */
     IN("in", (value, filterValue)-> {
         if (StringUtil.isNotBlank(filterValue)) {
@@ -78,16 +78,16 @@ public enum FilterEnum {
         return false;
     }),
     /**
-     * Null值
+     * NullValue
      */
     IS_NULL("is null", (value, filterValue)->value == null),
     /**
-     * 非Null值
+     * NotNullValue
      */
     IS_NOT_NULL("is not null", (value, filterValue)->value != null);
 
     /**
-     * 建立 name 与 FilterEnum 建立映射关系，用时便于快速查找
+     * Createname and FilterEnum CreateMapping，Time-consuming quick search
      */
     private static final Map<String, FilterEnum> MAPPING = new HashMap<>();
 
@@ -95,9 +95,9 @@ public enum FilterEnum {
         Arrays.stream(FilterEnum.values()).forEach((item)->MAPPING.put(item.getName().toUpperCase(), item));
     }
 
-    // 运算符名称
+    // OperatorsName
     private final String name;
-    // 比较器
+    // Comparer
     private final CompareFilter compareFilter;
 
     FilterEnum(String name, CompareFilter compareFilter) {
@@ -106,7 +106,7 @@ public enum FilterEnum {
     }
 
     /**
-     * 获取表达式
+     * Get Expression
      *
      * @param name
      * @return

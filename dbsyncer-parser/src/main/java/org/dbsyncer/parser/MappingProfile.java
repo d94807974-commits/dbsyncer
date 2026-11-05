@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * 同步任务
+ * Sync task
  *
  * @author wuji
  * @version 1.0.0
@@ -18,47 +18,47 @@ import java.util.function.Consumer;
 public interface MappingProfile {
 
     /**
-     * 按 id 查询 Mapping 任务配置。
+     * Pressid QuestionMapping TasksConfigure。
      */
     Mapping get(String id);
 
     /**
-     * 新增任务配置。
+     * InsertTasksConfigure。
      */
     String add(Mapping mapping);
 
     /**
-     * 批量新增任务配置。
+     * BatchInsertTasksConfigure。
      */
     void addBatch(List<Mapping> mappings);
 
     /**
-     * 修改任务配置。
+     * UpdateTasksConfigure。
      */
     String update(Mapping mapping);
 
     /**
-     * 删除任务配置
+     * DeleteTasksConfigure
      */
     void delete(String id);
 
     void clearRunData(String id);
 
     /**
-     * 删除任务时清理运行数据（物理 DROP 明细分表）。
+     * DeleteTasksIt's time to clean up.Row data（PhysicsDROP DetailsminTable.
      */
     void dropTaskDetailTable(String id);
 
     /**
-     * 按模型类型分页查询任务，可选按名称模糊搜索。
+     * Press ModelTypeminPageQuestionTasks，Optional PressNameBlurSearch。
      *
-     * @param searchKey 可选；非空时对 {@code name} 做 LIKE
-     * @param ids 可选；按 ID IN 过滤。
+     * @param searchKey optional; non-empty time pair{@code name} Do it.LIKE
+     * @param ids optional 38.ID IN Filter.
      */
     Paging<Mapping> query(int pageNum, int pageSize, String searchKey, List<String> ids);
 
     /**
-     * 按模型类型分页回调遍历全部任务。
+     * Press ModelTypeminPageAll over the clock.AllTasks。
      */
     void pageScanTasks(int pageSize, Consumer<List<Mapping>> pageConsumer);
 

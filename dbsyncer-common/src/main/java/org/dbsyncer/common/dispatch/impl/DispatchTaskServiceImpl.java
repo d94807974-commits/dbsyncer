@@ -17,9 +17,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 任务调度实现
+ * TasksMovement control achieved
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2025-06-12 23:45
  */
@@ -40,7 +40,7 @@ public class DispatchTaskServiceImpl implements DispatchTaskService {
                 t.destroy();
                 logger.warn("The dispatch task was terminated, {}", k);
             }
-            // 按实例移除，避免同 uniqueId 替换任务后旧任务 finally 误删新任务
+            // Remove by Example, Avoid SameuniqueId ReplaceTasksLaterTasks finally Error NewTasks
             task.onDestroy(dispatchTask -> active.remove(task.getUniqueId(), dispatchTask));
             return task;
         }));

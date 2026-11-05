@@ -7,7 +7,7 @@ import org.dbsyncer.sdk.enums.StorageEnum;
 import org.dbsyncer.sdk.storage.Strategy;
 
 /**
- * 任务分片计划：单表存储 {@code dbsyncer_cluster_task_plan}。
+ * TasksminPlan: Form Storage{@code dbsyncer_cluster_task_plan}。
  *
  * @author wuji
  * @version 1.0.0

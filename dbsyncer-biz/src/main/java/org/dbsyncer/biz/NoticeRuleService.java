@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 告警通知规则。
+ * Alert notificationRules.
  *
  * @author wuji
  * @version 1.0.0
@@ -17,17 +17,17 @@ import java.util.Map;
 public interface NoticeRuleService {
 
     /**
-     * 全部规则。
+     * AllRules.
      */
     List<NoticeRule> listAll();
 
     /**
-     * 新增或更新。
+     * Insertor update.
      */
     String save(Map<String, String> params);
 
     /**
-     * 按主键删除。
+     * PressPrimary keyDelete。
      */
     String remove(Map<String, String> params);
 }

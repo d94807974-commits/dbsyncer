@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 通过各节点 HTTP 地址拉取运行指标并聚合。
+ * ThroughNodes HTTP Address draws running indicators and aggregates them.
  *
  * @author wuji
  * @version 1.0.0
@@ -69,9 +69,9 @@ public class ClusterNodeMetricAggregator {
     private SystemConfigProfile systemConfigProfile;
 
     /**
-     * 拉取全部节点指标（本机直采，远端 HTTP）。
+     * Pull manipulateAllNodesIndicator (inline, remote)HTTP）。
      *
-     * @return 总览
+     * @return Overview
      */
     public ClusterMetricsOverviewVO collectAll() {
         Map<String, String> query = new HashMap<>();
@@ -83,15 +83,15 @@ public class ClusterNodeMetricAggregator {
         List<ClusterNode> remotes = new ArrayList<>();
         List<ClusterNodeMetricVO> metrics = new ArrayList<>();
         for (ClusterNode node : nodes) {
-            // 如果是本机
+            // IfYesHere.
             if (node.isLocal()) {
                 metrics.add(pullOne(node, workItemByNode, incByNode));
                 continue;
             }
-            // 远端
+            // Far
             remotes.add(node);
         }
-        // 并行获取其他节点信息
+        // Parallel AccessOtherNodesInfo
         if (!CollectionUtils.isEmpty(remotes)) {
             metrics.addAll(BatchTaskUtil.submit(remotes, node -> pullOne(node, workItemByNode, incByNode), Math.min(PULL_CONCURRENCY, Math.max(1, remotes.size())), logger));
         }
@@ -116,7 +116,7 @@ public class ClusterNodeMetricAggregator {
         overview.setTotalQueue(totalQueue);
         overview.setTotalFullWorkItems(totalWorkItems);
         overview.setTotalIncremental(totalInc);
-        // TPS 用节点秒级序列；堆积/全量分片打点后按同一套 labels 对齐，保证三图 X 轴一致
+        // TPS UseNodessecondsLevel sequences;Backlog/FullminHit it and press the same set.labels We're on the same page.X Axisymmetrical
         HistoryStackVO tps = mergeTpsSeries(metrics);
         String pointLabel = lastSeriesLabel(tps);
         if (StringUtil.isBlank(pointLabel)) {
@@ -136,7 +136,7 @@ public class ClusterNodeMetricAggregator {
     }
 
     /**
-     * 追加采样点；同一秒内重复刷新则覆盖末点，避免时间轴重复。
+     * additional sampling points;samesecondsInternal RepeatRefreshthenOverwriteEndpoint, avoid.TimeAxis repeat.
      */
     private void pushChartPoint(HistoryStackVO history, String label, double value) {
         if (history == null || StringUtil.isBlank(label)) {
@@ -158,7 +158,7 @@ public class ClusterNodeMetricAggregator {
     }
 
     /**
-     * 将稀疏采样按时间步进对齐到目标 labels（与 TPS 秒级轴一致）。
+     * Press a thin sampleTimeStep toObjective Combined labels（and TPS secondsIt's the same axis.
      */
     private HistoryStackVO alignToLabels(List<Object> labels, HistoryStackVO history) {
         HistoryStackVO result = new HistoryStackVO();
@@ -239,7 +239,7 @@ public class ClusterNodeMetricAggregator {
     }
 
     private ClusterNodeMetricVO pullRemote(ClusterNode node) {
-        // 已离线
+        // AlreadyOffline
         if (node.getStatus() == 0) {
             return unreachable();
         }
@@ -250,7 +250,7 @@ public class ClusterNodeMetricAggregator {
         try {
             HttpResult result = HttpClientUtil.get(base + "/cluster/internal/metrics", HttpClientUtil.clusterTokenHeaders(getClusterSecret()), CONNECT_TIMEOUT_MS, READ_TIMEOUT_MS);
             if (!result.isOk()) {
-                logger.warn("拉取节点指标失败, node={}, http={}", node.getNodeId(), result.getStatusCode());
+                logger.warn("Node indicator failed, node={, http=}", node.getNodeId(), result.getStatusCode());
                 return unreachable();
             }
             RestResult<ClusterNodeMetricVO> res = JsonUtil.jsonToObj(result.getBody(), new TypeReference<RestResult<ClusterNodeMetricVO>>() {
@@ -265,7 +265,7 @@ public class ClusterNodeMetricAggregator {
             vo.setReachable(true);
             return vo;
         } catch (Exception e) {
-            logger.warn("拉取节点指标异常, node={}: {}", node.getId(), e.getMessage());
+            logger.warn("Pull node indicator anomaly", node.getId(), e.getMessage());
             return unreachable();
         }
     }
@@ -286,19 +286,19 @@ public class ClusterNodeMetricAggregator {
     }
 
     private Map<String, Integer> resolveFullWorkItemCounts() {
-        // 全量分片：按执行节点统计 dbsyncer_cluster_task_plan（含已完成尚未删行的 DONE）
+        // FullminScrap: By ImplementationNodesStatisticsdbsyncer_cluster_task_plan（HamCompletedNot yet deletedDONE）
         try {
             String sql = "SELECT NODE_ID, COUNT(*) AS CNT FROM " + ConfigConstant.CLUSTER_TASK_PLAN_TABLE
                     + " WHERE NODE_ID IS NOT NULL AND STATUS IN (0, 1, 2) GROUP BY NODE_ID";
             return toNodeCountMap(storageService.queryList(ExecuteRequest.of(sql)));
         } catch (Exception e) {
-            logger.warn("加载全量分片统计失败: {}", e.getMessage());
+            logger.warn("Failed to load full fraction statistics: {", e.getMessage());
             return new LinkedHashMap<>();
         }
     }
 
     private Map<String, Integer> resolveIncrementalCounts() {
-        // 调度表 TASK_TYPE 为 mapping；同步方式 model 在 dbsyncer_task.JSON
+        // ScheduleTASK_TYPE Yesmapping；Synchronisation Methodmodel Yes.dbsyncer_task.JSON
         try {
             String sql = "SELECT t.NODE_ID, COUNT(*) AS CNT FROM " + ConfigConstant.CLUSTER_TASK_TABLE + " t"
                     + " JOIN dbsyncer_task dt ON dt.ID = t.TASK_ID"
@@ -309,7 +309,7 @@ public class ClusterNodeMetricAggregator {
                     + " GROUP BY t.NODE_ID";
             return toNodeCountMap(storageService.queryList(ExecuteRequest.of(sql)));
         } catch (Exception e) {
-            logger.warn("加载集群增量任务统计失败: {}", e.getMessage());
+            logger.warn("Failed to load an Incremental Task Statistics", e.getMessage());
             return new LinkedHashMap<>();
         }
     }

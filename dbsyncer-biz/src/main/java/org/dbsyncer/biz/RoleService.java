@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 角色管理（列表、自建、绑权、删除）。
+ * Role management（List、Self-building, kidnapping,Delete）。
  *
  * @author wuji
  * @version 1.0.0
@@ -19,38 +19,38 @@ import java.util.Map;
 public interface RoleService {
 
     /**
-     * 角色列表（含权限数量）。
+     * RoleList（HamPermissionsThe volume.
      */
     List<RoleVO> listRoles();
 
     /**
-     * 角色详情（含已绑权限码）。
+     * RoleDetails（It's tied.PermissionsThe code.
      */
     RoleVO getRole(String roleId);
 
     /**
-     * 全部权限点（可按角色标记 granted）。
+     * AllPermissionsPointRoleTaggranted）。
      *
-     * @param roleId 可空；非空时标记该角色是否已授权
+     * @param roleId empty; non-empty time markRoleYesNoAlreadyAuthorization
      */
     List<PermissionVO> listPermissions(String roleId);
 
     /**
-     * 新增角色并绑定权限码。
+     * Add RoleAnd bind.Permissionscode.
      *
-     * @param params name、permissionCodes（逗号分隔）
+     * @param params name、permissionCodes（Commaminamend
      */
     String add(Map<String, String> params);
 
     /**
-     * 更新角色名称，并覆盖绑定权限码。
+     * UpdateRole Name，andOverwriteTiePermissionscode.
      *
-     * @param params roleId、name、permissionCodes（逗号分隔）
+     * @param params roleId、name、permissionCodes（Commaminamend
      */
     String edit(Map<String, String> params);
 
     /**
-     * 删除角色（仍有用户绑定时不可删）。
+     * Remove Role（Still.UserTieScheduledI can't delete it.
      *
      * @param params roleId
      */

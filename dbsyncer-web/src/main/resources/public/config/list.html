@@ -1,33 +1,33 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <div class="form-container">
     <div class="card-header">
-        <h3 class="card-title text-center">配置管理</h3>
+        <h3 class="card-title text-center">Configuration Management</h3>
     </div>
     <div class="card-body">
         <div class="grid grid-cols-2 lg:grid-cols-2">
-            <!-- 左侧：配置列表 -->
+            <!-- Left:Configure List -->
             <div class="container-no-bg">
-                <h3 class="card-title">配置列表</h3>
-                <p class="text-xs text-tertiary">导出所有配置，请点击
+                <h3 class="card-title">Configure List</h3>
+                <p class="text-xs text-tertiary">Export all configurations, click
                     <a href="javascript:void(0);" onclick="downLoad()" class="text-primary hover-underline"
-                       th:title="'预估大小约 ' + ${#numbers.formatDecimal((fileSize / 1024), 0, 2)} + ' KB（ZIP 压缩后更小）'">
-                        <i class="fa fa-download"></i> 下载
+                       th:title="'Provisional Size About '+ ${#numbers.formatDecimal((fileSize / 1024), 0, 2)}+ 'KB(ZIP smaller)'">
+                        <i class="fa fa-download"></i> Download
                     </a>
                 </p>
                 <table class="table">
                     <thead>
                     <tr>
-                        <th>类型</th>
-                        <th>名称</th>
-                        <th>修改时间</th>
+                        <th>Type</th>
+                        <th>Name</th>
+                        <th>Updated at</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:if="${config == null or config.isEmpty()}">
-                        <td colspan="5" class="text-center text-tertiary py-8">暂无配置数据</td>
+                        <td colspan="5" class="text-center text-tertiary py-8">No configuration data available</td>
                     </tr>
                     <tr th:id="${c?.name}" th:each="c : ${config}">
                         <td><span class="badge badge-primary" th:text="${c?.type}"></span></td>
@@ -38,18 +38,18 @@
                 </table>
             </div>
 
-            <!-- 右侧：上传配置 -->
+            <!-- Right:UploadConfig -->
             <div id="configUploader" class="upload-container">
                 <div class="upload-area" data-upload-area>
                     <div class="upload-icon">
                         <i class="fa fa-cloud-upload"></i>
                     </div>
-                    <div class="upload-text">点击或拖拽文件到此处上传</div>
+                    <div class="upload-text">Production</div>
                     <div class="upload-hint">
-                        支持扩展名：.zip<br>
-                        单次最多上传 5 个文件
+                        Support extended name: .zip<br>
+                        Upload up to 5 files once
                     </div>
-                    <div class="upload-button">选择文件</div>
+                    <div class="upload-button">Choose file</div>
                     <input type="file"
                            class="upload-input"
                            id="fileConfig"
@@ -71,14 +71,14 @@ $(function() {
         maxSize: 50 * 1024 * 1024, // 50MB
         onSuccess: function(file, response) {
             if (response.success) {
-                notify({ message: '上传成功！', type: 'success' });
+                notify({ message: 'Upload successful!', type: 'success' });
                 doLoader("/config");
             } else {
-                notify({ message: response.message || '上传失败', type: 'danger' });
+                notify({ message: response.message || 'Upload failed', type: 'danger' });
             }
         },
         onError: function(file, error) {
-            notify({ message: error || '上传失败', type: 'danger' });
+            notify({ message: error || 'Upload failed', type: 'danger' });
         }
     });
 });

@@ -4,7 +4,7 @@
 package org.dbsyncer.sdk.enums;
 
 /**
- * 变更事件类型枚举
+ * ChangeEventTypeEnumeration
  *
  * @Author AE86
  * @Version 1.0.0
@@ -13,15 +13,15 @@ package org.dbsyncer.sdk.enums;
 public enum ChangedEventTypeEnum {
 
     /**
-     * ddl变更
+     * ddlChange
      */
     DDL,
     /**
-     * 定时变更
+     * ScheduledChange
      */
     SCAN,
     /**
-     * 表行变更
+     * Line changes
      */
     ROW;
 

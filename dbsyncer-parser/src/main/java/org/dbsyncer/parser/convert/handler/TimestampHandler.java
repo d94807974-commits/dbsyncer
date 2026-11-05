@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 
 /**
- * 系统时间戳
+ * System Timetamp
  *
  * @author AE86
  * @version 1.0.0

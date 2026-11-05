@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * ES连接配置校验器实现
+ * ESConnectConfigureVerifyer Achieved
  *
  * @Author AE86
  * @Version 1.0.0
@@ -50,7 +50,7 @@ public final class ESConfigValidator implements ConfigValidator<ElasticsearchCon
         Assert.hasText(tableName, "TableName is empty");
         Assert.hasText(columnList, "ColumnList is empty");
         List<Field> fields = JsonUtil.jsonToArray(columnList, Field.class);
-        Assert.notEmpty(fields, "字段不能为空.");
+        Assert.notEmpty(fields, "Field cannot be empty.");
         table.setName(tableName);
         table.setColumn(fields);
         if (StringUtil.isNotBlank(type)) {

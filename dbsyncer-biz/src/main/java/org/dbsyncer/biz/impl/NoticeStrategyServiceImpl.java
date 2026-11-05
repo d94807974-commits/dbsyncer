@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * {@link NoticeStrategyService} 实现。
+ * {@link NoticeStrategyService} Achieved.
  *
  * @author wuji
  * @version 1.0.0
@@ -43,14 +43,14 @@ public class NoticeStrategyServiceImpl implements NoticeStrategyService {
 
     @Override
     public synchronized String save(Map<String, String> params) {
-        Assert.notNull(params, "参数不能为空");
+        Assert.notNull(params, "Parameter cannot be empty");
         NoticeStrategyDef def = parseOne(params);
         String id = StringUtil.trim(params.get("id"));
         assertNoticeTypeUnique(def.getNoticeTypes(), id);
         long now = System.currentTimeMillis();
         if (StringUtil.isNotBlank(id)) {
             NoticeStrategyConfig existing = noticeStrategyProfile.get(id);
-            Assert.notNull(existing, "策略不存在");
+            Assert.notNull(existing, "Strategy does not exist");
             existing.setName(def.getName());
             existing.setEnabled(def.isEnabled() ? 1 : 0);
             existing.setFrequency(def.getFrequency());
@@ -64,8 +64,8 @@ public class NoticeStrategyServiceImpl implements NoticeStrategyService {
         }
 
         NoticeStrategyConfig config = NoticeStrategyConverter.toConfig(def);
-        Assert.notNull(config, "策略无效");
-        // 新增由存储层生成 ID
+        Assert.notNull(config, "Policy invalid");
+        // InsertBy Storage LayerGenerate ID
         config.setId(null);
         config.setCreateTime(now);
         config.setUpdateTime(now);
@@ -76,11 +76,11 @@ public class NoticeStrategyServiceImpl implements NoticeStrategyService {
 
     @Override
     public synchronized String remove(Map<String, String> params) {
-        Assert.notNull(params, "参数不能为空");
+        Assert.notNull(params, "Parameter cannot be empty");
         String id = StringUtil.trim(params.get("id"));
-        Assert.hasText(id, "策略ID不能为空");
+        Assert.hasText(id, "Policy ID cannot be empty");
         NoticeStrategyConfig existing = noticeStrategyProfile.get(id);
-        Assert.notNull(existing, "策略不存在");
+        Assert.notNull(existing, "Strategy does not exist");
         noticeStrategyProfile.remove(id);
         noticeStrategyRuntimeBridge.reloadFromStore();
         return id;
@@ -88,18 +88,18 @@ public class NoticeStrategyServiceImpl implements NoticeStrategyService {
 
     private NoticeStrategyDef parseOne(Map<String, String> params) {
         String name = StringUtil.trim(params.get("name"));
-        Assert.hasText(name, "策略名称不能为空");
+        Assert.hasText(name, "Policy name cannot be empty");
         int frequencyCode = parseFrequency(params.get("frequency"));
         NoticeFrequencyEnum frequency = NoticeFrequencyEnum.getByCode(frequencyCode);
-        Assert.notNull(frequency, "策略频率无效");
+        Assert.notNull(frequency, "Policy frequency invalid");
         String cron = StringUtil.trim(params.get("cron"));
         if (frequency == NoticeFrequencyEnum.INTERVAL) {
-            Assert.hasText(cron, "周期策略须填写 Cron");
+            Assert.hasText(cron, "Periodic policy to fill Cron");
         } else {
             cron = null;
         }
         int noticeTypes = parseNoticeType(params.get("noticeTypes"));
-        Assert.notNull(NoticeTypeEnum.getByCode(noticeTypes), "通知类型无效");
+        Assert.notNull(NoticeTypeEnum.getByCode(noticeTypes), "Invalid notice type");
 
         NoticeStrategyDef def = new NoticeStrategyDef();
         def.setName(name);
@@ -123,37 +123,37 @@ public class NoticeStrategyServiceImpl implements NoticeStrategyService {
             if (StringUtil.isNotBlank(excludeId) && StringUtil.equals(excludeId, config.getId())) {
                 continue;
             }
-            throw new BizException("同一通知类型只能配置一条策略");
+            throw new BizException("Only one policy can be configured for the same notification type");
         }
     }
 
     private static int parseFrequency(String raw) {
         String value = StringUtil.trim(raw);
-        Assert.hasText(value, "策略频率不能为空");
+        Assert.hasText(value, "Policy frequency cannot be empty");
         try {
             return Integer.parseInt(value);
         } catch (NumberFormatException ignore) {
-            // 兼容枚举名
+            // Compatible list of names
         }
         try {
             return NoticeFrequencyEnum.valueOf(value).getCode();
         } catch (Exception e) {
-            throw new BizException("策略频率无效: " + value);
+            throw new BizException("Policy frequency invalid: " + value);
         }
     }
 
     private static int parseNoticeType(String raw) {
         String value = StringUtil.trim(raw);
-        Assert.hasText(value, "策略须指定通知类型");
+        Assert.hasText(value, "Policy has to specify the type of notification");
         try {
             return Integer.parseInt(value);
         } catch (NumberFormatException ignore) {
-            // 兼容枚举名
+            // Compatible list of names
         }
         try {
             return NoticeTypeEnum.valueOf(value).getCode();
         } catch (Exception e) {
-            throw new BizException("通知类型无效: " + value);
+            throw new BizException("Invalid notice type: " + value);
         }
     }
 }

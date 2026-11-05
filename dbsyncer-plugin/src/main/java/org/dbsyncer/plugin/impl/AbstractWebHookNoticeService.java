@@ -14,7 +14,7 @@ import org.dbsyncer.sdk.enums.ModelEnum;
 import org.dbsyncer.sdk.model.NoticeContent;
 
 /**
- * WebHook通知服务实现基类
+ * WebHookNotification service realization base
  *
  * @author AE86
  * @version 1.0.0
@@ -23,45 +23,45 @@ import org.dbsyncer.sdk.model.NoticeContent;
 public abstract class AbstractWebHookNoticeService extends AbstractNoticeService {
 
     protected String buildContent(NoticeContent noticeContent) {
-        // 运行异常
+        // RunError
         if (noticeContent instanceof MappingErrorContent) {
             MappingErrorContent meta = (MappingErrorContent) noticeContent;
             StringBuilder c = new StringBuilder();
-            c.append(String.format("[%s] %s，任务数：%s\n",
+            c.append(String.format("[% Facilitated]",
                     getAppConfig().getName(), noticeContent.getTitle(), meta.getErrorItems().size()));
             c.append(String.format("%s\n\n", DateFormatUtil.now()));
 
             for (int i = 0; i < meta.getErrorItems().size(); i++) {
                 MappingErrorContent.ErrorItem item = meta.getErrorItems().get(i);
-                c.append(String.format("%d. %s(%s) 失败:%s, 成功:%s", i + 1, item.getName(), item.getModel().getName(), item.getFail(), item.getSuccess()));
+                c.append(String.format("%d. %s (%s) failed: %s, success: %s", i + 1, item.getName(), item.getModel().getName(), item.getFail(), item.getSuccess()));
                 if (ModelEnum.FULL == item.getModel()) {
-                    c.append(String.format("总数:%s", item.getTotal()));
+                    c.append(String.format("number", item.getTotal()));
                 }
                 c.append("\n");
             }
             return c.toString();
         }
 
-        // 停止驱动
+        // StopMapping
         if (noticeContent instanceof MappingStopContent) {
             MappingStopContent meta = (MappingStopContent) noticeContent;
             return String.format("[%s] %s %s(%s)", getAppConfig().getName(),
                     noticeContent.getTitle(), meta.getName(), meta.getModel().getName());
         }
 
-        // 全量同步完成
+        // Full Sync
         if (noticeContent instanceof MappingFullCompleteContent) {
             MappingFullCompleteContent meta = (MappingFullCompleteContent) noticeContent;
-            return String.format("[%s] %s %s(%s) 成功:%s, 失败:%s, 总数:%s", getAppConfig().getName(),
+            return String.format("[%s] %s (%s) succeeded: %s, failed: %s, total: %s", getAppConfig().getName(),
                     noticeContent.getTitle(), meta.getName(), meta.getModel().getName(),
                     meta.getSuccess(), meta.getFail(), meta.getTotal());
         }
 
-        // 连接离线
+        // Connect Offline
         if (noticeContent instanceof ConnectorOfflineContent) {
             ConnectorOfflineContent meta = (ConnectorOfflineContent) noticeContent;
             StringBuilder c = new StringBuilder();
-            c.append(String.format("[%s] %s，连接数：%s\n",
+            c.append(String.format("[%s] %s, connect: %s\n",
                     getAppConfig().getName(), noticeContent.getTitle(), meta.getErrorItems().size()));
             c.append(String.format("%s\n\n", DateFormatUtil.now()));
 
@@ -73,13 +73,13 @@ public abstract class AbstractWebHookNoticeService extends AbstractNoticeService
             return c.toString();
         }
 
-        // 通用通知
+        // General announcement
         if (noticeContent instanceof GeneralNoticeContent) {
             GeneralNoticeContent meta = (GeneralNoticeContent) noticeContent;
             return String.format("[%s] %s %s", getAppConfig().getName(), noticeContent.getTitle(), meta.getContent());
         }
 
-        // 测试通知
+        // TestAnnouncements
         if (noticeContent instanceof TestNoticeContent) {
             TestNoticeContent meta = (TestNoticeContent) noticeContent;
             return String.format("[%s] %s %s", getAppConfig().getName(), noticeContent.getTitle(), meta.getContent());

@@ -6,7 +6,7 @@ package org.dbsyncer.plugin.model;
 import org.dbsyncer.sdk.model.NoticeContent;
 
 /**
- * 通用通知消息
+ * General Notification Message
  *
  * @Author wuji
  * @Version 1.0.0

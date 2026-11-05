@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2026-01-11 22:21
  */
@@ -29,7 +29,7 @@ public final class SqlServerTimestampType extends TimestampType {
 
         TIMESTAMP("timestamp"),
         /**
-         * 带时区偏移的 datetime2，10 字节
+         * A time zone shift.datetime2，10 Bytes
          */
         DATETIMEOFFSET("datetimeoffset");
 

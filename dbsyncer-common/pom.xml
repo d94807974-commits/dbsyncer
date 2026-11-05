@@ -30,7 +30,7 @@
             <artifactId>javax.annotation-api</artifactId>
         </dependency>
 
-        <!-- apache 工具类 -->
+        <!-- apace -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>

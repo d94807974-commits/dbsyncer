@@ -18,27 +18,27 @@ public class Connector extends ConfigModel {
     }
 
     /**
-     * 连接器配置
+     * ConnectorConfigure
      */
     private ConnectorConfig config;
 
     /**
-     * 数据库列表
+     * Data FactLibraryList
      */
     private List<String> databases;
 
     /**
-     * 可作为源端，默认开启
+     * AsSourceEnd, DefaultOn
      */
     private boolean source = true;
 
     /**
-     * 可作为目标端，默认开启
+     * AsObjective CombinedEnd, DefaultOn
      */
     private boolean target = true;
 
     /**
-     * 连接状态：1-在线，0-离线；默认在线
+     * ConnectStatus：1-Online，0-Offline；DefaultOnline
      */
     private int status = 1;
 

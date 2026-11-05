@@ -44,14 +44,14 @@ public abstract class AbstractChecker implements Checker {
     private SnowflakeIdWorker snowflakeIdWorker;
 
     /**
-     * 修改基本配置
+     * UpdateBasicConfigure
      * <p>id,type,name,createTime,updateTime</p>
      */
     protected void modifyConfigModel(ConfigModel model, Map<String, String> params) {
         Assert.notNull(model, "ConfigModel can not be null.");
         Assert.hasText(model.getType(), "ConfigModel type can not be empty.");
         Assert.hasText(model.getName(), "ConfigModel name can not be empty.");
-        // 名称
+        // Name
         String name = params.get(ConfigConstant.CONFIG_MODEL_NAME);
         if (StringUtil.isNotBlank(name)) {
             model.setName(name);
@@ -63,28 +63,28 @@ public abstract class AbstractChecker implements Checker {
     }
 
     /**
-     * 修改高级配置：过滤条件/转换配置/插件配置
+     * UpdateAdvanced settings：Filter Conditions/Convert Configuration/Plugin Configuration
      */
     protected void modifySuperConfigModel(AbstractConfigModel model, Map<String, String> params) {
-        // 全局参数
+        // GlobalParameter
         String mappingParams = params.get("params");
         model.setParams(StringUtil.isNotBlank(mappingParams) ? JsonUtil.jsonToObj(mappingParams, Map.class) : new ConcurrentHashMap<>());
 
-        // 过滤条件
+        // Filter Conditions
         String filterJson = params.get("filter");
         if (StringUtil.isNotBlank(filterJson)) {
             List<Filter> list = JsonUtil.jsonToArray(filterJson, Filter.class);
             model.setFilter(list);
         }
 
-        // 转换配置
+        // Convert Configuration
         String convertJson = params.get("convert");
         if (StringUtil.isNotBlank(convertJson)) {
             List<Convert> convert = JsonUtil.jsonToArray(convertJson, Convert.class);
             model.setConvert(convert);
         }
 
-        // 插件配置
+        // Plugin Configuration
         String pluginId = params.get("pluginId");
         Plugin plugin = null;
         if (StringUtil.isNotBlank(pluginId)) {
@@ -99,12 +99,12 @@ public abstract class AbstractChecker implements Checker {
             }
         }
         model.setPlugin(plugin);
-        // 插件参数
+        // PluginParameter
         model.setPluginExtInfo(plugin != null ? params.get("pluginExtInfo") : null);
     }
 
     /**
-     * 打印参数（数据脱敏）
+     * PrintParameter（Data desensitization)
      */
     protected void printParams(Map<String, String> params) {
         Map<Object, Object> checkParams = new HashMap<>(params);

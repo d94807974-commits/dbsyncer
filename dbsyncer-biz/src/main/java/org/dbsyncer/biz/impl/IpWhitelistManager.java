@@ -13,11 +13,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * IP白名单管理器
- * 负责IP白名单的验证和管理
- * 支持单个IP、IP段（CIDR）和IP范围
+ * IP whitelistManager
+ * ResponsibleIP whitelistCertification and management
+ * Support individualIP、IPParagraphCIDR）andIPScope
  * 
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  */
 @Component
@@ -26,98 +26,98 @@ public class IpWhitelistManager {
     private static final Logger logger = LoggerFactory.getLogger(IpWhitelistManager.class);
 
     /**
-     * 验证IP是否在白名单中
+     * AuthenticationIPYesNoIn the white list.
      * 
-     * @param config 当前配置
-     * @param clientIp 客户端IP地址
-     * @return 是否在白名单中
+     * @param config CurrentConfigure
+     * @param clientIp ClientIPAddress
+     * @return YesNoIn the white list.
      */
     public boolean isAllowed(IpWhitelistConfig config, String clientIp) {
         try {
             if (StringUtil.isBlank(clientIp)) {
-                logger.warn("客户端IP为空");
+                logger.warn("Client IP is empty");
                 return false;
             }
 
             if (config == null || !config.isEnabled()) {
-                // 如果未启用白名单，默认允许所有IP
+                // If 212EnableWhite List, Default Allow AllIP
                 return true;
             }
 
-            // 允许localhost（如果配置允许）
+            // verifielocalhost（IfConfigureAllow 230
             if (config.isAllowLocalhost() && isLocalhost(clientIp)) {
                 return true;
             }
 
-            // 检查白名单
+            // Check the white list.
             List<String> whitelist = config.getWhitelist();
             if (whitelist == null || whitelist.isEmpty()) {
-                logger.warn("IP白名单为空，拒绝访问");
+                logger.warn("The IP white list is empty, access denied");
                 return false;
             }
 
-            // 遍历白名单，检查是否匹配
+            // Check the white list.YesNoMatch
             for (String ipPattern : whitelist) {
                 if (StringUtil.isBlank(ipPattern)) {
                     continue;
                 }
 
                 if (matchesIpPattern(clientIp, ipPattern.trim())) {
-                    logger.debug("IP {} 匹配白名单规则: {}", clientIp, ipPattern);
+                    logger.debug("IP {} Match white list rule: {", clientIp, ipPattern);
                     return true;
                 }
             }
 
-            logger.warn("IP {} 不在白名单中", clientIp);
+            logger.warn("IP{ Not on White List", clientIp);
             return false;
         } catch (Exception e) {
-            logger.error("验证IP白名单失败", e);
-            // 验证失败时，为了安全起见，拒绝访问
+            logger.error("Forests", e);
+            // AuthenticationFailedTime, for security reasons, denied access.
             return false;
         }
     }
 
     /**
-     * 检查IP是否匹配规则
-     * 支持：
-     * - 单个IP: 192.168.1.1
+     * InspectionIPYesNoMatch Rules
+     * Support:
+     * - SingleIP: 192.168.1.1
      * - CIDR: 192.168.1.0/24
-     * - IP范围: 192.168.1.1-192.168.1.100
+     * - IPScope: 192.168.1.1-192.168.1.100
      * 
-     * @param clientIp 客户端IP
-     * @param pattern IP规则
-     * @return 是否匹配
+     * @param clientIp ClientIP
+     * @param pattern IPRule
+     * @return YesNoMatch
      */
     private boolean matchesIpPattern(String clientIp, String pattern) {
         try {
-            // 精确匹配
+            // Prempt Match
             if (clientIp.equals(pattern)) {
                 return true;
             }
 
-            // CIDR格式: 192.168.1.0/24
+            // CIDRFormat: 192.168.1.0/24
             if (pattern.contains("/")) {
                 return matchesCidr(clientIp, pattern);
             }
 
-            // IP范围格式: 192.168.1.1-192.168.1.100
+            // IPRange Format: 192.168.1.1-192.168.1.100
             if (pattern.contains("-")) {
                 return matchesIpRange(clientIp, pattern);
             }
 
             return false;
         } catch (Exception e) {
-            logger.warn("匹配IP规则失败: {} - {}", clientIp, pattern, e);
+            logger.warn("Failed to match IP rule: } - {", clientIp, pattern, e);
             return false;
         }
     }
 
     /**
-     * 检查IP是否在CIDR范围内
+     * InspectionIPYesNoYes.CIDRScope
      * 
-     * @param clientIp 客户端IP
-     * @param cidr CIDR格式，如: 192.168.1.0/24
-     * @return 是否在范围内
+     * @param clientIp ClientIP
+     * @param cidr CIDRInter alia,: 192.168.1.0/24
+     * @return YesNoWithin Endosulfan
      */
     private boolean matchesCidr(String clientIp, String cidr) {
         try {
@@ -139,17 +139,17 @@ public class IpWhitelistManager {
 
             return (clientIpLong & mask) == (networkIpLong & mask);
         } catch (Exception e) {
-            logger.warn("CIDR匹配失败: {} - {}", clientIp, cidr, e);
+            logger.warn("CIDR matching failed:", clientIp, cidr, e);
             return false;
         }
     }
 
     /**
-     * 检查IP是否在IP范围内
+     * InspectionIPYesNoYes.IPScope
      * 
-     * @param clientIp 客户端IP
-     * @param ipRange IP范围，如: 192.168.1.1-192.168.1.100
-     * @return 是否在范围内
+     * @param clientIp ClientIP
+     * @param ipRange IPScope, if: 192.168.1.1-192.168.1.100
+     * @return YesNoWithin Endosulfan
      */
     private boolean matchesIpRange(String clientIp, String ipRange) {
         try {
@@ -167,16 +167,16 @@ public class IpWhitelistManager {
 
             return clientIpLong >= startIpLong && clientIpLong <= endIpLong;
         } catch (Exception e) {
-            logger.warn("IP范围匹配失败: {} - {}", clientIp, ipRange, e);
+            logger.warn("IP range match failed: } - {", clientIp, ipRange, e);
             return false;
         }
     }
 
     /**
-     * 将IP地址转换为长整型
+     * WillIPAddressConvertIt's long.
      * 
-     * @param ip IP地址
-     * @return 长整型值
+     * @param ip IPAddress
+     * @return LongValue
      */
     private long ipToLong(String ip) {
         String[] parts = ip.split("\\.");
@@ -196,17 +196,17 @@ public class IpWhitelistManager {
     }
 
     /**
-     * 检查是否为localhost
+     * InspectionYesNoYeslocalhost
      * 
-     * @param ip IP地址
-     * @return 是否为localhost
+     * @param ip IPAddress
+     * @return YesNoYeslocalhost
      */
     private boolean isLocalhost(String ip) {
         if (StringUtil.isBlank(ip)) {
             return false;
         }
 
-        // 检查常见的localhost地址
+        // Check the usual.localhostAddress
         return "127.0.0.1".equals(ip) || "0:0:0:0:0:0:0:1".equals(ip) || "::1".equals(ip) || "localhost".equalsIgnoreCase(ip);
     }
 

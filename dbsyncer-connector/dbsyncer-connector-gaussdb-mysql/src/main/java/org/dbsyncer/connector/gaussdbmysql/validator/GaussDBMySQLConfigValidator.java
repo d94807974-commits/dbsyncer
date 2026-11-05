@@ -12,7 +12,7 @@ import org.dbsyncer.sdk.connector.database.AbstractDatabaseConnector;
 import java.util.Map;
 
 /**
- * GaussDB MySQL 兼容配置校验
+ * GaussDB MySQL CompatibilityConfigureVerify INTRODUCTION
  *
  * @author wuji
  * @version 1.0.0

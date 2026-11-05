@@ -1,4 +1,4 @@
-/* ========== 顶栏 ========== */
+/* ========== Topbar========== */
 .app-header {
   padding: 0 12px;
   background-color: var(--bg-primary);
@@ -33,7 +33,7 @@
   font-size: 18px;
 }
 
-/* ========== 下拉菜单样式 ========== */
+/* ========== Dropdown Menu Style========== */
 .dropdown {
   position: relative;
 }
@@ -99,7 +99,7 @@
   font-size: 14px;
 }
 
-/* 下拉菜单按钮样式 */
+/* Drop Down Menu Button Style*/
 .dropdown-menu button {
   width: 100%;
   padding: 8px 16px;
@@ -158,7 +158,7 @@
   font-size: var(--font-size-sm);
 }
 
-/* ========== 授权状态下拉 ========== */
+/* ========== License statusPull down.========== */
 .license-dropdown {
   margin-right: 8px;
 }

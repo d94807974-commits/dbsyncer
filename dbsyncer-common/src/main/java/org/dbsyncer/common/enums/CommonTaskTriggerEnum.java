@@ -6,23 +6,23 @@ package org.dbsyncer.common.enums;
 import org.dbsyncer.common.util.StringUtil;
 
 /**
- * 任务触发策略枚举
+ * TasksSBI Trigger Policy Count
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2025-10-18 19:52
  */
 public enum CommonTaskTriggerEnum {
 
     /**
-     * 执行一次
+     * Run once
      */
-    ONCE("once", "执行一次"),
+    ONCE("once", "Run once"),
 
     /**
-     * 定时执行
+     * Run on schedule
      */
-    TIMING("timing", "定时执行");
+    TIMING("timing", "Run on schedule");
 
     private final String code;
     private final String message;
@@ -33,7 +33,7 @@ public enum CommonTaskTriggerEnum {
     }
 
     /**
-     * 获取类型
+     * AccessType
      */
     public static CommonTaskTriggerEnum getType(String code) {
         for (CommonTaskTriggerEnum e : CommonTaskTriggerEnum.values()) {

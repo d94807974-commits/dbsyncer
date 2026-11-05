@@ -7,7 +7,7 @@ import org.dbsyncer.sdk.enums.StorageEnum;
 import org.dbsyncer.sdk.storage.Strategy;
 
 /**
- * 任务执行明细：按任务分表(每个任务一张表, 逻辑同旧 dbsyncer_data)
+ * TasksImplementation Details：PressTasksminTable(EachTasksA watch., The same logic.dbsyncer_data)
  *
  * @Author AE86
  * @Version 1.0.0

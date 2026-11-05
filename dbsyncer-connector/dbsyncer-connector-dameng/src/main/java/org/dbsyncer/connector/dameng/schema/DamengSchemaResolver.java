@@ -27,10 +27,10 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * 达梦标准数据类型解析器
- * <p>在 Oracle 类型映射之上补充达梦特有类型名（如 INT、VARCHAR、DATETIME、IMAGE 等）。</p>
+ * Dream standard dataTypeParser
+ * <p>Yes.Oracle TypeIt's on the map.TypeName (e.g.INT、VARCHAR、DATETIME、IMAGE Wait.</p>
  *
- * @author 穿云
+ * @author The clouds.
  * @version 1.0.0
  * @date 2026-06-07 02:00
  */
@@ -65,8 +65,8 @@ public final class DamengSchemaResolver extends OracleSchemaResolver {
     }
 
     /**
-     * 规范化类型名：大写、去掉精度括号。
-     * <p>例如 {@code TIMESTAMP(6) WITH TIME ZONE} → {@code TIMESTAMP WITH TIME ZONE}</p>
+     * NormativeTypeName: uppercase, removedOutlook saluteparenthesis.
+     * <p>For example:{@code TIMESTAMP(6) WITH TIME ZONE} → {@code TIMESTAMP WITH TIME ZONE}</p>
      */
     public static String normalizeTypeName(String typeName) {
         if (typeName == null) {
@@ -84,7 +84,7 @@ public final class DamengSchemaResolver extends OracleSchemaResolver {
         if (damengType != null) {
             return damengType;
         }
-        // 时间间隔类型按字符串处理
+        // TimeIntervalTypeProcessing by String
         if (normalized != null && normalized.startsWith("INTERVAL")) {
             return DAMENG_TYPES.get("VARCHAR");
         }

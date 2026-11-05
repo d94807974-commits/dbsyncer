@@ -136,25 +136,25 @@ public class BinaryLogRemoteClient implements BinaryLogClient {
     private volatile boolean connected;
     private volatile boolean connectedError;
     /**
-     * 主动关闭后禁止自动重连；公开 connect() 会清回 false。
+     * InitiativesCloseThereafter automatic reconnection is prohibited; publicconnect() It'll come back.false。
      */
     private volatile boolean stopped;
     /**
-     * 保证同一时刻只有一个 keepalive 执行重连，避免 connect() 拉起的新线程再次进入重连导致双 dump。
+     * Just one at the same time.keepalive Execute reconnection, avoidconnect() Pull up newThreadsOnce again into the chain, two.dump。
      */
     private final AtomicBoolean reconnecting = new AtomicBoolean(false);
     /**
-     * 连接代数：每次建连尝试在 openChannel 成功后递增；旧 worker/keepalive 迟到回调用 epoch/channel 识别并丢弃。
+     * ConnectAlgebra: Every attempt to build a connectionopenChannel Successlater increment;oldworker/keepalive Late callbackepoch/channel # # Discard #  Workshops #
      */
     private final AtomicLong connectionEpoch = new AtomicLong(0);
     /**
-     * 心跳间隔（毫秒）：通过 SET @master_heartbeat_period 让 MySQL 在 binlog 流上定期发送心跳事件，
-     * 避免在流模式连接上发送 PingCommand 破坏协议（与原版库 BinaryLogClient 的 keepalive 机制一致）。
-     * 可通过 -Ddbsyncer.mysql.heartbeatInterval=0 禁用（用于不支持/不兼容心跳的库，如 GoldenDB、OceanBase 等）。
+     * Heart rate.Intervalms）：Pass.SET @master_heartbeat_period Jean.MySQL Yes.binlog Flow up and send regularlyHeart rate.Event，
+     * Avoid flow modeConnectSend UpPingCommand Disruption of the agreementandOriginalLibrary BinaryLogClient Yes.keepalive The mechanism is consistent).
+     * Can you--Ddbsyncer.mysql.heartbeatInterval=0 Disable（For unsupported/incompatibleHeart rate.Yes.Library，LikeGoldenDB、OceanBase Wait.
      */
     private long heartbeatInterval = Long.getLong("dbsyncer.mysql.heartbeatInterval", 3000L);
     /**
-     * 最近一次收到 binlog 事件（含心跳事件）的时间，keepalive 线程据此判断连接是否存活。
+     * Last receivedbinlog Event（HamHeart rate.Event）Yes.Time，keepalive ThreadsOn that basis,ConnectYesNoSurvive.
      */
     private volatile long eventLastSeen;
     private Thread worker;
@@ -211,7 +211,7 @@ public class BinaryLogRemoteClient implements BinaryLogClient {
     }
 
     /**
-     * 建连实现；自动重连走此方法，保留 {@link #stopped} 语义。
+     * Connection realization; automatic reconnection, retain{@link #stopped} Semantics.
      */
     private void connectInternal() throws Exception {
         try {
@@ -242,7 +242,7 @@ public class BinaryLogRemoteClient implements BinaryLogClient {
     }
 
     /**
-     * connect 半失败回滚：关掉已拉起的 channel / keepalive，避免 isConnected=true 但无 dump。
+     * connect HalfFailedRoll-back: Turn off what's pulled upchannel / keepalive，AvoidisConnected=true But...None dump。
      */
     private void rollbackConnectAttempt() {
         connected = false;
@@ -263,14 +263,14 @@ public class BinaryLogRemoteClient implements BinaryLogClient {
 
     @Override
     public void disconnect() throws Exception {
-        // 主动关闭：禁止后续自动重连，并打断可能正在 sleep/重试的 keepalive
+        // InitiativesClose：Prohibition of subsequent automatic reconnection and possible interruptionssleep/Try againYes.keepalive
         stopped = true;
         connectedError = false;
         teardownConnection(true);
     }
 
     /**
-     * 自动重连前的拆除：不置 stopped，以便随后 connectInternal。
+     * Dismantling before automatic reconnection:stopped，And then...connectInternal。
      */
     private void disconnectForReconnect() throws Exception {
         teardownConnection(true);
@@ -280,7 +280,7 @@ public class BinaryLogRemoteClient implements BinaryLogClient {
         try {
             connectLock.lock();
             boolean wasConnected = connected;
-            // 先标记断开，避免关闭 socket 时旧 worker/keepalive 再把 connectedError 置回 true
+            // Mark PrevClose socket Oldworker/keepalive Again.connectedError Returntrue
             connected = false;
             closeChannel(channel);
             channel = null;
@@ -299,7 +299,7 @@ public class BinaryLogRemoteClient implements BinaryLogClient {
     }
 
     /**
-     * 重连线程会调用 disconnectForReconnect()，不能 interrupt 自身，否则后续 sleep/重试会被打断。
+     * ReconnectThreadsIt's called.disconnectForReconnect()，I can't.interrupt It's not about me.NoFollow-upsleep/Try again55. Will be interrupted.
      */
     private void interruptIfOtherThread(Thread thread) {
         if (thread != null && thread != Thread.currentThread() && !thread.isInterrupted()) {
@@ -351,7 +351,7 @@ public class BinaryLogRemoteClient implements BinaryLogClient {
         if (binlogFilename == null) {
             fetchBinlogFilenameAndPosition();
         } else {
-            // 校验请求的binlog文件是否仍然存在,若不存在则回退到最新
+            // Verify the FigurebinlogDocumentationYesNoStill exists.,If not, back to the latest.
             validateRequestedBinlogOrFallback();
         }
         if (binlogPosition < 4) {
@@ -362,13 +362,13 @@ public class BinaryLogRemoteClient implements BinaryLogClient {
         if (checksumType != ChecksumType.NONE) {
             confirmSupportOfChecksum(channel, checksumType);
         }
-        // 启用 MySQL 原生心跳（须先于 COM_BINLOG_DUMP，避免在流模式下发送命令）
+        // Enable MySQL NativeHeart rate.（Prior toCOM_BINLOG_DUMP，Avoid sending commands in flow mode)
         if (heartbeatInterval > 0) {
             try {
                 enableHeartbeat();
             } catch (Exception e) {
                 // 不支持心跳（MySQL < 5.6、GoldenDB 等兼容库）时降级：keepalive 不再主动探测，
-                // 连接状态交由 worker 线程读取 socket 的 EOF 检测（避免 Ping 响应混入 binlog 事件流）
+                // ConnectStatusPresentedworker ThreadsReadsocket Yes.EOF Testing (avoidance)Ping Response blendingbinlog EventFlow
                 logger.warn("Failed to enable binlog heartbeat ({}), keepalive will rely on socket EOF detection", e.getMessage());
                 heartbeatInterval = 0;
             }
@@ -448,7 +448,7 @@ public class BinaryLogRemoteClient implements BinaryLogClient {
                 }
                 throw new EOFException("event data deserialization exception");
             }
-            // 循环退出说明流已读到 EOF（连接被对端关闭），与原版库一致抛异常，交由 keepalive 触发重连
+            // Loop exitDescriptionReadEOF（ConnectOppositeClose），andOriginalLibraryUnanimously.Error，Presentedkeepalive          Trigger Reconnection
             throw new EOFException("Binlog stream closed");
         } catch (Exception e) {
             notifyException(e, listenChannel, epoch);
@@ -720,8 +720,8 @@ public class BinaryLogRemoteClient implements BinaryLogClient {
     }
 
     /**
-     * 读取一个 MySQL 数据包（3 字节长度 + 1 字节序号 + 数据体），不做序号校验。
-     * 与监听线程一致：仅依赖长度字段切包，避免服务器在认证后重置序号导致 "unexpected sequence" 异常。
+     * MSARMySQL Packages3 BytesLength + 1 BytesNo. + Data body)No.Verify.
+     * andListenThreadsConsistency: reliance onlyLengthFieldCut, avoid server authenticationResetNo.Result"unexpected sequence" Error。
      */
     private byte[] readPacketNoSequence() throws IOException {
         ByteArrayInputStream inputStream = channel.getInputStream();
@@ -817,15 +817,15 @@ public class BinaryLogRemoteClient implements BinaryLogClient {
                     if (!connected || stopped || connectedError) {
                         break;
                     }
-                    // 优先使用 MySQL 原生心跳检测连接（与事件流同通道，不额外发命令）。
-                    // 心跳不可用时（GoldenDB 等兼容库可能拒绝 SET @master_heartbeat_period）不再发送 PingCommand：
-                    // Ping 响应会混入 binlog 事件流导致流错位，改为依赖 worker 线程读取 socket 的 EOF 感知断开并触发重连。
+                    // Use PriorityMySQL NativeHeart rate.TestConnect（andEventConvergence, no additional orders).
+                    // Heart rate.Not available (inGoldenDB CompatibilityLibraryProbably.SET @master_heartbeat_period）Do Not SendPingCommand：
+                    // Ping The response is mixed.binlog EventThe flow leads to misalignment, instead of dependenceworker ThreadsReadsocket Yes.EOF Perceptions are disconnected and trigger reconnection.
                     if (heartbeatInterval > 0) {
                         if (System.currentTimeMillis() - eventLastSeen > TimeUnit.SECONDS.toMillis(10)) {
                             throw new IOException("no binlog event received within keepalive interval");
                         }
                     }
-                    // else: 静默，连接状态由 worker 的 socket 读取（EOF/异常）负责检测
+                    // else: Quiet.ConnectStatusByworker Yes.socket ReadEOF/Error）Check.
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     break;
@@ -834,7 +834,7 @@ public class BinaryLogRemoteClient implements BinaryLogClient {
                     break;
                 }
             }
-            // 主动关闭或未抢到重连权则退出
+            // InitiativesCloseOr take the right to reconnect and quit.
             if (stopped || !connectedError || !reconnecting.compareAndSet(false, true)) {
                 return;
             }
@@ -846,10 +846,10 @@ public class BinaryLogRemoteClient implements BinaryLogClient {
                         if (stopped) {
                             return;
                         }
-                        // 必须在 connect 之前清标志，否则新 keepalive 一启动就会再次进入重连（双 dump / 同 serverId 互踢）
+                        // Must be.connect Before the marking,NoNewkeepalive One.StartYou'll be back in the chain again.dump / SameserverId ♪ Kick each other ♪
                         connectedError = false;
                         connectInternal();
-                        // 建连过程中 worker 可能已失败置位 connectedError；仅 connected 不足以视为重连成功
+                        // Connectionworker Maybe.FailedPersonsconnectedError；Onlyconnected Not enough to be considered a reconnection.Success
                         if (connected && !connectedError) {
                             return;
                         }
@@ -883,7 +883,7 @@ public class BinaryLogRemoteClient implements BinaryLogClient {
     }
 
     private void notifyException(Exception e, PacketChannel eventChannel, long epoch) {
-        // 主动关闭或旧连接迟到回调：忽略，避免污染新连接状态（靠 epoch/channel 识别，勿用 reconnecting 抑制，否则新连接刚起来就失败会被吞掉）
+        // InitiativesCloseOr old.ConnectLate callback: Ignore, avoid new contaminationConnectStatus（Shit.epoch/channel Identification, no use.reconnecting Depression,NoNewConnectI just got up.FailedThey'll swallow it.
         if (stopped || !connected) {
             return;
         }
@@ -893,13 +893,13 @@ public class BinaryLogRemoteClient implements BinaryLogClient {
         logger.error(e.getMessage(), e);
         if (e instanceof ServerException) {
             ServerException serverException = (ServerException) e;
-            // 若binlog文件不存在（错误码1236），下次重连时回退到最新位置
+            // If adoptbinlogDocumentationdoes not exist (ErrorCode1236），Next time you reconnect, back to your latest position.
             if (serverException.getErrorCode() == 1236) {
                 binlogFilename = null;
                 binlogPosition = 0;
             }
         } else {
-            // 位点落在 TABLE_MAP 与 ROW 事件组中间时，同位点重连会永久失败；直接跳到事件 nextPosition
+            // LocationTABLE_MAP and ROW EventIn the middle of the group, reconnect at the same location.PermanentFailed；Go straight toEvent nextPosition
             trySkipIncompleteEventGroup(e);
         }
         connectedError = true;
@@ -907,7 +907,7 @@ public class BinaryLogRemoteClient implements BinaryLogClient {
     }
 
     /**
-     * 判断是否为「从事件组中间起读」类失败（缺 TABLE_MAP）。
+     * Judgement ConfirmationYesNoYes「FromEventGroup Read」CategoryFailed（MissingTABLE_MAP）。
      */
     public static boolean isIncompleteEventGroupFailure(Throwable throwable) {
         Throwable current = throwable;
@@ -929,8 +929,8 @@ public class BinaryLogRemoteClient implements BinaryLogClient {
     }
 
     /**
-     * MissingTableMap 为确定性命中：将 {@link #binlogPosition} 推进到事件头 nextPosition，重连后继续读；
-     * 同组内若仍缺 TABLE_MAP 会再次跳过，直到读到可解析事件。
+     * MissingTableMap YesOKLife: General{@link #binlogPosition} Push toEventHeadnextPosition，Read more after reconnection;
+     * If not available in the same groupTABLE_MAP You'll skip again until you can read it.Event。
      */
     private void trySkipIncompleteEventGroup(Exception e) {
         if (!isIncompleteEventGroupFailure(e)) {
@@ -939,16 +939,16 @@ public class BinaryLogRemoteClient implements BinaryLogClient {
         String file = binlogFilename == null ? "" : binlogFilename;
         long nextPosition = resolveNextPosition(e);
         if (nextPosition <= 0 || nextPosition <= binlogPosition) {
-            logger.error("binlog 位点落在事件组中间 {}/{}, 但无法解析有效 nextPosition，无法自动跳过", file, binlogPosition);
+            logger.error("binlog bits in the middle of the event group {}, but could not parse valid nextPosition and could not automatically skip", file, binlogPosition);
             return;
         }
         long from = binlogPosition;
         binlogPosition = nextPosition;
-        logger.warn("已跳过不完整 binlog 事件组 {}/{} -> {}/{}", file, from, file, nextPosition);
+        logger.warn("Skipped incomplete binlog event group", file, from, file, nextPosition);
     }
 
     /**
-     * 从反序列化异常中解析事件头 nextPosition；失败时回退解析异常文案。
+     * From ResequencingErrorCentre ResolutionEventHeadnextPosition；FailedRevertErrorThe case.
      */
     static long resolveNextPosition(Throwable throwable) {
         Throwable current = throwable;

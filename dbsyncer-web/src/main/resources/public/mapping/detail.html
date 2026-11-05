@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org" lang="zh-CN">
+      xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<!-- 同步任务结果详情（表映射汇总） -->
+<!-- Synchronise Task ResultsDetails（TableMappingSummary） -->
 <div class="form-container" id="mappingDetailPage" th:attr="data-mapping-id=${mappingId}">
     <div class="card-header">
-        <h3 class="card-title text-center">同步结果详情</h3>
+ <h3 class="card-title text-center">Sync ResultsDetails</h3>
     </div>
     <div class="card-body">
         <div class="grid grid-cols-6 items-end mb-4">
             <div class="lg:col-span-2 form-item mb-0">
-                <label class="form-label">状态</label>
+ <label class="form-label">Status</label>
                 <select id="detailStatusFilter" class="form-control">
-                    <option value="" th:selected="${detailStatus == null or detailStatus == ''}">全部</option>
-                    <option value="success" th:selected="${detailStatus == 'success'}">成功</option>
-                    <option value="fail" th:selected="${detailStatus == 'fail'}">失败</option>
+ <option value="" th:selected="${detailStatus == null or detailStatus == ''}">All</option>
+ <option value="success" th:selected="${detailStatus == 'success'}">Success</option>
+ <option value="fail" th:selected="${detailStatus == 'fail'}">Failed</option>
                 </select>
             </div>
             <div class="lg:col-span-4 flex items-center justify-end">
                 <button type="button" class="btn btn-outline" onclick="backIndexPage()">
-                    <i class="fa fa-reply"></i> 返回列表
+ <i class="fa fa-reply"></i> BackList
                 </button>
             </div>
         </div>
@@ -28,12 +28,12 @@
             <thead>
             <tr>
                 <th class="width50px"></th>
-                <th>源表</th>
-                <th>目标表</th>
-                <th>成功数</th>
-                <th>失败数</th>
-                <th>更新时间</th>
-                <th class="width80px">查看详情</th>
+ <th>SourceTable</th>
+ <th>TargetTable</th>
+ <th>SuccessNumber</th>
+ <th>FailedNumber</th>
+ <th>UpdateTime</th>
+ <th class="width80px">ViewDetails</th>
             </tr>
             </thead>
             <tbody id="detail-result-table"></tbody>

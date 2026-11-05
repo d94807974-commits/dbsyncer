@@ -1,8 +1,8 @@
 /**
- * DBSyncer Confirm 对话框组件样式
+ * DBSyncer Confirm Dialogue Component Styles
  */
 
-/* 确认对话框容器 */
+/* ConfirmDialogue Box*/
 .confirm-overlay {
   position: fixed;
   top: 0;
@@ -31,7 +31,7 @@
   display: none !important;
 }
 
-/* 确认对话框 */
+/* Confirmdialogue box*/
 .confirm-dialog {
   background-color: var(--bg-primary);
   border-radius: var(--radius-lg);
@@ -49,7 +49,7 @@
   display: none !important;
 }
 
-/* 对话框尺寸 */
+/* Dialog Dimensions*/
 .confirm-dialog.size-normal {
   width: 400px;
 }
@@ -68,7 +68,7 @@
   max-height: 80vh;
 }
 
-/* 对话框头部 */
+/* 58. Dialog Head*/
 .confirm-header {
   padding: var(--spacing-lg);
   border-bottom: 1px solid var(--border-primary);
@@ -79,7 +79,7 @@
   margin-left: var(--spacing-md);
 }
 
-/* 对话框 icon */
+/* dialogue boxicon */
 .confirm-icon {
   flex-shrink: 0;
   width: 24px;
@@ -107,7 +107,7 @@
   color: var(--success-color);
 }
 
-/* 对话框标题和内容容器 */
+/* dialogue box title and contents container*/
 .confirm-content-wrapper {
   flex: 1;
   display: flex;
@@ -155,7 +155,7 @@
   padding-right: var(--spacing-xs);
 }
 
-/* 为 message 添加滚动条样式 */
+/* Yesmessage AddScrollbar Styles*/
 .confirm-message::-webkit-scrollbar {
   width: 6px;
 }
@@ -174,7 +174,7 @@
   background: var(--text-tertiary);
 }
 
-/* 对话框主体 */
+/* dialogue box main*/
 .confirm-body {
   padding: var(--spacing-lg);
   flex: 1;
@@ -188,7 +188,7 @@
   overflow-wrap: break-word;
 }
 
-/* 为 body 添加滚动条样式 */
+/* Yesbody AddScrollbar Styles*/
 .confirm-body::-webkit-scrollbar {
   width: 6px;
 }
@@ -211,13 +211,13 @@
   padding: 0;
 }
 
-/* 表选择弹窗：表单布局，避免 confirm-body 默认换行规则影响控件对齐 */
+/* Table selects bullet windows: Form layout, avoidconfirm-body Default line break rule influence control alignment*/
 .confirm-body .table-picker-body {
   white-space: normal;
   word-break: normal;
 }
 
-/* 分组新建/编辑弹窗：取消 pre-wrap；放开 overflow，避免裁切 dbSelect 下拉 */
+/* GroupNew/EditBullet window:Cancel pre-wrap；Let go!overflow，Avoid resizingdbSelect Pull down.*/
 .confirm-body .group-dialog-body {
   white-space: normal;
   word-break: normal;
@@ -230,7 +230,7 @@
 .confirm-body .group-dialog-body .dbsyncer-select {
   display: block;
   width: 100%;
-  /* 仅作定位上下文；不设 z-index，与页面内 dbSelect 一致，避免多个下拉互相压制 */
+  /* positioning context only;noz-index，andPageInside.dbSelect Unanimously, avoid multiple pulls to suppress each other.*/
   position: relative;
 }
 
@@ -242,7 +242,7 @@
   max-width: 100%;
 }
 
-/* confirm-body 默认 overflow-y:auto 会裁切 absolute 下拉，分组弹窗改为可见 */
+/* confirm-body Defaultoverflow-y:auto Cutabsolute Several bloggers have expressed concern about the situation.GroupThe bullet window is visible.*/
 .confirm-dialog:has(.group-dialog-body) {
   overflow: visible;
 }
@@ -264,7 +264,7 @@
   height: min(320px, 36vh);
 }
 
-/* 对话框脚部 */
+/* Dialog Foot*/
 .confirm-footer {
   padding: var(--spacing-lg);
   border-top: 1px solid var(--border-primary);
@@ -275,7 +275,7 @@
   margin-left: var(--spacing-md);
 }
 
-/* 按钮样式 */
+/* Button Style*/
 .confirm-btn {
   min-width: 80px;
 }
@@ -305,7 +305,7 @@
   border-color: var(--primary-hover);
 }
 
-/* 按钮类型 - 主要 */
+/* buttonType - Main*/
 .confirm-btn-type-primary {
   background-color: var(--primary-active);
   border-color: var(--primary-active);
@@ -317,7 +317,7 @@
   border-color: var(--primary-hover);
 }
 
-/* 按钮类型 - 成功 */
+/* buttonType - Success */
 .confirm-btn-type-success {
   background-color: var(--success-color);
   border-color: var(--success-color);
@@ -329,7 +329,7 @@
   border-color: #73d13d;
 }
 
-/* 按钮类型 - 警告 */
+/* buttonType - Warning */
 .confirm-btn-type-warning {
   background-color: var(--warning-color);
   border-color: var(--warning-color);
@@ -341,7 +341,7 @@
   border-color: #ffc53d;
 }
 
-/* 按钮类型 - 危险 */
+/* buttonType - Danger.*/
 .confirm-btn-type-danger {
   background-color: var(--error-color);
   border-color: var(--error-color);
@@ -353,7 +353,7 @@
   border-color: #ff4d4f;
 }
 
-/* 按钮类型 - 信息 */
+/* buttonType - Info */
 .confirm-btn-type-info {
   background-color: var(--info-color);
   border-color: var(--info-color);
@@ -365,7 +365,7 @@
   border-color: #69b1ff;
 }
 
-/* 动画 */
+/* Animation*/
 @keyframes confirm-overlay-show {
   from {
     opacity: 0;
@@ -386,7 +386,7 @@
   }
 }
 
-/* 响应式设计 */
+/* Response Design*/
 @media (max-width: 768px) {
   .confirm-dialog.size-normal,
   .confirm-dialog.size-large,

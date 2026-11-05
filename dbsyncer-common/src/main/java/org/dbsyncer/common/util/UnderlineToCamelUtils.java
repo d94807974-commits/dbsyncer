@@ -6,11 +6,11 @@ import java.util.regex.Pattern;
 public abstract class UnderlineToCamelUtils {
 
     /**
-     * 下划线转驼峰法
+     * Underlined humping method
      *
-     * @param line       源字符串
-     * @param smallCamel 大小驼峰,是否为小驼峰
-     * @return 转换后的字符串
+     * @param line       Source String
+     * @param smallCamel Big and big.,YesNoFor the little camels.
+     * @return ConvertNext String
      */
     public static String underlineToCamel(String line, boolean smallCamel) {
         if (line == null || "".equals(line)) {
@@ -33,10 +33,10 @@ public abstract class UnderlineToCamelUtils {
     }
 
     /**
-     * 驼峰法转下划线
+     * The croaks turn down the line.
      *
-     * @param line 源字符串
-     * @return 转换后的字符串
+     * @param line Source String
+     * @return ConvertNext String
      */
     public static String camelToUnderline(String line) {
         if (line == null || "".equals(line)) {

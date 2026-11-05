@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * H2 类型映射
+ * H2 TypeTable Group
  */
 public final class H2SchemaResolver extends AbstractDatabaseSchemaResolver {
 

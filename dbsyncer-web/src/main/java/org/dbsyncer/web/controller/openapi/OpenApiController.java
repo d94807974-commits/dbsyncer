@@ -50,8 +50,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * OpenAPI控制器
- * 提供外部系统集成接口
+ * OpenAPI controller for external system integration.
  *
  * @author 穿云
  * @version 2.0.0
@@ -85,7 +84,7 @@ public class OpenApiController extends BaseController implements InitializingBea
 
     private final Map<String, InvocableHandlerMethod> handlers = new ConcurrentHashMap<>();
     /**
-     * 各 path 允许的 HTTP 方法（空表示不限制），用于 GET/POST 校验
+     * Allowed HTTP methods per path (empty means unrestricted); used for GET/POST checks.
      */
     private final Map<String, Set<RequestMethod>> handlerAllowedMethods = new ConcurrentHashMap<>();
     private final HandlerMethodArgumentResolverComposite resolvers = new HandlerMethodArgumentResolverComposite();
@@ -94,11 +93,11 @@ public class OpenApiController extends BaseController implements InitializingBea
     private static final String OPENAPI_V1_PREFIX = "/openapi/v1";
 
     /**
-     * OpenAPI v1 统一入口，将 /openapi/v1/xxx 转发到内部 Controller 的 /xxx
+     * OpenAPI v1 entry point: forwards /openapi/v1/xxx to the internal controller path /xxx.
      * <p>
-     * 示例：<br>
-     * - /openapi/v1/connector/test → 转发到 /connector/test<br>
-     * - /openapi/v1/test → 转发到 /test
+     * Examples:<br>
+     * - /openapi/v1/connector/test → /connector/test<br>
+     * - /openapi/v1/test → /test
      * </p>
      */
     @RequestMapping(value = "/v1/**")
@@ -106,15 +105,15 @@ public class OpenApiController extends BaseController implements InitializingBea
         try {
             String lookupPath = getV1LookupPath(request);
             if (lookupPath == null) {
-                return OpenApiResponse.fail(OpenApiErrorCode.BAD_REQUEST, "请求路径无效");
+                return OpenApiResponse.fail(OpenApiErrorCode.BAD_REQUEST, "Invalid request path");
             }
             InvocableHandlerMethod invocableMethod = handlers.get(lookupPath);
             if (invocableMethod == null) {
-                logger.warn("OpenAPI v1 未找到对应接口: {}", lookupPath);
-                return OpenApiResponse.fail(OpenApiErrorCode.NOT_FOUND, "接口不存在: " + lookupPath);
+                logger.warn("OpenAPI v1 no matching API: {}", lookupPath);
+                return OpenApiResponse.fail(OpenApiErrorCode.NOT_FOUND, "API not found: " + lookupPath);
             }
 
-            // GET/POST 等请求方法校验：请求方法必须在目标 handler 允许的方法列表中
+            // Validate HTTP method against the target handler allow-list
             Set<RequestMethod> allowedMethods = handlerAllowedMethods.get(lookupPath);
             if (allowedMethods != null && !allowedMethods.isEmpty()) {
                 RequestMethod requestMethod = parseRequestMethod(request.getMethod());
@@ -124,22 +123,22 @@ public class OpenApiController extends BaseController implements InitializingBea
                 }
             }
 
-            // 解密入参
+            // Decrypt request payload
             String requestBody = readRequestBody(request);
-            Assert.hasText(requestBody, "请求体不能为空");
-            // 先解析为OpenApiRequest格式（包含时间戳和nonce）
+            Assert.hasText(requestBody, "Request body must not be empty");
+            // Parse as OpenApiRequest (includes timestamp and nonce)
             OpenApiData apiData = JsonUtil.jsonToObj(requestBody, OpenApiData.class);
-            Assert.notNull(apiData, "请求数据不能为空.");
-            // 验证时间戳和Nonce（在解密之前验证，避免无效请求消耗资源）
+            Assert.notNull(apiData, "Request data must not be empty.");
+            // Validate timestamp and nonce before decrypting to avoid wasting work
             Long timestamp = apiData.getTimestamp();
             String nonce = apiData.getNonce();
             Assert.notNull(timestamp, "Timestamp is empty.");
             Assert.hasText(nonce, "Nonce is empty.");
-            Assert.isTrue(timestampValidator.validate(timestamp, nonce), "时间戳或Nonce验证失败");
+            Assert.isTrue(timestampValidator.validate(timestamp, nonce), "Timestamp or nonce validation failed");
 
-            // 解析加密请求
+            // Parse encrypted request
             RsaConfig rsaConfig = systemConfigService.getSystemConfig().getRsaConfig();
-            // 判断是否为公网场景
+            // Detect public-network scenario
             boolean isPublicNetwork = isPublicNetwork(request);
             String decryptedData = rsaManager.decrypt(rsaConfig, apiData, isPublicNetwork);
             Object json = JSON.parse(decryptedData);
@@ -147,7 +146,7 @@ public class OpenApiController extends BaseController implements InitializingBea
             ModelAndViewContainer mavContainer = new ModelAndViewContainer();
             mavContainer.addAllAttributes(RequestContextUtils.getInputFlashMap(request));
             Object result = invocableMethod.invokeForRequest(webRequest, mavContainer);
-            // 加密返回
+            // Encrypt response
             if (result instanceof RestResult) {
                 RestResult restResult = (RestResult) result;
                 if (restResult.getData() != null && restResult.isSuccess()) {
@@ -156,8 +155,8 @@ public class OpenApiController extends BaseController implements InitializingBea
             }
             return result;
         } catch (Exception e) {
-            logger.error("OpenAPI 执行失败", e);
-            return OpenApiResponse.fail(OpenApiErrorCode.INTERNAL_ERROR, "请求处理失败: " + e.getMessage());
+            logger.error("OpenAPI execution failed", e);
+            return OpenApiResponse.fail(OpenApiErrorCode.INTERNAL_ERROR, "Request processing failed: " + e.getMessage());
         }
     }
 
@@ -168,9 +167,9 @@ public class OpenApiController extends BaseController implements InitializingBea
 
     @Override
     public void afterPropertiesSet() {
-        // 初始化拦截mapping
+        // Initialize handler mapping intercept
         initHandlerMapping();
-        // 添加解析器
+        // Register argument resolvers
         resolvers.addResolvers(requestMappingHandlerAdapter.getArgumentResolvers());
     }
 
@@ -180,7 +179,7 @@ public class OpenApiController extends BaseController implements InitializingBea
         parsePackage.add("/mapping/");
         parsePackage.add("/tableGroup/");
         RequestMappingHandlerMapping mapping = applicationContext.getBean(RequestMappingHandlerMapping.class);
-        // 获取url与类和方法的对应信息
+        // Collect URL-to-handler mappings
         Map<RequestMappingInfo, HandlerMethod> map = mapping.getHandlerMethods();
         map.forEach((k, v) -> {
             PatternsRequestCondition condition = k.getPatternsCondition();
@@ -189,7 +188,7 @@ public class OpenApiController extends BaseController implements InitializingBea
             boolean filter;
             for (String path : parsePackage) {
                 filter = false;
-                // 匹配解析包
+                // Match packages to expose
                 for (Object o : array) {
                     String patternPath = (String) o;
                     if (StringUtil.startsWith(patternPath, path)) {
@@ -202,7 +201,7 @@ public class OpenApiController extends BaseController implements InitializingBea
                             }
                             return y;
                         });
-                        // 记录该 path 允许的 HTTP 方法（空表示 @RequestMapping 未指定 method，允许任意）
+                        // Record allowed HTTP methods for this path (empty = any method)
                         Set<RequestMethod> methods = k.getMethodsCondition().getMethods();
                         handlerAllowedMethods.put(patternPath, methods.isEmpty() ? Collections.emptySet() : new HashSet<>(methods));
                         filter = true;
@@ -219,74 +218,74 @@ public class OpenApiController extends BaseController implements InitializingBea
     }
 
     /**
-     * 登录接口 - 获取Token
+     * Login endpoint — obtain a token.
      * POST /openapi/auth/login
      *
-     * @param requestBody 请求体（JSON格式，包含secret）
-     * @return Token信息
+     * @param requestBody JSON body containing the API secret
+     * @return token payload
      */
     @PostMapping("/auth/login")
     public OpenApiResponse<Map<String, String>> login(@RequestBody Map<String, String> requestBody) {
         try {
             String secret = requestBody.get("secret");
             if (StringUtil.isBlank(secret)) {
-                return OpenApiResponse.fail(OpenApiErrorCode.BAD_REQUEST, "secret不能为空");
+                return OpenApiResponse.fail(OpenApiErrorCode.BAD_REQUEST, "secret must not be empty");
             }
 
-            // 验证API密钥
+            // Validate API key
             SystemConfig systemConfig = systemConfigService.getSystemConfig();
             if (!apiKeyManager.validate(systemConfig.getApiKeyConfig(), secret)) {
-                logger.error("无效凭证 {}", secret);
-                return OpenApiResponse.fail(OpenApiErrorCode.UNAUTHORIZED, "无效凭证");
+                logger.error("Invalid credentials {}", secret);
+                return OpenApiResponse.fail(OpenApiErrorCode.UNAUTHORIZED, "Invalid credentials");
             }
 
-            // 获取JWT密钥（如果不存在会自动生成）
+            // Load JWT secret (auto-generated if missing)
             Map<String, String> data = new HashMap<>();
-            data.put("token", jwtSecretManager.generateToken()); // 生成Token
-            data.put("expires", "7200"); // 2小时，单位：秒
-            return OpenApiResponse.success("登录成功", data);
+            data.put("token", jwtSecretManager.generateToken()); // generate token
+            data.put("expires", "7200"); // 2 hours, in seconds
+            return OpenApiResponse.success("Login succeeded", data);
         } catch (Exception e) {
-            logger.error("登录失败", e);
-            return OpenApiResponse.fail(OpenApiErrorCode.INTERNAL_ERROR, "登录失败: " + e.getMessage());
+            logger.error("Login failed", e);
+            return OpenApiResponse.fail(OpenApiErrorCode.INTERNAL_ERROR, "Login failed: " + e.getMessage());
         }
     }
 
     /**
-     * 刷新Token接口
+     * Refresh-token endpoint.
      * POST /openapi/auth/refresh
      *
-     * @param request 请求对象（拦截器已解析token）
-     * @return 新的Token信息
+     * @param request HTTP request (token already resolved by the interceptor)
+     * @return new token payload
      */
     @PostMapping("/auth/refresh")
     public OpenApiResponse<Map<String, String>> refreshToken(HttpServletRequest request) {
         try {
-            // 从请求头获取原Token
+            // Read the previous token from the request header
             String oldToken = request.getHeader("Authorization");
             if (oldToken != null && oldToken.startsWith("Bearer ")) {
                 oldToken = oldToken.substring(7);
             }
             if (StringUtil.isBlank(oldToken)) {
-                return OpenApiResponse.fail(OpenApiErrorCode.UNAUTHORIZED, "Token不能为空");
+                return OpenApiResponse.fail(OpenApiErrorCode.UNAUTHORIZED, "Token must not be empty");
             }
-            // 刷新Token
+            // Refresh token
             String newToken = jwtSecretManager.refreshToken(oldToken);
             if (StringUtil.isBlank(newToken)) {
-                return OpenApiResponse.fail(OpenApiErrorCode.BAD_REQUEST, "Token无效或已过期");
+                return OpenApiResponse.fail(OpenApiErrorCode.BAD_REQUEST, "Token is invalid or expired");
             }
 
             Map<String, String> data = new HashMap<>();
             data.put("token", newToken);
             data.put("expires", "7200");
-            return OpenApiResponse.success("刷新Token成功", data);
+            return OpenApiResponse.success("Token refreshed successfully", data);
         } catch (Exception e) {
-            logger.error("刷新Token失败", e);
-            return OpenApiResponse.fail(OpenApiErrorCode.INTERNAL_ERROR, "刷新Token失败: " + e.getMessage());
+            logger.error("Refresh token failed", e);
+            return OpenApiResponse.fail(OpenApiErrorCode.INTERNAL_ERROR, "Refresh token failed: " + e.getMessage());
         }
     }
 
     /**
-     * 将请求方法字符串转为 RequestMethod；不支持的方法返回 null
+     * Convert a method string to {@link RequestMethod}; returns null if unsupported.
      */
     private RequestMethod parseRequestMethod(String method) {
         if (StringUtil.isBlank(method)) {
@@ -300,7 +299,7 @@ public class OpenApiController extends BaseController implements InitializingBea
     }
 
     /**
-     * 从请求中解析 /openapi/v1 之后的路径，作为内部 handler 的 lookup key（如 /connector/test）
+     * Resolve the path after /openapi/v1 as the internal handler lookup key (e.g. /connector/test).
      */
     private String getV1LookupPath(HttpServletRequest request) {
         String uri = urlPathHelper.getLookupPathForRequest(request);
@@ -315,7 +314,7 @@ public class OpenApiController extends BaseController implements InitializingBea
     }
 
     /**
-     * 判断是否为公网场景
+     * Whether this call is treated as a public-network scenario.
      */
     private boolean isPublicNetwork(HttpServletRequest request) {
         return "true".equalsIgnoreCase(request.getHeader(HttpConstant.PUBLIC_NETWORK_HEADER));

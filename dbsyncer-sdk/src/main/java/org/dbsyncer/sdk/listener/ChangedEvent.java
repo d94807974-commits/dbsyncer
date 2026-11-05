@@ -12,7 +12,7 @@ import org.dbsyncer.sdk.model.ChangedOffset;
 import java.util.List;
 
 /**
- * 变更事件
+ * ChangeEvent
  *
  * @version 1.0.0
  * @Author AE86
@@ -21,42 +21,42 @@ import java.util.List;
 public interface ChangedEvent extends Cloneable {
 
     /**
-     * 获取traceId
+     * AccesstraceId
      */
     String getTraceId();
 
     /**
-     * 设置traceId
+     * SettingstraceId
      */
     void setTraceId(String traceId);
 
     /**
-     * 获取变更事件类型
+     * Get changesEventType
      */
     ChangedEventTypeEnum getType();
 
     /**
-     * 获取变更表名称
+     * Get Change Sheet ComorosName
      */
     String getSourceTableName();
 
     /**
-     * 获取变更表名称(DQL场景自定义表名称)
+     * Get Change Sheet ComorosName(DQLsceneCustom tableName)
      */
     void setSourceTableName(String sourceTableName);
 
     /**
-     * 获取变更事件
+     * Get changesEvent
      */
     String getEvent();
 
     /**
-     * 获取增量偏移量
+     * AccessIncrementalOffset
      */
     ChangedOffset getChangedOffset();
 
     /**
-     * 获取变更SQL
+     * Get changesSQL
      * {@link DDLChangedEvent}
      */
     default String getSql() {
@@ -64,7 +64,7 @@ public interface ChangedEvent extends Cloneable {
     }
 
     /**
-     * 获取变更行数据
+     * Get changesRow data
      * {@link RowChangedEvent}
      * {@link ScanChangedEvent}
      */

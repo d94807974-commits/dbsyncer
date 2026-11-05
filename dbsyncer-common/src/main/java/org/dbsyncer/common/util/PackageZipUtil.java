@@ -19,7 +19,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
- * 配置包 ZIP 读写辅助（formatVersion=2）。
+ * ConfigurePackageZIP Read-and-write aidsformatVersion=2）。
  *
  * @author wuji
  * @version 1.0.0
@@ -30,7 +30,7 @@ public final class PackageZipUtil {
     }
 
     /**
-     * 读取 ZIP 条目（不存在则 null）。
+     * ReadZIP Entries (non-existent)null）。
      */
     public static String readOptionalEntry(ZipFile zip, String entryName) throws IOException {
         ZipEntry entry = zip.getEntry(entryName);
@@ -41,20 +41,20 @@ public final class PackageZipUtil {
     }
 
     /**
-     * 校验 manifest.json 并解析版本信息。
+     * Verifymanifest.json And parseVersionInfo。
      */
     public static VersionInfo validateManifest(ZipFile zip) throws IOException {
         String json = readOptionalEntry(zip, PackageFormatConfig.MANIFEST);
         if (StringUtil.isBlank(json)) {
-            throw new IllegalArgumentException("不支持导入低版本或配置不完整：缺少 manifest.json");
+            throw new IllegalArgumentException("Importing a low version or configuration incomplete is not supported: missing least.json");
         }
         Map map = JsonUtil.parseMap(json);
         if (map == null) {
-            throw new IllegalArgumentException("manifest.json 无效");
+            throw new IllegalArgumentException("Invalid.json");
         }
         Object formatVersion = map.get("formatVersion");
         if (formatVersion == null) {
-            throw new IllegalArgumentException("不支持导入低版本或配置不完整");
+            throw new IllegalArgumentException("Importing a low version or configuration incomplete is not supported");
         }
         VersionInfo info = new VersionInfo();
         Object version = map.get("version");
@@ -73,7 +73,7 @@ public final class PackageZipUtil {
     }
 
     /**
-     * 遍历 table_group/*.ndjson 中非空行。
+     * Throughtable_group/*.ndjson Central African Airline.
      */
     public static void pageScanTableGroupNdjsonLines(ZipFile zip, Consumer<String> lineConsumer) throws IOException {
         if (zip == null || lineConsumer == null) {

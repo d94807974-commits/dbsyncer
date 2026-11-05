@@ -104,7 +104,7 @@ public class PostgreSQLListener extends AbstractDatabaseListener {
                 Boolean login = (Boolean) rs.getOrDefault("login", false);
                 Boolean replication = (Boolean) rs.getOrDefault("replication", false);
                 Boolean superuser = (Boolean) rs.getOrDefault("superuser", false);
-                // 阿里云 RDS from PostgreSQL
+                // Alexander.RDS from PostgreSQL
                 Boolean rds_superuser = (Boolean) rs.getOrDefault("rds_superuser", false);
                 Boolean admin = (Boolean) rs.getOrDefault("admin", false);
                 Boolean repAdmin = (Boolean) rs.getOrDefault("rep_admin", false);
@@ -131,7 +131,7 @@ public class PostgreSQLListener extends AbstractDatabaseListener {
             worker.setDaemon(false);
             worker.start();
         } catch (Exception e) {
-            logger.error("启动失败:{}", e.getMessage());
+            logger.error("Start failed: {}", e.getMessage());
             DatabaseUtil.close(stream);
             DatabaseUtil.close(connection);
             throw new PostgreSQLException(e);
@@ -152,7 +152,7 @@ public class PostgreSQLListener extends AbstractDatabaseListener {
             DatabaseUtil.close(connection);
             dropReplicationSlot();
         } catch (Exception e) {
-            logger.error("关闭失败:{}", e.getMessage());
+            logger.error("Close failed: {}", e.getMessage());
         }
     }
 
@@ -169,7 +169,7 @@ public class PostgreSQLListener extends AbstractDatabaseListener {
             captured.put(LSN_POSITION, lsn);
             return captured;
         } catch (Exception e) {
-            logger.error("捕获PostgreSQL LSN位点失败:{}", e.getMessage(), e);
+            logger.error("Failed Affirmative", e.getMessage(), e);
             return Collections.emptyMap();
         }
     }
@@ -183,13 +183,13 @@ public class PostgreSQLListener extends AbstractDatabaseListener {
         Properties props = new Properties();
         PGProperty.USER.set(props, config.getUsername());
         PGProperty.PASSWORD.set(props, config.getPassword());
-        // Postgres 9.4发布逻辑复制功能
+        // Postgres 9.4Publish LogicCopyUNDAF function
         PGProperty.ASSUME_MIN_SERVER_VERSION.set(props, "9.4");
         PGProperty.REPLICATION.set(props, "database");
         PGProperty.PREFER_QUERY_MODE.set(props, "simple");
-        // 与业务连接同库（config.getUrl() 可能未带 mapping 选库）
+        // andOperationsConnectSameLibrary（config.getUrl() Probably not.mapping SelectLibrary）
         String db = instance.execute(t -> t.queryForObject("select current_database()", String.class));
-        Assert.hasText(db, "无法解析 PostgreSQL 逻辑复制库名");
+        Assert.hasText(db, "Could not parse PostgreSQL logical copy library First Name");
         connection = DriverManager.getConnection(
                 "jdbc:postgresql://" + config.getHost() + ":" + config.getPort() + "/" + db, props);
         Assert.notNull(connection, "Unable to get connection.");
@@ -223,7 +223,7 @@ public class PostgreSQLListener extends AbstractDatabaseListener {
             List<String> rows = instance.execute(databaseTemplate ->
                     databaseTemplate.queryForList(GET_RESTART_LSN, new Object[]{slotName, plugin}, String.class));
             if (CollectionUtils.isEmpty(rows)) {
-                throw new PostgreSQLException("复制槽找不到 restart_lsn: " + slotName);
+                throw new PostgreSQLException("Copy slot not found " + slotName);
             }
             LogSequenceNumber lsn = LogSequenceNumber.valueOf(rows.get(0));
             if (null == lsn || lsn.asLong() == 0) {

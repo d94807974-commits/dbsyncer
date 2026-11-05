@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 日志类型枚举
+ * LogTypeEnumeration
  *
  * @author AE86
  * @version 1.0.0
@@ -14,28 +14,28 @@ import java.util.stream.Collectors;
 public interface LogType {
 
     /**
-     * 分类名称
+     * minCategoryName
      *
      * @return
      */
     String getName();
 
     /**
-     * 类型
+     * Type
      *
      * @return
      */
     String getType();
 
     /**
-     * 内容
+     * Contents
      *
      * @return
      */
     String getMessage();
 
     /**
-     * 全部日志模块枚举；新增模块时在此追加即可。
+     * AllLogModule(a) Enumeration;InsertModuleI'll just add it here.
      */
     LogType[][] ALL = {
             SystemLog.values(),
@@ -50,7 +50,7 @@ public interface LogType {
     };
 
     /**
-     * 按 type 码解析模块名；未匹配时返回原 type。
+     * Presstype Code ParsingModulenames; when not matchedBackOriginaltype。
      */
     static String getNameByType(String type) {
         LogType matched = findByType(type);
@@ -58,7 +58,7 @@ public interface LogType {
     }
 
     /**
-     * 按 type 码查找枚举；未匹配返回 null。
+     * Presstype code search count; Article not matchedBack null。
      */
     static LogType findByType(String type) {
         if (type == null) {
@@ -83,8 +83,8 @@ public interface LogType {
     }
 
     /**
-     * 操作日志可选模块名（排除登录），按 {@link #ALL} 顺序去重。
-     * <p>同组共享 {@link #getName()}，取组首项即可。
+     * Operation logsOptionalModuleName (Exclusion)Login），Press{@link #ALL} Order to heavy.
+     * <p>GroupTotalHen.{@link #getName()}，Select the first entry of the group.
      */
     static List<String> listOperModuleNames() {
         return Arrays.stream(ALL)
@@ -95,7 +95,7 @@ public interface LogType {
     }
 
     /**
-     * 按模块名汇总类型码（逗号拼接），供 IN 查询；未匹配返回 {@code null}。
+     * PressModuleDivisionTypeCode (coma spell) forIN queries;not matchingBack {@code null}。
      */
     static String joinTypesByModuleName(String moduleName) {
         if (moduleName == null || moduleName.isEmpty()) {
@@ -111,22 +111,22 @@ public interface LogType {
     }
 
     /**
-     * 系统日志1
+     * System Log1
      */
     enum SystemLog implements LogType {
 
         /**
-         * 正常
+         * Normal
          */
-        INFO("10", "正常"),
+        INFO("10", "Normal"),
         /**
-         * 警告
+         * Warning
          */
-        WARN("11", "警告"),
+        WARN("11", "Warning"),
         /**
-         * 错误
+         * Error
          */
-        ERROR("12", "错误");
+        ERROR("12", "Error");
 
         private String type;
         private String message;
@@ -138,7 +138,7 @@ public interface LogType {
 
         @Override
         public String getName() {
-            return "系统日志";
+            return "System Log";
         }
 
         @Override
@@ -153,11 +153,11 @@ public interface LogType {
     }
 
     /**
-     * 连接器2
+     * Connector2
      */
     enum ConnectorLog implements LogType {
 
-        INSERT("20", "新增"), UPDATE("21", "修改"), DELETE("22", "删除"), FAILED("23", "连接失败"), COPY("25", "复制");
+        INSERT("20", "Insert"), UPDATE("21", "Update"), DELETE("22", "Delete"), FAILED("23", "Connection failed"), COPY("25", "Copy");
 
         private String type;
         private String message;
@@ -169,7 +169,7 @@ public interface LogType {
 
         @Override
         public String getName() {
-            return "连接器";
+            return "Connector";
         }
 
         @Override
@@ -184,11 +184,11 @@ public interface LogType {
     }
 
     /**
-     * 驱动3
+     * Mapping3
      */
     enum MappingLog implements LogType {
 
-        INSERT("30", "新增"), UPDATE("31", "修改"), DELETE("32", "删除"), RUNNING("33", "启动"), STOP("34", "停止"), CLEAR_DATA("35", "清空同步数据"), COPY("36", "复制");
+        INSERT("30", "Insert"), UPDATE("31", "Update"), DELETE("32", "Delete"), RUNNING("33", "Start"), STOP("34", "Stop"), CLEAR_DATA("35", "Empty Sync Data"), COPY("36", "Copy");
 
         private String type;
         private String message;
@@ -200,7 +200,7 @@ public interface LogType {
 
         @Override
         public String getName() {
-            return "同步任务";
+            return "Sync task";
         }
 
         @Override
@@ -215,11 +215,11 @@ public interface LogType {
     }
 
     /**
-     * 映射关系4
+     * Mapping4
      */
     enum TableGroupLog implements LogType {
 
-        INSERT("40", "新增"), UPDATE("41", "修改"), DELETE("42", "删除"), INCREMENT_FAILED("43", "增量同步异常"), FULL_FAILED("44", "全量同步异常"), COPY("45", "复制");
+        INSERT("40", "Insert"), UPDATE("41", "Update"), DELETE("42", "Delete"), INCREMENT_FAILED("43", "Incremental sync anomaly"), FULL_FAILED("44", "Full sync anomaly"), COPY("45", "Copy");
 
         private String type;
         private String message;
@@ -231,7 +231,7 @@ public interface LogType {
 
         @Override
         public String getName() {
-            return "映射关系";
+            return "Mapping";
         }
 
         @Override
@@ -246,11 +246,11 @@ public interface LogType {
     }
 
     /**
-     * 元信息5
+     * MetaInfo5
      */
     enum MetaLog implements LogType {
 
-        DELETE("50", "删除"), CLEAR("51", "删除数据");
+        DELETE("50", "Delete"), CLEAR("51", "Delete Data");
 
         private String type;
         private String message;
@@ -262,7 +262,7 @@ public interface LogType {
 
         @Override
         public String getName() {
-            return "元信息";
+            return "MetaInfo";
         }
 
         @Override
@@ -277,11 +277,11 @@ public interface LogType {
     }
 
     /**
-     * 插件信息6
+     * PluginInfo6
      */
     enum PluginLog implements LogType {
 
-        UPDATE("60", "上传成功"), CHECK_ERROR("61", "格式不正确"), DELETE("62", "删除成功");
+        UPDATE("60", "Upload Apartment"), CHECK_ERROR("61", "Malformed"), DELETE("62", "Deleted successfully");
 
         private String type;
         private String message;
@@ -293,7 +293,7 @@ public interface LogType {
 
         @Override
         public String getName() {
-            return "插件";
+            return "Plugin";
         }
 
         @Override
@@ -308,11 +308,11 @@ public interface LogType {
     }
 
     /**
-     * 缓存配置信息7
+     * CacheConfiguration7
      */
     enum CacheLog implements LogType {
 
-        IMPORT("70", "导入配置"), IMPORT_ERROR("71", "导入配置异常"), EXPORT("72", "导出配置");
+        IMPORT("70", "Import Configuration"), IMPORT_ERROR("71", "Import Configuration Abnormal"), EXPORT("72", "Export Configuration");
 
         private String type;
         private String message;
@@ -324,7 +324,7 @@ public interface LogType {
 
         @Override
         public String getName() {
-            return "配置";
+            return "Configure";
         }
 
         @Override
@@ -339,12 +339,12 @@ public interface LogType {
     }
 
     /**
-     * 用户日志8
+     * User log8
      */
     enum UserLog implements LogType {
 
-        INSERT("80", "新增"), UPDATE("81", "修改"), DELETE("82", "删除"), UPLOAD_LICENSE_FILE("83", "上传授权许可文件"), UPLOAD_LICENSE_FILE_ERROR("84", "上传授权许可文件失败"), ACTIVATE_FREE_LICENSE_FILE("85", "激活授权许可文件"),
-        ACTIVATE_FREE_LICENSE_FILE_ERROR("86", "激活授权许可文件失败"), DELETE_LICENSE_FILE("87", "删除授权许可文件"), DELETE_LICENSE_FILE_ERROR("88", "删除授权许可文件失败");
+        INSERT("80", "Insert"), UPDATE("81", "Update"), DELETE("82", "Delete"), UPLOAD_LICENSE_FILE("83", "Upload Authorization File"), UPLOAD_LICENSE_FILE_ERROR("84", "Failed to upload authorization file CONCERNING"), ACTIVATE_FREE_LICENSE_FILE("85", "Activate Authorization File"),
+        ACTIVATE_FREE_LICENSE_FILE_ERROR("86", "Failed to activate authorisation file"), DELETE_LICENSE_FILE("87", "Delete Authorization File"), DELETE_LICENSE_FILE_ERROR("88", "Failed to delete permission file");
 
         private String type;
         private String message;
@@ -356,7 +356,7 @@ public interface LogType {
 
         @Override
         public String getName() {
-            return "用户日志";
+            return "User log";
         }
 
         @Override
@@ -371,11 +371,11 @@ public interface LogType {
     }
 
     /**
-     * 登录日志9
+     * Login logs9
      */
     enum LoginLog implements LogType {
 
-        SUCCESS("90", "登录成功"), FAIL("91", "登录失败");
+        SUCCESS("90", "Login succeeded"), FAIL("91", "Login failed");
 
         private String type;
         private String message;
@@ -387,7 +387,7 @@ public interface LogType {
 
         @Override
         public String getName() {
-            return "登录日志";
+            return "Login logs";
         }
 
         @Override

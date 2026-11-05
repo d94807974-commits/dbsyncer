@@ -12,7 +12,7 @@ import org.springframework.util.Assert;
 import java.util.Map;
 
 /**
- * 定时配置
+ * Time Configuration
  *
  * @author AE86
  * @version 1.0.0

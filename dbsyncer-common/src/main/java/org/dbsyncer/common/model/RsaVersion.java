@@ -4,26 +4,26 @@
 package org.dbsyncer.common.model;
 
 /**
- * RSA配置
+ * RSAConfigure
  *
  * @version 1.0.0
- * @Author 穿云
+ * @Author The clouds.
  * @Date 2026-02-06 08:30
  */
 public class RsaVersion extends ConfigVersion {
 
     /**
-     * RSA公钥
+     * RSA Public Key
      */
     private String publicKey;
 
     /**
-     * RSA私钥
+     * RSA private key
      */
     private String privateKey;
 
     /**
-     * 密钥长度
+     * KeyLength
      */
     private int keyLength = 2048;
 

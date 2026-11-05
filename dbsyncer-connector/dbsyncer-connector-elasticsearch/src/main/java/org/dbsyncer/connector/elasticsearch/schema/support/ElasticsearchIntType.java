@@ -11,10 +11,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * ES 整数类型
- * 支持: integer
+ * ES IntegerType
+ * Support: integer
  *
- * @Author 穿云
+ * @Author The clouds.
  * @Version 1.0.0
  * @Date 2026-01-11 22:21
  */
@@ -26,7 +26,7 @@ public final class ElasticsearchIntType extends IntType {
         INTEGER("integer"),
         INT("INT"),
         LONG("LONG"),
-        VERSION("version"); /* 专门用于存储文档版本号,乐观锁,防止并发更新时的数据冲突 */
+        VERSION("version"); /* For storage of documentsVersionNo. No.,The optimism lock.,Prevent data conflicts when updating*/
 
         private final String value;
 

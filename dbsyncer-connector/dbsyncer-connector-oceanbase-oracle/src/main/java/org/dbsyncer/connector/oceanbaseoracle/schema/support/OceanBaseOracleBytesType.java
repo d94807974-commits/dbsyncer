@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * OceanBase Oracle 模式二进制类型（标准 JDBC Blob）
+ * OceanBase Oracle Mode BinaryType（StandardJDBC Blob）
  *
  * @author wuji
  * @version 1.0.0

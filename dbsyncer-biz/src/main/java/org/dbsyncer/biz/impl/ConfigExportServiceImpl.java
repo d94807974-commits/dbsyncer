@@ -37,8 +37,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 /**
- * 流式 ZIP 配置导出：system/user/connector/task/meta 写 JSON 数组，
- * table_group 按 taskId 分文件写 NDJSON；task.json 含同步/校验/迁移全量任务；
+ * FluidZIP ConfigureExport：system/user/connector/task/meta WriteJSON array,
+ * table_group PresstaskId minDocumentationWriteNDJSON；task.json Include sync/check/transferFullTasks；
  * task_detail.json 仅含任务 ID 清单，导入时预建空分表（不导出行数据）。
  *
  * @author AE86
@@ -69,10 +69,10 @@ public class ConfigExportServiceImpl implements ConfigExportService {
     @Override
     public void exportZip(OutputStream out, VersionInfo versionInfo) throws IOException {
         if (out == null) {
-            throw new BizException("导出输出流不能为空");
+            throw new BizException("Export output stream cannot be empty");
         }
         if (versionInfo == null) {
-            throw new BizException("版本信息不能为空");
+            throw new BizException("Version information cannot be empty");
         }
 
         Map<String, Integer> counts = new LinkedHashMap<>();
@@ -122,9 +122,9 @@ public class ConfigExportServiceImpl implements ConfigExportService {
     }
 
     /**
-     * 导出 dbsyncer_task 全表：同步(mapping)、订正校验(VALIDATE_SYNC)、整库迁移(DATABASE_SYNC)。
+     * Export dbsyncer_task Full table: Synchronization(mapping)、Data validation(VALIDATE_SYNC)、Database migration(DATABASE_SYNC)。
      *
-     * @param taskIds 收集任务 ID，供导出 task_detail 分表结构清单
+     * @param taskIds CollectionTasks ID，ForExport task_detail minTable schemaList
      */
     private int writeAllTasks(ZipOutputStream zos, List<String> taskIds) throws IOException {
         List<Map<String, Object>> tasks = taskProfile.listAllTaskJsonMaps();
@@ -139,7 +139,7 @@ public class ConfigExportServiceImpl implements ConfigExportService {
     }
 
     /**
-     * 导出 task_detail 动态分表结构清单（仅 taskIds，不导出行数据）。
+     * Export task_detail DynamicShit.minTable schemaListtaskIds，Oh, no.ExportRow data）。
      */
     private int writeTaskDetailSchemas(ZipOutputStream zos, List<String> taskIds) throws IOException {
         writeBytes(zos, PackageFormatConfig.TASK_DETAIL,
@@ -148,7 +148,7 @@ public class ConfigExportServiceImpl implements ConfigExportService {
     }
 
     /**
-     * 按 taskId 分文件写出 table_group NDJSON。
+     * PresstaskId minDocumentationWritetable_group NDJSON。
      */
     private int writeTableGroupsToZip(ZipOutputStream zos) throws IOException {
         String[] currentTaskId = {null};
@@ -170,7 +170,7 @@ public class ConfigExportServiceImpl implements ConfigExportService {
                     writer[0].newLine();
                     count[0]++;
                 } catch (IOException e) {
-                    throw new BizException("导出 table_group 失败: " + e.getMessage(), e);
+                    throw new BizException("Export of table group failed: " + e.getMessage(), e);
                 }
             });
         } finally {

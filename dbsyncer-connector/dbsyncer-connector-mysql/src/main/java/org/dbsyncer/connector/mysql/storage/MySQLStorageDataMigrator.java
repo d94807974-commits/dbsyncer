@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * MySQL 存储兼容升级（临时，随 StorageDataMigrator 一并可删）。
+ * MySQL Storage compatibility upgrade (temporary, withStorageDataMigrator One can be deleted.
  *
  * @author wuji
  * @version 1.0.0

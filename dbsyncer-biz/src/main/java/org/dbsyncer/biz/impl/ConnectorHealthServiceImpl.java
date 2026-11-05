@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 /**
- * 连接器健康检查服务
+ * ConnectorHealth screening services
  *
  * @author wuji
  * @version 1.0.0

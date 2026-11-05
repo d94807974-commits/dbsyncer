@@ -6,7 +6,7 @@ package org.dbsyncer.parser;
 import org.dbsyncer.parser.model.SystemConfig;
 
 /**
- * 系统配置（{@code dbsyncer_config}）读写。
+ * System settings（{@code dbsyncer_config}）Read and write.
  *
  * @author wuji
  * @version 1.0.0
@@ -14,30 +14,30 @@ import org.dbsyncer.parser.model.SystemConfig;
 public interface SystemConfigProfile {
 
     /**
-     * 获取系统配置。
+     * AccessSystem settings。
      */
     SystemConfig getSystemConfig();
 
     /**
-     * 保存系统配置（新增或更新）。
+     * SaveSystem settings（Insertor update).
      */
     void saveSystemConfig(SystemConfig config);
 
     /**
-     * 系统配置行数。
+     * System settingsLine number.
      */
     int countSystemConfigs();
 
     /**
-     * 从 system.json 数组导入。
+     * Fromsystem.json ArrayImport。
      */
     void importFromJson(String json);
 
     /**
-     * 生成并保存 API 密钥（OpenAPI 登录凭证）
-     * 返回明文密钥，仅展示一次，请妥善保管
+     * GenerateandSave API KeyOpenAPI Login)
+     * BackExpress key, show it only once. Keep it safe.
      *
-     * @return 新生成的 API 密钥
+     * @return NewGenerateYes.API Key
      */
     String generateApiSecret();
 }

@@ -4,7 +4,7 @@
 package org.dbsyncer.connector.gaussdbmysql.constant;
 
 /**
- * GaussDB MySQL 兼容连接配置常量
+ * GaussDB MySQL CompatibilityConnectConfigureConstant
  *
  * @author wuji
  * @version 1.0.0

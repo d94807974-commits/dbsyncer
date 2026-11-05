@@ -10,14 +10,14 @@ package org.dbsyncer.common.enums;
  */
 public enum TaskLevelEnum {
     /**
-     * 0 任务级别（顶层任务）
+     * 0 Task level（Top LevelTasks）
      */
-    TASK(0, "任务级别"),
+    TASK(0, "Task level"),
 
     /**
-     * 1 任务明细级别
+     * 1 Task detail level
      */
-    TASK_DETAIL(1, "任务明细级别");
+    TASK_DETAIL(1, "Task detail level");
 
     private final int code;
     private final String desc;
