@@ -1,0 +1,347 @@
+/**
+ * DBSyncer Copyright 2020-2023 All Rights Reserved.
+ */
+package org.realtimeetl.biz.checker.impl.tablegroup;
+
+import org.realtimeetl.biz.BizException;
+import org.realtimeetl.biz.RepeatedTableGroupException;
+import org.realtimeetl.biz.checker.AbstractChecker;
+import org.realtimeetl.common.model.ConfigModel;
+import org.realtimeetl.common.util.CollectionUtils;
+import org.realtimeetl.common.util.JsonUtil;
+import org.realtimeetl.common.util.StringUtil;
+import org.realtimeetl.parser.MappingProfile;
+import org.realtimeetl.parser.ParserComponent;
+import org.realtimeetl.parser.TableGroupProfile;
+import org.realtimeetl.parser.model.FieldMapping;
+import org.realtimeetl.parser.model.Mapping;
+import org.realtimeetl.parser.model.TableGroup;
+import org.realtimeetl.parser.util.ConnectorInstanceUtil;
+import org.realtimeetl.parser.util.ConnectorServiceContextUtil;
+import org.realtimeetl.parser.util.PickerUtil;
+import org.realtimeetl.sdk.connector.DefaultConnectorServiceContext;
+import org.realtimeetl.sdk.constant.ConfigConstant;
+import org.realtimeetl.sdk.model.Field;
+import org.realtimeetl.sdk.model.MetaInfo;
+import org.realtimeetl.sdk.model.Table;
+import org.realtimeetl.sdk.model.ValidateSyncTask;
+import org.realtimeetl.sdk.util.PrimaryKeyUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
+
+/**
+ * @author AE86
+ * @version 1.0.0
+ * @date 2020-01-08 15:17
+ */
+@Component
+public class TableGroupChecker extends AbstractChecker {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Resource
+    private ParserComponent parserComponent;
+
+    @Resource
+    private MappingProfile mappingProfile;
+
+    @Resource
+    private TableGroupProfile tableGroupProfile;
+
+    @Override
+    public ConfigModel checkAddConfigModel(Map<String, String> params) {
+        logger.info("params:{}", params);
+        String mappingId = params.get("mappingId");
+        String sourceTable = params.get("sourceTable");
+        String targetTable = params.get("targetTable");
+        String sourceType = params.get("sourceType");
+        String targetType = params.get("targetType");
+        String sourceTablePK = params.get("sourceTablePK");
+        String targetTablePK = params.get("targetTablePK");
+        String fieldMappings = params.get("fieldMappings");
+        Assert.hasText(mappingId, "tableGroup mappingId is empty.");
+        Assert.hasText(sourceTable, "tableGroup sourceTable is empty.");
+        Assert.hasText(targetTable, "tableGroup targetTable is empty.");
+        Assert.hasText(sourceType, "tableGroup sourceType is empty.");
+        Assert.hasText(targetType, "tableGroup targetType is empty.");
+        Mapping mapping = mappingProfile.get(mappingId);
+        Assert.notNull(mapping, "mapping can not be null.");
+
+        // InspectionYesNoDuplicationMapping（BatchInsertMay beService Skipped after pre-checking)
+        if (!StringUtil.equals(params.get("skipRepeatedCheck"), Boolean.TRUE.toString())) {
+            checkRepeatedTable(mappingId, sourceTable, targetTable);
+        }
+
+        // AccessConnectorInfo
+        TableGroup tableGroup = new TableGroup();
+        tableGroup.setTaskId(mappingId);
+        Table source = findTable(mapping.getSourceTable(), sourceTable, sourceType);
+        Table target = findTable(mapping.getTargetTable(), targetTable, targetType);
+        tableGroup.setSourceTable(updateTableColumn(mapping, ConnectorInstanceUtil.SOURCE_SUFFIX, sourceTablePK, source));
+        tableGroup.setTargetTable(updateTableColumn(mapping, ConnectorInstanceUtil.TARGET_SUFFIX, targetTablePK, target));
+
+        // UpdateBasicConfigure
+        this.modifyConfigModel(tableGroup, params);
+
+        // Match SimilarFieldMapping
+        if (StringUtil.isNotBlank(fieldMappings)) {
+            matchFieldMapping(tableGroup, fieldMappings);
+        } else {
+            matchFieldMapping(tableGroup);
+        }
+
+        // MergeConfigure
+        mergeConfig(mapping, tableGroup);
+
+        return tableGroup;
+    }
+
+    @Override
+    public ConfigModel checkEditConfigModel(Map<String, String> params) {
+        logger.info("params:{}", params);
+        Assert.notEmpty(params, "TableGroupChecker check params is null.");
+        String id = params.get(ConfigConstant.CONFIG_MODEL_ID);
+        TableGroup tableGroup = tableGroupProfile.getTableGroup(id);
+        Assert.notNull(tableGroup, "Can not find tableGroup.");
+        Mapping mapping = mappingProfile.get(tableGroup.getTaskId());
+        Assert.notNull(mapping, "mapping can not be null.");
+        String fieldMappingJson = params.get("fieldMapping");
+        Assert.hasText(fieldMappingJson, "TableGroupChecker check params fieldMapping is empty");
+
+        // UpdateBasicConfigure
+        this.modifyConfigModel(tableGroup, params);
+
+        // UpdateAdvanced settings：Filter Conditions/Convert Configuration/Plugin Configuration
+        this.modifySuperConfigModel(tableGroup, params);
+
+        // FieldMapping
+        setFieldMapping(tableGroup, fieldMappingJson);
+
+        // MergeConfigure
+        mergeConfig(mapping, tableGroup);
+
+        return tableGroup;
+    }
+
+    public Table findTable(List<Table> tables, String tableName, String type) {
+        if (!CollectionUtils.isEmpty(tables)) {
+            Optional<Table> first = tables.stream().filter(table->table.getName().equals(tableName) && table.getType().equals(type)).findFirst();
+            if (first.isPresent()) {
+                return first.get();
+            }
+        }
+        throw new BizException("TableName not found.");
+    }
+
+    /**
+     * Refresh tablesField
+     */
+    public void refreshTableFields(TableGroup tableGroup) {
+        Mapping mapping = mappingProfile.get(tableGroup.getTaskId());
+        Assert.notNull(mapping, "mapping can not be null.");
+
+        Table sourceTable = tableGroup.getSourceTable();
+        Table targetTable = tableGroup.getTargetTable();
+        List<String> sourceTablePks = sourceTable.getColumn().stream().filter(Field::isPk).map(Field::getName).collect(Collectors.toList());
+        List<String> targetTablePks = targetTable.getColumn().stream().filter(Field::isPk).map(Field::getName).collect(Collectors.toList());
+        updateTableColumn(mapping, ConnectorInstanceUtil.SOURCE_SUFFIX, StringUtil.join(sourceTablePks, ","), sourceTable);
+        updateTableColumn(mapping, ConnectorInstanceUtil.TARGET_SUFFIX, StringUtil.join(targetTablePks, ","), targetTable);
+    }
+
+    public void mergeConfig(Mapping mapping, TableGroup tableGroup) {
+        // MergeAdvanced settings
+        TableGroup group = PickerUtil.mergeTableGroupConfig(mapping, tableGroup);
+        Map<String, String> command = parserComponent.getCommand(mapping, group);
+        tableGroup.setCommand(command);
+    }
+
+    /**
+     * Revised verification tasks：MergeTasksLevel filter etc.andTable groupsConfigureBack
+     *
+     * @param task       Revised verification tasks
+     * @param tableGroup AlreadyEnduringTable Group
+     */
+    public void mergeConfig(ValidateSyncTask task, TableGroup tableGroup) {
+        TableGroup group = PickerUtil.mergeTableGroupConfig(task, tableGroup);
+        Map<String, String> command = parserComponent.getCommand(task, group);
+        tableGroup.setCommand(command);
+    }
+
+    private Table updateTableColumn(Mapping mapping, String suffix, String primaryKeyStr, Table table) {
+        boolean isSource = StringUtil.equals(ConnectorInstanceUtil.SOURCE_SUFFIX, suffix);
+        DefaultConnectorServiceContext context = ConnectorServiceContextUtil.buildConnectorServiceContext(mapping, isSource);
+        updateTableColumn(context, primaryKeyStr, table);
+        return table;
+    }
+
+    public Table updateTableColumn(DefaultConnectorServiceContext context, String primaryKeyStr, Table table) {
+        context.addTablePattern(table);
+        List<MetaInfo> metaInfos = parserComponent.getMetaInfo(context);
+        MetaInfo metaInfo = CollectionUtils.isEmpty(metaInfos) ? null : metaInfos.get(0);
+        Assert.notNull(metaInfo, "Could not close temporary folder: %s");
+        // CustomPrimary key
+        if (StringUtil.isNotBlank(primaryKeyStr) && !CollectionUtils.isEmpty(metaInfo.getColumn())) {
+            String[] pks = StringUtil.split(primaryKeyStr, StringUtil.COMMA);
+            Arrays.stream(pks).forEach(pk-> {
+                for (Field field : metaInfo.getColumn()) {
+                    if (StringUtil.equalsIgnoreCase(field.getName(), pk)) {
+                        field.setPk(true);
+                        break;
+                    }
+                }
+            });
+        }
+        table.setColumn(metaInfo.getColumn());
+        return table;
+    }
+
+    public void checkRepeatedTable(String mappingId, String sourceTable, String targetTable) {
+        if (tableGroupProfile.existTableGroup(mappingId, sourceTable, targetTable)) {
+            final String error = String.format("Map relationship already 256. %s > %s", sourceTable, targetTable);
+            logger.error(error);
+            throw new RepeatedTableGroupException(error);
+        }
+    }
+
+    public void matchFieldMapping(TableGroup tableGroup) {
+        List<Field> sCol = tableGroup.getSourceTable().getColumn();
+        List<Field> tCol = tableGroup.getTargetTable().getColumn();
+        if (CollectionUtils.isEmpty(sCol) || CollectionUtils.isEmpty(tCol)) {
+            return;
+        }
+
+        Map<String, Field> m1 = new LinkedHashMap<>();
+        Map<String, Field> m2 = new LinkedHashMap<>();
+        shuffleColumn(sCol, m1);
+        shuffleColumn(tCol, m2);
+
+        // Fuzzy matches are similarField
+        AtomicBoolean existSourcePKFieldMapping = new AtomicBoolean();
+        AtomicBoolean existTargetPKFieldMapping = new AtomicBoolean();
+        m1.forEach((s, f1)->m2.computeIfPresent(s, (t, f2)-> {
+            tableGroup.getFieldMapping().add(new FieldMapping(f1, f2));
+            if (f1.isPk()) {
+                existSourcePKFieldMapping.set(true);
+            }
+            if (f2.isPk()) {
+                existTargetPKFieldMapping.set(true);
+            }
+            return f2;
+        }));
+
+        // Nothing.Primary keyMapping，FirstPrimary keyAsMapping
+        if (!existSourcePKFieldMapping.get() || !existTargetPKFieldMapping.get()) {
+            List<String> sourceTablePrimaryKeys = PrimaryKeyUtil.findTablePrimaryKeys(tableGroup.getSourceTable());
+            List<String> targetTablePrimaryKeys = PrimaryKeyUtil.findTablePrimaryKeys(tableGroup.getTargetTable());
+            Assert.isTrue(!CollectionUtils.isEmpty(sourceTablePrimaryKeys) && !CollectionUtils.isEmpty(targetTablePrimaryKeys), "Data source and target source tables must contain primary keys.");
+            String sPK = sourceTablePrimaryKeys.stream().findFirst().get().toUpperCase();
+            String tPK = targetTablePrimaryKeys.stream().findFirst().get().toUpperCase();
+            tableGroup.getFieldMapping().add(new FieldMapping(m1.get(sPK), m2.get(tPK)));
+        }
+    }
+
+    public void matchFieldMapping(TableGroup tableGroup, String fieldMappings) {
+        // A1|A2,B1|B2,|C2
+        List<Field> sCol = tableGroup.getSourceTable().getColumn();
+        List<Field> tCol = tableGroup.getTargetTable().getColumn();
+        if (CollectionUtils.isEmpty(sCol) || CollectionUtils.isEmpty(tCol) || StringUtil.isBlank(fieldMappings)) {
+            return;
+        }
+
+        Map<String, Field> sMap = sCol.stream().collect(Collectors.toMap(Field::getName, filed->filed));
+        Map<String, Field> tMap = tCol.stream().collect(Collectors.toMap(Field::getName, filed->filed));
+        List<FieldMapping> fieldMappingList = tableGroup.getFieldMapping();
+        Set<String> exist = new HashSet<>();
+        String[] fieldMapping = StringUtil.split(fieldMappings, StringUtil.COMMA);
+        for (String mapping : fieldMapping) {
+            String[] m = StringUtil.split(mapping, StringUtil.VERTICAL_LINE);
+            if (m.length == 2) {
+                String sName = m[0];
+                String tName = m[1];
+                if (!exist.contains(mapping) && sMap.containsKey(sName) && tMap.containsKey(tName)) {
+                    fieldMappingList.add(new FieldMapping(sMap.get(sName), tMap.get(tName)));
+                    exist.add(mapping);
+                }
+                continue;
+            }
+
+            // |C2,C3|
+            if (m.length == 1) {
+                String name = m[0];
+                if (StringUtil.startsWith(mapping, StringUtil.VERTICAL_LINE)) {
+                    if (!exist.contains(mapping)) {
+                        tMap.computeIfPresent(name, (k, field)-> {
+                            fieldMappingList.add(new FieldMapping(null, field));
+                            exist.add(mapping);
+                            return field;
+                        });
+                    }
+                    continue;
+                }
+                if (!exist.contains(mapping)) {
+                    sMap.computeIfPresent(name, (k, field)-> {
+                        fieldMappingList.add(new FieldMapping(field, null));
+                        exist.add(mapping);
+                        return field;
+                    });
+                }
+            }
+        }
+        exist.clear();
+    }
+
+    private void shuffleColumn(List<Field> col, Map<String, Field> map) {
+        col.forEach(f->map.putIfAbsent(f.getName().toUpperCase(), f));
+    }
+
+    /**
+     * ParsingMapping
+     *
+     * @param tableGroup
+     * @param json       [{"source":"id","target":"id"}]
+     * @return
+     */
+    public void setFieldMapping(TableGroup tableGroup, String json) {
+        List<Map> mappings = JsonUtil.parseList(json);
+        if (null == mappings) {
+            throw new BizException("Mapping cannot be empty");
+        }
+
+        final Map<String, Field> sMap = PickerUtil.convert2Map(tableGroup.getSourceTable().getColumn());
+        final Map<String, Field> tMap = PickerUtil.convert2Map(tableGroup.getTargetTable().getColumn());
+        int length = mappings.size();
+        List<FieldMapping> list = new ArrayList<>();
+        Map row = null;
+        Field s = null;
+        Field t = null;
+        for (int i = 0; i < length; i++) {
+            row = mappings.get(i);
+            s = sMap.get(row.get("source"));
+            t = tMap.get(row.get("target"));
+            if (null == s && null == t) {
+                continue;
+            }
+
+            if (null != t) {
+                t.setPk((Boolean) row.get("pk"));
+            }
+            list.add(new FieldMapping(s, t));
+        }
+        tableGroup.setFieldMapping(list);
+    }
+
+}

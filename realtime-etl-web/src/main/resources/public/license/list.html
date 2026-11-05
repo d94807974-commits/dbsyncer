@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<!-- Introduction QRCode Library -->
+<script th:src="@{/plugins/js/qrcodejs/qrcode.min.js}"></script>
+<!-- CommunityTip -->
+<div th:if="${editionInfo.edition eq 'community'}" class="text-center">
+    <h3 class="text-xl text-center text-gray-500">[[${editionInfo.editionName}]]</h3>
+
+ <!-- Introduction to stumbler functionality -->
+    <div class="bg-info/10 border border-info rounded-lg p-4 mb-6 text-left">
+        <h4 class="text-lg font-semibold text-info mb-2">
+ <i class="fa fa-star"></i> Professional layout advantage
+        </h4>
+        <p class="text-sm text-secondary mb-3">
+ Professional editions provide enterprises with stronger data synchronization capabilities，Support more advanced functionality，Help your digital transformation。
+        </p>
+        <ul class="text-sm text-secondary mb-3 pl-4">
+ <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>Advanced Synchronization</strong>：Support◦ Revised Validation、Library Migration，Meeting enterprise-level data security needs
+            </li>
+ <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>Cluster distribution</strong>：Multiple syncs faster and more steady.，Support for high availability（HA）—It's a single malfunction.、It's business.，It can be dynamically expanded.
+            </li>
+ <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>Performance optimization</strong>：IncrementalSynchronization Performance Enhancement 5-10
+ Double，Supporting High-Standing scenes
+            </li>
+ <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>Exclusive services</strong>：1Yeah.1Special service.，7×24Hour-based remote support
+            </li>
+ <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>Data security</strong>：Encrypted transfer of (17%) enterprise-level data，Multiple EURM
+            </li>
+ <li><i class="fa fa-angle-right text-info"></i> <strong>OpenSourceCommunity</strong>：Community activity，A large number of firms are certified in the production environment，Continuous optimization of product functionsUpdate，ProfessionalUsersPriority for new editions
+            </li>
+        </ul>
+        <p class="text-sm text-secondary">
+ Make data synchronize more efficient、Safer.、More stable.。
+        </p>
+    </div>
+
+    <p class="text-secondary mb-6">
+ This feature is open only in the professional version，Please download.
+        <a href="https://gitee.com/ghi/realtime-etl/releases"
+           class="text-primary hover-underline font-medium"
+ title="Download Professional Edit realtime-etl-enterprise-x.x.x-bin.zip"
+           target="_blank">
+ <i class="fa fa-download"></i> Professional
+        </a>
+    </p>
+</div>
+<!-- ProfessionalTip -->
+<div th:if="${(not (editionInfo.edition eq 'community')) and #strings.isEmpty(key)}" class="text-center">
+    <h3 class="text-xl text-center text-gray-500">[[${editionInfo.editionName}]]</h3>
+ <p class="text-secondary mb-6">Do not support the activation of virtual environments for the time being，Please contact me.<a href="javascript:void(0);"
+                                                                   class="text-success qrcode-trigger"><i
+ class="fa fa-wechat"></i> Starstroke Official</a></p>
+    <script>
+        $(function () {
+ // Initialize 2D suspendedTip
+            initQRCodePopover({
+                url: 'https://work.weixin.qq.com/u/vc7f073c9f993bc776?v=4.1.20.26620',
+                selector: '.qrcode-trigger',
+                size: 150,
+                position: 'bottom'
+            });
+        });
+    </script>
+</div>
+
+<!-- LicenseActivated -->
+<div th:if="${not #strings.isEmpty(key)}">
+    <div class="form-container mb-6" th:if="${productInfo?.products?.size() gt 0}">
+        <div class="card-header">
+ <h3 class="card-title text-center">Authorization</h3>
+        </div>
+ <!-- AuthorizationDetails -->
+        <div class="card-body" style="line-height:2">
+            <div class="grid grid-cols-2">
+                <div class="grid-cols-1">
+                    <div>
+                        <i class="fa fa-building text-primary"></i>
+ <label class="form-label">CompanyName</label>
+                        <div class="text-sm" th:text="${productInfo?.company}"></div>
+                    </div>
+                    <div>
+                        <i class="fa fa-user text-success"></i>
+ <label class="form-label">Applicant</label>
+                        <div class="text-sm" th:text="${productInfo?.owner}"></div>
+                    </div>
+                    <div>
+                        <i class="fa fa-clock-o text-warning"></i>
+ <label class="form-label">Terrorists</label>
+                        <div class="text-sm"
+                             th:text="${#dates.format(productInfo?.createTime, 'yyyy-MM-dd HH:mm:ss')}"></div>
+                    </div>
+                </div>
+
+ <!-- ProductsListTableGrill -->
+                <div class="grid-cols-1">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th></th>
+ <th>ProductsName</th>
+ <th>Duration Responses</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="p,state : ${productInfo?.products}">
+                            <td class="text-tertiary" th:text="${state.index + 1}"></td>
+ <!-- HealthyValid. -->
+                            <td th:if="${#dates.createNow()?.time} < ${p?.effectiveTime} and ${p?.effectiveTime} - 864000000 > ${#dates.createNow()?.time}">
+                                <span class="font-medium" th:text="${p?.name}"></span>
+ <span class="badge badge-success ml-2"><i class="fa fa-check-circle"></i> Healthy</span>
+                            </td>
+ <!-- Expi LIST -->
+                            <td th:if="${#dates.createNow()?.time} < ${p?.effectiveTime} and ${p?.effectiveTime} - 864000000 <= ${#dates.createNow()?.time}">
+                                <span class="font-medium" th:text="${p?.name}"></span>
+ <span class="badge badge-warning ml-2" title="Expi LIST, 53/159."><i
+ class="fa fa-exclamation-triangle"></i> Expiry
+                    </span>
+                            </td>
+ <!-- Expired -->
+                            <td th:if="${#dates.createNow()?.time} > ${p?.effectiveTime}">
+                                <span class="font-medium" th:text="${p?.name}"></span>
+ <span class="badge badge-error ml-2" title="Expired, Please contact the star river sync official renewal."><i
+ class="fa fa-times-circle"></i> Expired</span>
+                            </td>
+                            <td>
+                                <span class="text-sm text-secondary"
+                                      th:text="${#dates.format(p?.effectiveTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="form-actions m-5" data-permission="license:edit">
+ <button id="removeBtn" class="btn btn-outline" type="button">DeleteActivate Code</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="grid grid-cols-2 lg:grid-cols-2" data-permission="license:edit">
+ <!-- OnlineActivateTableSingle -->
+        <div class="form-container mb-6">
+            <div class="card-header">
+ <h3 class="card-title">OnlineActivate</h3>
+ <p class="text-xs text-tertiary mt-1">First time free of charge. 15 days</p>
+            </div>
+            <div class="card-body">
+                <form id="license-form">
+                    <div class="grid">
+ <!-- Applicant -->
+                        <div class="form-item">
+ <label class="form-label">Applicant<strong class="text-primary">*</strong></label>
+                            <div class="form-control-area">
+                                <input class="form-control" type="text" name="owner" maxlength="32" required
+ placeholder="Please enterName Include"/>
+                            </div>
+                        </div>
+
+ <!-- CompanyName -->
+                        <div class="form-item">
+ <label class="form-label">CompanyName</label>
+                            <div class="form-control-area">
+                                <input class="form-control" type="text" name="company" maxlength="64"
+ placeholder="Please enterCompanyName"/>
+                            </div>
+                        </div>
+
+ <!-- Cell phone number -->
+                        <div class="form-item">
+ <label class="form-label">Cell phone number</label>
+                            <div class="form-control-area">
+                                <input class="form-control" type="tel" name="phone" maxlength="11"
+ th:value="${userInfo?.phone}" placeholder="Please enterCell phone number"/>
+ <div class="form-help">It's easy to text in advance.NotificationsYour authorization</div>
+                            </div>
+                        </div>
+
+ <!-- Mailbox -->
+                        <div class="form-item">
+ <label class="form-label">Mailbox
+ <i class="fa fa-question-circle text-tertiary" title="Support for Multiple Mailboxes，Comma-separated"></i>
+                            </label>
+                            <div class="form-control-area">
+                                <input class="form-control" type="text" name="email" data-role="tagsinput"
+ th:value="${userInfo?.email}" placeholder="Please enterMailbox Address，Support for Multiple Mailboxes"/>
+                            </div>
+                        </div>
+
+ <!-- Remark -->
+                        <div class="form-item">
+ <label class="form-label">Remark</label>
+                            <div class="form-control-area">
+                                <textarea name="remark" class="form-control" maxlength="64" rows="3"
+ placeholder="Please enterRemarkInformation"></textarea>
+                                <div class="form-help">
+ <i class="fa fa-lock text-success"></i> The information will be strictly confidential.，We won't share your information with anyone else.
+                                </div>
+                            </div>
+                        </div>
+
+ <!-- Submitbutton -->
+                        <div class="form-item">
+                            <label class="form-label"></label>
+                            <div class="form-control-area">
+                                <button id="activateBtn" class="btn btn-primary" type="button">
+ <i class="fa fa-rocket"></i> Activate Now (First time free of charge.15days)
+                                </button>
+ <a href="javascript:void(0);" class="btn btn-text ml-2 qrcode-trigger">Contact the customer service.</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+ <!-- OfflineActivate -->
+        <div class="form-container">
+            <div class="card-header">
+ <h3 class="card-title">OfflineActivate</h3>
+ <p class="text-xs text-tertiary mt-1">Use when accessing the Internet</p>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <h4 class="text-sm font-semibold text-primary mb-3">
+ <i class="fa fa-info-circle"></i> Activate Steps
+                    </h4>
+                    <ol class="steps">
+                        <li>
+ <!-- Machine Code -->
+                            <div class="mb-4">
+ <label class="text-sm">Copy Machine Code</label>
+                                <div class="flex">
+                                    <input id="licenseKey" type="text" class="form-control" readonly th:value="${key}">
+ <button id="copyBtn" class="btn btn-outline ml-2" type="button" title="Copy Machine Code">
+ <i class="fa fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="mb-4">
+ <label class="text-sm">Contact
+                                    <a href="javascript:void(0);"
+                                       class="text-success qrcode-trigger">
+ <i class="fa fa-wechat"></i> Starstroke Official
+                                    </a>
+ Help Contemporary File
+                                </label>
+                            </div>
+                        </li>
+                        <li>
+ <!-- Uploading files -->
+                            <div class="mb-4">
+ <label class="text-sm">Upload Activate File</label>
+                                <div id="licenseUploader" class="upload-container">
+                                    <div class="upload-area" data-upload-area>
+                                        <div class="upload-icon">
+                                            <i class="fa fa-key"></i>
+                                        </div>
+ <div class="upload-text">Click or drag active file to upload it here</div>
+                                        <div class="upload-hint">
+ Supported filesType：Activate Code File<br>
+ Up to upload 1 Documentation
+                                        </div>
+ <div class="upload-button">Select File</div>
+                                        <input type="file"
+                                               class="upload-input"
+                                               id="fileLicense">
+                                    </div>
+                                    <div class="upload-list" data-upload-list></div>
+                                </div>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script th:if="${not #strings.isEmpty(key)}" th:src="@{/js/license/license.js}"></script>
+</html>

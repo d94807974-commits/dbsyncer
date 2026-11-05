@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<div class="form-container">
+    <form id="validate-sync-modify-form" method="post">
+        <div class="card-header">
+            <div class="grid grid-cols-6 items-center">
+                <div class="lg:col-span-2"></div>
+                <div class="lg:col-span-2 card-title text-center">
+                    <span id="task-name-modify" class="text-xxl">[[${task?.name}]]</span>
+                    <i class="fa fa-edit text-info text-xl cursor-pointer" th:title="Click to rename" th:onclick="taskModifyName()"></i>
+                    <!-- Hide FormsValue -->
+                    <div class="hidden">
+                        <input id="taskId" name="id" type="text" th:value="${task?.id}"/>
+                        <input name="name" type="text" th:value="${task?.name}"/>
+                    </div>
+                </div>
+                <div class="lg:col-span-2"></div>
+            </div>
+        </div>
+        <div class="card-body">
+            <!-- Verify INTRODUCTIONRelations -->
+            <div class="grid grid-cols-3">
+                <div class="flex items-center">
+                    <img draggable="false" class="connector-logo-lg" th:src="@{'/img/'+ ${task?.sourceConnector?.config?.connectorType} + '.png'}" alt="" />
+                    <div class="ml-2">
+                        <p class="text-md">[[${task?.sourceConnector?.name}]]</p>
+                        <p class="text-sm">
+                            Source database：[[${task?.sourceDatabase}]]
+                            <span th:if="${!#strings.isEmpty(task?.sourceDatabase) and !#strings.isEmpty(task?.sourceSchema)}"> (</span>
+                            [[${task?.sourceSchema}]]
+                            <span th:if="${!#strings.isEmpty(task?.sourceDatabase) and !#strings.isEmpty(task?.sourceSchema)}"> )</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="text-info items-center text-center">
+                    <p></p>
+                    <i class="fa fa-arrow-right fa-3x"></i>
+                </div>
+                <div class="flex items-center">
+                    <img draggable="false" class="connector-logo-lg" th:src="@{'/img/'+ ${task?.targetConnector?.config?.connectorType} + '.png'}" alt="" />
+                    <div class="ml-2">
+                        <p class="text-md">[[${task?.targetConnector?.name}]]</p>
+                        <p class="text-sm">
+                            Target database：[[${task?.targetDatabase}]]
+                            <span th:if="${!#strings.isEmpty(task?.targetDatabase) and !#strings.isEmpty(task?.targetSchema)}"> (</span>
+                            [[${task?.targetSchema}]]
+                            <span th:if="${!#strings.isEmpty(task?.targetDatabase) and !#strings.isEmpty(task?.targetSchema)}"> )</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SyncModeSelection -->
+            <div class="flex items-center justify-end mt-4">
+                <div class="form-actions">
+                    <span th:if="${task?.metaState eq 1 or task?.metaState eq 2}">
+                        <button type="button" class="btn btn-info" disabled>
+                            <i class="fa fa-save"></i> Running
+                        </button>
+                    </span>
+                    <button th:if="${task?.metaState eq null or task?.metaState eq 0 or task?.metaState eq 3}"
+                            id="task-submit-btn"
+                            type="button"
+                            class="btn btn-primary">
+                        <i class="fa fa-save"></i> Save
+                    </button>
+                    <button type="button" class="btn btn-outline" onclick="backIndexPage()">
+                        <i class="fa fa-reply"></i> Back
+                    </button>
+                </div>
+            </div>
+
+            <!-- MappingRegional-->
+            <h3><i class="fa fa-table text-success"></i> Mapping</h3>
+            <div th:replace="validate-sync/editTable :: content"></div>
+
+            <!-- Advanced settingsRegional-->
+            <h3><i class="fa fa-table text-info"></i> Advanced settings</h3>
+            <p class="text-xs text-tertiary">Applies to all table mappings</p>
+              <!-- FullConfig -->
+             <div th:replace="validate-sync/editSetting :: content"></div>
+
+            <!-- Implementation strategySelection -->
+            <p><i class="fa fa-history text-success"></i> Implementation strategy</p>
+            <div class="grid grid-cols-4">
+                <div id="task-trigger" class="radio-group">
+                    <input type="radio" name="trigger" value="once" th:checked="${'once' eq task?.trigger}" />
+                    <label>Run once</label>
+                    <input type="radio" name="trigger" value="timing" th:checked="${'timing' eq task?.trigger}" />
+                    <label>Scheduled</label>
+                </div>
+            </div>
+
+            <!-- CronConfig -->
+            <div th:id="trigger-cron" class="hidden">
+                <div class="grid grid-cols-3 mt-4">
+                    <div class="form-item">
+                        <label class="form-label">Cron<strong class="text-primary">*</strong></label>
+                        <input class="form-control" required name="cron" th:value="${task?.cron}?:'*/30 * * * * ?'" type="text" placeholder="*/30 * * * * ?" />
+                    </div>
+                </div>
+            </div>
+
+            <p><i class="fa fa-database text-success"></i> Verification scope</p>
+            <div id="validate-sync-scope" class="checkbox-group mt-4"
+                 th:with="schemaUnsupported=${#strings.equalsIgnoreCase(#strings.defaultString(task?.sourceConnector?.config?.connectorType, ''), 'elasticsearch') or #strings.equalsIgnoreCase(#strings.defaultString(task?.sourceConnector?.config?.connectorType, ''), 'sqlite') or #strings.equalsIgnoreCase(#strings.defaultString(task?.targetConnector?.config?.connectorType, ''), 'elasticsearch') or #strings.equalsIgnoreCase(#strings.defaultString(task?.targetConnector?.config?.connectorType, ''), 'sqlite')}">
+                <input type="checkbox" name="enableSync" value="true" th:checked="${task?.enableSync}" />
+                <label>Revised</label>
+
+                <input type="checkbox" name="enableRowData" value="true" th:checked="${task?.enableRowData}" />
+                <label>Row data</label>
+
+                <input type="checkbox" name="enableSchema" value="true"
+                       th:disabled="${schemaUnsupported}"
+                       th:checked="${!schemaUnsupported and task?.enableSchema}" />
+                <label>Table schema</label>
+<!--                <input type="checkbox" name="enableIndex" value="true" th:checked="${task?.enableIndex}" />-->
+<!--                <label>Index</label>-->
+<!--                <input type="checkbox" name="enableTrigger" value="true" th:checked="${task?.enableTrigger}" />-->
+<!--                <label>Trigger</label>-->
+<!--                <input type="checkbox" name="enableFunction" value="true" th:checked="${task?.enableFunction}" />-->
+<!--                <label>Functions</label>-->
+            </div>
+
+            <p><i class="fa fa-database text-success"></i> Target strategy</p>
+            <p class="text-xs text-tertiary">Re Highly verified, contrast source table, redundant lines of target list</p>
+            <div id="validate-sync-target-strategy" class="grid grid-cols-2 gap-4 mt-4">
+                <div class="form-item mb-0">
+                    <label class="form-label">
+                        Reverse check
+                        <i class="fa fa-question-circle text-tertiary" title="Open scanning target sheets to record excess lines where source forms do not exist"></i>
+                    </label>
+                    <div class="form-control-area">
+                        <label class="form-switch">
+                            <input name="enableReverseScan" type="checkbox" value="true"
+                                   th:checked="${task?.enableReverseScan}" />
+                            <span class="switch-track">
+                                <span class="switch-option switch-option-on">Yes</span>
+                                <span class="switch-option switch-option-off">No</span>
+                                <span class="switch-thumb"></span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div id="validate-sync-delete-extra-wrap" class="form-item mb-0 hidden">
+                    <label class="form-label">
+                        Reverse Revision
+                        <i class="fa fa-question-circle text-tertiary" title="Automatically delete redundant lines from the source table when the task is performed and cannot be restored; line data and reverse verification must be started"></i>
+                    </label>
+                    <div class="form-control-area">
+                        <label class="form-switch">
+                            <input name="enableReverseSync" type="checkbox" value="true"
+                                   th:checked="${task?.enableReverseSync}" />
+                            <span class="switch-track">
+                                <span class="switch-option switch-option-on">Yes</span>
+                                <span class="switch-option switch-option-off">No</span>
+                                <span class="switch-thumb"></span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Conditions -->
+            <div th:replace="validate-sync/editFilter :: content"></div>
+
+            <!-- EmptyWhite Block -->
+            <div class="blank-block"></div>
+
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    // EditMappingName
+    function taskModifyName() {
+        const $name = $("#task-name-modify");
+        const tmp = $name.text();
+        $name.text("");
+        $name.append("<input type='text' class='form-control text-md'/>");
+        const $input = $name.find("input");
+        $input.focus().val(tmp);
+        $input.blur(function () {
+            $name.text($(this).val());
+            $("#validate-sync-modify-form input[name='name']").val($(this).val());
+            $input.unbind();
+        });
+    }
+
+    function showTriggerConfig(model) {
+        const cron = $("#trigger-cron");
+        if ('once' === model) {
+            cron.addClass("hidden");
+        } else {
+            cron.removeClass("hidden");
+        }
+    }
+
+    // TieRun once+ScheduledSwitchEvent
+    function bindTriggerChange() {
+        const trigger = $('#task-trigger').radioGroup({
+            theme: 'info',
+            size: 'md',
+            onChange: function (value, label) {
+                showTriggerConfig(value);
+            }
+        });
+        // Render Selection ratifyradioConfig
+        showTriggerConfig(trigger.getValue());
+    }
+
+    /**
+     * 「Row data」and「Table schema」Let's try it at least.Save。
+     * @param {JQuery} $form Form
+     * @returns {boolean}
+     */
+    function validateValidateSyncScope($form) {
+        var rowData = $form.find('input[name="enableRowData"]').is(':checked');
+        var schema = $form.find('input[name="enableSchema"]').is(':checked');
+        if (!rowData && !schema) {
+            bootGrowl('Please tick at least one of the "line data" or "table structure".', 'danger');
+            return false;
+        }
+        return true;
+    }
+
+    function setSwitchEnabled($input, enabled) {
+        $input.prop('disabled', !enabled);
+        $input.closest('.form-switch').toggleClass('disabled', !enabled);
+    }
+
+    function syncTargetStrategyState() {
+        var $form = $('#validate-sync-modify-form');
+        var rowData = $form.find('input[name="enableRowData"]').is(':checked');
+        var $reverseScan = $form.find('input[name="enableReverseScan"]');
+        var $reverseSync = $form.find('input[name="enableReverseSync"]');
+        var $deleteWrap = $('#validate-sync-delete-extra-wrap');
+
+        var reverseAllowed = rowData;
+        var reverseChecked = reverseAllowed && $reverseScan.is(':checked');
+
+        if (!reverseAllowed) {
+            $reverseScan.prop('checked', false);
+        }
+        setSwitchEnabled($reverseScan, reverseAllowed);
+
+        $deleteWrap.toggleClass('hidden', !reverseChecked);
+
+        if (!reverseChecked) {
+            $reverseSync.prop('checked', false);
+            setSwitchEnabled($reverseSync, false);
+            return;
+        }
+
+        setSwitchEnabled($reverseSync, true);
+    }
+
+    function validateTargetStrategy($form) {
+        var reverseScan = $form.find('input[name="enableReverseScan"]').is(':checked');
+        var reverseSync = $form.find('input[name="enableReverseSync"]').is(':checked');
+        if (!reverseSync) {
+            return true;
+        }
+        if (!reverseScan) {
+            bootGrowl('Reverse Around revision is subject to reverse verification.', 'danger');
+            return false;
+        }
+        if (!$form.find('input[name="enableRowData"]').is(':checked')) {
+            bootGrowl('Reverse revision must be accompanied by the opening of line data.', 'danger');
+            return false;
+        }
+        return true;
+    }
+
+    function showReverseSyncConfirm(onConfirm) {
+        showConfirm({
+            title: 'Make sure you start the reverse revision?',
+            message: 'Use the repository as the authoritative benchmark, remove redundant records that do not exist in the target library, and delete operations cannot be restored. Please confirm that the database is complete and continue.',
+            size: 'large',
+            icon: 'warning',
+            confirmType: 'danger',
+            onConfirm: onConfirm
+        });
+    }
+
+    function bindReverseSyncConfirm() {
+        $('#validate-sync-modify-form input[name="enableReverseSync"]').on('change', function () {
+            var $input = $(this);
+            if ($input.is(':checked')) {
+                $input.prop('checked', false);
+                syncTargetStrategyState();
+                showReverseSyncConfirm(function () {
+                    $input.prop('checked', true);
+                    syncTargetStrategyState();
+                });
+                return;
+            }
+            syncTargetStrategyState();
+        });
+    }
+
+    function submitValidateSyncForm() {
+        var $form = $('#validate-sync-modify-form');
+        if (!validateValidateSyncScope($form)) {
+            return;
+        }
+        if (!validateTargetStrategy($form)) {
+            return;
+        }
+        if (!validateForm($form)) {
+            return;
+        }
+        var saveTask = function () {
+            var $btn = $('#task-submit-btn');
+            var originalText = $btn.html();
+            $btn.html('<i class="fa fa-spinner fa-spin"></i> Saving...').prop('disabled', true);
+            doPoster('/validate-sync/edit', $form.serializeJson(), function (response) {
+                $btn.html(originalText).prop('disabled', false);
+                if (response.success === true) {
+                    bootGrowl('Saved successfully!', 'success');
+                    var rawStr = localStorage.getItem('realtime-etl.pagination.validate-sync-list');
+                    var raw = JSON.parse(rawStr);
+                    raw.pageNum = 1;
+                    localStorage.setItem('realtime-etl.pagination.validate-sync-list', JSON.stringify(raw));
+                    backIndexPage();
+                } else {
+                    bootGrowl(response.message, 'danger');
+                }
+            });
+        };
+        saveTask();
+    }
+
+    $(function () {
+        window.backIndexPage = function () {
+            doLoader("/validate-sync/list");
+        };
+
+        bindTriggerChange();
+
+        $('#validate-sync-scope').checkboxGroup({
+            theme: 'info',
+            size: 'md',
+            onChange: function () {
+                syncTargetStrategyState();
+            }
+        });
+        $('#validate-sync-modify-form input[name="enableReverseScan"]').on('change', syncTargetStrategyState);
+        bindReverseSyncConfirm();
+        syncTargetStrategyState();
+
+        // Save
+        $('#task-submit-btn').click(function () {
+            submitValidateSyncForm();
+        });
+    });
+</script>
+
+</html>

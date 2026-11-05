@@ -1,0 +1,262 @@
+/**
+ * DBSyncer Copyright 2020-2026 All Rights Reserved.
+ */
+package org.realtimeetl.manager.impl;
+
+import org.realtimeetl.common.model.Paging;
+import org.realtimeetl.common.util.BatchTaskUtil;
+import org.realtimeetl.common.util.CollectionUtils;
+import org.realtimeetl.common.util.StringUtil;
+import org.realtimeetl.manager.AbstractPuller;
+import org.realtimeetl.parser.LogService;
+import org.realtimeetl.parser.LogType;
+import org.realtimeetl.parser.ParserComponent;
+import org.realtimeetl.parser.TableGroupProfile;
+import org.realtimeetl.parser.TaskMetaProfile;
+import org.realtimeetl.parser.enums.ParserEnum;
+import org.realtimeetl.parser.event.FullRefreshEvent;
+import org.realtimeetl.parser.message.NoticeMappingCompletedPublisher;
+import org.realtimeetl.parser.model.Mapping;
+import org.realtimeetl.parser.model.Meta;
+import org.realtimeetl.parser.model.TableGroup;
+import org.realtimeetl.parser.util.FullTableProgressUtil;
+import org.realtimeetl.parser.util.MetaLockUtil;
+import org.realtimeetl.sdk.constant.ConfigConstant;
+import org.realtimeetl.sdk.model.CommonTaskSnapshot;
+import org.realtimeetl.sdk.model.Task;
+import org.realtimeetl.sdk.util.PrimaryKeyUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
+
+import javax.annotation.Resource;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
+
+/**
+ * Full sync（Line up, align.Data Migration：threadNum Control the table and send, read and write a string within the table.
+ *
+ * @author AE86
+ * @version 1.0.0
+ * @date 2020-04-26 15:28
+ */
+@Component
+public final class FullPuller extends AbstractPuller implements ApplicationListener<FullRefreshEvent> {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    /**
+     * Write Batch Synchronizer in Form (no longer used)threadNum Writing and distribution)
+     */
+    private static final Executor SYNC_WRITE_EXECUTOR = Runnable::run;
+
+    @Resource
+    private ParserComponent parserComponent;
+
+    @Resource
+    private TableGroupProfile tableGroupProfile;
+
+    @Resource
+    private TaskMetaProfile taskMetaProfile;
+
+    @Resource
+    private LogService logService;
+
+    @Resource
+    private NoticeMappingCompletedPublisher noticeMappingCompletedPublisher;
+
+    private final Map<String, Task> map = new ConcurrentHashMap<>();
+
+    @Override
+    public void start(Mapping mapping) {
+        Thread worker = new Thread(() -> runSync(mapping, true));
+        worker.setName("full-worker-" + mapping.getId());
+        worker.setDaemon(false);
+        worker.start();
+    }
+
+    @Override
+    public void start(Mapping mapping, boolean autoRecovery) {
+        // 全量不涉及自启动
+        start(mapping);
+    }
+
+    /**
+     * Sync executionFullTasks
+     *
+     * @param mapping       Driver
+     * @param publishClosed FinishBackYesNoReleaseCloseEvent
+     */
+    public void runSync(Mapping mapping, boolean publishClosed) {
+        Assert.isTrue(tableGroupProfile.getTableGroupCount(mapping.getId()) > 0, "Mapping cannot be empty");
+        final String taskId = mapping.getId();
+        boolean completed = false;
+        try {
+            Task task = map.computeIfAbsent(taskId, k -> new Task(taskId));
+            logger.info("Start FullSyn renders", taskId, mapping.getName());
+            completed = doTask(task, mapping);
+            // ProposalFullNaturally.FinishNotificationFull + incremental publishClosed=false，ManualStopCome on.MappingStop）
+            if (publishClosed && completed) {
+                noticeMappingCompletedPublisher.publish(mapping);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            logService.log(LogType.SystemLog.ERROR, e.getMessage());
+        } finally {
+            map.remove(taskId);
+            if (publishClosed) {
+                publishClosedEvent(taskId);
+            }
+            logger.info("End FullSync: }, }", taskId, mapping.getName());
+        }
+    }
+
+    @Override
+    public void close(String taskId) {
+        map.computeIfPresent(taskId, (k, task) -> {
+            task.stop();
+            return null;
+        });
+    }
+
+    @Override
+    public List<String> getTaskId() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void onApplicationEvent(FullRefreshEvent event) {
+        flush(event.getTask());
+    }
+
+    private boolean doTask(Task task, Mapping mapping) {
+        flush(task);
+
+        int pageSize = ConfigConstant.PAGE_SIZE;
+        int pageNum = 1;
+        while (task.isRunning()) {
+            Paging<TableGroup> paging = tableGroupProfile.queryTableGroup(mapping.getId(), null, pageNum, pageSize);
+            if (paging == null || CollectionUtils.isEmpty(paging.getData())) {
+                break;
+            }
+            List<TableGroup> page = new ArrayList<>(paging.getData());
+            int threadNum = Math.max(1, mapping.getThreadNum());
+            BatchTaskUtil.executeBySlice(page, page.size(), threadNum, (slice, executor) ->
+                    BatchTaskUtil.executeWithAwait(slice, executor, tableGroup ->
+                            syncOneTable(task, mapping, tableGroup), logger), logger);
+
+            if (!task.isRunning() || page.size() < pageSize) {
+                break;
+            }
+            pageNum++;
+        }
+        task.setTableGroupIndex(ParserEnum.TABLE_GROUP_INDEX.getDefaultValue());
+        task.setPageIndex(ParserEnum.PAGE_INDEX.getDefaultValue());
+        task.setCursors(null);
+        if (task.isRunning()) {
+            clearFullProgress(task, mapping.getId());
+            return true;
+        }
+        flush(task);
+        return false;
+    }
+
+    private void syncOneTable(Task parent, Mapping mapping, TableGroup tableGroup) {
+        if (!parent.isRunning()) {
+            return;
+        }
+        String tableGroupId = tableGroup.getId();
+        if (FullTableProgressUtil.isDone(taskMetaProfile, tableGroupId)) {
+            return;
+        }
+
+        Task tableTask = parent.createTableTask(tableGroupId);
+        CommonTaskSnapshot progress = FullTableProgressUtil.getOrInit(taskMetaProfile, tableGroupId);
+        int pageIndex = progress.getPageIndex() > 0
+                ? (int) progress.getPageIndex()
+                : ParserEnum.PAGE_INDEX.getDefaultValue();
+        tableTask.setPageIndex(pageIndex);
+        tableTask.setCursors(PrimaryKeyUtil.getLastCursors(progress.getCursor()));
+
+        try {
+            parserComponent.execute(tableTask, mapping, tableGroup, SYNC_WRITE_EXECUTOR);
+            if (parent.isRunning()) {
+                markTableDone(parent, tableGroupId);
+            }
+        } catch (Exception e) {
+            logger.error("Full sync table failed: }->, {",
+                    tableGroup.getSourceTable() != null ? tableGroup.getSourceTable().getName() : tableGroupId,
+                    tableGroup.getTargetTable() != null ? tableGroup.getTargetTable().getName() : tableGroupId,
+                    e.getMessage(), e);
+            logService.log(LogType.SystemLog.ERROR, e.getMessage());
+        }
+    }
+
+    private void flush(Task task) {
+        if (StringUtil.isNotBlank(task.getTableGroupId())) {
+            String cursor = StringUtil.getIfBlank(StringUtil.join(task.getCursors(), StringUtil.COMMA), StringUtil.EMPTY);
+            FullTableProgressUtil.save(taskMetaProfile, task.getTableGroupId(),
+                    FullTableProgressUtil.runningSnapshot(task.getPageIndex(), cursor));
+        }
+        synchronized (metaLock(task.getId())) {
+            Meta meta = taskMetaProfile.getMeta(task.getId());
+            Assert.notNull(meta, "Check meta as empty.");
+            refreshMetaTotals(meta);
+            meta.setUpdateTime(Instant.now().toEpochMilli());
+            Map<String, String> snapshot = meta.getSnapshot();
+            snapshot.put(ParserEnum.PAGE_INDEX.getCode(), String.valueOf(task.getPageIndex()));
+            snapshot.put(ParserEnum.CURSOR.getCode(),
+                    StringUtil.getIfBlank(StringUtil.join(task.getCursors(), StringUtil.COMMA), StringUtil.EMPTY));
+            if (StringUtil.isBlank(task.getTableGroupId())) {
+                snapshot.put(ParserEnum.TABLE_GROUP_INDEX.getCode(), String.valueOf(task.getTableGroupIndex()));
+            }
+            taskMetaProfile.updateMeta(meta);
+        }
+    }
+
+    private void markTableDone(Task parent, String tableGroupId) {
+        FullTableProgressUtil.save(taskMetaProfile, tableGroupId, FullTableProgressUtil.doneSnapshot());
+        synchronized (metaLock(parent.getId())) {
+            Meta meta = taskMetaProfile.getMeta(parent.getId());
+            Assert.notNull(meta, "Check meta as empty.");
+            refreshMetaTotals(meta);
+            meta.setUpdateTime(Instant.now().toEpochMilli());
+            taskMetaProfile.updateMeta(meta);
+        }
+    }
+
+    private void clearFullProgress(Task task, String mappingId) {
+        FullTableProgressUtil.clearAll(taskMetaProfile, tableGroupProfile, mappingId);
+        synchronized (metaLock(task.getId())) {
+            Meta meta = taskMetaProfile.getMeta(task.getId());
+            Assert.notNull(meta, "Check meta as empty.");
+            refreshMetaTotals(meta);
+            meta.setUpdateTime(Instant.now().toEpochMilli());
+            Map<String, String> snapshot = meta.getSnapshot();
+            snapshot.remove(ParserEnum.TABLE_PROGRESS.getCode());
+            snapshot.put(ParserEnum.PAGE_INDEX.getCode(), String.valueOf(ParserEnum.PAGE_INDEX.getDefaultValue()));
+            snapshot.put(ParserEnum.CURSOR.getCode(), StringUtil.EMPTY);
+            snapshot.put(ParserEnum.TABLE_GROUP_INDEX.getCode(),
+                    String.valueOf(ParserEnum.TABLE_GROUP_INDEX.getDefaultValue()));
+            taskMetaProfile.updateMeta(meta);
+        }
+    }
+
+    private void refreshMetaTotals(Meta meta) {
+        long finished = meta.getSuccess().get() + meta.getFail().get();
+        if (meta.getTotal().get() < finished) {
+            meta.getTotal().set(finished);
+        }
+    }
+
+    private Object metaLock(String taskId) {
+        return MetaLockUtil.lock(taskId);
+    }
+}

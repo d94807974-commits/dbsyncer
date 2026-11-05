@@ -1,0 +1,219 @@
+/**
+ * DBSyncer Copyright 2020-2026 All Rights Reserved.
+ */
+package org.realtimeetl.biz.task;
+
+import org.realtimeetl.biz.TableGroupService;
+import org.realtimeetl.common.dispatch.AbstractDispatchTask;
+import org.realtimeetl.common.dispatch.DispatchTaskService;
+import org.realtimeetl.common.enums.DispatchTaskEnum;
+import org.realtimeetl.common.util.CollectionUtils;
+import org.realtimeetl.common.util.StringUtil;
+import org.realtimeetl.parser.MappingProfile;
+import org.realtimeetl.parser.model.Mapping;
+import org.realtimeetl.sdk.SdkException;
+import org.realtimeetl.sdk.enums.TableTypeEnum;
+import org.realtimeetl.sdk.model.Table;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
+
+/**
+ * Step-by-Script MapMatch similar tablesorCustom tableGroups），FinishBackSubmit MappingCountTask。
+ *
+ * @author AE86
+ * @version 1.0.0
+ * @date 2026/4/8
+ */
+@Service
+public final class MappingMatchTableTask extends AbstractDispatchTask {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    private String mappingId;
+
+    /**
+     * Press non-timeCustomtext map;by source/when emptyObjective CombinedAutomatically match the same name list.
+     */
+    private String tableGroups;
+
+    @Resource
+    private TableGroupService tableGroupService;
+
+    @Resource
+    private MappingProfile mappingProfile;
+
+    @Resource
+    private DispatchTaskService dispatchTaskService;
+
+    @Resource
+    private MappingCountTask mappingCountTask;
+
+    @Override
+    public DispatchTaskEnum getType() {
+        return DispatchTaskEnum.MAPPING_MATCH_TABLE;
+    }
+
+    @Override
+    public String getUniqueId() {
+        return mappingId;
+    }
+
+    @Override
+    public void execute() {
+        Mapping mapping = mappingProfile.get(mappingId);
+        if (mapping == null) {
+            logger.warn("Mapping not found, skip match table, mappingId={}", mappingId);
+            return;
+        }
+        int added;
+        if (StringUtil.isNotBlank(tableGroups)) {
+            added = matchCustomizedTableGroups(mapping, tableGroups);
+            logger.info("Custom Jointly Map complete: {}, add {} Table Map", mapping.getName(), added);
+        } else {
+            added = matchSimilarTableGroups(mapping);
+            logger.info("Automatically match completed: {}, add a new {}sheet map", mapping.getName(), added);
+        }
+
+        MappingCountTask task = (MappingCountTask) mappingCountTask.clone();
+        task.setMappingId(mapping.getId());
+        dispatchTaskService.execute(task);
+    }
+
+    /**
+     * Batch Writing Similar Map, Not Table by TableSubmit CountTask。
+     *
+     * @return ActualInsertNumber of bars
+     */
+    private int matchSimilarTableGroups(Mapping mapping) {
+        List<Table> sourceTables = mapping.getSourceTable();
+        List<Table> targetTables = mapping.getTargetTable();
+        if (CollectionUtils.isEmpty(sourceTables) || CollectionUtils.isEmpty(targetTables)) {
+            return 0;
+        }
+        Map<String, Table> targetTableMap = targetTables.stream()
+                .collect(Collectors.toMap(table -> table.getName().toUpperCase(), table -> table, (a, b) -> a));
+        List<String> sourceNames = new ArrayList<>();
+        List<String> targetNames = new ArrayList<>();
+        for (Table sourceTable : sourceTables) {
+            if (sourceTable == null || StringUtil.isBlank(sourceTable.getName())) {
+                continue;
+            }
+            Table targetTable = targetTableMap.get(sourceTable.getName().toUpperCase());
+            if (targetTable == null || !TableTypeEnum.isTable(targetTable.getType())) {
+                continue;
+            }
+            sourceNames.add(sourceTable.getName());
+            targetNames.add(targetTable.getName());
+        }
+        if (sourceNames.isEmpty()) {
+            return 0;
+        }
+        Map<String, String> params = new HashMap<>();
+        params.put("mappingId", mapping.getId());
+        params.put("sourceTable", StringUtil.join(sourceNames, StringUtil.VERTICAL_LINE));
+        params.put("targetTable", StringUtil.join(targetNames, StringUtil.VERTICAL_LINE));
+        params.put("sourceType", TableTypeEnum.TABLE.getCode());
+        params.put("targetType", TableTypeEnum.TABLE.getCode());
+        return tableGroupService.addWithoutCount(params);
+    }
+
+    /**
+     * PressCustomText BatchLibrary（Each line contains independencefieldMappings）。
+     */
+    private int matchCustomizedTableGroups(Mapping mapping, String tableGroupsText) {
+        List<Table> sourceTables = mapping.getSourceTable();
+        List<Table> targetTables = mapping.getTargetTable();
+        if (CollectionUtils.isEmpty(sourceTables) || CollectionUtils.isEmpty(targetTables)) {
+            return 0;
+        }
+        String[] lines = StringUtil.split(tableGroupsText, StringUtil.BREAK_LINE);
+        List<Map<String, String>> paramsList = new ArrayList<>();
+        // Source table|Target table=Source fieldsA1*|Target fieldsA2*
+        for (String line : lines) {
+            if (StringUtil.isBlank(line)) {
+                continue;
+            }
+            String[] tableGroup = StringUtil.split(line, StringUtil.EQUAL);
+            String[] tableGroupNames = StringUtil.split(tableGroup[0], StringUtil.VERTICAL_LINE);
+            if (tableGroupNames.length != 2) {
+                continue;
+            }
+            try {
+                paramsList.add(buildTableGroupParams(mapping.getId(), tableGroupNames[0], tableGroupNames[1],
+                        tableGroup.length == 2 ? tableGroup[1] : StringUtil.EMPTY));
+            } catch (SdkException e) {
+                logger.error(e.getMessage(), e);
+            }
+        }
+        if (CollectionUtils.isEmpty(paramsList)) {
+            return 0;
+        }
+        return tableGroupService.addWithoutCountBatch(paramsList);
+    }
+
+    private Map<String, String> buildTableGroupParams(String id, String sourceTableName, String targetTableName, String fieldMappings) {
+        Map<String, String> params = new HashMap<>();
+        params.put("mappingId", id);
+        params.put("sourceTable", sourceTableName);
+        params.put("targetTable", targetTableName);
+        params.put("sourceType", TableTypeEnum.TABLE.getCode());
+        params.put("targetType", TableTypeEnum.TABLE.getCode());
+        // A1*|A2*,B1|B2,|C3
+        if (StringUtil.isNotBlank(fieldMappings)) {
+            String[] mappings = StringUtil.split(fieldMappings, StringUtil.COMMA);
+            StringJoiner fms = new StringJoiner(StringUtil.COMMA);
+            StringJoiner sPk = new StringJoiner(StringUtil.COMMA);
+            StringJoiner tPk = new StringJoiner(StringUtil.COMMA);
+            for (String mapping : mappings) {
+                String[] m = StringUtil.split(mapping, "\\" + StringUtil.VERTICAL_LINE);
+                if (m.length == 2) {
+                    fms.add(replaceStar(m[0], sPk) + StringUtil.VERTICAL_LINE + replaceStar(m[1], tPk));
+                    continue;
+                }
+                // |C2,C3|
+                if (m.length == 1) {
+                    String name = replaceStar(m[0], tPk);
+                    if (StringUtil.startsWith(mapping, StringUtil.VERTICAL_LINE)) {
+                        fms.add(StringUtil.VERTICAL_LINE + name);
+                        continue;
+                    }
+                    fms.add(name + StringUtil.VERTICAL_LINE);
+                }
+            }
+            params.put("fieldMappings", fms.toString());
+            if (StringUtil.isNotBlank(sPk.toString())) {
+                params.put("sourceTablePK", sPk.toString());
+            }
+            if (StringUtil.isNotBlank(tPk.toString())) {
+                params.put("targetTablePK", tPk.toString());
+            }
+        }
+        return params;
+    }
+
+    private String replaceStar(String name, StringJoiner joiner) {
+        if (StringUtil.endsWith(name, StringUtil.STAR)) {
+            name = StringUtil.replace(name.trim(), StringUtil.STAR, StringUtil.EMPTY);
+            joiner.add(name);
+        }
+        return name;
+    }
+
+    public void setMappingId(String mappingId) {
+        this.mappingId = mappingId;
+    }
+
+    public void setTableGroups(String tableGroups) {
+        this.tableGroups = tableGroups;
+    }
+
+}

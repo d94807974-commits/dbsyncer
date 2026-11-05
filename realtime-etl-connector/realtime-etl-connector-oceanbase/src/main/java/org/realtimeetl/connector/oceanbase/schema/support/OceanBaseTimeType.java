@@ -1,0 +1,34 @@
+/**
+ * DBSyncer Copyright 2020-2024 All Rights Reserved.
+ */
+package org.realtimeetl.connector.oceanbase.schema.support;
+
+import org.realtimeetl.sdk.model.Field;
+import org.realtimeetl.sdk.schema.support.TimeType;
+
+import java.sql.Time;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+/**
+ * @Author The clouds.
+ * @Version 1.0.0
+ * @Date 2024-11-26 22:59
+ */
+public final class OceanBaseTimeType extends TimeType {
+
+    private enum TypeEnum {
+        TIME;
+    }
+
+    @Override
+    public Set<String> getSupportedTypeName() {
+        return Arrays.stream(TypeEnum.values()).map(Enum::name).collect(Collectors.toSet());
+    }
+
+    @Override
+    protected Time merge(Object val, Field field) {
+        return throwUnsupportedException(val, field);
+    }
+}

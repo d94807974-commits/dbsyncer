@@ -1,0 +1,85 @@
+/**
+ * DBSyncer Copyright 2019-2024 All Rights Reserved.
+ */
+package org.realtimeetl.sdk.listener.event;
+
+import org.realtimeetl.common.util.StringUtil;
+import org.realtimeetl.sdk.listener.ChangedEvent;
+import org.realtimeetl.sdk.model.ChangedOffset;
+
+/**
+ * Generic changeEvent
+ *
+ * @version 1.0.0
+ * @Author AE86
+ * @Date 2023-08-20 20:00
+ */
+public abstract class CommonChangedEvent implements ChangedEvent {
+
+    /**
+     * traceId
+     */
+    private String traceId = StringUtil.EMPTY;
+
+    /**
+     * Change tableName
+     */
+    private String sourceTableName;
+
+    /**
+     * ChangeEvent
+     */
+    private String event;
+
+    /**
+     * IncrementalOffset
+     */
+    private final ChangedOffset changedOffset = new ChangedOffset();
+
+    @Override
+    public String getTraceId() {
+        return traceId;
+    }
+
+    @Override
+    public void setTraceId(String traceId) {
+        this.traceId = traceId;
+    }
+
+    @Override
+    public String getSourceTableName() {
+        return sourceTableName;
+    }
+
+    @Override
+    public void setSourceTableName(String sourceTableName) {
+        this.sourceTableName = sourceTableName;
+    }
+
+    @Override
+    public String getEvent() {
+        return event;
+    }
+
+    public void setEvent(String event) {
+        this.event = event;
+    }
+
+    @Override
+    public ChangedOffset getChangedOffset() {
+        return changedOffset;
+    }
+
+    public void setNextFileName(String nextFileName) {
+        changedOffset.setNextFileName(nextFileName);
+    }
+
+    public void setPosition(Object position) {
+        changedOffset.setPosition(position);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+}

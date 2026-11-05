@@ -1,0 +1,32 @@
+/**
+ * DBSyncer Copyright 2020-2023 All Rights Reserved.
+ */
+package org.realtimeetl.connector.file.config;
+
+import org.realtimeetl.sdk.model.ConnectorConfig;
+
+/**
+ * @Author AE86
+ * @Version 1.0.0
+ * @Date 2022-05-05 23:19
+ */
+public class FileConfig extends ConnectorConfig {
+
+    /**
+     * DocumentationContents
+     */
+    private String fileDir;
+
+    public String getFileDir() {
+        return fileDir;
+    }
+
+    public void setFileDir(String fileDir) {
+        this.fileDir = fileDir;
+    }
+
+    @Override
+    public String getUrl() {
+        return fileDir;
+    }
+}

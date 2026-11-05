@@ -1,0 +1,16 @@
+package org.realtimeetl.biz.vo;
+
+import org.realtimeetl.biz.model.MetricResponse;
+
+public class MetricResponseVO extends MetricResponse {
+
+    private String detail;
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
+}

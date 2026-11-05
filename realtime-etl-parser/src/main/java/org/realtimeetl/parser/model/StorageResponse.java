@@ -1,0 +1,58 @@
+/**
+ * DBSyncer Copyright 2020-2026 All Rights Reserved.
+ */
+package org.realtimeetl.parser.model;
+
+import org.realtimeetl.common.util.StringUtil;
+import org.realtimeetl.parser.flush.BufferResponse;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * DetailsminTables are written in response.
+ *
+ * @author AE86
+ * @version 1.0.0
+ * @date 2022/3/27 16:57
+ */
+public class StorageResponse implements BufferResponse {
+
+    /**
+     * DetailsminTableminSnippetsTasks ID）
+     */
+    private String taskDetailShardId;
+    private List<Map> dataList = new LinkedList<>();
+
+    public String getTaskDetailShardId() {
+        return taskDetailShardId;
+    }
+
+    public void setTaskDetailShardId(String taskDetailShardId) {
+        this.taskDetailShardId = taskDetailShardId;
+    }
+
+    public List<Map> getDataList() {
+        return dataList;
+    }
+
+    public void setDataList(List<Map> dataList) {
+        this.dataList = dataList;
+    }
+
+    @Override
+    public int getTaskSize() {
+        return dataList.size();
+    }
+
+    @Override
+    public String getSuffixName() {
+        return StringUtil.EMPTY;
+    }
+
+    @Override
+    public void clearDataList() {
+        this.dataList.clear();
+    }
+}

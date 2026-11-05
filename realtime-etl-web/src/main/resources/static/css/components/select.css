@@ -1,0 +1,468 @@
+/**
+ * Realtime ETL Select Component Style
+ */
+
+/* Select Plans*/
+.realtime-etl-select {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  font-size: var(--font-size-sm);
+}
+
+/* Mini width: about1/4 wide, forandEnter the lower drop-down ForestGET/POST） */
+.realtime-etl-select-mini {
+  width: 25%;
+  min-width: 80px;
+  max-width: 140px;
+  flex: 0 0 auto;
+}
+.realtime-etl-select-md {
+  width: 50%;
+  min-width: 80px;
+  max-width: 140px;
+  flex: 0 0 auto;
+}
+
+/* mini Drop-down menu under style: Ensure that the drop-down menu is wide enough, not limited by the width of the parent element*/
+.realtime-etl-select-mini .realtime-etl-select-dropdown,
+.realtime-etl-select-md .realtime-etl-select-dropdown {
+  left: 0;
+  right: auto;
+  min-width: 80px;
+  width: max-content;
+  max-width: 300px;
+}
+
+/* Full pull in panel: LongAnalysisFull displayable*/
+.realtime-etl-select-panel .realtime-etl-select {
+  display: block;
+  width: 100%;
+}
+
+.realtime-etl-select-panel .realtime-etl-select-dropdown {
+  left: 0;
+  right: auto;
+  min-width: 100%;
+  width: max-content;
+  max-width: min(480px, calc(100vw - 48px));
+}
+
+.realtime-etl-select-panel .realtime-etl-select-option-text {
+  white-space: normal;
+  word-break: break-word;
+  overflow: visible;
+  text-overflow: unset;
+}
+
+/* Trigger button*/
+.realtime-etl-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-height: 32px;
+  user-select: none;
+}
+
+.realtime-etl-select-trigger:hover {
+  border-color: var(--primary-color);
+  background-color: var(--bg-tertiary);
+}
+
+.realtime-etl-select-trigger:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+}
+
+.realtime-etl-select.disabled .realtime-etl-select-trigger {
+  background-color: var(--bg-tertiary);
+  border-color: var(--border-primary);
+  color: var(--text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Trigger button content*/
+.realtime-etl-select-trigger-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  min-height: 21px;
+  flex-wrap: wrap;
+}
+.realtime-etl-select-trigger-content > *:not(:first-child) {
+  margin-left: var(--spacing-xs);
+}
+
+.realtime-etl-select-trigger-text {
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.realtime-etl-select-trigger-tags {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  min-width: 0;
+  margin: -2px;
+}
+
+.realtime-etl-select-trigger-tags > * {
+  margin: 2px;
+}
+
+/* Label*/
+.realtime-etl-select-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  background-color: var(--info-color);
+  color: var(--bg-primary);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+  animation: tag-enter 0.2s ease;
+}
+.realtime-etl-select-tag > *:not(:first-child) { margin-left: 4px; }
+
+.realtime-etl-select-tag .realtime-etl-select-tag-remove {
+  cursor: pointer;
+  font-size: 12px;
+  opacity: 0.8;
+  transition: opacity var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.realtime-etl-select-tag .realtime-etl-select-tag-remove:hover {
+  opacity: 1;
+}
+
+/* CountTip */
+.realtime-etl-select-count {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* Draw Arrows Down*/
+.realtime-etl-select-arrow {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: var(--text-secondary);
+  transition: transform var(--transition-fast);
+  margin-left: var(--spacing-xs);
+}
+
+.realtime-etl-select.open .realtime-etl-select-arrow {
+  transform: rotate(180deg);
+}
+
+/* Down Additional Menu*/
+.realtime-etl-select-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+  max-height: 300px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: dropdown-show 0.2s ease;
+}
+
+/* Opend Down Menu Up*/
+.realtime-etl-select-dropdown-up {
+  top: auto;
+  bottom: calc(100% + 4px);
+  animation: dropdown-show-up 0.2s ease;
+}
+
+.realtime-etl-select-dropdown.hidden {
+  display: none !important;
+}
+
+/* SearchBox*/
+.realtime-etl-select-search-wrapper {
+  padding: var(--spacing-sm);
+  border-bottom: 1px solid var(--border-primary);
+  position: sticky;
+  top: 0;
+  background-color: var(--bg-primary);
+  z-index: 10;
+}
+
+.realtime-etl-select-search {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-secondary);
+  transition: all var(--transition-fast);
+}
+.realtime-etl-select-search > *:not(:first-child) {
+  margin-left: var(--spacing-xs);
+}
+
+.realtime-etl-select-search:focus-within {
+  border-color: var(--primary-color);
+  background-color: var(--bg-primary);
+}
+
+.realtime-etl-select-search input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  outline: none;
+  font-size: var(--font-size-sm);
+}
+
+.realtime-etl-select-search input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.realtime-etl-select-search-clear {
+  flex-shrink: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  transition: color var(--transition-fast);
+}
+
+.realtime-etl-select-search-clear:hover {
+  color: var(--text-primary);
+}
+
+.realtime-etl-select-search-clear.active {
+  display: flex;
+}
+
+/* Actionsbutton*/
+.realtime-etl-select-actions {
+  padding: var(--spacing-sm);
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  min-height: 36px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+  background-color: var(--bg-primary);
+}
+
+/* Hide emptyActionsButton Container (in single selection)*/
+.realtime-etl-select-actions:empty {
+  display: none !important;
+  padding: 0;
+  border-bottom: none;
+}
+
+.realtime-etl-select-action-btn {
+  flex: 1 1 0%;
+  min-width: 0;
+  min-height: 28px;
+  padding: 6px var(--spacing-sm);
+  font-size: var(--font-size-xs);
+  line-height: 1.5;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  text-align: center;
+}
+
+.realtime-etl-select-action-btn:not(:first-child) {
+  margin-left: var(--spacing-sm);
+}
+
+.realtime-etl-select-action-btn:hover {
+  background-color: var(--bg-tertiary);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.realtime-etl-select-action-btn:active {
+  background-color: rgba(24, 144, 255, 0.1);
+}
+
+/* Options*/
+.realtime-etl-select-options {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.realtime-etl-select-option {
+  padding: var(--spacing-sm) var(--spacing-md);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border-left: 3px solid transparent;
+}
+.realtime-etl-select-option > *:not(:first-child) {
+  margin-left: var(--spacing-sm);
+}
+
+.realtime-etl-select-option:hover {
+  background-color: var(--bg-tertiary);
+  border-left-color: var(--primary-color);
+}
+
+.realtime-etl-select-option.selected {
+  background-color: rgba(24, 144, 255, 0.08);
+  border-left-color: var(--primary-color);
+  font-weight: 500;
+}
+
+.realtime-etl-select-option.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: transparent;
+}
+
+.realtime-etl-select-option.disabled:hover {
+  background-color: transparent;
+  border-left-color: transparent;
+}
+
+.realtime-etl-select-option.hidden {
+  display: none !important;
+}
+
+.realtime-etl-select-option-checkbox {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-primary);
+  transition: all var(--transition-fast);
+}
+
+.realtime-etl-select-option-checkbox.hidden {
+  display: none !important;
+}
+
+.realtime-etl-select-option input[type="radio"],
+.realtime-etl-select-option input[type="checkbox"] {
+  display: none;
+}
+
+.realtime-etl-select-option input[type="radio"]:checked ~ .realtime-etl-select-option-checkbox,
+.realtime-etl-select-option input[type="checkbox"]:checked ~ .realtime-etl-select-option-checkbox {
+  background-color: var(--primary-active);
+  border-color: var(--primary-active);
+  color: var(--bg-primary);
+}
+
+.realtime-etl-select-option-checkbox::after {
+  content: '✓';
+  font-size: 12px;
+  font-weight: bold;
+  display: none;
+}
+
+.realtime-etl-select-option input[type="radio"]:checked ~ .realtime-etl-select-option-checkbox::after,
+.realtime-etl-select-option input[type="checkbox"]:checked ~ .realtime-etl-select-option-checkbox::after {
+  display: block;
+}
+
+.realtime-etl-select-option-text {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* EmptyStatus */
+.realtime-etl-select-empty {
+  padding: var(--spacing-lg);
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: var(--font-size-sm);
+}
+
+/* Animation*/
+@keyframes dropdown-show {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dropdown-show-up {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes tag-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Response*/
+@media (max-width: 768px) {
+  .realtime-etl-select-dropdown {
+    max-height: 250px;
+  }
+
+  .realtime-etl-select-options {
+    max-height: 150px;
+  }
+
+  .realtime-etl-select-action-btn {
+    flex: 1 1 0%;
+    padding: var(--spacing-xs) var(--spacing-xs);
+    font-size: var(--font-size-xs);
+  }
+}

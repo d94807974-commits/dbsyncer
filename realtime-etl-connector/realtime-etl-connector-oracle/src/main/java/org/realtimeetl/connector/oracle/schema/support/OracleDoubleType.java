@@ -1,0 +1,51 @@
+/**
+ * DBSyncer Copyright 2020-2024 All Rights Reserved.
+ */
+package org.realtimeetl.connector.oracle.schema.support;
+
+import org.realtimeetl.common.util.StringUtil;
+import org.realtimeetl.sdk.model.Field;
+import org.realtimeetl.sdk.schema.support.DoubleType;
+
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+/**
+ * @Author The clouds.
+ * @Version 1.0.0
+ * @Date 2024-12-25 00:03
+ */
+public final class OracleDoubleType extends DoubleType {
+
+    private enum TypeEnum {
+
+        BINARY_DOUBLE("BINARY_DOUBLE");
+
+        private final String value;
+
+        TypeEnum(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    @Override
+    public Set<String> getSupportedTypeName() {
+        return Arrays.stream(TypeEnum.values()).map(TypeEnum::getValue).collect(Collectors.toSet());
+    }
+
+    @Override
+    protected Double merge(Object val, Field field) {
+        if (val instanceof Number) {
+            return ((Number) val).doubleValue();
+        }
+        if (val instanceof String) {
+            return Double.valueOf(StringUtil.trimToEmpty(val.toString()));
+        }
+        return throwUnsupportedException(val, field);
+    }
+}

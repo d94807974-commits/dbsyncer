@@ -1,0 +1,43 @@
+/**
+ * DBSyncer Copyright 2020-2026 All Rights Reserved.
+ */
+package org.realtimeetl.connector.sqlserver.schema.support;
+
+import org.realtimeetl.sdk.model.Field;
+import org.realtimeetl.sdk.schema.support.ShortType;
+
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+/**
+ * @Author The clouds.
+ * @Version 1.0.0
+ * @Date 2026-01-11 22:21
+ */
+public final class SqlServerShortType extends ShortType {
+
+    private enum TypeEnum {
+        SMALLINT("smallint");
+
+        private final String value;
+
+        TypeEnum(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    @Override
+    protected Short merge(Object val, Field field) {
+        return throwUnsupportedException(val, field);
+    }
+
+    @Override
+    public Set<String> getSupportedTypeName() {
+        return Arrays.stream(TypeEnum.values()).map(TypeEnum::getValue).collect(Collectors.toSet());
+    }
+}

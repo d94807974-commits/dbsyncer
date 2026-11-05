@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.realtimeetl</groupId>
+        <artifactId>realtime-etl-connector</artifactId>
+        <version>2.1.6</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>realtime-etl-connector-base</artifactId>
+
+    <dependencies>
+        <!-- sdk -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-sdk</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-clickhouse -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-clickhouse</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-dameng -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-dameng</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-doris -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-doris</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-elasticsearch -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-elasticsearch</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-file -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-file</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-h2 -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-h2</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-http -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-http</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-kafka -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-kafka</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-mysql -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-mysql</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-oceanbase -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-oceanbase</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-oceanbase-oracle -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-oceanbase-oracle</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-oracle -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-oracle</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-postgresql -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-postgresql</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-gaussdb -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-gaussdb</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-gaussdb-mysql -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-gaussdb-mysql</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-kingbase</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-mongodb -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-mongodb</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-redis -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-redis</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-rocketmq -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-rocketmq</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-duckdb -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-duckdb</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-sqlite -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-sqlite</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-sqlserver -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-sqlserver</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-starrocks -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-starrocks</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- realtime-etl-connector-tidb -->
+        <dependency>
+            <groupId>org.realtimeetl</groupId>
+            <artifactId>realtime-etl-connector-tidb</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <!-- Log4j2 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>

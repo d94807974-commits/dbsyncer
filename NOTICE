@@ -1,0 +1,21 @@
+Realtime ETL
+Copyright 2026 the Realtime ETL contributors
+
+This product includes software developed as a derivative work of
+DBSyncer (https://github.com/86dbs/dbsyncer), Copyright the DBSyncer
+authors, licensed under the Apache License, Version 2.0.
+
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+Modifications in this fork include English localization, removal of
+third-party company branding from the UI, and renaming of packages,
+Maven modules, configuration keys, and storage table prefixes from
+dbsyncer / org.dbsyncer to realtime-etl / org.realtimeetl.

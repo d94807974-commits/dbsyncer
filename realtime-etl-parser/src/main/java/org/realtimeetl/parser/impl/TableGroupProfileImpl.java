@@ -1,0 +1,402 @@
+/**
+ * DBSyncer Copyright 2020-2026 All Rights Reserved.
+ */
+package org.realtimeetl.parser.impl;
+
+import org.realtimeetl.common.enums.TaskLevelEnum;
+import org.realtimeetl.common.model.Paging;
+import org.realtimeetl.common.util.CollectionUtils;
+import org.realtimeetl.common.util.NumberUtil;
+import org.realtimeetl.common.util.StringUtil;
+import org.realtimeetl.common.util.TaskSplitUtil;
+import org.realtimeetl.parser.TableGroupProfile;
+import org.realtimeetl.parser.TaskDetailMetaProfile;
+import org.realtimeetl.parser.TaskMetaProfile;
+import org.realtimeetl.parser.enums.CommandEnum;
+import org.realtimeetl.parser.model.Meta;
+import org.realtimeetl.parser.model.TableGroup;
+import org.realtimeetl.parser.util.ConfigModelUtil;
+import org.realtimeetl.parser.util.SqlResultRowUtil;
+import org.realtimeetl.sdk.constant.ConfigConstant;
+import org.realtimeetl.sdk.enums.FilterEnum;
+import org.realtimeetl.sdk.enums.OperationEnum;
+import org.realtimeetl.sdk.enums.SortEnum;
+import org.realtimeetl.sdk.enums.StorageEnum;
+import org.realtimeetl.sdk.filter.BooleanFilter;
+import org.realtimeetl.sdk.filter.Query;
+import org.realtimeetl.sdk.filter.impl.StringFilter;
+import org.realtimeetl.sdk.storage.ExecuteRequest;
+import org.realtimeetl.sdk.storage.StorageService;
+import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
+/**
+ * {@link TableGroupProfile} Achieved (realtime_etl_table_group）。
+ *
+ * @author wuji
+ * @version 1.0.0
+ */
+@Component
+public final class TableGroupProfileImpl implements TableGroupProfile {
+
+    private static final String RESULT_SELECT_COLUMNS =
+            "tg.ID AS tableGroupId, "
+                    + "tg.SOURCE_TABLE AS sourceTable, tg.TARGET_TABLE AS targetTable, "
+                    + "COALESCE(dm.SUCCESS, 0) AS successTotal, COALESCE(dm.FAIL, 0) AS failTotal, "
+                    + "COALESCE(dm.UPDATE_TIME, tg.UPDATE_TIME) AS updateTime";
+
+    private static final String RESULT_FROM_JOIN =
+            " FROM realtime_etl_table_group tg "
+                    + "LEFT JOIN realtime_etl_meta dm ON dm.TASK_ID = tg.ID AND dm.IS_TASK_DETAIL = 1 ";
+
+    private static final String RESULT_ORDER_SQL =
+            " ORDER BY COALESCE(dm.UPDATE_TIME, tg.UPDATE_TIME) DESC,"
+                    + " COALESCE(dm.FAIL, 0) DESC,"
+                    + " COALESCE(dm.SUCCESS, 0) DESC";
+
+    private static final String[] RESULT_SELECT_ALIASES = {
+            ConfigConstant.DATA_TABLE_GROUP_ID,
+            ConfigConstant.TABLE_GROUP_SOURCE_TABLE,
+            ConfigConstant.TABLE_GROUP_TARGET_TABLE,
+            ConfigConstant.DATABASE_SYNC_DETAIL_SUCCESS_TOTAL,
+            ConfigConstant.DATABASE_SYNC_DETAIL_FAIL_TOTAL,
+            ConfigConstant.CONFIG_MODEL_UPDATE_TIME
+    };
+
+    @Resource
+    private OperationTemplate operationTemplate;
+
+    @Resource
+    private StorageService storageService;
+
+    @Resource
+    private TaskMetaProfile taskMetaProfile;
+
+    @Resource
+    private TaskDetailMetaProfile taskDetailMetaProfile;
+
+    @Resource
+    private TableGroupProfile tableGroupProfile;
+
+    @Override
+    public String addTableGroup(TableGroup model) {
+        String id = operationTemplate.execute(model, CommandEnum.OPR_ADD);
+        addTableGroupDetailMeta(id);
+        return id;
+    }
+
+    @Override
+    public void addTableGroupBatch(List<TableGroup> models) {
+        if (CollectionUtils.isEmpty(models)) {
+            return;
+        }
+        TaskSplitUtil.split(models, ConfigConstant.PAGE_SIZE, batch -> {
+            List<String> ids = operationTemplate.executeBatch(batch, CommandEnum.OPR_ADD);
+            List<Meta> metas = new ArrayList<>(ids.size());
+            long now = System.currentTimeMillis();
+            for (String id : ids) {
+                if (StringUtil.isBlank(id)) {
+                    continue;
+                }
+                Meta meta = new Meta();
+                // id ByOperationTemplate ADD HarmonizationGenerateSnowflake;taskId Associationtable_group.id
+                meta.setTaskId(id);
+                meta.setIsTaskDetail(TaskLevelEnum.TASK_DETAIL.getCode());
+                meta.setCreateTime(now);
+                meta.setUpdateTime(now);
+                metas.add(meta);
+            }
+            if (!CollectionUtils.isEmpty(metas)) {
+                taskMetaProfile.addMetaBatch(metas);
+            }
+        });
+    }
+
+    @Override
+    public String editTableGroup(TableGroup model) {
+        return operationTemplate.execute(model, CommandEnum.OPR_EDIT);
+    }
+
+    @Override
+    public void editTableGroupBatch(List<TableGroup> models) {
+        if (CollectionUtils.isEmpty(models)) {
+            return;
+        }
+        TaskSplitUtil.split(models, ConfigConstant.PAGE_SIZE, batch ->
+                operationTemplate.executeBatch(batch, CommandEnum.OPR_EDIT));
+    }
+
+    @Override
+    public void removeTableGroup(String id) {
+        removeTableGroupDetailMeta(id);
+        storageService.remove(StorageEnum.TABLE_GROUP, id);
+    }
+
+    @Override
+    public void removeTableGroupsByTaskId(String taskId) {
+        if (StringUtil.isBlank(taskId)) {
+            return;
+        }
+        // DeleteTable Associatedmeta
+        tableGroupProfile.pageScanTableGroups(taskId, ConfigConstant.PAGE_SIZE, tableGroups -> {
+            List<String> groupIds = tableGroups.stream().map(TableGroup::getId).collect(Collectors.toList());
+            // BatchDeleteTablemetaData Fact
+            taskDetailMetaProfile.deleteMetaByTableGroupIds(groupIds);
+        });
+
+        Query deleteQuery = new Query();
+        deleteQuery.setType(StorageEnum.TABLE_GROUP);
+        deleteQuery.addFilter(ConfigConstant.TABLE_GROUP_TASK_ID, taskId);
+        storageService.delete(deleteQuery);
+    }
+
+    @Override
+    public TableGroup getTableGroup(String tableGroupId) {
+        return operationTemplate.queryObject(TableGroup.class, tableGroupId);
+    }
+
+    @Override
+    public Paging<TableGroup> queryTableGroup(String mappingId, String searchKey, int pageNum, int pageSize) {
+        int safePageSize = pageSize > 0 ? pageSize : ConfigConstant.PAGE_SIZE;
+        int safePageNum = Math.max(pageNum, 1);
+        if (StringUtil.isBlank(mappingId)) {
+            return new Paging<>(safePageNum, safePageSize);
+        }
+        Query query = new Query(safePageNum, safePageSize);
+        query.setType(StorageEnum.TABLE_GROUP);
+        query.addOrderBy(ConfigConstant.TABLE_GROUP_SORT_INDEX, SortEnum.DESC);
+        if (StringUtil.isBlank(searchKey)) {
+            query.addFilter(ConfigConstant.TABLE_GROUP_TASK_ID, mappingId);
+        } else {
+            BooleanFilter root = new BooleanFilter();
+            BooleanFilter taskClause = new BooleanFilter();
+            taskClause.add(new StringFilter(ConfigConstant.TABLE_GROUP_TASK_ID, FilterEnum.EQUAL, mappingId, false));
+            BooleanFilter searchClause = new BooleanFilter();
+            searchClause.add(new StringFilter(ConfigConstant.TABLE_GROUP_SOURCE_TABLE, FilterEnum.LIKE, searchKey, false));
+            searchClause.or(new StringFilter(ConfigConstant.TABLE_GROUP_TARGET_TABLE, FilterEnum.LIKE, searchKey, false));
+            root.add(taskClause, OperationEnum.AND);
+            root.add(searchClause, OperationEnum.AND);
+            query.setBooleanFilter(root);
+        }
+        Paging paging = storageService.query(query);
+        Paging<TableGroup> result = new Paging<>(safePageNum, safePageSize);
+        if (paging == null) {
+            return result;
+        }
+        result.setTotal(paging.getTotal());
+        if (CollectionUtils.isEmpty(paging.getData())) {
+            return result;
+        }
+        List<TableGroup> groups = new ArrayList<>(paging.getData().size());
+        for (Object item : paging.getData()) {
+            TableGroup group = ConfigModelUtil.parseFromRow((Map) item, TableGroup.class);
+            if (group != null) {
+                groups.add(group);
+            }
+        }
+        result.setData(groups);
+        return result;
+    }
+
+    @Override
+    public Paging queryTableGroupResults(String mappingId, String detailStatus, int pageNum, int pageSize) {
+        Assert.hasText(mappingId, "Synchronising task ID cannot be empty");
+        int safePageNum = Math.max(pageNum, 1);
+        int safePageSize = pageSize > 0 ? pageSize : ConfigConstant.PAGE_SIZE;
+
+        List<Object> args = new ArrayList<>();
+        String where = buildTableGroupResultWhere(mappingId, detailStatus, args);
+        long total = queryTableGroupResultCount(where, args);
+        Paging paging = new Paging(safePageNum, safePageSize);
+        paging.setTotal(total);
+        if (total <= 0) {
+            paging.setData(Collections.emptyList());
+            return paging;
+        }
+        String sql = "SELECT " + RESULT_SELECT_COLUMNS + RESULT_FROM_JOIN + where + RESULT_ORDER_SQL;
+        List<Map<String, Object>> rows = storageService.queryList(
+                ExecuteRequest.of(sql, args.toArray()).page(safePageNum, safePageSize));
+        List<Map<String, Object>> data = new ArrayList<>(rows == null ? 0 : rows.size());
+        if (!CollectionUtils.isEmpty(rows)) {
+            for (Map<String, Object> row : rows) {
+                data.add(SqlResultRowUtil.toAliasRow(row, RESULT_SELECT_ALIASES));
+            }
+        }
+        paging.setData(data);
+        return paging;
+    }
+
+    private String buildTableGroupResultWhere(String mappingId, String detailStatus, List<Object> args) {
+        StringBuilder where = new StringBuilder("WHERE tg.TASK_ID = ? ");
+        args.add(mappingId);
+        if (StringUtil.equals("fail", detailStatus)) {
+            where.append("AND COALESCE(dm.FAIL, 0) > 0 ");
+        } else if (StringUtil.equals("success", detailStatus)) {
+            where.append("AND COALESCE(dm.FAIL, 0) = 0 ");
+        }
+        return where.toString();
+    }
+
+    private long queryTableGroupResultCount(String where, List<Object> args) {
+        String sql = "SELECT COUNT(1) AS cnt " + RESULT_FROM_JOIN + where;
+        List<Map<String, Object>> rows = storageService.queryList(ExecuteRequest.of(sql, args.toArray()));
+        if (CollectionUtils.isEmpty(rows)) {
+            return 0L;
+        }
+        Object cnt = rows.get(0).get("cnt");
+        if (cnt == null) {
+            cnt = rows.get(0).values().iterator().next();
+        }
+        return NumberUtil.toLong(String.valueOf(cnt));
+    }
+
+    @Override
+    public void pageScanTableGroups(String mappingId, int pageSize, Consumer<List<TableGroup>> pageConsumer) {
+        if (StringUtil.isBlank(mappingId) || pageConsumer == null) {
+            return;
+        }
+        int safePageSize = pageSize > 0 ? pageSize : ConfigConstant.PAGE_SIZE;
+        int pageNum = 1;
+        while (true) {
+            Paging<TableGroup> paging = queryTableGroup(mappingId, null, pageNum, safePageSize);
+            if (CollectionUtils.isEmpty(paging.getData())) {
+                break;
+            }
+            List<TableGroup> page = new ArrayList<>(paging.getData());
+            pageConsumer.accept(page);
+            if (page.size() < safePageSize) {
+                break;
+            }
+            pageNum++;
+        }
+    }
+
+    @Override
+    public List<TableGroup> listTableGroupsBySql(ExecuteRequest query) {
+        if (query == null) {
+            return Collections.emptyList();
+        }
+        List<Map<String, Object>> rows = storageService.queryList(query);
+        if (CollectionUtils.isEmpty(rows)) {
+            return Collections.emptyList();
+        }
+        List<TableGroup> result = new ArrayList<>(rows.size());
+        for (Map<String, Object> row : rows) {
+            TableGroup group = ConfigModelUtil.parseFromRow(row, TableGroup.class);
+            if (group != null) {
+                result.add(group);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public int getTableGroupCount(String mappingId) {
+        if (StringUtil.isBlank(mappingId)) {
+            return 0;
+        }
+        Query condition = new Query();
+        condition.addFilter(ConfigConstant.TABLE_GROUP_TASK_ID, mappingId);
+        return operationTemplate.count(StorageEnum.TABLE_GROUP, condition);
+    }
+
+    @Override
+    public boolean existTableGroup(String taskId, String sourceTable, String targetTable) {
+        if (StringUtil.isBlank(taskId) || StringUtil.isBlank(sourceTable) || StringUtil.isBlank(targetTable)) {
+            return false;
+        }
+        Query condition = new Query();
+        condition.addFilter(ConfigConstant.TABLE_GROUP_TASK_ID, taskId);
+        condition.addFilter(ConfigConstant.TABLE_GROUP_SOURCE_TABLE, sourceTable);
+        condition.addFilter(ConfigConstant.TABLE_GROUP_TARGET_TABLE, targetTable);
+        return operationTemplate.count(StorageEnum.TABLE_GROUP, condition) > 0;
+    }
+
+    private void addTableGroupDetailMeta(String tableGroupId) {
+        if (StringUtil.isBlank(tableGroupId)) {
+            return;
+        }
+        Meta existing = taskMetaProfile.getMetaDetail(tableGroupId);
+        if (existing != null) {
+            return;
+        }
+        Meta meta = new Meta();
+        meta.setTaskId(tableGroupId);
+        meta.setIsTaskDetail(TaskLevelEnum.TASK_DETAIL.getCode());
+        long now = System.currentTimeMillis();
+        meta.setCreateTime(now);
+        meta.setUpdateTime(now);
+        taskMetaProfile.addMeta(meta);
+    }
+
+    @Override
+    public void addTableGroupBatchWithoutMeta(List<TableGroup> models) {
+        if (CollectionUtils.isEmpty(models)) {
+            return;
+        }
+        long now = System.currentTimeMillis();
+        for (TableGroup model : models) {
+            if (model == null) {
+                continue;
+            }
+            // ConfigurePackageNDJSON Probably not.createTime/updateTime，LibraryreorganizeNOT NULL
+            if (model.getCreateTime() == null) {
+                model.setCreateTime(now);
+            }
+            if (model.getUpdateTime() == null) {
+                model.setUpdateTime(now);
+            }
+        }
+        TaskSplitUtil.split(models, ConfigConstant.PAGE_SIZE, batch ->
+                operationTemplate.executeBatch(batch, CommandEnum.OPR_ADD));
+    }
+
+    @Override
+    public int countTableGroups() {
+        return operationTemplate.count(StorageEnum.TABLE_GROUP, null);
+    }
+
+    @Override
+    public void pageScanTableGroupsByTaskId(Consumer<TableGroup> consumer) {
+        if (consumer == null) {
+            return;
+        }
+        Query query = new Query();
+        query.setType(StorageEnum.TABLE_GROUP);
+        query.setPageSize(ConfigConstant.PAGE_SIZE);
+        query.addOrderBy(ConfigConstant.TABLE_GROUP_TASK_ID, SortEnum.ASC);
+        while (true) {
+            Paging paging = storageService.query(query);
+            if (paging == null || CollectionUtils.isEmpty(paging.getData())) {
+                break;
+            }
+            List<Map> data = (List<Map>) paging.getData();
+            for (Map row : data) {
+                TableGroup tg = ConfigModelUtil.parseFromRow(row, TableGroup.class);
+                if (tg != null && StringUtil.isNotBlank(tg.getTaskId())) {
+                    consumer.accept(tg);
+                }
+            }
+            query.setPageNum(query.getPageNum() + 1);
+        }
+    }
+
+    private void removeTableGroupDetailMeta(String tableGroupId) {
+        if (StringUtil.isBlank(tableGroupId)) {
+            return;
+        }
+        Meta byRef = taskMetaProfile.getMetaDetail(tableGroupId);
+        if (byRef != null && StringUtil.isNotBlank(byRef.getId())) {
+            taskMetaProfile.removeMeta(byRef.getId());
+        }
+    }
+
+}

@@ -1,0 +1,16 @@
+/**
+ * DBSyncer Copyright 2020-2023 All Rights Reserved.
+ */
+package org.realtimeetl.connector.sqlserver.validator;
+
+import org.realtimeetl.sdk.connector.AbstractDataBaseConfigValidator;
+
+/**
+ * SqlServerConnectConfigureVerifyer Achieved
+ *
+ * @Author AE86
+ * @Version 1.0.0
+ * @Date 2023-11-25 23:10
+ */
+public final class SqlServerConfigValidator extends AbstractDataBaseConfigValidator {
+}

@@ -1,0 +1,25 @@
+package org.realtimeetl.parser.convert.handler;
+
+import org.realtimeetl.common.util.StringUtil;
+import org.realtimeetl.parser.convert.AbstractHandler;
+
+import org.springframework.util.Assert;
+
+/**
+ * Replace
+ *
+ * @author AE86
+ * @version 1.0.0
+ * @date 2019/10/8 23:03
+ */
+public class ReplaceHandler extends AbstractHandler {
+
+    @Override
+    protected Object convert(String args, Object value) {
+        Assert.hasText(args, "No 55/2.");
+        String[] split = StringUtil.split(args, StringUtil.COMMA);
+        String a = split[0];
+        String b = split.length == 2 ? split[1] : "";
+        return StringUtil.replace(String.valueOf(value), a, b);
+    }
+}

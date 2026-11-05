@@ -2,7 +2,7 @@
 
 <!-- https://help.eclipse.org/latest/topic/org.eclipse.jdt.doc.isv/guide/jdt_api_options.htm -->
 <profiles version="13">
-    <profile kind="CodeFormatterProfile" name="'DBSyncer'" version="13">
+    <profile kind="CodeFormatterProfile" name="'Realtime ETL'" version="13">
         <!-- CompilerConfigure -->
         <setting id="org.eclipse.jdt.core.compiler.source" value="1.8" />
         <setting id="org.eclipse.jdt.core.compiler.compliance" value="1.8" />

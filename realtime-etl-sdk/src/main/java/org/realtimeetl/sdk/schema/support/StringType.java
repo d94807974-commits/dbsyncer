@@ -1,0 +1,69 @@
+/**
+ * DBSyncer Copyright 2020-2024 All Rights Reserved.
+ */
+package org.realtimeetl.sdk.schema.support;
+
+import org.realtimeetl.common.util.DateFormatUtil;
+import org.realtimeetl.sdk.enums.DataTypeEnum;
+import org.realtimeetl.sdk.model.Field;
+import org.realtimeetl.sdk.schema.AbstractDataType;
+
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+/**
+ * @Author The clouds.
+ * @Version 1.0.0
+ * @Date 2024-11-21 23:56
+ */
+public abstract class StringType extends AbstractDataType<String> {
+
+    @Override
+    public DataTypeEnum getType() {
+        return DataTypeEnum.STRING;
+    }
+
+    @Override
+    protected Object convert(Object val, Field field) {
+        if (val instanceof String) {
+            return val;
+        }
+        if (val instanceof byte[]) {
+            return new String((byte[]) val);
+        }
+
+        if (val instanceof Number) {
+            Number number = (Number) val;
+            return number.toString();
+        }
+
+        if (val instanceof LocalDateTime) {
+            return ((LocalDateTime) val).format(DateFormatUtil.YYYY_MM_DD_HH_MM_SS);
+        }
+
+        if (val instanceof LocalDate) {
+            return ((LocalDate) val).format(DateFormatUtil.YYYY_MM_DD);
+        }
+
+        if (val instanceof Timestamp) {
+            return DateFormatUtil.timestampToString((Timestamp) val);
+        }
+
+        if (val instanceof Time) {
+            return DateFormatUtil.timeToString((Time) val);
+        }
+
+        if (val instanceof Date) {
+            return DateFormatUtil.dateToString((Date) val);
+        }
+
+        if (val instanceof java.util.Date) {
+            return DateFormatUtil.dateToString((java.util.Date) val);
+        }
+
+        return throwUnsupportedException(val, field);
+    }
+}

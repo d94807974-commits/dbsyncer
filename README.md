@@ -1,8 +1,14 @@
+# Realtime ETL
+
+> **Derivative notice.** This project is derived from [86dbs/dbsyncer](https://github.com/86dbs/dbsyncer) (Apache License 2.0).
+> Upstream copyright and authors are retained in source file headers and `LICENSE` / `NOTICE`.
+> This fork renames packages and branding to **Realtime ETL** (`org.realtimeetl`, Maven `realtime-etl-*`) and removes third-party company branding from the UI.
+
 ## Introduction
 
-![logo](https://gitee.com/ghi/dbsyncer/raw/master/dbsyncer-web/src/main/resources/static/img/logo.png)
+![logo](https://gitee.com/ghi/realtime-etl/raw/master/realtime-etl-web/src/main/resources/static/img/logo.png)
 
-[DBSyncer](https://dbsyncer.cn) (pronounced [dbsɪŋkɜː(r)], short for **dbs**) is an open-source data synchronization middleware. It covers sync scenarios for MySQL, Oracle, SQL Server, PostgreSQL, Elasticsearch (ES), Kafka, File, SQL, and more. You can upload plugins to customize transform logic, and monitor full/incremental stats with application performance alerts.
+[Realtime ETL](https://github.com/d94807974-commits/dbsyncer) is an open-source **real-time data processing / ETL** service. It is a derivative fork of [DBSyncer](https://github.com/86dbs/dbsyncer) (Apache-2.0). It covers sync scenarios for MySQL, Oracle, SQL Server, PostgreSQL, Elasticsearch (ES), Kafka, File, SQL, and more. You can upload plugins to customize transform logic, and monitor full/incremental stats with application performance alerts.
 
 > Features
 
@@ -12,12 +18,12 @@
 
 > Upstream repositories
 
-* [Gitee](https://gitee.com/ghi/dbsyncer)
+* [Gitee](https://gitee.com/ghi/realtime-etl)
 * [GitHub](https://github.com/86dbs/dbsyncer)
 
-[![star](https://gitee.com/ghi/dbsyncer/badge/star.svg?theme=dark)](https://gitee.com/ghi/dbsyncer/stargazers)
-[![fork](https://gitee.com/ghi/dbsyncer/badge/fork.svg?theme=dark)](https://gitee.com/ghi/dbsyncer/members)
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://gitee.com/ghi/dbsyncer/blob/master/LICENSE)
+[![star](https://gitee.com/ghi/realtime-etl/badge/star.svg?theme=dark)](https://gitee.com/ghi/realtime-etl/stargazers)
+[![fork](https://gitee.com/ghi/realtime-etl/badge/fork.svg?theme=dark)](https://gitee.com/ghi/realtime-etl/members)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://gitee.com/ghi/realtime-etl/blob/master/LICENSE)
 
 > Website
 
@@ -65,17 +71,17 @@ https://dbsyncer.cn
 
 ## User manual (Wiki)
 
-https://gitee.com/ghi/dbsyncer/wikis
+https://gitee.com/ghi/realtime-etl/wikis
 
 ## Install
 
-- dbsyncer-x.x.x.zip — [Community install guide](https://gitee.com/ghi/dbsyncer/wikis)
-- dbsyncer-enterprise-x.x.x.zip — [Professional install guide](https://gitee.com/ghi/dbsyncer/wikis)
+- realtime-etl-x.x.x.zip — [Community install guide](https://gitee.com/ghi/realtime-etl/wikis)
+- realtime-etl-enterprise-x.x.x.zip — [Professional install guide](https://gitee.com/ghi/realtime-etl/wikis)
 
 #### Option 1 — Download package
 
 1. Install [JDK 1.8+](https://www.oracle.com/java/technologies/jdk8-downloads.html)
-2. Download [dbsyncer-x.x.x.zip](https://gitee.com/ghi/dbsyncer/releases) (or build from source)
+2. Download [realtime-etl-x.x.x.zip](https://gitee.com/ghi/realtime-etl/releases) (or build from source)
 3. Unzip; on Windows run `bin/startup.bat`, on Linux run `bin/startup.sh`
 4. Open http://127.0.0.1:18686
 5. Default account: `admin` / `admin`
@@ -84,28 +90,28 @@ https://gitee.com/ghi/dbsyncer/wikis
 
 ```shell
 # Community
-docker pull images.dbsyncer.cn/xhtb-dbs/dbsyncer:latest
-docker pull images.dbsyncer.cn/xhtb-dbs/dbsyncer:2.1.5
+docker pull images.dbsyncer.cn/xhtb-dbs/realtime-etl:latest
+docker pull images.dbsyncer.cn/xhtb-dbs/realtime-etl:2.1.5
 # Professional
-docker pull images.dbsyncer.cn/xhtb-dbs/dbsyncer-enterprise:latest
-docker pull images.dbsyncer.cn/xhtb-dbs/dbsyncer-enterprise:2.1.5
+docker pull images.dbsyncer.cn/xhtb-dbs/realtime-etl-enterprise:latest
+docker pull images.dbsyncer.cn/xhtb-dbs/realtime-etl-enterprise:2.1.5
 ```
 
 ```shell
 docker run -d \
-  --name=dbsyncer \
+  --name=realtime-etl \
   --restart=unless-stopped \
   -p 18686:18686 \
   -e TZ="Asia/Shanghai" \
   -m 5g \
   --memory-swap=5g \
-  -v /opt/dbsyncer/data:/app/dbsyncer/data \
-  -v /opt/dbsyncer/logs:/app/dbsyncer/logs \
-  -v /opt/dbsyncer/plugins:/app/dbsyncer/plugins \
+  -v /opt/realtime-etl/data:/app/realtime-etl/data \
+  -v /opt/realtime-etl/logs:/app/realtime-etl/logs \
+  -v /opt/realtime-etl/plugins:/app/realtime-etl/plugins \
   --log-driver json-file \
   --log-opt max-size=100m \
   --log-opt max-file=7 \
-  images.dbsyncer.cn/xhtb-dbs/dbsyncer:latest
+  images.dbsyncer.cn/xhtb-dbs/realtime-etl:latest
 ```
 
 ## Build from source
@@ -114,7 +120,7 @@ Requires JDK and Maven:
 
 ```bash
 git clone https://github.com/d94807974-commits/dbsyncer.git
-cd dbsyncer
+cd realtime-etl
 git checkout i18n-english
 chmod u+x build.sh
 ./build.sh
@@ -128,7 +134,7 @@ mvn -DskipTests package
 
 ## Performance tests
 
-See upstream wiki: https://gitee.com/ghi/dbsyncer/wikis
+See upstream wiki: https://gitee.com/ghi/realtime-etl/wikis
 
 #### Full sync
 
@@ -148,14 +154,14 @@ See upstream wiki: https://gitee.com/ghi/dbsyncer/wikis
 
 ## FAQ
 
-* MySQL connection issues: default driver is 8.0.21; for MySQL 5.x replace with [mysql-connector-java-5.1.40.jar](https://gitee.com/ghi/dbsyncer/attach_files)
+* MySQL connection issues: default driver is 8.0.21; for MySQL 5.x replace with [mysql-connector-java-5.1.40.jar](https://gitee.com/ghi/realtime-etl/attach_files)
 * SQL Server SSL/TLS issues: see upstream issues
 * Garbled sync data / remote debug: see upstream wiki FAQ
 
 ## Credits
 
 * Upstream project and authors: [86dbs/dbsyncer](https://github.com/86dbs/dbsyncer) (Apache-2.0)
-* Original Gitee project: https://gitee.com/ghi/dbsyncer
+* Original Gitee project: https://gitee.com/ghi/realtime-etl
 * This English localization is a community fork contribution and is not an official upstream release
 
 ## License
