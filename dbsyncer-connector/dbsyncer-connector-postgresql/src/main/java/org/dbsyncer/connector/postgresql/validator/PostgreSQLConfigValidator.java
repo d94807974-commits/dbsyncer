@@ -32,7 +32,7 @@ public class PostgreSQLConfigValidator extends AbstractDataBaseConfigValidator {
         } else if (!connectorConfig.getExtInfo().containsKey(PostgreSQLConfigConstant.DROP_SLOT_ON_CLOSE)) {
             connectorConfig.getExtInfo().put(PostgreSQLConfigConstant.DROP_SLOT_ON_CLOSE, "true");
         }
-        // params (ifCopy）Other OrganiserextInfo JSON RevertValue，AvoidHashtable Rejectnull
+        // params 缺省时（如复制）保留已从 extInfo JSON 还原的值，避免 Hashtable 拒 null
         String pluginName = params.get(PostgreSQLConfigConstant.PLUGIN_NAME);
         if (StringUtil.isBlank(pluginName)) {
             pluginName = connectorConfig.getExtInfo().getProperty(PostgreSQLConfigConstant.PLUGIN_NAME);

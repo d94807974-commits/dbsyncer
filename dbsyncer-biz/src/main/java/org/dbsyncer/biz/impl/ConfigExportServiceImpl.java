@@ -39,7 +39,7 @@ import java.util.zip.ZipOutputStream;
 /**
  * FluidZIP ConfigureExport：system/user/connector/task/meta WriteJSON array,
  * table_group PresstaskId minDocumentationWriteNDJSON；task.json Include sync/check/transferFullTasks；
- * task_detail.json OnlyTasks ID List,ImportOther OrganiserminTable (no)ExportRow data）。
+ * task_detail.json 仅含任务 ID 清单，导入时预建空分表（不导出行数据）。
  *
  * @author AE86
  * @version 1.0.0

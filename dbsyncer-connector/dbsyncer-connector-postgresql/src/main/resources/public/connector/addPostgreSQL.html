@@ -80,7 +80,7 @@
         </div>
 
         <div class="form-item">
-            <label class="form-label">TTL (ms)<strong class="text-primary">*</strong></label>
+            <label class="form-label">Keep-alive (ms)<strong class="text-primary">*</strong></label>
             <div class="form-control-area">
                 <input class="form-control" name="keepAlive" type="number" required min="10000" max="120000"
                        th:value="${connector?.config?.keepAlive}?:60000" placeholder="Default 60000"/>

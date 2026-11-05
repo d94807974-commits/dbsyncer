@@ -83,7 +83,7 @@
         return $item;
     }
     
-    // Bind individualcheckbox Yes.Event
+    // Bind checkbox change events
     function bindCheckboxEvents($container, $item, $checkbox, config, isSingle) {
         // Switch when clicking itemscheckbox Status
         $item.on('click', function(e) {

@@ -125,7 +125,7 @@ public class WebAppConfig extends WebSecurityConfigurerAdapter implements Authen
     public LogoutSuccessHandler logoutHandler() {
         return (request, response, authentication) -> {
             try {
-                String msg = String.format("Other Organiser", authentication.getPrincipal());
+                String msg = String.format("%s signed out successfully", authentication.getPrincipal());
                 write(response, RestResult.restSuccess(msg));
                 logger.info(msg);
             } catch (Exception e) {

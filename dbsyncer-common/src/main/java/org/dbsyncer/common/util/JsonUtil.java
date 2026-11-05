@@ -19,7 +19,7 @@ public abstract class JsonUtil {
     }
 
     /**
-     * Other OrganiserJSON String, yes.FastJSON2 It's hard to sequence.TypeDo it.Convert，AvoidJSONException。
+     * 将对象序列化为 JSON 字符串，对 FastJSON2 难以序列化的类型做转换，避免 JSONException。
      * ForgetBinlogData Waiting for possible Inspectionbyte[]、ByteBuffer、Original array, etc.TypeYes.Map。
      * <p>
      * Convert27. Rules:byte[]/ByteBuffer -> Base64；int/long/short/float/double/boolean/char[] -> List；

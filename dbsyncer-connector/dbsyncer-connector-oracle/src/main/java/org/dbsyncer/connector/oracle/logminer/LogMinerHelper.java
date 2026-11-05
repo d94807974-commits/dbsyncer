@@ -227,7 +227,7 @@ public class LogMinerHelper {
         if (roles.contains("DBA")) {
             return;
         }
-        // SELECT_CATALOG_ROLE verifieUserAccess data dictionary view (e. g.DBA_, V$, ALL_* ) for data searchLibraryOther Organiser
+        // SELECT_CATALOG_ROLE 允许用户访问数据字典视图（如 DBA_, V$, ALL_* 等），用于查询数据库的元数据
         if (!roles.contains(LOG_MINER_SELECT_CATALOG_ROLE_ROLE)) {
             throw new IllegalArgumentException(String.format("No permission, please execute sql authorization：GRANT %s TO USERNAME;", LOG_MINER_SELECT_CATALOG_ROLE_ROLE));
         }

@@ -909,7 +909,7 @@ public class H2StorageService extends AbstractStorageService {
             return;
         }
         if (StorageEnum.TASK.getType().equals(type)) {
-            // STATUS Other OrganiserData MigrationBackDelete，SeedropTaskStatusColumnIfPresent()
+            // STATUS 列须在数据迁移后删除，见 dropTaskStatusColumnIfPresent()
             createIndexIfNotExist(table, "IDX_UPDATE_TIME", "`UPDATE_TIME`");
             createIndexIfNotExist(table, "IDX_TYPE_UPDATE_TIME", "`TYPE`,`UPDATE_TIME`");
             return;
@@ -937,9 +937,9 @@ public class H2StorageService extends AbstractStorageService {
                     connector.buildWithQuotation(table),
                     connector.buildWithQuotation(columnName),
                     columnDef));
-            logger.info("Other Organiser", table, columnName);
+            logger.info("Backfilled {}.{}", table, columnName);
         } catch (Exception e) {
-            logger.warn("Other Organiser", table, columnName, e.getMessage());
+            logger.warn("Failed to backfill {}.{}: {}", table, columnName, e.getMessage());
         }
     }
 

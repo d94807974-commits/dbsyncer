@@ -171,7 +171,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
         checkTask(task, params);
         // Default checkRow data
         task.setEnableRowData(true);
-        // Other Organiser 88
+        // 关联同步任务
         String mappingId = params.get("mappingId");
         if (StringUtil.isNotBlank(mappingId)) {
             Mapping mapping = mappingProfile.get(mappingId);
@@ -509,7 +509,7 @@ public final class ValidateSyncServiceImpl extends BaseServiceImpl implements Va
         int pageNum = NumberUtil.toInt(params.get("pageNum"), 1);
         int pageSize = Math.max(10, Math.min(200, NumberUtil.toInt(params.get("pageSize"), 50)));
 
-        // YesNoFilteredConfigureTableexclude=1 Other Organiser
+        // 是否过滤已配置的表（exclude=1 表示不过滤）
         boolean excludeMapped = NumberUtil.toInt(params.get("exclude"), 0) != YesNoEnum.YES.getCode();
 
         ValidateSyncTask task = validateSyncProfile.get(id);

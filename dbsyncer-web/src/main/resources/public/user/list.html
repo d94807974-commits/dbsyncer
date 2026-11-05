@@ -4,26 +4,26 @@
 
 <div class="form-container">
     <div class="card-header">
-        <h3 class="card-title text-center">User Management</h3>
+ <h3 class="card-title text-center">UsersManagement OPENING</h3>
     </div>
     <div class="card-body">
         <div class="form-actions mb-4" data-permission="user:edit">
             <button class="btn btn-primary" onclick="doLoader('/user/page/add')">
-                <i class="fa fa-plus"></i> Add
+ <i class="fa fa-plus"></i> Add
             </button>
         </div>
         <table class="table">
             <thead>
             <tr>
-                <th>User</th>
-                <th>Role</th>
-                <th>Status</th>
-                <th>Actions</th>
+ <th>Users</th>
+ <th>Roles</th>
+ <th>Status</th>
+ <th>Actions</th>
             </tr>
             </thead>
             <tbody id="userList">
             <tr th:if="${users == null or users.isEmpty()}">
-                <td colspan="4" class="text-center text-tertiary py-8">User data not available</td>
+ <td colspan="4" class="text-center text-tertiary py-8">None yetUsersData</td>
             </tr>
             <tr th:each="u : ${users}">
                 <td>
@@ -43,21 +43,21 @@
                           th:text="${u?.roleName}"></span>
                 </td>
                 <td>
-                    <span class="badge badge-error" th:if="${u?.locked}">Locked</span>
-                    <span class="badge badge-success" th:unless="${u?.locked}">Normal</span>
+ <span class="badge badge-error" th:if="${u?.locked}">Locked</span>
+ <span class="badge badge-success" th:unless="${u?.locked}">Healthy</span>
                 </td>
                 <td>
                     <div class="flex items-center">
-                        <!-- I can change; or I haveuser:edit -->
-                        <button class="table-action-btn view editUserBtn" title="Edit" th:data-username="${u?.username}"
+ <!-- I can change.；or user:edit -->
+ <button class="table-action-btn view editUserBtn" title="Update" th:data-username="${u?.username}"
                                 th:if="${currentUser?.username eq u?.username or currentUser?.admin or (currentUser?.permissions != null and #lists.contains(currentUser.permissions, 'user:edit'))}">
                             <i class="fa fa-edit"></i>
                         </button>
-                        <button class="table-action-btn unlockUserBtn" title="Unlock" th:data-username="${u?.username}"
+ <button class="table-action-btn unlockUserBtn" title="Unlock" th:data-username="${u?.username}"
                                 th:if="${u?.locked}" data-permission="user:edit">
                             <i class="fa fa-unlock"></i>
                         </button>
-                        <button class="table-action-btn delete removeUserBtn" title="Delete" th:data-username="${u?.username}"
+ <button class="table-action-btn delete removeUserBtn" title="Delete" th:data-username="${u?.username}"
                                 th:if="${currentUser?.username != u?.username}" data-permission="user:edit">
                             <i class="fa fa-trash"></i>
                         </button>
@@ -71,49 +71,49 @@
 
 <script>
     $(function () {
-        // DefinitionsBackFunctions，SonPageNoodles.Back
+ // DefinitionsBackFunctions，SubpageBack
         window.backIndexPage = function () {
             doLoader('/user');
         };
 
-        // TieModify UserbuttonEvent
+ // TieUpdateUsersBut Instalment
         $(".editUserBtn").on('click', function () {
             const username = $(this).data('username');
             doLoader("/user/page/edit?username=" + username);
         });
 
-        // TieDeleteUserbuttonEvent
+ // TieDeleteUsersButton Events
         $(".removeUserBtn").on('click', function () {
             const username = $(this).data('username');
             const $btn = $(this);
             showConfirm({
-                title: 'Are you sure you want to delete the user?',
+ title: 'OKYes.DeleteUsers？',
                 icon: 'warning',
                 size: 'large',
                 confirmType: 'danger',
                 onConfirm: function () {
-                    // Disablebutton to prevent repeat clicks
+ // Disablebutton，Prevent repeat clicks
                     const originalText = $btn.html();
-                    $btn.html('<i class="fa fa-spinner fa-spin"></i> Deleting...').prop('disabled', true)
+ $btn.html('<i class="fa fa-spinner fa-spin"></i> DeleteMedium...').prop('disabled', true)
                     doPoster('/user/remove', {username: username}, function (data) {
                         $btn.html(originalText).prop('disabled', false);
                         if (data.success === true) {
-                            bootGrowl("Deleted successfully!", "success");
+ bootGrowl("Deleted successfully！", "success");
                             doLoader("/user?refresh=" + new Date().getTime());
                         } else {
-                            bootGrowl(data.message || "Delete failed", "danger");
+ bootGrowl(data.message || "DeleteFailed", "danger");
                         }
                     });
                 }
             });
         });
 
-        // TieUnlockbuttonEvent
+ // all button events
         $(".unlockUserBtn").on('click', function () {
             const username = $(this).data('username');
             const $btn = $(this);
             showConfirm({
-                title: 'Are you sure you want to unlock the user?',
+ title: 'OKTo unlock it.Users？',
                 icon: 'warning',
                 onConfirm: function () {
                     const originalText = $btn.html();
@@ -121,10 +121,10 @@
                     doPoster('/user/unlock', {username: username}, function (data) {
                         $btn.html(originalText).prop('disabled', false);
                         if (data.success === true) {
-                            bootGrowl("Unlocked!", "success");
+ bootGrowl("UnlockSuccess！", "success");
                             doLoader("/user?refresh=" + new Date().getTime());
                         } else {
-                            bootGrowl(data.message || "Unlock failed", "danger");
+ bootGrowl(data.message || "UnlockFailed", "danger");
                         }
                     });
                 }

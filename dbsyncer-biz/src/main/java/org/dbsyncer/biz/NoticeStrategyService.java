@@ -33,7 +33,7 @@ public interface NoticeStrategyService {
      * PressID DeleteStrategy, effective immediately.
      *
      * @param params must containid
-     * @return DeletedOther OrganiserID
+     * @return 已删除的策略 ID
      */
     String remove(Map<String, String> params);
 }

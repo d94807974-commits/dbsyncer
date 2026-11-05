@@ -185,7 +185,7 @@ public class ParserComponentImpl implements ParserComponent {
 
         for (; ; ) {
             if (!task.isRunning()) {
-                logger.warn("Other Organiser", taskId);
+                logger.warn("Task aborted: {}", taskId);
                 break;
             }
 

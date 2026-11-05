@@ -4,7 +4,7 @@
 package org.dbsyncer.biz.vo;
 
 /**
- * Sync taskListLine (only)ListPresentationField，Other OrganiserConfigure）。
+ * 同步任务列表行（仅列表展示字段，不含完整配置）。
  *
  * @author wuji
  * @version 1.0.0

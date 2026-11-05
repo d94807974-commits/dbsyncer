@@ -76,7 +76,7 @@ public interface ResourceAclService {
     GroupSearchFilter applyToSearchFilter(GroupSearchFilter groupFilter, Set<String> allowedIds);
 
     /**
-     * FilterListMediumNoneOther OrganiserPermissionsentry(s)admin As FurthermoreBack）。
+     * 过滤列表中无对应动作权限的项（admin 原样返回）。
      */
     <T> List<T> filter(String username, String resourceType, List<T> list, Function<T, String> idGetter, String action);
 }

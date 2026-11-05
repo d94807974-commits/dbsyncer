@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <div th:fragment="index">
-    <!-- StatisticsCut.Snippets -->
+ <!-- Statistical card -->
     <div class="grid grid-cols-4 mb-5">
         <div class="card px-6" id="totalMeta"></div>
 
@@ -11,7 +11,7 @@
 
         <div class="card px-6">
             <div class="flex items-center justify-between">
-                <p class="text-gray-500">Failed Tasks</p>
+ <p class="text-gray-500">Failed tasks</p>
                 <div class="w-10 h-10 rounded-full bg-danger/10 flex items-center justify-center text-error">
                     <i class="fa fa-exclamation-triangle"></i>
                 </div>
@@ -19,65 +19,65 @@
             <div class="flex items-end">
                 <span class="text-xxl font-bold" id="failMeta"></span>
             </div>
-            <p class="text-xs text-gray-500 mt-1">It needs immediate attention.</p>
+ <p class="text-xs text-gray-500 mt-1">Needs attention</p>
         </div>
 
         <div class="card px-6" id="allData"></div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 mb-5">
-        <!-- Sync TrendsChart -->
+ <!-- Sync trendFigureTable -->
         <div class="form-container lg:col-span-2 px-3">
             <div class="flex items-center justify-between mt-2">
-                <h3 class="font-bold text-lg">Sync Trends</h3>
+ <h3 class="font-bold text-lg">Sync trend</h3>
                 <div>
-                    <button class="btn btn-outline text-sm trend-item mr-1 text-primary" data-key="7">7 Days</button>
-                    <button class="btn btn-outline text-sm trend-item mr-1" data-key="15">15 Days</button>
-                    <button class="btn btn-outline text-sm trend-item mr-3" data-key="30">30 Days</button>
+ <button class="btn btn-outline text-sm trend-item mr-1 text-primary" data-key="7">7 Days</button>
+ <button class="btn btn-outline text-sm trend-item mr-1" data-key="15">15 Days</button>
+ <button class="btn btn-outline text-sm trend-item mr-3" data-key="30">30 Days</button>
                 </div>
             </div>
             <canvas id="trendChart"></canvas>
         </div>
 
-        <!-- StatisticsCut.Snippets -->
+ <!-- Statistical card -->
         <div class="form-container lg:col-span-1 p-5">
             <div id="statistic" class="mini-stats-grid mb-3"></div>
 
-            <!-- TaskStatusminBattery -->
+ <!-- TasksStatusCylinder Chart -->
             <canvas id="statusDoughnutChart"></canvas>
         </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3">
-        <!-- Left:ConnectList -->
+ <!-- Left：ConnectionsList -->
         <div class="form-container p-5">
             <div class="border-gray-100 flex justify-end mb-5">
                 <button class="btn btn-info" onclick="doLoader('/connector/page/add')" data-permission="connector:edit">
                     <i class="fa fa-plus"></i>
-                    <span>Add Connection</span>
+ <span>Add connection</span>
                 </button>
             </div>
             <div id="connectorTable"></div>
             <div id="connectorPagination"></div>
         </div>
 
-        <!-- Right:MappingList -->
+ <!-- pays right.：DriverList -->
         <div class="form-container lg:col-span-2 p-5">
             <div class="border-gray-100 flex items-center justify-end mb-5">
                 <button class="btn btn-info" onclick="doLoader('/mapping/pageAdd')" data-permission="mapping:edit">
                     <i class="fa fa-plus"></i>
-                    <span>Add Sync</span>
+ <span>Add sync task</span>
                 </button>
             </div>
 
             <table class="table">
                 <thead>
                 <tr class="text-left">
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Result</th>
-                    <th>Status</th>
-                    <th>Last Sync</th>
+ <th>Name</th>
+ <th>Type</th>
+ <th>Result</th>
+ <th>Status</th>
+ <th>Last Sync</th>
                 </tr>
                 </thead>
                 <tbody id="mappingTable"></tbody>
@@ -87,15 +87,15 @@
 
     <script>
         $(function () {
-            // DefinitionsBackFunctions，SonPageNoodles.Back
+ // DefinitionsBackFunctions，SubpageBack
             window.backIndexPage = function () {
                 doLoader('/index');
             };
 
-            // Sync TrendsChart
+ // Sync trendFigureTable
             const trendCanvas = document.getElementById('trendChart');
             if (!trendCanvas) {
-                console.error('TendChart element not found');
+ console.error('trendChart Element not found');
             }
             const trendCtx = trendCanvas ? trendCanvas.getContext('2d') : null;
             const trendChart = trendCtx ? new Chart(trendCtx, {
@@ -104,7 +104,7 @@
                     labels: [],
                     datasets: [
                         {
-                            label: 'Synchronization succeeded',
+ label: 'Sync succeeded',
                             data: [],
                             borderColor: '#165DFF',
                             borderWidth: 2,
@@ -113,7 +113,7 @@
                             fill: true
                         },
                         {
-                            label: 'Sync failed',
+ label: 'Sync failed',
                             data: [],
                             borderColor: '#fa8c16',
                             borderWidth: 2,
@@ -139,13 +139,13 @@
                 }
             }) : null;
 
-            // TasksStatusminBattery
+ // TasksStatusCylinder Chart
             const statusDoughnutCanvas = document.getElementById('statusDoughnutChart');
             const statusDoughnutCtx = statusDoughnutCanvas ? statusDoughnutCanvas.getContext('2d') : null;
             const statusDoughnutChart = statusDoughnutCtx ? new Chart(statusDoughnutCtx, {
                 type: 'bar',
                 data: {
-                    labels: ['Overall tasks', 'Running', 'Failed'],
+ labels: ['Overall tasks', 'Running', 'Failed'],
                     datasets: [{
                         data: [0, 0, 0],
                         backgroundColor: [
@@ -232,15 +232,15 @@
                 const percent = r.lastWeekMeta > 0 ? (diff / r.lastWeekMeta * 100) : 0;
                 const config = isIncrease ? {
                     class: 'fa-arrow-up',
-                    text: 'Growth',
+ text: 'up',
                     colorClass: 'text-success'
                 } : {
                     class: 'fa-arrow-down',
-                    text: 'Lower',
+ text: 'down',
                     colorClass: 'text-warning'
                 };
                 return `<div class="flex items-center justify-between">
-                <p class="text-gray-500">Total number of tasks</p>
+ <p class="text-gray-500">Total tasks</p>
                 <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                     <i class="fa fa-tasks"></i>
                 </div>
@@ -248,16 +248,16 @@
             <div class="flex items-end success">
                 <span class="text-xxl font-bold">${r.totalMeta}</span>
                 <span class="${config.colorClass} text-sm mb-1 flex items-center ml-2">
-                    <i class="fa ${config.class} mr-1"></i> ${diff} individual
+ <i class="fa ${config.class} mr-1"></i> ${diff}
                 </span>
             </div>
-            <p class="text-xs text-gray-500 mt-1">More than last week.${config.text} ${percent.toFixed(2)}%</p>`;
+ <p class="text-xs text-gray-500 mt-1">${config.text} ${percent.toFixed(2)}% vs last week</p>`;
             }
 
             function renderRunningMeta(r) {
                 const percent = r.totalMeta > 0 ? (r.runningMeta / r.totalMeta * 100) : 0;
                 return `<div class="flex items-center justify-between">
-                <p class="text-gray-500">Running Tasks</p>
+ <p class="text-gray-500">Running tasks</p>
                 <div class="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center text-success">
                     <i class="fa fa-play"></i>
                 </div>
@@ -265,16 +265,16 @@
             <div class="flex items-end">
                 <span class="text-xxl font-bold">${r.runningMeta}</span>
                 <span class="text-success text-sm mb-1 flex items-center ml-2">
-                        <i class="fa fa-check mr-1"></i> Normal
+ <i class="fa fa-check mr-1"></i> Healthy
                     </span>
             </div>
-            <p class="text-xs text-gray-500 mt-1">Jim.Total number of tasks ${percent.toFixed(2)}%</p>`;
+ <p class="text-xs text-gray-500 mt-1">${percent.toFixed(2)}% of all tasks</p>`;
             }
 
             function renderAllData(r) {
                 const total = (r.success || 0) + (r.fail || 0);
                 return `<div class="flex items-center justify-between">
-                <p class="text-gray-500">Sync Total</p>
+ <p class="text-gray-500">Total synced</p>
                 <div class="w-10 h-10 rounded-full bg-info/10 flex items-center justify-center text-info">
                     <i class="fa fa-database"></i>
                 </div>
@@ -286,11 +286,11 @@
 
             function renderStatistic(r) {
                 const statistic = [
-                    {key: 'success', title: 'Success', bgColor: 'success'},
-                    {key: 'fail', title: 'Failed', bgColor: 'error'},
-                    {key: 'insert', title: 'Create', bgColor: 'primary'},
-                    {key: 'update', title: 'Edit', bgColor: 'info'},
-                    {key: 'delete', title: 'Delete', bgColor: 'warning'},
+ {key: 'success', title: 'Success', bgColor: 'success'},
+ {key: 'fail', title: 'Failed', bgColor: 'error'},
+ {key: 'insert', title: 'Insert', bgColor: 'primary'},
+ {key: 'update', title: 'Update', bgColor: 'info'},
+ {key: 'delete', title: 'Delete', bgColor: 'warning'},
                     {key: 'ddl', title: 'DDL', bgColor: 'violet'}
                 ];
 
@@ -308,7 +308,7 @@
                 $("#statistic").html(html);
             }
 
-            // Refreshdashboard data
+ // RefreshYi!TableBoard Data
             function refreshDashboardData() {
                 doGetter("/monitor/dashboard", {}, function (response) {
                     if (response.success === true) {
@@ -317,11 +317,11 @@
                         $("#runningMeta").html(renderRunningMeta(r));
                         $("#failMeta").text(r.failMeta);
                         $("#allData").html(renderAllData(r));
-                        // GenerateMinicard
+ // Generate minicards
                         renderStatistic(r);
                         refreshLineChatData(r.trend);
 
-                        // Update column chart data
+ // UpdateColumn Chart Data
                         if (statusDoughnutChart) {
                             statusDoughnutChart.data.datasets[0].data = [
                                 r.totalMeta || 0,
@@ -334,7 +334,7 @@
                 });
             }
 
-            // InitializeminPageManager
+ // Initializing Page Break Manager
             let searchConnector = new PaginationManager({
                 requestUrl: '/connector/search',
                 tableBodySelector: '#connectorTable',
@@ -355,14 +355,14 @@
                     </div>
                 </div>
                 <div class="flex items-center mr-2 flex-shrink-0">
-                    ${Number(connector.status) === 1 ? '<span class="badge badge-success">Online</span>' : '<span class="badge badge-error">Offline</span>'}
+ ${Number(connector.status) === 1 ? '<span class="badge badge-success">Online</span>' : '<span class="badge badge-error">Offline</span>'}
                 </div>
             </div>`;
                 },
-                emptyHtml: '<div class="text-center"><i class="fa fa-database empty-icon"></i><p class="empty-text">Other Organiser</p><p class="empty-description">Click Add button to create the first connection</p></div>'
+ emptyHtml: '<div class="text-center"><i class="fa fa-database empty-icon"></i><p class="empty-text">No connections yet</p><p class="empty-description">Click Add to create your first connection</p></div>'
             });
 
-            // InitializeminPageManager
+ // Initializing Page Break Manager
             let searchMapping = new PaginationManager({
                 requestUrl: '/mapping/search',
                 tableBodySelector: '#mappingTable',
@@ -377,13 +377,13 @@
                     <td>${formatRelativeTime((mapping && mapping.meta && mapping.meta.updateTime) || '')}</td>
                 </tr>`;
                 },
-                emptyHtml: '<td colspan="5" class="text-center"><i class="fa fa-exchange empty-icon"></i><p class="empty-text">Synchronising folder</p><p class="empty-description">Click Add button to create the first task</p></td>'
+ emptyHtml: '<td colspan="5" class="text-center"><i class="fa fa-exchange empty-icon"></i><p class="empty-text">None yetSync Tasks</p><p class="empty-description">Click"Add"buttonCreateFirst task</p></td>'
             });
 
-            // Immediately upon initializationRefreshOnce.
+ // Immediately upon initializationRefreshOnce.
             refreshDashboardData();
 
-            // Register to GlobalScheduledRefreshManager
+ // Register to Global TimeRefreshManager
             PageRefreshManager.register(() => {
                 refreshDashboardData();
                 searchConnector.doSearch({}, searchConnector.currentPage);

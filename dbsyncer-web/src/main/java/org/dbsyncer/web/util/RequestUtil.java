@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 public abstract class RequestUtil {
 
     /**
-     * Other OrganiserIP（Consider a reverse agent.
+     * 获取客户端真实 IP（考虑反向代理）。
      *
      * @param request HTTP Request
      * @return ClientIP，NoneDuring Law ResolutionBackEmpty string

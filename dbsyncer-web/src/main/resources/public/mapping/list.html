@@ -2,18 +2,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<!-- QueryMappingList -->
+<!-- SearchDriverList -->
 <div class="form-container">
     <div class="card-header">
-        <h3 class="card-title text-center">Data sync</h3>
+ <h3 class="card-title text-center">Data Sync</h3>
     </div>
     <div class="card-body">
         <div class="flex items-center justify-between gap-2">
             <div class="flex items-center gap-2 flex-1 min-w-0">
                 <div id="searchMapping" class="search-wrapper w-320 max-w-full flex-shrink-0">
                     <i class="fa fa-search search-icon"></i>
-                    <input class="search-input" type="text" maxlength="32" placeholder="Search by name">
-                    <span class="search-clear" title="Clear">
+ <input class="search-input" type="text" maxlength="32" placeholder="SearchName">
+ <span class="search-clear" title="Clear">
                         <i class="fa fa-times"></i>
                     </span>
                 </div>
@@ -22,7 +22,7 @@
             <div class="flex items-center gap-2 flex-shrink-0">
                 <span id="mappingGroupCreateHost" data-permission="mapping:edit"></span>
                 <button id="mappingAddBtn" class="btn btn-primary" type="button" data-permission="mapping:edit">
-                    <i class="fa fa-plus"></i> Add
+ <i class="fa fa-plus"></i> Add
                 </button>
             </div>
         </div>
@@ -31,13 +31,13 @@
             <thead>
             <tr>
                 <th></th>
-                <th>Name</th>
-                <th>Sync Scheme</th>
-                <th>Type</th>
-                <th>Result</th>
-                <th>Status</th>
-                <th>Last Sync</th>
-                <th>Actions</th>
+ <th>Name</th>
+ <th>Sync Scheme</th>
+ <th>Type</th>
+ <th>Result</th>
+ <th>Status</th>
+ <th>Last Sync</th>
+ <th>Actions</th>
             </tr>
             </thead>
             <tbody id="mappingTableBody"></tbody>
@@ -50,10 +50,10 @@
     function copyMapping(id) {
         doPoster("/mapping/copy", {id: id}, function (response) {
             if (response.success) {
-                bootGrowl('Copied successfully', 'success');
+ bootGrowl('CopySuccess', 'success');
                 backIndexPage();
             } else {
-                bootGrowl('Copy failed: ' + response.message, 'danger');
+ bootGrowl('CopyFailed: ' + response.message, 'danger');
             }
         });
     }
@@ -61,63 +61,63 @@
     function changeMappingState(id, url, title) {
         const btn = event.target.closest('.table-action-btn');
         const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fa fa-spinner fa-spin" title="'+title+ '"></i>';
+ btn.innerHTML = '<i class="fa fa-spinner fa-spin" title="' + title + 'Medium"></i>';
         btn.disabled = true;
         doPoster(url, {id: id}, function (response) {
             btn.innerHTML = originalText;
             btn.disabled = false;
             if (response.success) {
-                bootGrowl(title + 'Success', 'success');
+ bootGrowl(title + 'Success', 'success');
                 refreshIndexList();
             } else {
-                // MappingCannot initialise Evolution's mail component.BizException（For example:Mapping cannot be empty）
-                if (url === '/mapping/start' && response.message && response.message.indexOf('Mapping') !== -1) {
-                    bootGrowl('The map relationship does not exist.', 'warning');
+ // MappingRelationship does not exist：The back end will throw out. BizException（For example:：MappingRelations Expensesmust not be empty）
+ if (url === '/mapping/start' && response.message && response.message.indexOf('MappingRelations Expenses') !== -1) {
+ bootGrowl('MappingRelationship does not exist，Not permittedStart', 'warning');
                     return;
                 }
-                bootGrowl(title + 'Failed: ' + response.message, 'danger');
+ bootGrowl(title + 'Failed: ' + response.message, 'danger');
             }
         })
     }
 
     function deleteMapping(id) {
         showConfirm({
-            title: 'Are you sure you want to delete the driver?',
+ title: 'OKYes RecogniseDeleteDriver？',
             icon: 'warning',
             size: 'large',
             confirmType: 'danger',
             onConfirm: function () {
-                // Disablebutton to prevent repeat clicks
+ // Disablebutton Specific，Prevent repeat clicks
                 doPoster('/mapping/remove', {id: id}, function (response) {
                     if (response.success === true) {
-                        bootGrowl("Deleted successfully!", "success");
+ bootGrowl("Deleted successfully！", "success");
                         const rawStr = localStorage.getItem("dbsyncer.pagination.mapping-list");
                         const raw = JSON.parse(rawStr);
                         raw.pageNum = 1;
                         localStorage.setItem('dbsyncer.pagination.mapping-list', JSON.stringify(raw));
                         backIndexPage();
                     } else {
-                        bootGrowl(response.message || "Delete failed", "danger");
+ bootGrowl(response.message || "DeleteFailed", "danger");
                     }
                 });
             }
         });
     }
 
-    // StartButton Rendering: Hand over to the backend for verification (avoid error: statistics)TaskNotFinish total Maybe.0）
+ // StartButton render：Turn backend background check（Avoid miscalculation.：Statistical tasks not completed total Possible 0）
     function renderStateButtonWithMappingCheck(state, mapping) {
         return renderStateButton(state, mapping.id);
     }
 
 
-    // PageInitialize
+ // Page Initialization
     $(document).ready(function () {
-        // DefinitionsBackFunctions，SonPageNoodles.Back
+ // DefinitionsBackFunctions，SubpageBack
         window.backIndexPage = function () {
             doLoader('/mapping/list');
         };
         let groupToolbar = null;
-        // InitializeminPageManager
+ // Initializing Page Break Manager
         const pagination = new PaginationManager({
             requestUrl: '/mapping/search',
             tableBodySelector: '#mappingTableBody',
@@ -135,25 +135,25 @@
             renderRow: function (mapping, index) {
                 const source = mapping.sourceConnector || {};
                 const target = mapping.targetConnector || {};
-                const sourceName = source.name || 'Connector has been deleted';
-                const targetName = target.name || 'Connector has been deleted';
+ const sourceName = source.name || 'Connection deleted';
+ const targetName = target.name || 'Connection deleted';
                 const sourceType = (source.config && source.config.connectorType) || '';
                 const targetType = (target.config && target.config.connectorType) || '';
                 const meta = mapping.meta || {};
                 const canEdit = !window.DBSPermission || DBSPermission.has('mapping:edit');
                 const editBtn = canEdit ? `
-                            <button class="table-action-btn view" title="Edit" onclick="doLoader('/mapping/page/edit?id=${mapping.id}')">
+ <button class="table-action-btn view" title="Update" onclick="doLoader('/mapping/page/edit?id=${mapping.id}')">
                                 <i class="fa fa-edit"></i>
                             </button>` : '';
                 const copyBtn = canEdit ? `
-                            <button class="table-action-btn copy" title="Copy" onclick="copyMapping('${mapping.id}')">
+ <button class="table-action-btn copy" title="Copy" onclick="copyMapping('${mapping.id}')">
                                 <i class="fa fa-copy"></i>
                             </button>` : '';
                 return `
                 <tr>
                     <td>${index}</td>
                     <td title="${escapeHtml(mapping.name)}">
-                        <a href="javascript:void(0)" class="text-primary hover:underline cursor-pointer" title="Click to see details"
+ <a href="javascript:void(0)" class="text-primary hover:underline cursor-pointer" title="Click to ViewDetails"
                            onclick="doLoader('/mapping/page/detail?id=${mapping.id}')">${escapeHtml(mapping.name)}</a>
                     </td>
                     <td title="${escapeHtml(sourceName)} > ${escapeHtml(targetName)}">
@@ -181,7 +181,7 @@
                 </tr>
             `;
             },
-            emptyHtml: '<td colspan="7" class="text-center"><i class="fa fa-exchange empty-icon"></i><p class="empty-text">Synchronising folder</p><p class="empty-description">Click Add button to create the first task</p></td>',
+ emptyHtml: '<td colspan="7" class="text-center"><i class="fa fa-exchange empty-icon"></i><p class="empty-text">None yetSync Tasks</p><p class="empty-description">Click"Add"buttonCreateFirst task</p></td>',
             customPageSize: true,
         });
 
@@ -199,17 +199,17 @@
         });
         groupToolbar.setListTotal(pagination.total || 0);
 
-        // SearchBox InputEvent
+ // SearchBoxok Event
         searchInput = initSearch('searchMapping', function (searchKey) {
             pagination.doSearch(groupToolbar.getSearchParams({searchKey: searchKey}), 1);
         });
 
-        // ListLocalRefresh（Start/StopWait.ActionsKeep Current AfterPageandminPageSize)
+ // ListLocalRefresh（Start/StopWait.ActionsKeep the current page and page break size after）
         window.refreshIndexList = function () {
             pagination.doSearch(groupToolbar.getSearchParams({searchKey: searchInput.getValue()}), pagination.currentPage);
         };
 
-        // Register to GlobalScheduledRefreshManager
+ // Register to Global TimeRefreshManager
         PageRefreshManager.register(() => {
             pagination.doSearch(groupToolbar.getSearchParams({searchKey: searchInput.getValue()}), pagination.currentPage);
         });

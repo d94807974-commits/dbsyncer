@@ -8,7 +8,7 @@ import org.dbsyncer.common.util.StringUtil;
 import java.io.Serializable;
 
 /**
- * Other Organiser
+ * 请求响应对象
  *
  * @author AE86
  * @version 1.0.0

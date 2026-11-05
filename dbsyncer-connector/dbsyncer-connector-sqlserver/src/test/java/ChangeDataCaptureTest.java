@@ -67,7 +67,7 @@ public class ChangeDataCaptureTest {
     /**
      * <p>cdc.captured_columns – This succeededBackCapture ColumnsListYes.Result。</p>
      * <p>cdc.change_tables – This succeededBackAllEnableThe catch table.List。</p>
-     * <p>cdc.ddl_history – Other OrganiserEnableAll since the capture dataDDL Changed historical record.</p>
+     * <p>cdc.ddl_history – 此表包含自启用捕获数据以来所有 DDL 更改的历史记录。</p>
      * <p>cdc.index_columns – This table containsandChange table relatedIndex。</p>
      * <p>cdc.lsn_time_mapping – MapLSNPart Number(Unique Serial Number ID, Increase) andTime。</p>
      * <p>cdc.fn_cdc_get_all_changes_MY_USER - Available for specific accessTimeof theEvent</p>

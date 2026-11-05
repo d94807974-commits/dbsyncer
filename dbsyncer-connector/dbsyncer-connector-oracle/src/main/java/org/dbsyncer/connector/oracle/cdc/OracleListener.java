@@ -80,7 +80,7 @@ public class OracleListener extends AbstractDatabaseListener {
                 try {
                     parseEvent(event);
                 } catch (JSQLParserException e) {
-                    logger.warn("Other Organiser", event.getRedoSql(), e);
+                    logger.warn("Unsupported SQL: {}", event.getRedoSql(), e);
                 } catch (Exception e) {
                     logger.error("Parsing sql anomaly: }", event.getRedoSql(), e);
                 }
@@ -286,7 +286,7 @@ public class OracleListener extends AbstractDatabaseListener {
     /**
      * Collapse PressPrimary keyCheck back.SQL：Include onlyindexes Corresponding column.
      *
-     * @return Other OrganiserBack null
+     * @return 非法下标时返回 null
      */
     private String buildSelectSqlByPrimaryKey(Database database, String tableName, List<Field> fields,
                                               List<Integer> indexes, List<Field> pkFields) {

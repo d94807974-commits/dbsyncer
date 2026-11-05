@@ -66,7 +66,7 @@ public interface MappingService {
     MappingCustomTableVO getMappingCustomTable(String id, String type);
 
     /**
-     * minPageSearch（ListLightField，Other OrganiserConfigure/ConnectorSensitive.Info）
+     * 分页搜索（列表轻量字段，不含完整配置/连接器敏感信息）
      *
      * @param params
      * @return

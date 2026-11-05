@@ -132,7 +132,7 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
     public String add(Map<String, String> params) {
         String name = params.get("name");
         if (StringUtil.isBlank(name)) {
-            throw new BizException("Other Organiser");
+            throw new BizException("Task name cannot be empty");
         }
         List<DatabaseMappingVO> mappings = parseDatabaseMappings(params.get("databaseMappingsJson"));
         checkDatabaseMapping(mappings);
@@ -488,7 +488,7 @@ public class DatabaseSyncServiceImpl extends BaseServiceImpl implements Database
     private void fillTaskOnEdit(DatabaseSyncTask task, Map<String, String> params) {
         String name = params.get("name");
         if (StringUtil.isBlank(name)) {
-            throw new BizException("Other Organiser");
+            throw new BizException("Task name cannot be empty");
         }
         task.setName(name);
         task.setUpdateTime(Instant.now().toEpochMilli());

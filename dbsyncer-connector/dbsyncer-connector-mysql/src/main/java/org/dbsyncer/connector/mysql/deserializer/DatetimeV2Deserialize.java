@@ -26,7 +26,7 @@ public final class DatetimeV2Deserialize {
         int second = bitSlice(datetime, 34, 6, 40);
         int nano = fsp * 1000;
 
-        // InspectionYesNoYesMySQL Other Organiser(0000-00-00 00:00:00)
+        // 检查是否为 MySQL 的零日期 (0000-00-00 00:00:00)
         // MySQL From5.7Start default zero date not allowedJava LocalDateTime Not supported
         // Characteristics of date zero:year=0 ormonth=0 orday=0
         if (year == 0 || month == 0 || day == 0) {

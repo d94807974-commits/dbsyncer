@@ -91,7 +91,7 @@
         if (!tableGroupPagination) {
             return;
         }
-        // ListReloadDOM In order of service,ClearNotSubmit, avoidSaveOther Organiser
+        // After reload, DOM order follows the server; clear uncommitted drag order so save does not send a stale sequence
         $("#sortedTableGroupIds").val('');
         const taskId = $("#taskId").val();
         tableGroupPagination.doSearch({'id': taskId}, 1);
@@ -222,7 +222,7 @@
                 }
             },
             defaultValue: [],// Default Selection
-            customButtons: [ // Most2individualCustombutton
+            customButtons: [ // Up to 2 custom buttons
                 {
                     text: 'Cancel Filter',
                     callback: function(values) {
@@ -402,7 +402,7 @@
         });
     }
 
-    // Other OrganiserEvent
+    // Bind table-relation click handlers
     function bindMappingTableGroupListClick() {
         const $tableGroupList = $("#tableGroupList");
 
@@ -541,7 +541,7 @@
             emptyHtml:'<td colspan="4" class="text-center"><p class="empty-text">No Map Relationship</p></td>',
             refreshCompleted: function() {
                 syncTableGroupListUi(tableGroupPagination, taskId);
-                // Other OrganiserEvent
+                // Bind table-relation click handlers
                 bindMappingTableGroupListClick();
                 // TieDeleteMap relationEvent
                 bindTableGroupRemove();

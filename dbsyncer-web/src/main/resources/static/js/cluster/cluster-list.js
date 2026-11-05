@@ -355,7 +355,7 @@
             + '<div>' + formatRole(item.role) + '</div>'
             + '<div class="mt-1">' + formatStatus(item.status) + '</div>';
         if (Number(item.gracePeriodSeconds) > 0) {
-            statusHtml += '<div class="mt-1 text-warning">Other Organiser' + Number(item.gracePeriodSeconds) + ' sec refund</div>';
+            statusHtml += '<div class="mt-1 text-warning">'Grace period: ' + Number(item.gracePeriodSeconds) + ' sec refund</div>';
         }
         statusHtml += '</div>';
         var timeHtml = stackCell([

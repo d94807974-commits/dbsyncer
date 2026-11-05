@@ -4,22 +4,22 @@
 
 <div class="form-container">
     <div class="card-header">
-        <h3 class="card-title text-center">Add Connection</h3>
+ <h3 class="card-title text-center">Add connection</h3>
     </div>
     <div class="card-body">
         <div class="form-actions mb-4">
             <button id="connectorSubmitBtn" type="button" class="btn btn-primary">
-                <i class="fa fa-save"></i> Save
+ <i class="fa fa-save"></i> Save
             </button>
             <button class="btn btn-outline" onclick="backIndexPage()">
-                <i class="fa fa-reply"></i> Back
+ <i class="fa fa-reply"></i> Back
             </button>
         </div>
 
         <form id="connectorAddForm" class="grid">
             <div class="grid grid-cols-2 mt-4">
                 <div class="form-item">
-                    <label class="form-label">Type</label>
+ <label class="form-label">Type</label>
                     <div class="form-control-area">
                         <select id="connectorType" name="connectorType" class="form-control">
                             <option th:each="t,s:${connectorTypes}" th:value="${t}" th:text="${t}"></option>
@@ -27,16 +27,16 @@
                     </div>
                 </div>
                 <div class="form-item">
-                    <label class="form-label">Name<strong class="text-primary">*</strong></label>
+ <label class="form-label">Name<strong class="text-primary">*</strong></label>
                     <div class="form-control-area">
-                        <input class="form-control" name="name" type="text" maxlength="50" required placeholder="Please enter connection name"/>
+ <input class="form-control" name="name" type="text" maxlength="50" required placeholder="Enter connection name"/>
                     </div>
                 </div>
             </div>
             <div id="connectorConfig" class="mb-5"></div>
             <div class="grid grid-cols-2 mt-4">
                 <div class="form-item">
-                    <label class="form-label">Source</label>
+ <label class="form-label">Source</label>
                     <div class="form-control-area">
                         <label class="form-switch">
                             <input name="isSource" type="checkbox" checked/>
@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <div class="form-item">
-                    <label class="form-label">Target</label>
+ <label class="form-label">Target</label>
                     <div class="form-control-area">
                         <label class="form-switch">
                             <input name="isTarget" type="checkbox" checked/>
@@ -70,14 +70,14 @@
 <script>
 $(document).ready(function() {
     function changeConfig(selectedValues) {
-        // InitializeFinish, if selected by defaultValue，Trigger LoadConfigure
+ // After initialization，If default selected，Trigger Load Configuration
         if (selectedValues && selectedValues.length > 0) {
             const selectedValue = selectedValues[0];
             const $connectorConfig = $("#connectorConfig");
-            $connectorConfig.html('<div class="loading"><div class="loading-spinner"></div>Loading...</div>');
+ $connectorConfig.html('<div class="loading"><div class="loading-spinner"></div>Loading...</div>');
             $connectorConfig.load($basePath + "/connector/page/add" + selectedValue, function (response, status) {
                 if (status !== 'success') {
-                    $connectorConfig.html('<div class="empty"><div class="empty-icon"><i class="fa fa-warning"></i></div><div class="empty-text">Loading connection failed</div></div>');
+ $connectorConfig.html('<div class="empty"><div class="empty-icon"><i class="fa fa-warning"></i></div><div class="empty-text">Failed to load connection form</div></div>');
                 }
             });
         }
@@ -88,25 +88,25 @@ $(document).ready(function() {
         onReady: changeConfig
     });
 
-    // TieSavebuttonEvent
+ // TieSaveButton Events
     $('#connectorSubmitBtn').off('click').on('click', function () {
         const $form = $("#connectorAddForm");
         const isSource = $form.find('input[name="isSource"]').is(':checked');
         const isTarget = $form.find('input[name="isTarget"]').is(':checked');
         if (!isSource && !isTarget) {
-            bootGrowl("At least open as a source or as a target.", "warning");
+ bootGrowl("Enable at least Source or Target.", "warning");
             return;
         }
-        // Authentication Form
+ // AuthenticationTableSingle
         if (validateForm($form)) {
-            // ShowSubmitStatus
+ // ShowSubmitStatus
             const submitBtn = $(this);
             const originalText = submitBtn.html();
-            submitBtn.html('<i class="fa fa-spinner fa-spin"></i> Saving...').prop('disabled', true);
+ submitBtn.html('<i class="fa fa-spinner fa-spin"></i> Saving...').prop('disabled', true);
             doPoster("/connector/add", $form.serializeJson(), function (response) {
                 submitBtn.html(originalText).prop('disabled', false);
                 if (response.success === true) {
-                    bootGrowl("Saved successfully!", "success");
+ bootGrowl("Saved successfully!", "success");
                     backIndexPage();
                 } else {
                     bootGrowl(response.message, "danger");

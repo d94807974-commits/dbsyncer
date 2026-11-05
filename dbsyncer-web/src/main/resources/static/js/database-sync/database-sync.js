@@ -1096,7 +1096,7 @@
             }
             const cbId = $cb.attr('id');
             $cb.checkboxGroup(TABLE_TREE_CHECKBOX_OPTIONS);
-            // The initialization of the individual will start with the package.checkbox-group，Originallabel It's no longer close.input，Manual removal to avoid duplication of files
+            // After init, checkbox-group wraps inputs; remove orphan labels to avoid duplicates
             if (cbId) {
                 $('label[for="' + cbId + '"]').each(function () {
                     const $label = $(this);

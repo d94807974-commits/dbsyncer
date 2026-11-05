@@ -143,7 +143,7 @@
             $item.append($radio);
             $item.append($itemLabel);
             
-            // Remove Originallabel（Other Organiser
+            // 移除原始 label（已经提取文本）
             if ($label.length) {
                 $label.remove();
             }
@@ -161,7 +161,7 @@
             }
         }, 0);
         
-        // EventOther Organiserradio
+        // 事件委托：点击项目时选中对应的 radio
         $container.on('click', '.radio-group-item:not(.disabled)', function() {
             const $item = $(this);
             const $radio = $item.find('input[type="radio"]');

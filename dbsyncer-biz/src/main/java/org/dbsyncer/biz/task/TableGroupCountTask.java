@@ -46,7 +46,7 @@ public final class TableGroupCountTask extends AbstractCountTask {
     public void execute() throws Exception {
         Mapping mapping = mappingProfile.get(mappingId);
         int groupCount = tableGroupProfile.getTableGroupCount(mappingId);
-        logger.info("Other Organiser", mapping.getName(), groupCount);
+        logger.info("Counting {}: {} tables", mapping.getName(), groupCount);
         if (!CollectionUtils.isEmpty(tableGroups)) {
             for (String tableGroupId : tableGroups) {
                 // Task TypeSwitches, early release.Tasks

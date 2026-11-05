@@ -5,7 +5,7 @@
  *   - data: Options data array[{label: '', value: ''}, ...]
  *   - defaultValue: Default SelectionValue
  *   - disabled: YesNoDisable
- *   - customButtons: Custombutton array, maximum2individual
+ *   - customButtons: Custombutton array, up to 2
  *     [{text: 'Button Text', callback: function() {}}]
  *   - onSelect: Select the echo of the change
  *   - onCustomButton: CustomTurnback on button click
@@ -88,7 +88,7 @@
             pageSize: options.pageSize || 100,
             keywordDebounceMs: options.keywordDebounceMs || 300,
             loadOptions: options.loadOptions || null,
-            customButtons: (options.customButtons || []).slice(0, 2), // Most2individual
+            customButtons: (options.customButtons || []).slice(0, 2), // Up to 2
             onSelect: options.onSelect || function() {},
             onReady: options.onReady || function() {},
             onCustomButton: options.onCustomButton || function() {}
@@ -131,7 +131,7 @@
         const selectId = 'dbsyncer-select-' + timestamp + '-' + random;
         const dropdownId = 'dbsyncer-select-dropdown-' + timestamp + '-' + random;
         
-        // From birthselect Yes.Class NameOther Organiserselect-mini，Pass toGenerateComponent
+        // 从原生 select 的类名中提取 select-mini，传递到生成的组件
         let miniClass = $select.hasClass('form-control-mini') ? 'dbsyncer-select-mini' : '';
         miniClass = $select.hasClass('form-control-md') ? 'dbsyncer-select-md' : miniClass;
 

@@ -1,5 +1,5 @@
 /**
- * UniversalminPageManager
+ * Shared pagination manager
  * @param {Object} options ConfigureOptions
  *   - requestUrl: Address requested (required)
  *   - tableBodySelector: Table Body Selector (required)

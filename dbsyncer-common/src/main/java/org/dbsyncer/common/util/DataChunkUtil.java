@@ -30,7 +30,7 @@ public class DataChunkUtil {
     private static final int MIN_CHUNK_SIZE = 100 * 1024;
 
     /**
-     * Other OrganiserminSnippets
+     * 将数据分片
      * 
      * @param data Source data (%2)JSONString)
      * @param chunkSize minArea size (bytes), if<=0UseDefault value
@@ -84,7 +84,7 @@ public class DataChunkUtil {
     }
 
     /**
-     * Other OrganiserminSnippet (using default)minSize)
+     * 将数据分片（使用默认分片大小）
      * 
      * @param data Source data (%2)JSONString)
      * @return minSnippetsList

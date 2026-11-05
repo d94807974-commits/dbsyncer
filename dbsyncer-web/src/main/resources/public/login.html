@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>dbsyncer - Login</title>
+ <title>dbsyncer - Login</title>
     <link type="image/x-icon" rel="icon" th:href="@{/img/logo.ico}"/>
     <link type="text/css" rel="stylesheet" th:href="@{/css/login.css}"/>
 </head>
 <body class="font-inter bg-gray-50 min-h-screen flex items-center justify-center p-4">
-<!-- Background particle SontEffect canvas: Foxed full of screens, bit at the Contents LayerDown-->
+<!-- Background particle special effects canvas：Fixed Full Screen，Below Content Layer enact -->
 <canvas id="bgParticles" style="position:fixed;left:0;top:0;width:100%;height:100%;z-index:0;pointer-events:none;"></canvas>
-<!-- LoginCut.SnippetsPlans-->
+<!-- LoginCard container -->
 <div class="w-full max-w-6xl grid md:grid-cols-2 shadow-2xl rounded-2xl overflow-hidden" style="position:relative;z-index:10;">
 
-    <!-- LeftIt's the other way.BrandPresentationSector-->
+ <!-- Left brand area. -->
     <div class="md:flex bg-gradient-primary p-12 flex-col justify-between text-white">
         <div>
             <div class="flex items-center space-x-3 mb-12">
@@ -23,19 +23,19 @@
                 <h1 id="appName" class="text-2xl font-bold tracking-tight">DBSyncer</h1>
             </div>
 
-            <h2 class="text-responsive-2xl font-bold mb-4 text-shadow">Data sync, never been easier</h2>
-            <p class="text-white/80 mb-8 max-w-md">An efficient, stable and secure solution for your business</p>
+ <h2 class="text-responsive-2xl font-bold mb-4 text-shadow">Data sync, never been easier</h2>
+ <p class="text-white/80 mb-8 max-w-md">Efficient、Stabilization、Secure solutions，Protect your business.</p>
         </div>
 
-        <!-- FeatureList -->
+ <!-- FeatureList -->
         <div class="space-y-6">
             <div class="flex items-start space-x-4">
                 <div class="mt-1 w-8 h-8 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
                     <i class="svg-bolt"></i>
                 </div>
                 <div>
-                    <h3 class="font-semibold mt-1">High-performance sync</h3>
-                    <p class="text-sm text-white/70">Millisecond response for massive data sync</p>
+ <h3 class="font-semibold mt-1">Efficient Synchronization</h3>
+ <p class="text-sm text-white/70">millisecond response，Support big-5, sync</p>
                 </div>
             </div>
 
@@ -44,8 +44,8 @@
                     <i class="svg-shield"></i>
                 </div>
                 <div>
-                    <h3 class="font-semibold mt-1">Secure and reliable</h3>
-                    <p class="text-sm text-white/70">Multi-layer encryption for safe data transfer</p>
+ <h3 class="font-semibold mt-1">Secure and reliable</h3>
+ <p class="text-sm text-white/70">Multiple encryption security，Secure data transmission</p>
                 </div>
             </div>
 
@@ -54,44 +54,44 @@
                     <i class="svg-cogs"></i>
                 </div>
                 <div>
-                    <h3 class="font-semibold mt-1">Flexible configuration</h3>
-                    <p class="text-sm text-white/70">Multiple data sources with custom sync strategies</p>
+ <h3 class="font-semibold mt-1">Flexible configuration</h3>
+ <p class="text-sm text-white/70">SupportMultiple data sources with custom sync strategies</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- RightLoginFormSector-->
+ <!-- RightLoginTableSingle sector -->
     <div class="bg-white p-8 md:p-12 flex flex-col h-full w-full-50 right-0 absolute">
         <div class="mt-6 md:mt-12">
-            <h2 class="text-responsive-xl font-bold text-dark mb-2">Welcome back</h2>
-            <p class="text-gray-500 mb-8">Please enter your account information login system</p>
+ <h2 class="text-responsive-xl font-bold text-dark mb-2">Welcome back</h2>
+ <p class="text-gray-500 mb-8">Enter your account details to sign in</p>
 
-            <!-- LoginForm-->
+ <!-- LoginTableSingle -->
             <form id="loginForm" class="space-y-6">
-                <!-- UsernameInput -->
+ <!-- UsernameInput -->
                 <div class="space-y-2">
-                    <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+ <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="svg-user"></i>
                         </div>
                         <input type="text" id="username" name="username"
                                class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-custom outline-none"
-                               placeholder="Please enter username" required>
+ placeholder="Enter username" required>
                     </div>
                     <div id="usernameError" class="hidden text-danger text-sm mt-1">
                         <div class="flex">
                             <i class="svg-exclamation-circle"></i>
-                            <span>Username cannot be empty</span>
+ <span>Username is required</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- PasswordInput -->
+ <!-- PasswordInput -->
                 <div class="space-y-2">
                     <div class="flex justify-between">
-                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+ <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                     </div>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -99,7 +99,7 @@
                         </div>
                         <input type="password" id="password" name="password"
                                class="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/50 focus:border-primary transition-custom outline-none"
-                               placeholder="Please enter password" required>
+ placeholder="Enter password" required>
                         <button type="button" id="togglePassword"
                                 class="absolute inset-y-0 right-0 pr-3 flex mr-1 mt-1 mb-1 items-center rounded-lg">
                             <i class="svg-eye-slash"></i>
@@ -108,36 +108,36 @@
                     <div id="passwordError" class="hidden text-danger text-sm mt-1">
                         <div class="flex">
                             <i class="svg-exclamation-circle"></i>
-                            <span>Password cannot be empty</span>
+ <span>Password is required</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- ErrorTip -->
+ <!-- ErrorTip -->
                 <div id="loginError" class="hidden bg-danger/10 text-danger p-3 rounded-lg text-sm flex items-center">
                     <div class="flex">
                         <i class="svg-exclamation-circle"></i>
-                        <span id="errorMessage">Login failed, check username or password</span>
+ <span id="errorMessage">Login failed. Check your username or password</span>
                     </div>
                 </div>
 
-                <!-- Loginbutton-->
+ <!-- Loginbutton -->
                 <button type="submit" id="loginButton"
                         class="w-full bg-primary/80 hover:bg-primary/90 text-white font-medium py-3 px-4 rounded-lg transition-custom flex items-center justify-center space-x-2 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
-                    <span>Login</span>
+ <span>Login</span>
                     <i class="svg-sign-in"></i>
                 </button>
 
-                <!-- LoadStatusbutton-->
+ <!-- LoadStatusbutton -->
                 <button type="button" id="loadingButton"
                         class="hidden w-full bg-primary/80 text-white font-medium py-3 px-4 rounded-lg transition-custom flex items-center justify-center space-x-2 cursor-not-allowed">
                     <i class="rotate-loading"></i>
-                    <span>Logging...</span>
+ <span>Signing in...</span>
                 </button>
             </form>
         </div>
 
-        <!-- PageFoot. -->
+ <!-- Footer -->
         <div class="mt-auto pt-8 border-t border-gray-100 text-center text-sm text-gray-500">
             <p id="appCopyRight" style="text-align:center;"></p>
         </div>
@@ -145,7 +145,7 @@
 </div>
 
 <script>
-    // Background particleShit. special effects (light,andCurrent Harmonized Blue System)
+ // Background particle effects（Light、Consistent with the current blue system style）
     (function () {
         const canvas = document.getElementById('bgParticles');
         if (!canvas) return;
@@ -154,13 +154,13 @@
         let dpr = Math.max(1, window.devicePixelRatio || 1);
         let width = 0, height = 0;
         const particles = [];
-        const PARTICLE_COUNT_BASE = 0.00012; // The smaller the smaller the number of pixels to avoid over-screening
-        const MAX_ALPHA = 0.45; // The highest degree of opacity. Keep a low profile.
+ const PARTICLE_COUNT_BASE = 0.00012; // The smaller, the less.：Quantity by pixel area，Avoid keeping secrets in small screens
+ const MAX_ALPHA = 0.45; // Highest opacity，Keep your head down and keep your eyes open.
         const COLORS = [
-            'rgba(59,130,246,ALPHA)',   // Blueprimary）
-            'rgba(37,99,235,ALPHA)',    // Deep Blue
-            'rgba(99,102,241,ALPHA)',   // Luxurium
-            'rgba(56,189,248,ALPHA)'    // Blue
+ 'rgba(59,130,246,ALPHA)', // Blue（Close primary）
+ 'rgba(37,99,235,ALPHA)', // Deep Blue
+ 'rgba(99,102,241,ALPHA)', // Luxur Approval
+ 'rgba(56,189,248,ALPHA)' // Blue
         ];
 
         function resize() {
@@ -170,7 +170,7 @@
             canvas.height = Math.round(height * dpr);
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-            // Adjusting the number of particles according to area dynamics
+ // Adjusting the number of particles according to area dynamics
             const target = Math.min(180, Math.max(60, Math.floor(width * height * PARTICLE_COUNT_BASE)));
             if (particles.length > target) {
                 particles.length = target;
@@ -202,7 +202,7 @@
         function step() {
             ctx.clearRect(0, 0, width, height);
 
-            // Slightly invisible, forming a drag layer.
+ // Slightly hidden.，Form a drag layer（Very apportioned.，No surprises.）
             ctx.fillStyle = 'rgba(255,255,255,0.03)';
             ctx.fillRect(0, 0, width, height);
 
@@ -211,11 +211,11 @@
                 p.x += p.vx;
                 p.y += p.vy;
 
-                // Border loop
+ // Border loop
                 if (p.x < -10) p.x = width + 10; else if (p.x > width + 10) p.x = -10;
                 if (p.y < -10) p.y = height + 10; else if (p.y > height + 10) p.y = -10;
 
-                // Draw soft and bright spots
+ // Draw soft and UNCCPT
                 const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 6);
                 grad.addColorStop(0, p.color);
                 grad.addColorStop(1, 'rgba(255,255,255,0)');
@@ -225,14 +225,14 @@
                 ctx.fill();
             }
 
-            // Adjacent connection (close, very fine, increasing technological awareness)
+ // Close link.（Expedition，Very Fine，Technological awareness.）
             ctx.lineWidth = 0.6;
             for (let i = 0; i < particles.length; i++) {
                 for (let j = i + 1; j < particles.length; j++) {
                     const a = particles[i], b = particles[j];
                     const dx = a.x - b.x, dy = a.y - b.y;
                     const dist2 = dx * dx + dy * dy;
-                    const maxDist = 120; // Maximum distance to connect
+ const maxDist = 120; // Maximum distance to connect
                     if (dist2 < maxDist * maxDist) {
                         const t = 1 - Math.sqrt(dist2) / maxDist;
                         ctx.strokeStyle = `rgba(99,102,241,${0.12 * t})`;
@@ -251,7 +251,7 @@
         resize();
         requestAnimationFrame(step);
     })();
-    // Get Project Address
+ // Fetch Nowhere
     const $location = (window.location + '').split('/');
     const $path = document.location.pathname;
     const $basePath = $location[0] + '//' + $location[2] + $path.substr(0, $path.substr(1).indexOf("/") + 1);
@@ -265,27 +265,27 @@
     const passwordError = document.getElementById('passwordError');
     const loginError = document.getElementById('loginError');
     const errorMessage = document.getElementById('errorMessage');
-    // tokenExpiry, Jump DefaultPageNoodles.
+ // tokenExpiry，Jumping Default Page
     const navbar = document.querySelector("div.sidebar-item");
     if (navbar !== null) {
         window.location.href = $basePath;
     }
 
-    // SwitchPasswordVisibility
+ // SwitchPasswordVisibility
     togglePassword.addEventListener('click', () => {
         const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
         passwordInput.setAttribute('type', type);
 
-        // Switch Icon
+ // Switch Icon
         togglePassword.querySelector('i').classList.toggle('svg-eye');
         togglePassword.querySelector('i').classList.toggle('svg-eye-slash');
     });
 
-    // Initialise Loading CopyrightInfo
+ // Initialise loading of copyright information
     window.addEventListener('load', () => {
-        // SendGETRequest
+ // SendGETRequest
         fetch($basePath + '/index/version.json').then(response => {
-            if (!response.ok) throw new Error(`HTTPError: ${response.status}`);
+ if (!response.ok) throw new Error(`HTTPError: ${response.status}`);
             return response.json();
         }).then(response => {
             if (response.success === true) {
@@ -293,12 +293,12 @@
                 document.getElementById('appCopyRight').innerHTML = response.data.appCopyRight;
             }
         }).catch(error => {
-            throw new Error(`RequestError: ${error.message}`);
+ throw new Error(`RequestError: ${error.message}`);
         });
     });
 
     function validateItem($input, $error){
-        // HideLoginErrorNotice
+ // HideLoginErrorTip
         loginError.classList.add('hidden');
         if (!$input.value.trim()) {
             $error.classList.remove('hidden');
@@ -311,28 +311,28 @@
         $input.classList.add('border-gray-300', 'focus:border-primary');
         return true;
     }
-    // Form authentication
+ // TableSingle Authentication
     function validateForm() {
         return validateItem(usernameInput, usernameError) && validateItem(passwordInput, passwordError);
     }
-    // Revalidation on input/2007/1
+ // Revalidate when input box changes
     usernameInput.addEventListener('input', () => validateItem(usernameInput, usernameError));
     passwordInput.addEventListener('input', () => validateItem(passwordInput, passwordError));
 
-    // LoginFormSubmitProcessing
+ // LoginTableSingleSubmitProcessing
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // Form authentication
+ // TableSingle Authentication
         if (!validateForm()) {
             return;
         }
 
-        // Show LoadingStatus，HideLoginbutton
+ // Show LoadingStatus，HideLoginbutton
         loginButton.classList.add('hidden');
         loadingButton.classList.remove('hidden');
 
-        // Get Form Data
+ // AccessTableSingle Data
         const username = usernameInput.value.trim();
         const password = passwordInput.value.trim();
 
@@ -344,32 +344,32 @@
             const response = await fetch($basePath + '/login', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded', // Visible declarationForm format
+ 'Content-Type': 'application/x-www-form-urlencoded', // Visible declarationTableSingle Format
                 },
                 body: formData,
             });
 
-            // Processing responses
+ // Processing responses
             const result = await response.json();
             if (response.ok) {
-                // Login successful，Jump toFirst pageorOtherPageNoodles.
+ // Login succeeded，Go to Home or Other Page
                 window.location.href = $basePath;
             } else {
-                // Login Failed，ShowErrorInfo
-                throw new Error(result.message || 'Login failed, check username or password');
+ // Login failed — show error
+ throw new Error(result.message || 'Login failed. Check your username or password');
             }
         } catch (error) {
-            // ShowErrorInfo
+ // ShowErrorInformation
             errorMessage.textContent = error.message;
             loginError.classList.remove('hidden');
 
-            // AddErrorDiverse Animations
+ // AddErrorDiverse Animations
             loginError.classList.add('animate-shake');
             setTimeout(() => {
                 loginError.classList.remove('animate-shake');
             }, 500);
         } finally {
-            // Restore buttonStatus
+ // Restore buttonStatus
             loginButton.classList.remove('hidden');
             loadingButton.classList.add('hidden');
         }

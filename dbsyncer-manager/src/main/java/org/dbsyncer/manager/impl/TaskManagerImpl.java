@@ -92,7 +92,7 @@ public final class TaskManagerImpl implements TaskManager, ApplicationListener<C
             long now = Instant.now().toEpochMilli();
             meta.setState(code);
             meta.setUpdateTime(now);
-            // EnterRunningOther OrganiserStartTime，Time-consuming supplyupdateTime - startTime）Most
+            // 进入运行中时记录本轮启动时间，供耗时（updateTime - startTime）计算
             if (CommonTaskStatusEnum.RUNNING == status) {
                 meta.setStartTime(now);
             }

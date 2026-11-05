@@ -960,7 +960,7 @@ public class MySQLStorageService extends AbstractStorageService {
             return;
         }
         if (StorageEnum.TASK.getType().equals(type)) {
-            // STATUS Other OrganiserData MigrationBackDelete，SeedropTaskStatusColumnIfPresent()
+            // STATUS 列须在数据迁移后删除，见 dropTaskStatusColumnIfPresent()
             createIndexIfNotExist(table, "IDX_UPDATE_TIME", "`UPDATE_TIME`");
             createIndexIfNotExist(table, "IDX_TYPE_UPDATE_TIME", "`TYPE`,`UPDATE_TIME`");
             return;
@@ -985,14 +985,14 @@ public class MySQLStorageService extends AbstractStorageService {
         }
         try {
             executeSql(String.format("ALTER TABLE `%s` ADD COLUMN `%s` %s", table, columnName, columnDef));
-            logger.info("Other Organiser", table, columnName);
+            logger.info("Backfilled {}.{}", table, columnName);
         } catch (Exception e) {
-            logger.warn("Other Organiser", table, columnName, e.getMessage());
+            logger.warn("Failed to backfill {}.{}: {}", table, columnName, e.getMessage());
         }
     }
 
     /**
-     * IndexOther Organiser
+     * 索引不存在则创建。
      */
     private void createIndexIfNotExist(String table, String indexName, String indexColumns) {
         if (indexExists(table, indexName)) {

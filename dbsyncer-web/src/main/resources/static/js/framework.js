@@ -246,7 +246,7 @@ function validateForm($form) {
                 $container = $field.parent();
             }
 
-            // AccessFieldOther OrganiserErrorNotice
+            // 获取字段的标签文本用于错误提示
             var labelText = '';
             var $label = $field.closest('.form-item').find('.form-label').first();
             if ($label.length) {
@@ -1448,7 +1448,7 @@ function buildRemoteConnectorSelectOptions(extra) {
 }
 
 /**
- * FromdbSelect Other OrganiserConnectorType（Prioritydata.connectorType）。
+ * Resolve connector type from dbSelect (prefer data.connectorType).
  */
 function resolveConnectorTypeFromSelect($connector, connectorId) {
     const api = $connector && $connector.data ? $connector.data('dbSelect') : null;
@@ -1469,7 +1469,7 @@ function resolveConnectorTypeFromSelect($connector, connectorId) {
 }
 
 /**
- * Universal RemoteminPageDrawConfigModel Style:id + name）。
+ * Shared remote page drawer config model (id + name).
  * @param {Object} extra url/defaultValue/defaultLabel/pageSize/onSelect/convertRow/params
  */
 function buildRemotePagingSelectOptions(extra) {

@@ -107,7 +107,7 @@ public final class CryptoUtil {
      *
      * @param data            Data to Encrypt
      * @param privateKey      Private Combined Key
-     * @param hmacSecret      HMACOther Organiser
+     * @param hmacSecret      HMAC密钥（用于签名，内网场景必需）
      * @param isPublicNetwork YesNoIt's a public view.true-Internet useRSA-SHA256Signature,false-Intranet useHMAC-SHA256English
      * @return Encrypted RequestJSONString
      */

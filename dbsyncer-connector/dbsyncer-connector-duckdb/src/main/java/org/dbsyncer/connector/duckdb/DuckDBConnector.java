@@ -93,7 +93,7 @@ public final class DuckDBConnector extends AbstractDatabaseConnector {
     }
 
     /**
-     * UI「Data FactLibrary」ListBack schema；SelectionResultWriting oftencatalog，Other Organisercatalog/schema Connect.
+     * UI「数据库」列表返回 schema；选择结果常写入 catalog，故解析时 catalog/schema 互通。
      */
     @Override
     protected String getCatalog(String database, Connection connection) {

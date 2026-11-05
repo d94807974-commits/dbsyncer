@@ -2,13 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<!-- Charts andTaskList -->
+<!-- FigureTableand MagistracyList -->
 <div class="grid grid-cols-1 lg:grid-cols-3 mb-5">
-    <!-- Left:TPS / CPU / Memory -->
+ <!-- Left：TPS / CPU / Memory -->
     <div class="lg:col-span-2">
         <div class="card mb-6">
             <div class="card-header">
-                <h3 class="card-title text-center" id="tps">Executor TPS</h3>
+ <h3 class="card-title text-center" id="tps">ExecutorTPS</h3>
             </div>
             <div class="card-body">
                 <canvas id="tpsChart" height="200"></canvas>
@@ -26,7 +26,7 @@
             </div>
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title text-center">Memory (MB)</h3>
+ <h3 class="card-title text-center">Memory(MB)</h3>
                 </div>
                 <div class="card-body">
                     <canvas id="memoryChart" height="200"></canvas>
@@ -35,18 +35,18 @@
         </div>
     </div>
 
-    <!-- Right: SystemStatus -->
+ <!-- Right：SystemStatus -->
     <div class="container-no-bg">
-        <!-- C Produce Use -->
+ <!-- CPUUsage -->
         <div class="progress-card mb-3" id="cpuProgressBar"></div>
 
-        <!-- Memory UsageRate -->
+ <!-- There's a chance that you'll be able to make a difference. -->
         <div class="progress-card mb-3" id="memoryProgressBar"></div>
 
-        <!-- DiskUsage -->
+ <!-- Disk Usage -->
         <div class="progress-card mb-3" id="diskProgressBar"></div>
 
-        <!-- ApplyStatus -->
+ <!-- ApplyStatus -->
         <div class="mb-3">
             <table class="table">
                 <tbody id="metrics"></tbody>
@@ -56,19 +56,19 @@
 </div>
 
 <div class="grid grid-cols-2 mb-5">
-    <!-- Query ExecutorTask -->
+ <!-- SearchExecutor Task -->
     <div class="form-container">
         <div class="card-header">
             <div class="grid grid-cols-6 items-center">
                 <div class="lg:col-span-3">
                     <select id="searchActuatorMeta" class="form-control"></select>
                 </div>
-                <!-- CommunityPressTable nameSearch；Commercial version is fixed conduit(channel)，Do Not DisplayTable nameSearch -->
+ <!-- CommunityPressTableFirst NameSearch；Commercial version is fixed conduit(channel)，Do Not DisplayTableFirst NameSearch -->
                 <div th:if="${editionInfo == null or editionInfo.edition eq 'community'}"
                      id="searchActuator" class="lg:col-span-3 search-wrapper">
                     <i class="fa fa-search search-icon"></i>
-                    <input class="search-input" type="text" maxlength="32" placeholder="Search Table Key" />
-                    <span class="search-clear" title="Clear">
+ <input class="search-input" type="text" maxlength="32" placeholder="SearchTableKeyword" />
+ <span class="search-clear" title="Clear">
                         <i class="fa fa-times"></i>
                     </span>
                 </div>
@@ -79,8 +79,8 @@
                 <thead>
                 <tr>
                     <th></th>
-                    <th>Sync task</th>
-                    <th>Result</th>
+ <th>Sync Tasks</th>
+ <th>Result</th>
                 </tr>
                 </thead>
                 <tbody id="actuatorList"></tbody>
@@ -88,11 +88,11 @@
         </div>
     </div>
 
-    <!-- Backlog / EnduringTrends -->
+ <!-- Stack / Enduring trends -->
     <div class="grid grid-cols-1">
         <div class="form-container">
             <div class="card-header">
-                <h3 class="card-title text-center">Stacking Trends</h3>
+ <h3 class="card-title text-center">Stacking trend salute</h3>
             </div>
             <div class="card-body">
                 <canvas id="queueChart" height="160"></canvas>
@@ -100,7 +100,7 @@
         </div>
         <div class="form-container">
             <div class="card-header">
-                <h3 class="card-title text-center">Durable trend map</h3>
+ <h3 class="card-title text-center">Durable trend map</h3>
             </div>
             <div class="card-body">
                 <canvas id="storageChart" height="160"></canvas>

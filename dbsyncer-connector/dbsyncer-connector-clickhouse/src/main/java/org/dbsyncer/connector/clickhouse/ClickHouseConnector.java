@@ -124,7 +124,7 @@ public final class ClickHouseConnector extends AbstractDatabaseConnector {
             result.getSuccessData().addAll(context.getTargetList());
             return result;
         }
-        // ClickHouse Standard not supportedUPSERT，Other OrganiserPrimary key/Sorting keys:OverwriteWritingandUpdateReunify as delete and insert.
+        // ClickHouse 不支持标准 UPSERT，且禁止更新主键/排序键列：覆盖写入与修改统一为先删后插。
         if (context.isForceUpdate() || isUpdate(context.getEvent())) {
             deleteByPrimaryKey(connectorInstance, context);
             // NotOnOverwrite andupdate

@@ -48,7 +48,7 @@ public class UserInfo {
     private int loginFailCount;
 
     /**
-     * Lock deadlineTime（msTimePoke.0 Other Organiser
+     * 锁定截止时间（毫秒时间戳，0 表示未锁定）
      */
     private long lockUntil;
 

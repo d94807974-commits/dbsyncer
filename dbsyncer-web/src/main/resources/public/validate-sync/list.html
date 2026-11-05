@@ -6,49 +6,49 @@
 <div th:if="${editionInfo.edition eq 'community'}" class="text-center">
     <h3 class="text-xl text-center text-gray-500">[[${editionInfo.editionName}]]</h3>
 
-    <!-- Data validationUNDAF functionIntroduction -->
+ <!-- Description of revised verification function -->
     <div class="bg-info/10 border border-info rounded-lg p-4 mb-6 text-left">
         <h4 class="text-lg font-semibold text-info mb-2">
-            <i class="fa fa-check-circle"></i> What's a revised check? Issues.
+ <i class="fa fa-check-circle"></i> What?YesRevised Validation？
         </h4>
         <p class="text-sm text-secondary mb-3">
-            Revised verification is for validation<strong>Source Number</strong>and<strong>Target database</strong>The function of data consistency between them. In the context of data synchronization or migration, some data may be lost or inconsistent due to network shaking, procedural anomalies, etc. Revised verifications can:
+ Revised ValidationYesFor validation<strong>SourceDatabase</strong>and<strong>TargetDatabase</strong>Data GLOBALITY FUNCTIONS BETWEEN。In the Data Sync or Migration scene，Because the network is shaking.、Procedural irregularities, etc.，Possible loss or inconsistency of some data。Correct asks.：
         </p>
         <ul class="text-sm text-secondary mb-3 pl-4">
-            <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>Autodetect</strong>: records of discrepancies in data found on both sides
+ <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>Autodetect</strong>：There's a record of data discrepancies between the two sides.
             </li>
-            <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>Analysis of variances</strong>: Number of statistical discrepancies, location problem data
+ <li class="mb-1"><i class="fa fa-angle-right text-info"></i> <strong>Analysis of variances</strong>：Number of statistical differences，Positioning problem data
             </li>
-            <li><i class="fa fa-angle-right text-info"></i> <strong>Rehabilitation support</strong>: provide repair capacity to ensure that data are eventually consistent</li>
+ <li><i class="fa fa-angle-right text-info"></i> <strong>Rehabilitation support</strong>：Provision of repair capacity，Ensure that data are finally consistent</li>
         </ul>
         <p class="text-sm text-secondary">
-            Applies to scenarios such as data simultaneous validation, migration consistency checks, real-time data quality monitoring, etc.
+ Applicable to：Synchron International、Migration consistency check、Real-time data qualityMonitorWait for the scene.。
         </p>
     </div>
 
     <p class="text-secondary mb-6">
-        This feature is only available in Professional edition. Please download
+ This feature is open only in the professional version，Please download.
         <a href="https://gitee.com/ghi/dbsyncer/releases"
            class="text-primary hover-underline font-medium"
-           title="Download Professional edition dbsyncer-enterprise-x.x.x-bin.zip"
+ title="Download Professional Edit dbsyncer-enterprise-x.x.x-bin.zip"
            target="_blank">
-            <i class="fa fa-download"></i> Professional
+ <i class="fa fa-download"></i> Professional
         </a>
     </p>
 </div>
 
-<!-- QueryData validationList -->
+<!-- SearchRevised ValidationList -->
 <div th:if="${editionInfo.edition ne 'community'}" class="form-container">
     <div class="card-header">
-        <h3 class="card-title text-center">Data validation</h3>
+ <h3 class="card-title text-center">Revised Validation</h3>
     </div>
     <div class="card-body">
         <div class="flex items-center justify-between gap-2">
             <div class="flex items-center gap-2 flex-1 min-w-0">
                 <div id="validate-sync-search" class="search-wrapper w-320 max-w-full flex-shrink-0">
                     <i class="fa fa-search search-icon"></i>
-                    <input class="search-input" type="text" maxlength="32" placeholder="Search by name">
-                    <span class="search-clear" title="Clear">
+ <input class="search-input" type="text" maxlength="32" placeholder="SearchName">
+ <span class="search-clear" title="Clear">
                         <i class="fa fa-times"></i>
                     </span>
                 </div>
@@ -57,7 +57,7 @@
             <div class="flex items-center gap-2 flex-shrink-0">
                 <span id="validateSyncGroupCreateHost" data-permission="mapping:edit"></span>
                 <button id="validateSyncAddBtn" class="btn btn-primary" type="button" data-permission="mapping:edit">
-                    <i class="fa fa-plus"></i> Add
+ <i class="fa fa-plus"></i> Add
                 </button>
             </div>
         </div>
@@ -66,13 +66,13 @@
             <thead>
             <tr>
                 <th></th>
-                <th>Task name</th>
-                <th>Verify Scheme</th>
-                <th>Trigger Method</th>
-                <th>Result</th>
-                <th>Status</th>
-                <th>Final implementation</th>
-                <th>Actions</th>
+ <th>TasksName</th>
+ <th>Verify Scheme</th>
+ <th>Trigger Method</th>
+ <th>Result</th>
+ <th>Status</th>
+ <th>Final implementation</th>
+ <th>Actions</th>
             </tr>
             </thead>
             <tbody id="validate-sync-table"></tbody>

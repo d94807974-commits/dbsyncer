@@ -86,7 +86,7 @@
                     + '</tr>';
             },
             emptyHtml: '<td colspan="7" class="text-center"><i class="fa fa-exchange empty-icon"></i>'
-                + '<p class="empty-text">Other Organiser</p>'
+                + '<p class="empty-text">No connections yet</p>'
                 + '<p class="empty-description">This is where you will display the maps.</p></td>'
         });
     }

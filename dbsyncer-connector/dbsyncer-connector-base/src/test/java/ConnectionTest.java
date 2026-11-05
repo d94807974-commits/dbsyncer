@@ -328,10 +328,10 @@ public class ConnectionTest {
             final int offset = i;
             pool.submit(()-> {
                 try {
-                    logger.info("Other Organiser", Thread.currentThread().getName());
+                    logger.info("{} - task started", Thread.currentThread().getName());
                     // Add & DeleteEventIntensive
                     mockData(connectorInstance, num, offset, insert, update, delete);
-                    logger.info("Other Organiser", Thread.currentThread().getName());
+                    logger.info("{} - task ended", Thread.currentThread().getName());
                 } catch (Exception e) {
                     logger.error(e.getMessage());
                 } finally {

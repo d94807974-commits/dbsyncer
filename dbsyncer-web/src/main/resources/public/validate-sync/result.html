@@ -19,7 +19,7 @@
             <div class="dbsyncer-card-body" style="padding: 20px;">
                 <div class="grid grid-cols-2">
                     <div class="flex items-center">
-                        <label class="font-medium text-gray-600" style="width: 120px;">Other Organiser</label>
+                        <label class="font-medium text-gray-600" style="width: 120px;">Updated</label>
                         <span id="taskName" class="text-gray-800">-</span>
                     </div>
                     <div class="flex items-center">
@@ -91,7 +91,7 @@
                     <span id="detailTargetTable" class="text-gray-800">-</span>
                 </div>
                 <div class="flex items-center mb-2">
-                    <label class="font-medium text-gray-600" style="width: 120px;">Other Organiser</label>
+                    <label class="font-medium text-gray-600" style="width: 120px;">Updated</label>
                     <span id="detailUpdateTime" class="text-gray-500">-</span>
                 </div>
             </div>
@@ -126,7 +126,7 @@
 
 <script th:src="@{/js/task/result.js}"></script>
 <script th:inline="javascript">
-    // FromURLParameterOther OrganisertaskId，andSettingsFor global variablesresult.jsUse
+    // Read taskId from the URL and expose it for result.js
 
     
     $(document).ready(function() {

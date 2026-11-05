@@ -232,7 +232,7 @@ public class PgOutputMessageDecoder extends AbstractMessageDecoder {
      * 1. "O" - AppealValueDivision(Optional)
      * 2. "N" - NewValueDivision
      * 
-     * NewValuemay containTOASTED ("u") Field，OrganisationFieldUnchanged, required from oldValueOther Organiser
+     * 新值中可能包含 TOASTED ("u") 字段，表示该字段未变更，需要从旧值中获取
      */
     private RowChangedEvent parseUpdateData(TableId tableId, ByteBuffer buffer) {
         List<Object> oldData = null;

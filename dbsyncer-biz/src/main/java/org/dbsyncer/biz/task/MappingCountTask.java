@@ -57,7 +57,7 @@ public final class MappingCountTask extends AbstractCountTask {
     public void execute() {
         Mapping mapping = mappingProfile.get(mappingId);
         int groupCount = tableGroupProfile.getTableGroupCount(mappingId);
-        logger.info("Other Organiser", mapping.getName(), groupCount);
+        logger.info("Counting {}: {} tables", mapping.getName(), groupCount);
         if (groupCount > 0) {
             tableGroupProfile.pageScanTableGroups(mappingId, ConfigConstant.PAGE_SIZE, page -> {
                 if (CollectionUtils.isEmpty(page)) {

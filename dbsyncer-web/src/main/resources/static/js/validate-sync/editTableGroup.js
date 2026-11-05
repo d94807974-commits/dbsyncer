@@ -38,7 +38,7 @@ $(function() {
                 }
             },
             defaultValue: [],// Default Selection
-            customButtons: [ // Most2individualCustombutton
+            customButtons: [ // Up to 2 custom buttons
                 {
                     text: 'Refresh Fields',
                     callback: function(values) {

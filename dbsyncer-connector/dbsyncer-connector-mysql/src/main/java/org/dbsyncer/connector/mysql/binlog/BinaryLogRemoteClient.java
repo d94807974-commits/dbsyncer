@@ -367,7 +367,7 @@ public class BinaryLogRemoteClient implements BinaryLogClient {
             try {
                 enableHeartbeat();
             } catch (Exception e) {
-                // Not supportedHeart rate.（MySQL < 5.6、GoldenDB CompatibilityLibrary）Other Organiserkeepalive It's no longer active.
+                // 不支持心跳（MySQL < 5.6、GoldenDB 等兼容库）时降级：keepalive 不再主动探测，
                 // ConnectStatusPresentedworker ThreadsReadsocket Yes.EOF Testing (avoidance)Ping Response blendingbinlog EventFlow
                 logger.warn("Failed to enable binlog heartbeat ({}), keepalive will rely on socket EOF detection", e.getMessage());
                 heartbeatInterval = 0;

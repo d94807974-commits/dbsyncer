@@ -164,7 +164,7 @@ public class JwtSecretManager {
     }
 
     /**
-     * FromSystem settingsOther OrganiserJWTKeyConfigure
+     * 从系统配置中获取JWT密钥配置
      *
      * @return JWTKeyConfigure，If not presentBacknull
      */

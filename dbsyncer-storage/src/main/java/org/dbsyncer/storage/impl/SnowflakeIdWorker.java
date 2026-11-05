@@ -91,7 +91,7 @@ public class SnowflakeIdWorker {
             throw new CommonException(String.format("Clock moved backwards.  Refusing to generate id for %d milliseconds", lastTimestamp - timestamp));
         }
 
-        // IfYesThe same.TimeGenerateOther OrganisermsProcurate
+        // 如果是同一时间生成的，则进行毫秒内序列
         if (lastTimestamp == timestamp) {
             sequence = (sequence + 1) & sequenceMask;
             // msInner series spill

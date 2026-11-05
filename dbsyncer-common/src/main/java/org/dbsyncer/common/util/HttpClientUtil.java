@@ -65,7 +65,7 @@ public abstract class HttpClientUtil {
     }
 
     /**
-     * ICALLYNodesOther Organisertoken is emptyBackEmptyMap。
+     * 构建节点间调用头。token 为空时返回空 Map。
      */
     public static Map<String, String> clusterTokenHeaders(String token) {
         if (StringUtil.isBlank(token)) {

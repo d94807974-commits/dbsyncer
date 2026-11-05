@@ -372,7 +372,7 @@ public abstract class AbstractDatabaseConnector extends AbstractConnector implem
     }
 
     /**
-     * Demarcation of sitesParameter：Other Organiser{@code budget} SoldierOFFSET=budget-1, LIMIT=1）。
+     * 划界探点参数：取排序后第 {@code budget} 行（OFFSET=budget-1, LIMIT=1）。
      * <p>General in the cursor window.keyset Parameterand {@link #getPageArgs} minPagepatches; if cursorSQL minPagePosition.and
      * {@link #getPageArgs} Inconsistencies (e.g., department)min Oracle Cursor OnlyROWNUM），Back null It means the window is changed.
      *
@@ -802,7 +802,7 @@ public abstract class AbstractDatabaseConnector extends AbstractConnector implem
      * <p>Yeah.3FieldPrimary key (pk1, pk2, pk3)：GenerateCondition：(pk1 > ?) OR (pk1 = ? AND pk2 > ?) OR (pk1 = ? AND pk2 = ? AND pk3 > ?)</p>
      * <p>Yeah.nFieldPrimary key：And so on....</p>
      *
-     * <p>Principle: For composite keys(pk1, pk2, ..., pkn)，Other Organiser(v1, v2, ..., vn) The record,
+     * <p>原理：对于复合键 (pk1, pk2, ..., pkn)，要查询所有大于 (v1, v2, ..., vn) 的记录，
      * Need to meet:(pk1 > v1) OR (pk1 = v1 AND pk2 > v2) OR ... OR (pk1 = v1 AND pk2 = v2 AND ... AND pkn > vn)</p>
      *
      * @param sql         SQLBuilder
@@ -880,7 +880,7 @@ public abstract class AbstractDatabaseConnector extends AbstractConnector implem
     }
 
     /**
-     * Build cursor onlyminPageYes.WHERECondition（Other OrganiserORDER BY）
+     * 仅构建游标分页的WHERE条件（不包含ORDER BY）
      *
      * <p>ForSQL ServerWait for scenes that need to be sorted from the outer layer to avoid repetition from the internal and external layers.ORDER BY</p>
      *
@@ -920,7 +920,7 @@ public abstract class AbstractDatabaseConnector extends AbstractConnector implem
     /**
      * Build CursorminPageYes.ParameterCore logic of arrays (excluding data)LibrarySpecificOFFSETWait.Parameter）
      *
-     * <p>BackCursorConditionParameter，Other OrganiserpageSizeWait.minPageParameter</p>
+     * <p>返回游标条件参数，不包含pageSize等分页参数</p>
      *
      * @param cursors Current cursorValueArray
      * @return CursorConditionParameterarray, ifNoneCurseBacknull

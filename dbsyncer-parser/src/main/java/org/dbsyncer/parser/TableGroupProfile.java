@@ -80,7 +80,7 @@ public interface TableGroupProfile {
     Paging queryTableGroupResults(String mappingId, String detailStatus, int pageNum, int pageSize);
 
     /**
-     * PressPageAll over the clock.TasksconcludeAllMapPageOther OrganisersortIndex Decline.
+     * 按页回调遍历任务下全部表映射（页内顺序为 sortIndex 降序）。
      *
      * @param mappingId    Tasks/Mapping ID
      * @param pageSize     EveryPageNumber of bars;fallbacks when illegal{@link org.dbsyncer.sdk.constant.ConfigConstant#PAGE_SIZE}

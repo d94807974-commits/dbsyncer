@@ -70,7 +70,7 @@ public class OpenApiInterceptor implements HandlerInterceptor {
             }
 
             // 2. AuthenticationIP whitelist（Prioritization, AvoidNoneConsumption on requestResource）
-            // AllOpenAPIInterfaceOther OrganiserIP whitelist，IncludingLoginInterface
+            // 所有OpenAPI接口都需要验证IP白名单，包括登录接口
             String clientIp = RequestUtil.getClientIp(request);
             // Fetch Request Path, AvoidUserRequest/.;That kind of characters go around.PermissionsThe judgment leads to a circumvention.PermissionsCheck risk.
             String requestPath = urlPathHelper.getLookupPathForRequest(request);

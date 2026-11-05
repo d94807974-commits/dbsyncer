@@ -52,7 +52,7 @@ public interface ValidateSyncService {
     String stop(String id);
 
     /**
-     * SearchTasks（ListLightField，Other OrganiserConfigure/ConnectorSensitive.Info）
+     * 搜索任务（列表轻量字段，不含完整配置/连接器敏感信息）
      */
     Paging<ValidateSyncListVO> search(Map<String, String> params);
 

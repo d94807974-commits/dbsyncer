@@ -4,37 +4,37 @@
 
 <div class="form-container">
     <div class="card-header">
-        <h3 class="card-title text-center">Role management</h3>
+ <h3 class="card-title text-center">RolesManagement</h3>
     </div>
     <div class="card-body">
         <div class="form-actions mb-4" data-permission="user:edit">
             <button class="btn btn-primary" type="button" onclick="doLoader('/role/page/add')">
-                <i class="fa fa-plus"></i> Add
+ <i class="fa fa-plus"></i> Add
             </button>
         </div>
-        <p class="text-sm text-tertiary mb-4">They can build their own roles and assign functional competencies.</p>
+ <p class="text-sm text-tertiary mb-4">Self-buildableRolesAnd assign functionPermissions。</p>
         <table class="table">
             <thead>
             <tr>
-                <th>Name</th>
-                <th>Permissions</th>
-                <th>Actions</th>
+ <th>Name</th>
+ <th>PermissionsNumber</th>
+ <th>Actions</th>
             </tr>
             </thead>
             <tbody id="roleList">
             <tr th:if="${roles == null or roles.isEmpty()}">
-                <td colspan="3" class="text-center text-tertiary py-8">No role data available</td>
+ <td colspan="3" class="text-center text-tertiary py-8">None yetRolesData</td>
             </tr>
             <tr th:each="r : ${roles}">
                 <td th:text="${r?.name}"></td>
                 <td th:text="${r?.permissionCount}"></td>
                 <td>
                     <div class="flex items-center">
-                        <button class="table-action-btn view editRoleBtn" title="Configure Permissions"
+ <button class="table-action-btn view editRoleBtn" title="ConfigurePermissions"
                                 th:data-id="${r?.id}">
                             <i class="fa fa-edit"></i>
                         </button>
-                        <button class="table-action-btn delete removeRoleBtn" title="Delete"
+ <button class="table-action-btn delete removeRoleBtn" title="Delete"
                                 th:data-id="${r?.id}"
                                 th:data-name="${r?.name}"
                                 data-permission="user:edit">
@@ -63,7 +63,7 @@
             const name = $(this).data('name');
             const $btn = $(this);
             showConfirm({
-                title: 'Other Organiser' + name + '」？',
+ title: 'DeleteRoles「' + name + '」？',
                 icon: 'warning',
                 size: 'large',
                 confirmType: 'danger',
@@ -73,10 +73,10 @@
                     doPoster('/role/remove', {roleId: roleId}, function (data) {
                         $btn.html(originalText).prop('disabled', false);
                         if (data.success === true) {
-                            bootGrowl('Deleted successfully!', 'success');
+ bootGrowl('Deleted successfully！', 'success');
                             doLoader('/role?refresh=' + new Date().getTime());
                         } else {
-                            bootGrowl(data.message || 'Delete failed', 'danger');
+ bootGrowl(data.message || 'DeleteFailed', 'danger');
                         }
                     });
                 }

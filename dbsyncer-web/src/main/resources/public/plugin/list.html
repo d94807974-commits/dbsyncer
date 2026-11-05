@@ -4,30 +4,30 @@
 
 <div class="form-container mb-5">
     <div class="card-header">
-        <h3 class="card-title text-center">Plugin management</h3>
+ <h3 class="card-title text-center">PluginsManagement</h3>
     </div>
     <div class="card-body">
-        <h3 class="card-title">Plugin List</h3>
-        <p class="text-xs text-tertiary">After uploading the plugin, select the sync job to enter the advanced configuration connection plugin.</p>
+ <h3 class="card-title">PluginsList</h3>
+ <p class="text-xs text-tertiary">After uploading a plugin, open a sync task and link it under Advanced settings.</p>
         <table class="table">
             <thead>
             <tr>
-                <th>Name</th>
-                <th>Class Name</th>
-                <th>Version</th>
-                <th>Documentation</th>
-                <th>Actions</th>
+ <th>Name</th>
+ <th>Class Name</th>
+ <th>Version</th>
+ <th>Documentation</th>
+ <th>Actions</th>
             </tr>
             </thead>
             <tbody id="pluginList">
             <tr th:id="${p?.name}" th:each="p,state : ${plugins}">
                 <td>
-                    <div th:if="${p?.unmodifiable}" class="flex items-center" title="Inline Plugins">
+ <div th:if="${p?.unmodifiable}" class="flex items-center" title="InternalPlugins">
                         <i class="fa fa-plug mr-2"></i>
                         <span class="font-medium">[[${p?.name}]]</span>
-                        <span class="badge badge-info ml-2 text-xs">Internal</span>
+ <span class="badge badge-info ml-2 text-xs">Internal</span>
                     </div>
-                    <div th:if="${not p?.unmodifiable}" class="flex items-center" title="Normal Plugin">
+ <div th:if="${not p?.unmodifiable}" class="flex items-center" title="NormalPlugins">
                         <i class="fa fa-star text-warning mr-2"></i>
                         <span class="font-medium">[[${p?.name}]]</span>
                     </div>
@@ -41,7 +41,7 @@
                     <button th:if="${not p?.unmodifiable and not #strings.isEmpty(p?.fileName)}"
                             type="button"
                             class="table-action-btn delete"
-                            title="Delete"
+ title="Delete"
                             th:attr="data-file=${p?.fileName}"
                             onclick="deletePlugin(this)">
                         <i class="fa fa-trash"></i>
@@ -58,12 +58,12 @@
                 <div class="upload-icon">
                     <i class="fa fa-plug"></i>
                 </div>
-                <div class="upload-text">Click or drag JAR files up here</div>
+ <div class="upload-text">Click or drag JAR File Upload Here</div>
                 <div class="upload-hint">
-                    Supported file type: .jar<br>
-                    Upload maximum 5 files
+ Supported filesType：.jar<br>
+ Up to upload 5 Documentation
                 </div>
-                <div class="upload-button">Choose file</div>
+ <div class="upload-button">Select File</div>
                 <input type="file"
                        class="upload-input"
                        id="filePlugin"
@@ -75,34 +75,34 @@
     </div>
 </div>
 
-<!-- OpenFire!Documentation -->
+<!-- Develop Document -->
 <div class="form-container">
     <div class="card-header">
-        <h3 class="card-title">How to develop plugins?</h3>
+ <h3 class="card-title">How to developPlugins？</h3>
         <p class="text-xs text-tertiary">
-            The plugin is a technology that allows the full and incremental synchronization of data conversion. The plugin allows for the reception of synchronized data, customizes synchronized line data to the target source, and can consume data and achieve more business scenarios.</p>
+ PluginsYesOne that can be extended.FullSyncIncrementalTechnical ways to synchronize data conversion。IntroducedPluginsCan receive synchronized data，Custom Sync toTargetLine Data，It can consume data and achieve more business scenarios.。</p>
     </div>
     <div class="card-body">
         <ol class="steps">
             <li>
-                <span class="font-medium">7. New Project</span>
+ <span class="font-medium">New Project</span>
                 <p>
-                    New java or maven project, or download
+ NewjavaormavenEngineering，Or download.
                     <a href="https://gitee.com/ghi/dbsyncer-plugin-demo"
-                       title="Provide examples of plugins prepared by developers"
+ title="Prepared by the providerPluginsExample items"
                        target='_blank'
                        class="text-primary hover-underline">
-                        <i class="fa fa-external-link"></i> Example items
+ <i class="fa fa-external-link"></i> Example items
                     </a>
                 </p>
             </li>
 
             <li>
-                <span class="font-medium">Import Development Package</span>
-                <p class="text-sm font-medium mt-4 mb-2">Mode 1 (recommended): Introduction pom (required locally)</p>
+ <span class="font-medium">Import Development Package</span>
+ <p class="text-sm font-medium mt-4 mb-2">Mode1(Recommendations)：Introduction pom（Locally installed）</p>
                 <div class="code-block-wrapper">
-                    <button class="code-copy-btn" onclick="copyCode(this)" title="Click to copy">
-                        <i class="fa fa-copy"></i> Click to copy
+ <button class="code-copy-btn" onclick="copyCode(this)" title="Click to copy">
+ <i class="fa fa-copy"></i> Click to copy
                     </button>
                     <pre class="code-block"><code>&lt;dependency&gt;
     &lt;groupId&gt;org.ghi&lt;/groupId&gt;
@@ -110,19 +110,19 @@
     &lt;version&gt;[[${version}]]&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
                 </div>
-                <p class="text-sm font-medium mb-2">Mode 2: Import jar</p>
+ <p class="text-sm font-medium mb-2">Modalities2：Import jar</p>
                 <p class="mb-3">
-                    <a onClick="downLoad('sdk')" href="javascript:;" class="btn btn-sm btn-info" title="Download Appropriate">
+ <a onClick="downLoad('sdk')" href="javascript:;" class="btn btn-sm btn-info" title="Download Development Package">
                         <i class="fa fa-download"></i> dbsyncer-sdk-[[${version}]].jar
                     </a>
                 </p>
             </li>
             <li>
-                <span class="font-medium">New Plugin Class</span>
-                <p class="text-sm font-medium mt-3 mb-2">Create a new class, such as MyPlugin, to achieve the PluginService method</p>
+ <span class="font-medium">NewPluginsCategory</span>
+ <p class="text-sm font-medium mt-3 mb-2">New Category，Like what? MyPlugin，Achieve interface PluginService Methodology</p>
                 <div class="code-block-wrapper">
-                    <button class="code-copy-btn" onclick="copyCode(this)" title="Click to copy">
-                        <i class="fa fa-copy"></i> Click to copy
+ <button class="code-copy-btn" onclick="copyCode(this)" title="Click to copy">
+ <i class="fa fa-copy"></i> Click to copy
                     </button>
                     <pre class="code-block"><code>package org.test;
 
@@ -139,68 +139,68 @@ public class MyPlugin implements PluginService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
-     * Pre-process before full sync / scheduled incremental sync
+ * FullSync/TimeIncrementalSync Preprocessing
      *
-     * @param pluginContext context
+ * @param pluginContext Context
      */
     @Override
     public void postProcessBefore(PluginContext pluginContext) {
     }
 
     /**
-     * Full sync / incremental sync
+ * FullSync/IncrementalSync
      *
      * @param pluginContext
      */
     @Override
     public void convert(PluginContext pluginContext) {
-        // Extend data conversion
-        logger.info("Plugin is converting data...");
+ // Expand Moving Data Functions
+ logger.info("PluginsExpanding conversion data...");
 
-        // Whether to abort writing to the target (default false)
+ // Whether to stop writing to the target DB; default false
         pluginContext.setTerminated(false);
 
-        // Source and target tables
+ // SourceTableandTargetTable
         pluginContext.getSourceTableName();
         pluginContext.getTargetTableName();
 
-        // Captured event (INSERT/UPDATE/DELETE)
+ // Capture events（INSERT/UPDATE/DELETE）
         pluginContext.getEvent();
 
-        // Full or incremental rows from source/target tables
+ // SourceandTargetTableFullorIncrementalData
         pluginContext.getSourceList();
         pluginContext.getTargetList();
 
-        // Get target connector instance (if needed, add dbsyncer-connector-[[${version}]].jar)
+ // AccessTarget databaseConnectorExamples（If necessaryConnector，Must be introduceddbsyncer-connector-[[${version}]].jar）
         pluginContext.getTargetConnectorInstance();
     }
 
     /**
-     * Post-process after full/incremental sync completes
+ * FullSync/IncrementalSynchronize processing
      *
      * @param context
      */
     @Override
     public void postProcessAfter(PluginContext context) {
-        // Called after sync completes
-        logger.info("Plugin handling synced data, target table:{}, event:{}, count:{}", context.getTargetTableName(),
+ // Call this method after sync
+ logger.info("PluginsProcessingSync succeededData，TargetTable:{}，Events:{}，Number Mediation:{}", context.getTargetTableName(),
                         context.getEvent(), context.getTargetList().size());
 
         ConnectorInstance connectorInstance = context.getSourceConnectorInstance();
 
-        // Obtain a relational DB connection and implement custom logic...
+ // Access relationship databaseConnections，Achieving its business logic...
         if (connectorInstance instanceof DatabaseConnectorInstance) {
             DatabaseConnectorInstance db = (DatabaseConnectorInstance) connectorInstance;
-            // Option 1:
+ // Mode I：
             String query = "select * from my_user limit 10";
             db.execute(databaseTemplate -> databaseTemplate.queryForList(query));
 
-            // Option 2, with transaction:
+ // Mode XVII，Commence Concerning：
             int execute = db.execute(databaseTemplate -> {
                 SimpleConnection connection = databaseTemplate.getSimpleConnection();
                 int update = 0;
                 try {
-                    // ManualSubmitService
+ // ManualSubmitService
                     connection.setAutoCommit(false);
                     Object[] args = new Object[3];
                     args[0] = "1";
@@ -210,20 +210,20 @@ public class MyPlugin implements PluginService {
                         column3) VALUES (value1, value2, value3)", args);
                     connection.commit();
                 } catch (Exception e) {
-                    // ErrorRoll back
+ // Unusual Rollback
                     connection.rollback();
                 } finally {
-                    // Revert DefaultSubmitService
+ // Revert DefaultSubmitService
                     connection.setAutoCommit(true);
                 }
                 return update;
             });
-            logger.info("Manual Transition", execute);
+ logger.info("Manual executionSQLResult:{}", execute);
         }
     }
 
     /**
-     * Rewrite method:SettingsVersionNo. No.
+ * Rewrite Method：Set Version Number
      *
      * @return
      */
@@ -233,35 +233,35 @@ public class MyPlugin implements PluginService {
     }
 
     /**
-     * Rewrite method:SettingsPluginName
+ * Rewrite Method：SettingsPluginsName
      *
      * @return
      */
     @Override
     public String getName() {
-        return "My Plugin";
+ return "Mine.Plugins";
     }
 }</code></pre>
                 </div>
             </li>
 
             <li>
-                <span class="font-medium">Configure SPI</span>
+ <span class="font-medium">Configure SPI</span>
                 <p class="mt-3">
-                    New serviceces folder in / META-INF/ and a new file named <code>org.dbsyncer.sdk.spi.PluginService</code>, the file writes the path to the realization class
-                    <code>org.test.MyPlugin</code>Ratified and rewritten if more than one is achieved
+ Yes. /META-INF/ New services Folder，And services New/58/12，Name <code>org.dbsyncer.sdk.spi.PluginService</code>，File Writes the path to the 177
+ <code>org.test.MyPlugin</code>，If it's achieved, write it again.
                 </p>
                 <div class="mt-3">
-                    <img draggable="false" th:src="@{'/img/plugin/spi.jpg'}" alt="Example of SPI configuration">
+ <img draggable="false" th:src="@{'/img/plugin/spi.jpg'}" alt="SPIConfigure Example">
                 </div>
             </li>
 
             <li>
-                <span class="font-medium">Pack up.</span>
-                <p class="mt-3">Pack through maven command</p>
+ <span class="font-medium">Pack up.</span>
+ <p class="mt-3">Pass. maven Order to pack.</p>
                 <div class="code-block-wrapper">
-                    <button class="code-copy-btn" onclick="copyCode(this)" title="Click to copy">
-                        <i class="fa fa-copy"></i> Click to copy
+ <button class="code-copy-btn" onclick="copyCode(this)" title="Click to copy">
+ <i class="fa fa-copy"></i> Click to copy
                     </button>
                     <pre class="code-block"><code>mvn clean compile package</code></pre>
                 </div>
@@ -272,7 +272,7 @@ public class MyPlugin implements PluginService {
 
 <script type="text/javascript">
     $(function () {
-        // InitializeDocumentationUploadComponent
+ // Initialise File Upload Component
         initFileUpload('#pluginUploader', {
             uploadUrl: $basePath + '/plugin/upload',
             maxFiles: 5,
@@ -281,14 +281,14 @@ public class MyPlugin implements PluginService {
             autoUpload: true,
             onSuccess: function (file, response) {
                 if (response.success) {
-                    bootGrowl("Plugin upload succeeded!", "success");
+ bootGrowl("PluginsUploaded successfully！", "success");
                     doLoader("/plugin");
                 } else {
-                    bootGrowl(response.message || "Upload failed", "danger");
+ bootGrowl(response.message || "Upload failed", "danger");
                 }
             },
             onError: function (file, error) {
-                bootGrowl(error || "Upload failed", "danger");
+ bootGrowl(error || "Upload failed", "danger");
             }
         });
     });
@@ -303,24 +303,24 @@ public class MyPlugin implements PluginService {
             return;
         }
         showConfirm({
-            title: 'Are you sure you want to delete the plugin?',
-            message: 'Other Organiser ' + fileName + ', the tasks associated with the plugin need to be reconfigured.',
+ title: 'OKYes.DeleteThePlugins？',
+ message: 'WillDeleteDocumentation ' + fileName + '，Associated withPluginsTasks to be reconfigured。',
             icon: 'warning',
             confirmType: 'danger',
             onConfirm: function () {
                 doPoster('/plugin/remove', {fileName: fileName}, function (response) {
                     if (response.success === true) {
-                        bootGrowl('Deleted successfully', 'success');
+ bootGrowl('Deleted successfully', 'success');
                         doLoader('/plugin');
                     } else {
-                        bootGrowl(response.message || 'Delete failed', 'danger');
+ bootGrowl(response.message || 'DeleteFailed', 'danger');
                     }
                 });
             }
         });
     }
 
-    // CopyCode Functions
+ // Copy code function
     function copyCode(btn) {
         const $btn = $(btn);
         const codeBlock = $btn.siblings('.code-block').find('code');
@@ -328,8 +328,8 @@ public class MyPlugin implements PluginService {
 
         copyToClipboard(text, {
             button: $btn,
-            successMessage: "Copy code minister!",
-            originalText: "Click to copy",
+ successMessage: "Copy CodeSuccess！",
+ originalText: "Click to copy",
             originalIcon: "fa-copy"
         });
     }

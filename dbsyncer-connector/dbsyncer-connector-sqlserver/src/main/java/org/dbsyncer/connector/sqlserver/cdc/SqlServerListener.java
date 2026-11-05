@@ -326,7 +326,7 @@ public class SqlServerListener extends AbstractDatabaseListener {
      * Minimal use of pulling starting clamp to capture instanceLSN，AvoidanceCDCClean-up triggers crossing the thresholdMsg 313。
      * <p>If the starting point has passed the end of this instalment, this form is enteredNoneNeed to pull.
      *
-     * @return Effectivedoubt;NoneOther OrganiserBacknull
+     * @return 有效起点；无需拉取时返回null
      */
     private Lsn resolveFromLsn(SqlServerChangeTable changeTable, Lsn startLsn, Lsn stopLsn) {
         Lsn fromLsn = startLsn;

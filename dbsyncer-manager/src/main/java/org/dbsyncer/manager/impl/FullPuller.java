@@ -84,7 +84,7 @@ public final class FullPuller extends AbstractPuller implements ApplicationListe
 
     @Override
     public void start(Mapping mapping, boolean autoRecovery) {
-        // FullOther OrganiserStart
+        // 全量不涉及自启动
         start(mapping);
     }
 

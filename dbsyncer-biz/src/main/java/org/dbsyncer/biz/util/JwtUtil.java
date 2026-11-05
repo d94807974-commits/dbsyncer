@@ -75,7 +75,7 @@ public abstract class JwtUtil {
     }
 
     /**
-     * Other OrganiserJWT。
+     * 对任意载荷签名为 JWT。
      *
      * @param payload Load Object
      * @param secret  Key

@@ -52,7 +52,7 @@ public class ExecuteRequest {
     /**
      * YesNoEnableminPage。
      *
-     * @return true Other OrganiserminPageQuestion
+     * @return true 表示按分页查询
      */
     public boolean isPaged() {
         return pageNum > 0 && pageSize > 0;

@@ -24,7 +24,7 @@ public class AppConfig {
 
     private String copyright;
 
-    private String company = "Sichuan Star River Synchronization Technology Ltd.";
+    private String company = "四川星河同步科技有限公司";
 
     public String getName() {
         return name;

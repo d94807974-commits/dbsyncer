@@ -340,10 +340,10 @@ public class MySQLListener extends AbstractDatabaseListener {
         private void parseAlter(QueryEventData data, Alter alter) {
             // ALTER TABLE `test`.`my_user` MODIFY COLUMN `name` varchar(128) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL AFTER `id`
             String tableName = StringUtil.replace(alter.getTable().getName(), StringUtil.BACK_QUOTE, StringUtil.EMPTY);
-            // databaseName Other OrganiserValueI can't.QueryEventData#getDatabase, getDatabase RetrievedYesImplementationSQL statementLibraryContext,
+            // databaseName 的取值不能为 QueryEventData#getDatabase, getDatabase 获取的是执行 SQL 语句时所在的数据库上下文,
             // Oh, no.Yes alter StatementEditThe data on which the table is locatedLibrary
             // Execute the following two statements in turnuse db1; alter table db2.my_user add column name varchar(128);
-            // data.getDatabase() Yes.ValueYesdb1, Oh, no.Yes db2, Must be fromalter Other OrganiserdatabaseName
+            // data.getDatabase() 的值为 db1, 不是 db2, 必须从 alter 中获取 databaseName
             String databaseName = alter.getTable().getSchemaName();
             // alter Nothing.databaseName DescriptionYes alter table my_user xxx This format, Just get in the context.
             if (StringUtil.isBlank(databaseName)) {

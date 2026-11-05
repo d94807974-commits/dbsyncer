@@ -98,9 +98,9 @@
                 bootGrowl(response.message || "Modify failed", "danger");
                 return;
             }
-            // RefreshGiven the individualInfo
+            // Refresh user info
             if (currentUserName === data.username) {
-                // EditGiven the individualPasswordThen we Procedurally ResetLogin
+                // After password change, force re-login
                 if (!isBlank(data.newPwd)) {
                     bootGrowl("Reset password successful. Jump to login in 3 seconds. Page Noodles.", "success");
                     setTimeout(function () {
