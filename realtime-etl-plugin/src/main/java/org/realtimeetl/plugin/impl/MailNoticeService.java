@@ -31,7 +31,7 @@ import java.util.Properties;
 /**
  * EmailNotification of service realization
  *
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2022/11/13 22:20
  */
@@ -57,7 +57,7 @@ public final class MailNoticeService extends AbstractNoticeService {
     public void build() throws GeneralSecurityException {
         final Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.host", "smtp.qq.com");
+        props.put("mail.smtp.host", "smtp.example.com");
         props.put("mail.user", username);
         props.put("mail.password", password);
         MailSSLSocketFactory sf = new MailSSLSocketFactory();
@@ -183,7 +183,7 @@ public final class MailNoticeService extends AbstractNoticeService {
     }
 
     private String createTemplate(String appName, String content) {
-        String temp = "<!DOCTYPE html>\n" + "<html lang=\"en\">\n" + "<meta charset=\"UTF-8\">\n" + "<title>${appName} Notification</title>\n" + "</head>\n" + "<body>\n" + "${content}\n" + "<p><a href=\"http://gitee.com/ghi/realtime-etl\">Visits</a></p>\n" + "</body>\n" + "</html>";
+        String temp = "<!DOCTYPE html>\n" + "<html lang=\"en\">\n" + "<meta charset=\"UTF-8\">\n" + "<title>${appName} Notification</title>\n" + "</head>\n" + "<body>\n" + "${content}\n" + "\n" + "</body>\n" + "</html>";
         String replace = StringUtil.replace(temp, "${appName}", appName);
         replace = StringUtil.replace(replace, "${content}", content);
         return replace;

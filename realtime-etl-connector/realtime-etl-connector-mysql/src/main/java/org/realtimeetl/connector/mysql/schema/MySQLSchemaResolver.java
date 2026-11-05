@@ -1,5 +1,17 @@
 /**
- * DBSyncer Copyright 2020-2024 All Rights Reserved.
+ * Copyright 2026 Realtime ETL
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.realtimeetl.connector.mysql.schema;
 
@@ -24,9 +36,9 @@ import java.util.stream.Stream;
 
 /**
  * MySQLStandard ContextTypeParser
- * <p>https://gitee.com/ghi/realtime-etl/wikis/%E9%A1%B9%E7%9B%AE%E8%AE%BE%E8%AE%A1/%E6%A0%87%E5%87%86%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/MySQL</p>
+ * <p></p>
  *
- * @Author The clouds.
+ * @Author Realtime ETL.
  * @Version 1.0.0
  * @Date 2024-11-25 22:08
  */

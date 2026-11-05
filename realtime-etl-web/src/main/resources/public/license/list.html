@@ -3,7 +3,6 @@
       xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <!-- Introduction QRCode Library -->
-<script th:src="@{/plugins/js/qrcodejs/qrcode.min.js}"></script>
 <!-- CommunityTip -->
 <div th:if="${editionInfo.edition eq 'community'}" class="text-center">
     <h3 class="text-xl text-center text-gray-500">[[${editionInfo.editionName}]]</h3>
@@ -37,32 +36,12 @@
     </div>
 
     <p class="text-secondary mb-6">
- This feature is open only in the professional version，Please download.
-        <a href="https://gitee.com/ghi/realtime-etl/releases"
-           class="text-primary hover-underline font-medium"
- title="Download Professional Edit realtime-etl-enterprise-x.x.x-bin.zip"
-           target="_blank">
- <i class="fa fa-download"></i> Professional
-        </a>
-    </p>
+ This feature is available in the professional edition.</p>
 </div>
 <!-- ProfessionalTip -->
 <div th:if="${(not (editionInfo.edition eq 'community')) and #strings.isEmpty(key)}" class="text-center">
     <h3 class="text-xl text-center text-gray-500">[[${editionInfo.editionName}]]</h3>
- <p class="text-secondary mb-6">Do not support the activation of virtual environments for the time being，Please contact me.<a href="javascript:void(0);"
-                                                                   class="text-success qrcode-trigger"><i
- class="fa fa-wechat"></i> Starstroke Official</a></p>
-    <script>
-        $(function () {
- // Initialize 2D suspendedTip
-            initQRCodePopover({
-                url: 'https://work.weixin.qq.com/u/vc7f073c9f993bc776?v=4.1.20.26620',
-                selector: '.qrcode-trigger',
-                size: 150,
-                position: 'bottom'
-            });
-        });
-    </script>
+ <p class="text-secondary mb-6">Virtual environment activation is not supported.</p>
 </div>
 
 <!-- LicenseActivated -->
@@ -209,7 +188,7 @@
                                 <button id="activateBtn" class="btn btn-primary" type="button">
  <i class="fa fa-rocket"></i> Activate Now (First time free of charge.15days)
                                 </button>
- <a href="javascript:void(0);" class="btn btn-text ml-2 qrcode-trigger">Contact the customer service.</a>
+ 
                             </div>
                         </div>
                     </div>
@@ -239,17 +218,6 @@
  <i class="fa fa-copy"></i> Copy
                                     </button>
                                 </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="mb-4">
- <label class="text-sm">Contact
-                                    <a href="javascript:void(0);"
-                                       class="text-success qrcode-trigger">
- <i class="fa fa-wechat"></i> Starstroke Official
-                                    </a>
- Help Contemporary File
-                                </label>
                             </div>
                         </li>
                         <li>

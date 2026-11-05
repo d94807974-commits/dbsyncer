@@ -1,5 +1,17 @@
 /**
- * DBSyncer Copyright 2020-2024 All Rights Reserved.
+ * Copyright 2026 Realtime ETL
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.realtimeetl.web.controller.license;
 
@@ -69,7 +81,7 @@ public class LicenseController extends BaseController {
     @Resource
     private UserConfigService userConfigService;
 
-    @Value("${realtime-etl.web.license.server.address:https://dbsyncer.cn/api/license/create}")
+    @Value("${realtime-etl.web.license.server.address:}")
     private String serverAddress;
 
     public static final Integer SUCCESS = 200;
@@ -308,6 +320,9 @@ public class LicenseController extends BaseController {
     }
 
     public String invoke(ProductInfo info) throws IOException {
+        if (serverAddress == null || serverAddress.trim().isEmpty()) {
+            throw new IllegalArgumentException("License server not configured");
+        }
         // AuthorizationService history agreements:body YesURL EncodedJSON，Content-Type Stillapplication/json
         String data = URLEncoder.encode(JsonUtil.objToJson(info), "UTF-8");
         try {

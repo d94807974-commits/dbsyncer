@@ -1,16 +1,8 @@
 $(function () {
     // Initialise Tab Input Box
     initMultipleInputTags();
-    
-    // Initialize 2D suspendedNotice
-    initQRCodePopover({
-        url: 'https://work.weixin.qq.com/u/vc7f073c9f993bc776?v=4.1.20.26620',
-        selector: '.qrcode-trigger',
-        size: 150,
-        position: 'top'
-    });
 
-    // Remove Activated Code
+// Remove Activated Code
     $("#removeBtn").on('click', function(){
         const $btn = $(this);
         showConfirm({
