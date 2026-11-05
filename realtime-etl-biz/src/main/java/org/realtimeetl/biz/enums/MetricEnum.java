@@ -6,7 +6,7 @@ import org.realtimeetl.common.util.StringUtil;
 /**
  * System indicators
  *
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2021/07/22 19:19
  */

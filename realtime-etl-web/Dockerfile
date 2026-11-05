@@ -1,8 +1,8 @@
 # Basic mirror
-FROM crpi-hd9bjdgoqqg4ils8.cn-hangzhou.personal.cr.aliyuncs.com/xhtb-dbs/java:8
+FROM eclipse-temurin:11-jre
 
 # Maintainer Information
-LABEL authors="chuanyun"
+LABEL authors="Realtime ETL"
 
 # Define time zone parameters
 ENV TZ=Asia/Shanghai

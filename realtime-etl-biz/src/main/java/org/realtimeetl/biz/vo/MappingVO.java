@@ -4,7 +4,7 @@ import org.realtimeetl.parser.model.Connector;
 import org.realtimeetl.parser.model.Mapping;
 
 /**
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2020/01/03 17:20
  */

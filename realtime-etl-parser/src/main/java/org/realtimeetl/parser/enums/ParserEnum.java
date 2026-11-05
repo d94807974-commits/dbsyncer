@@ -3,7 +3,7 @@ package org.realtimeetl.parser.enums;
 /**
  * ParserParameterEnumeration
  *
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2020/04/29 10:19
  */

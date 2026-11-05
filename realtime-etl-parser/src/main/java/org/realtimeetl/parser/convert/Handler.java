@@ -1,7 +1,7 @@
 package org.realtimeetl.parser.convert;
 
 /**
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2019/10/8 22:55
  */

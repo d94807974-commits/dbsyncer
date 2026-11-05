@@ -9,7 +9,7 @@ import org.springframework.context.event.ApplicationContextEvent;
  * RefreshOffsetEvent
  *
  * @version 1.0.0
- * @Author AE86
+ * @Author Realtime ETL
  * @Date 2023-08-23 22:45
  */
 public final class RefreshOffsetEvent extends ApplicationContextEvent {

@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * UserInfoManagement
  *
- * @author AE86
+ * @author Realtime ETL
  * @ClassName: UserController
  * @date: 2017Year7Intern7Morning10:03:33
  */

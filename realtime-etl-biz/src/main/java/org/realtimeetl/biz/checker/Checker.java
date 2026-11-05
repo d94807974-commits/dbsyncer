@@ -5,7 +5,7 @@ import org.realtimeetl.common.model.ConfigModel;
 import java.util.Map;
 
 /**
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2020/1/7 23:17
  */

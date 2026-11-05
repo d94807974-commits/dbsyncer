@@ -5,7 +5,7 @@ import org.realtimeetl.common.util.StringUtil;
 /**
  * DocumentationFormat
  *
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2021/2/23 23:21
  */

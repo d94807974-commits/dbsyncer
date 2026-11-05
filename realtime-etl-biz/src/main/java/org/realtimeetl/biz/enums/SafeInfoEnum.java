@@ -5,7 +5,7 @@ import org.realtimeetl.common.util.StringUtil;
 /**
  * Clear.InfoEnumeration
  *
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2022/8/26 23:21
  */

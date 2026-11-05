@@ -2,7 +2,7 @@ package org.realtimeetl.biz.vo;
 
 /**
  * @version 1.0.0
- * @Author AE86
+ * @Author Realtime ETL
  * @Date 2021-01-27 20:55
  */
 public class VersionVO {

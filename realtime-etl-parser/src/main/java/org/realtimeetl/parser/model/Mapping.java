@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * MappingMapping
  *
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2019/10/1 13:19
  */

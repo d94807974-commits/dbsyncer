@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * <p>DetailsminTable{@code realtime_etl_task_detail_{taskId}} minSnippet UseTasksAdministrationMeta Yes.taskId，Oh, no.Yes Meta Primary key。
  *
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2020/04/21 16:19
  */

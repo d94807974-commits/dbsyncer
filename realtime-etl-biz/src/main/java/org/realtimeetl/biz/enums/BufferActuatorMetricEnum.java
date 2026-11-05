@@ -3,7 +3,7 @@ package org.realtimeetl.biz.enums;
 /**
  * Cache Executor Indicators
  *
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2021/07/23 0:19
  */

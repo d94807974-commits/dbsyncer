@@ -6,7 +6,7 @@ import org.realtimeetl.sdk.listener.ChangedEvent;
 import java.util.List;
 
 /**
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2022/3/27 16:57
  */

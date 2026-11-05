@@ -6,7 +6,7 @@ import java.util.Map;
  * Data Change Listener
  *
  * @version 1.0.0
- * @Author AE86
+ * @Author Realtime ETL
  * @Date 2020-05-11 22:50
  */
 public interface Watcher {

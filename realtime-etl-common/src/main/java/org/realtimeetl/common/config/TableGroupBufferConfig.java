@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * Table-group actuatorConfigure
  *
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2023/8/28 23:50
  */

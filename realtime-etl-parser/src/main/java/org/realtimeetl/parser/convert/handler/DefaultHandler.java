@@ -6,7 +6,7 @@ import org.realtimeetl.parser.convert.Handler;
 /**
  * Default value
  *
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2019/10/8 23:02
  */

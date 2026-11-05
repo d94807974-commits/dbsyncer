@@ -10,7 +10,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 /**
  * General actuatorConfigure
  *
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2023/8/28 23:50
  */

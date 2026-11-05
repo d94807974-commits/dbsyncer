@@ -5,7 +5,7 @@ import org.realtimeetl.sdk.model.Field;
 /**
  * FieldMapping
  *
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2020/01/16 15:20
  */

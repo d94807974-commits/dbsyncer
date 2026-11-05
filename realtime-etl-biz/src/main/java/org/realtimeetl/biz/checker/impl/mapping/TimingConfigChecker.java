@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Time Configuration
  *
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2020/1/8 15:17
  */

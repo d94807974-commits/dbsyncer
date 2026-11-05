@@ -4,7 +4,7 @@ import java.util.Map;
 
 /**
  * @version 1.0.0
- * @Author AE86
+ * @Author Realtime ETL
  * @Date 2020-05-21 23:18
  */
 public interface LogService {

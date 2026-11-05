@@ -1,7 +1,18 @@
 /**
- * DBSyncer Copyright 2020-2023 All Rights Reserved.
+ * Copyright 2026 Realtime ETL
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-
 import oracle.jdbc.OracleConnection;
 import org.realtimeetl.common.util.CollectionUtils;
 import org.realtimeetl.common.util.RandomUtil;
@@ -42,7 +53,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * @Author AE86
+ * @Author Realtime ETL
  * @Version 1.0.0
  * @Date 2022-04-11 20:19
  */
@@ -425,9 +436,9 @@ public class ConnectionTest {
 
     @Test
     public void testReadSchema() {
-        List<Table> tables = getTables(createOracleConfig(), "test", "AE86", "MY_ORG");
+        List<Table> tables = getTables(createOracleConfig(), "test", "TESTUSER", "MY_ORG");
         assert !tables.isEmpty();
-        List<Table> tables1 = getTables(createOracleConfig(), "test", "AE86", null);
+        List<Table> tables1 = getTables(createOracleConfig(), "test", "TESTUSER", null);
         assert !tables1.isEmpty();
 
         getTables(createMysqlConfig(), "test", "root", "MY_ORG");
@@ -502,7 +513,7 @@ public class ConnectionTest {
     private DatabaseConfig createOracleConfig() {
         DatabaseConfig config = new DatabaseConfig();
         config.setUrl("jdbc:oracle:thin:@127.0.0.1:1521:ORCL");
-        config.setUsername("ae86");
+        config.setUsername("testuser");
         config.setPassword("123");
         config.setDriverClassName("oracle.jdbc.OracleDriver");
         return config;

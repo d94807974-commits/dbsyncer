@@ -1,7 +1,7 @@
 package org.realtimeetl.common.model;
 
 /**
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2019/11/16 23:16
  */

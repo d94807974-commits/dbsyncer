@@ -6,7 +6,7 @@ import org.realtimeetl.parser.convert.AbstractHandler;
 /**
  * String rotationTimestamp
  *
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2022/7/12 23:04
  */

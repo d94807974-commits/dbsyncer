@@ -7,7 +7,7 @@ import java.util.Properties;
 /**
  * FieldProperties
  *
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2019/9/30 15:10
  */

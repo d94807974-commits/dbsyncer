@@ -18,7 +18,7 @@ import java.util.concurrent.Executor;
  *     AchievedFullandIncrementalSync task，andConnectorRead and write,PluginConvert，TableMetaInfo，Heart rate.Test
  * </pre>
  *
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2019/10/20 21:11
  */

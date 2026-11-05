@@ -1,7 +1,7 @@
 package org.realtimeetl.common.column;
 
 /**
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2022/4/24 18:22
  */

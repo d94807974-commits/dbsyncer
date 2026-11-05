@@ -7,7 +7,7 @@ import org.realtimeetl.sdk.model.ConnectorConfig;
 import java.util.List;
 
 /**
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2019/10/1 12:40
  */

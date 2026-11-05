@@ -3,7 +3,7 @@ package org.realtimeetl.common.config;
 /**
  * Buffer zoneConfigure
  *
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2022/7/14 23:50
  */

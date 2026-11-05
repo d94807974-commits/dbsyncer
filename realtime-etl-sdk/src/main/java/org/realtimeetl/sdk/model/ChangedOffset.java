@@ -4,7 +4,7 @@ package org.realtimeetl.sdk.model;
  * IncrementalOffset
  *
  * @version 1.0.0
- * @author AE86
+ * @author Realtime ETL
  * @date 2023-08-23 20:00
  */
 public final class ChangedOffset {

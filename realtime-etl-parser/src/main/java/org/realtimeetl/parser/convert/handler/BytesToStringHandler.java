@@ -5,7 +5,7 @@ import org.realtimeetl.parser.convert.AbstractHandler;
 /**
  * Byte [ ] Turning
  *
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2021/12/20 23:04
  */

@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 /**
  * TimeTurn Date
  *
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2021/9/2 23:04
  */

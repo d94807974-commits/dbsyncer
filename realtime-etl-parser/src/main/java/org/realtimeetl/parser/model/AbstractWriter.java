@@ -5,7 +5,7 @@ import org.realtimeetl.sdk.enums.ChangedEventTypeEnum;
 import org.realtimeetl.sdk.model.ChangedOffset;
 
 /**
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2022/4/4 23:02
  */

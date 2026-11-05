@@ -8,7 +8,7 @@ import org.springframework.context.event.ApplicationContextEvent;
  * DeleteConfigureCacheEvent
  *
  * @version 1.0.0
- * @author AE86
+ * @author Realtime ETL
  * @date 2020-04-26 22:45
  */
 public class RemoveCacheEvent extends ApplicationContextEvent {

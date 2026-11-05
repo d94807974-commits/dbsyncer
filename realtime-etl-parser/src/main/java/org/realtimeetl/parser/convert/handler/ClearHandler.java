@@ -3,7 +3,7 @@ package org.realtimeetl.parser.convert.handler;
 import org.realtimeetl.parser.convert.Handler;
 
 /**
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2019/10/8 23:05
  */

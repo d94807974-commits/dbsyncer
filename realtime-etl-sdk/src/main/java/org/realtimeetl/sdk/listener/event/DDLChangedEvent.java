@@ -6,7 +6,7 @@ import org.realtimeetl.sdk.enums.ChangedEventTypeEnum;
  * DDLChangeEvent
  *
  * @version 1.0.0
- * @Author AE86
+ * @Author Realtime ETL
  * @Date 2023-09-18 23:00
  */
 public final class DDLChangedEvent extends CommonChangedEvent {

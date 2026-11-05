@@ -3,7 +3,7 @@ package org.realtimeetl.sdk.config;
 import org.realtimeetl.sdk.enums.ListenerTypeEnum;
 
 /**
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2019/10/8 22:36
  */

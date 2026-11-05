@@ -6,7 +6,7 @@ import java.util.Properties;
 
 /**
  * ConnectorConfigure
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2019/9/21 0:01
  */

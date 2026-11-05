@@ -1,7 +1,7 @@
 package org.realtimeetl.common;
 
 /**
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2023/12/04 22:39
  */

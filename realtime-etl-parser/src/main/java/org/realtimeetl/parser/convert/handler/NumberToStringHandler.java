@@ -5,7 +5,7 @@ import org.realtimeetl.parser.convert.AbstractHandler;
 /**
  * Number to String
  *
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2022/7/20 23:04
  */

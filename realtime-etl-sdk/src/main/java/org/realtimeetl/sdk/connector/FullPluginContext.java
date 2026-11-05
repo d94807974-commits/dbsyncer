@@ -6,7 +6,7 @@ import org.realtimeetl.sdk.plugin.AbstractPluginContext;
 import org.realtimeetl.sdk.plugin.CustomContext;
 
 /**
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0s
  * @date 2022/6/30 16:04
  */

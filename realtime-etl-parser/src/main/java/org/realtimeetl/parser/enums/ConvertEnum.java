@@ -27,7 +27,7 @@ import org.realtimeetl.parser.convert.handler.UUIDHandler;
 /**
  * SupportedConvertType
  *
- * @author AE86
+ * @author Realtime ETL
  * @version 1.0.0
  * @date 2019/9/19 23:56
  */
